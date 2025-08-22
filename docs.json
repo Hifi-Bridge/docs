@@ -1,4 +1,4 @@
-{
+g{
   "$schema": "https://hifibridge.com/docs.json",
   "theme": "mint",
   "name": "HIFI Documentation",
@@ -39,13 +39,13 @@
           "icon": "book-open-cover"
         },
         {
-          "anchor": "Community",
+          "anchor": "API Reference",
           "href": "https://hifibridge.com/community",
           "icon": "slack"
         },
         {
-          "anchor": "Blog",
-          "href": "https://hifibridge.com/blog",
+          "anchor": "Changelog",
+          "href": "https://dashboard.hifibridge.com/changelog",
           "icon": "newspaper"
         }
       ]
