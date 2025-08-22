@@ -3,9 +3,9 @@
   "theme": "mint",
   "name": "HIFI Documentation",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#33171E",
+    "light": "#33171E",
+    "dark": "#191314"
   },
   "favicon": "/favicon.svg",
   "navigation": {
