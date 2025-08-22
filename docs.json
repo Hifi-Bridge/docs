@@ -11,7 +11,7 @@
   "navigation": {
     "tabs": [
       {
-        "tab": "Home",
+        "tab": "Get Statered",
         "groups": []
       },
       {
@@ -34,8 +34,8 @@
     "global": {
       "anchors": [
         {
-          "anchor": "Docs",
-          "href": "https://docs.hifibridge.com",
+          "anchor": "Getting Started",
+          "href": "https://hifi.mintlify.app",
           "icon": "book-open-cover"
         },
         {
