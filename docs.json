@@ -1,67 +1,124 @@
 {
   "$schema": "https://hifibridge.com/docs.json",
-  "theme": "mint",
-  "name": "HIFI Documentation",
+  "theme": "almond",
+  "name": "HIFI Docs",
+  "description": "Developer Documentation for HIFI",
   "colors": {
     "primary": "#33171E",
-    "light": "#33171E",
+    "light": "#F2FF66",
     "dark": "#191314"
   },
   "favicon": "/favicon.svg",
   "navigation": {
+    "pages": ["index"],
     "tabs": [
       {
-        "tab": "Get Statered",
-        "groups": []
+        "tab": "Guides",
+        "groups": [
+          {
+            "group": "Overview",
+            "pages": [
+              "guides/index",
+              "guides/sandbox",
+              {
+                "group": "API",
+                "pages": [
+                  "guides/api/index",
+                  "guides/api/authentication",
+                  "guides/api/webhooks"
+                ]
+              },
+              {
+                "group": "Dashboard",
+                "pages": [
+                  "guides/dashboard/index",
+                  "guides/dashboard/roles"
+                ]
+              }
+            ]
+          },
+          {
+            "group": "Concepts",
+            "pages": [
+              {
+                "group": "Users",
+                "pages": [
+                  "guides/users/index",
+                  "guides/users/screen", 
+                  "guides/users/currencies"
+                ]
+              },
+              {
+                "group": "Wallets",
+                "pages": [
+                  "guides/wallets/index",
+                  "guides/wallets/balance",
+                  "guides/wallets/deposits",
+                  "guides/wallets/transactions"
+                ]
+              },
+              {
+                "group": "Accounts",
+                "pages": [
+                  "guides/accounts/index",
+                  "guides/accounts/payins",
+                  "guides/accounts/payouts"
+                ]
+              },
+              {
+                "group": "Transfers",
+                "pages": [
+                  "guides/transfers/index",
+                  "guides/transfers/convert",
+                  "guides/transfers/bridge",
+                  "guides/transfers/swap",
+                  "guides/transfers/send"
+                ]
+              }
+            ]
+          },
+          {
+            "group": "Features",
+            "pages": [
+              "guides/features/virtual-accounts",
+              "guides/features/settlement-rules",
+              "guides/features/transfer-approvals"
+            ]
+          }
+        ]
       },
       {
-        "tab": "Get started",
-        "groups": []
-      },
-      {
-        "tab": "Product Manual",
-        "groups": []
+        "tab": "Recipes",
+        "pages": [
+          "recipes/index",
+          {
+            "group": "Finance",
+            "pages": [
+              "recipes/finance/payments",
+              "recipes/finance/fx"
+            ]
+          },
+          {
+            "group": "Corporate",
+            "pages": [
+              "recipes/corporate/treasury-management",
+              "recipes/corporate/vendor-payments"
+            ]
+          }
+        ]
       },
       {
         "tab": "API Reference",
-        "groups": []
-      },
-      {
-        "tab": "Changelog",
-        "groups": []
-      }
-    ],
-    "global": {
-      "anchors": [
-        {
-          "anchor": "Getting Started",
-          "href": "https://hifi.mintlify.app",
-          "icon": "book-open-cover"
-        },
-        {
-          "anchor": "Changelog",
-          "href": "https://dashboard.hifibridge.com/changelog",
-          "icon": "newspaper"
+        "openapi": {
+          "source": "/api-reference/openapi.json",
+          "directory": "api-reference"
         }
-      ]
-    }
+      }
+    ]
   },
   "logo": {
     "light": "/logo/light.svg",
     "dark": "/logo/dark.svg"
-  },
-  "navbar": {
-    "links": [
-      {
-        "label": "Support",
-        "href": "mailto:hi@hifibridge.com"
-      }
-    ],
-    "primary": {
-      "type": "button",
-      "label": "Dashboard",
-      "href": "https://dashboard.hifibridge.com/"
-    }
   },
   "contextual": {
     "options": [
