@@ -10,16 +10,20 @@
   },
   "favicon": "/favicon.svg",
   "navigation": {
-    "pages": ["index"],
     "tabs": [
       {
         "tab": "Guides",
         "groups": [
           {
-            "group": "Overview",
+            "group": "Welcome",
             "pages": [
               "guides/index",
-              "guides/sandbox",
+              "guides/sandbox"
+            ]
+          },
+          {
+            "group": "Getting Started",
+            "pages": [
               {
                 "group": "API",
                 "pages": [
@@ -103,6 +107,13 @@
             "pages": [
               "recipes/corporate/treasury-management",
               "recipes/corporate/vendor-payments"
+            ]
+          },
+          {
+            "group": "Platforms",
+            "pages": [
+              "recipes/platforms/marketplaces",
+              "recipes/platforms/ledgers"
             ]
           }
         ]
