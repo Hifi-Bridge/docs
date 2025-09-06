@@ -65,7 +65,6 @@
                 "group": "Accounts",
                 "pages": [
                   "guides/accounts/index",
-                  "guides/accounts/payins",
                   "guides/accounts/payouts"
                 ]
               },
