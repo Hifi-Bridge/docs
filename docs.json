@@ -49,8 +49,7 @@
                 "group": "Users",
                 "pages": [
                   "guides/users/index",
-                  "guides/users/kyc",
-                  "guides/users/kyc-link"
+                  "guides/users/kyc"
                 ]
               },
               {
@@ -84,6 +83,7 @@
           {
             "group": "Features",
             "pages": [
+              "guides/kyc-link/index",
               "guides/virtual-accounts/index",
               "guides/virtual-accounts/settlement-rules",
               "guides/transfer-approvals/index"
