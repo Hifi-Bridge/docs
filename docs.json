@@ -73,10 +73,10 @@
                 "group": "Transfers",
                 "pages": [
                   "guides/transfers/index",
-                  "guides/transfers/convert",
+                  "guides/transfers/onramp",
                   "guides/transfers/bridge",
                   "guides/transfers/swap",
-                  "guides/transfers/send"
+                  "guides/transfers/offramp"
                 ]
               }
             ]
