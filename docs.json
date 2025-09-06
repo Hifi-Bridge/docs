@@ -80,10 +80,15 @@
             ]
           },
           {
-            "group": "Features",
+            "group": "Wallets",
             "pages": [
               "guides/features/virtual-accounts",
-              "guides/features/settlement-rules",
+              "guides/features/settlement-rules"
+            ]
+          },
+          {
+            "group": "Transfers",
+            "pages": [
               "guides/features/transfer-approvals"
             ]
           }
