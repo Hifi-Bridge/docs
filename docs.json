@@ -18,7 +18,6 @@
             "group": "Overview",
             "pages": [
               "guides/index",
-              "guides/sandbox",
               "guides/support"
             ]
           },
@@ -39,7 +38,8 @@
                   "guides/dashboard/index",
                   "guides/dashboard/roles"
                 ]
-              }
+              },
+              "guides/sandbox"
             ]
           },
           {
