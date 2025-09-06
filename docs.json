@@ -48,7 +48,7 @@
                 "group": "Users",
                 "pages": [
                   "guides/users/index",
-                  "guides/users/screen", 
+                  "guides/users/kyc", 
                   "guides/users/currencies"
                 ]
               },
@@ -58,7 +58,8 @@
                   "guides/wallets/index",
                   "guides/wallets/balance",
                   "guides/wallets/deposits",
-                  "guides/wallets/transactions"
+                  "guides/wallets/payins",
+                  "guides/wallets/transfers"
                 ]
               },
               {
