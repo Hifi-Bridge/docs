@@ -15,7 +15,7 @@
         "tab": "Guides",
         "groups": [
           {
-            "group": "Welcome",
+            "group": "Overview",
             "pages": [
               "guides/index",
               "guides/sandbox",
@@ -49,7 +49,8 @@
                 "group": "Users",
                 "pages": [
                   "guides/users/index",
-                  "guides/users/kyc"
+                  "guides/users/kyc",
+                  "guides/users/kyc-link"
                 ]
               },
               {
@@ -81,16 +82,11 @@
             ]
           },
           {
-            "group": "Wallets",
+            "group": "Features",
             "pages": [
-              "guides/features/virtual-accounts",
-              "guides/features/settlement-rules"
-            ]
-          },
-          {
-            "group": "Transfers",
-            "pages": [
-              "guides/features/transfer-approvals"
+              "guides/virtual-accounts/index",
+              "guides/virtual-accounts/settlement-rules",
+              "guides/transfer-approvals/index"
             ]
           }
         ]
