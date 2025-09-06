@@ -18,7 +18,8 @@
             "group": "Welcome",
             "pages": [
               "guides/index",
-              "guides/sandbox"
+              "guides/sandbox",
+              "guides/support"
             ]
           },
           {
