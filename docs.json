@@ -58,14 +58,14 @@
                   "guides/wallets/balance",
                   "guides/wallets/deposits",
                   "guides/wallets/payins",
-                  "guides/wallets/transfers"
+                  "guides/wallets/transfers",
+                  "guides/wallets/payouts"
                 ]
               },
               {
                 "group": "Accounts",
                 "pages": [
-                  "guides/accounts/index",
-                  "guides/accounts/payouts"
+                  "guides/accounts/index"
                 ]
               },
               {
