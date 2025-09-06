@@ -63,12 +63,6 @@
                 ]
               },
               {
-                "group": "Accounts",
-                "pages": [
-                  "guides/accounts/index"
-                ]
-              },
-              {
                 "group": "Transfers",
                 "pages": [
                   "guides/transfers/index",
