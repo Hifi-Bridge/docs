@@ -68,6 +68,15 @@
                   "platform/wallets/balance",
                   "platform/wallets/deposits"
                 ]
+              },
+              {
+                "group": "Transfers",
+                "pages": [
+                  "platform/transfers/index",
+                  "platform/transfers/onramps",
+                  "platform/transfers/onchain",
+                  "platform/transfers/offramps"
+                ]
               }
             ]
           },
