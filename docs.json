@@ -91,14 +91,8 @@
                   "platform/virtual-accounts/index"
                 ]
               },
-              {
-                "group": "Onchain",
-                "pages": [
-                  "platform/onchain/index",
-                  "platform/onchain/bridge",
-                  "platform/onchain/swap"
-                ]
-              },
+              "platform/onchain/bridge",
+              "platform/onchain/swap",
               {
                 "group": "Offramps",
                 "pages": [
