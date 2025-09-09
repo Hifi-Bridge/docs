@@ -12,17 +12,17 @@
   "navigation": {
     "tabs": [
       {
-        "tab": "Guides",
+        "tab": "Platform",
         "groups": [
           {
             "group": "Overview",
             "pages": [
-              "guides/index",
+              "platform/index",
               {
                 "group": "Availability",
                 "pages": [
-                  "guides/availability/currencies",
-                  "guides/availability/geographies"
+                  "platform/availability/currencies",
+                  "platform/availability/geographies"
                 ]
               }
             ]
@@ -33,61 +33,68 @@
               {
                 "group": "API",
                 "pages": [
-                  "guides/api/index",
-                  "guides/api/authentication",
-                  "guides/api/responses",
-                  "guides/api/events",
-                  "guides/api/errors"
+                  "platform/api/index",
+                  "platform/api/authentication",
+                  "platform/api/responses",
+                  "platform/api/events",
+                  "platform/api/errors"
                 ]
               },
               {
                 "group": "Dashboard",
                 "pages": [
-                  "guides/dashboard/index",
-                  "guides/dashboard/roles"
+                  "platform/dashboard/index",
+                  "platform/dashboard/roles"
                 ]
               },
-              "guides/sandbox"
+              "platform/sandbox"
             ]
           },
           {
-            "group": "Product",
+            "group": "Concepts",
             "pages": [
               {
                 "group": "Users",
                 "pages": [
-                  "guides/users/index",
-                  "guides/kyc/index"
+                  "platform/users/index",
+                  "platform/users/terms-of-service",
+                  "platform/users/compliance"
                 ]
               },
               {
                 "group": "Wallets",
                 "pages": [
-                  "guides/wallets/index",
-                  "guides/wallets/balance",
-                  "guides/wallets/deposits"
+                  "platform/wallets/index",
+                  "platform/wallets/balance",
+                  "platform/wallets/deposits"
+                ]
+              }
+            ]
+          },
+          {
+            "group": "Transfers",
+            "pages": [
+              {
+                "group": "Onramps",
+                "pages": [
+                  "platform/onramps/index",
+                  "platform/onramps/plaid",
+                  "platform/virtual-accounts/index"
                 ]
               },
               {
-                "group": "Payins",
+                "group": "Onchain",
                 "pages": [
-                  "guides/payins/index",
-                  "guides/virtual-accounts/index"
+                  "platform/onchain/index",
+                  "platform/onchain/bridge",
+                  "platform/onchain/swap"
                 ]
               },
               {
-                "group": "Convert",
+                "group": "Offramps",
                 "pages": [
-                  "guides/convert/index",
-                  "guides/convert/bridge",
-                  "guides/convert/swap"
-                ]
-              },
-              {
-                "group": "Payouts",
-                "pages": [
-                  "guides/payouts/index",
-                  "guides/transfers/index"
+                  "platform/offramps/index",
+                  "platform/offramps/accounts"
                 ]
               }
             ]
@@ -95,36 +102,36 @@
           {
             "group": "Features",
             "pages": [              
-              "guides/kyc/kyc-link",
-              "guides/virtual-accounts/settlement-rules",
-              "guides/transfer-approvals/index"
+              "platform/kyc/kyc-link",
+              "platform/virtual-accounts/settlement-rules",
+              "platform/transfer-approvals/index"
             ]
           }
         ]
       },
       {
-        "tab": "Recipes",
+        "tab": "Guides",
         "pages": [
-          "recipes/index",
+          "guides/index",
           {
             "group": "Finance",
             "pages": [
-              "recipes/finance/payments",
-              "recipes/finance/fx"
+              "guides/finance/payments",
+              "guides/finance/fx"
             ]
           },
           {
             "group": "Corporate",
             "pages": [
-              "recipes/corporate/treasury-management",
-              "recipes/corporate/vendor-payments"
+              "guides/corporate/treasury-management",
+              "guides/corporate/vendor-payments"
             ]
           },
           {
             "group": "Platforms",
             "pages": [
-              "recipes/platforms/marketplaces",
-              "recipes/platforms/ledgers"
+              "guides/platforms/marketplaces",
+              "guides/platforms/ledgers"
             ]
           }
         ]
