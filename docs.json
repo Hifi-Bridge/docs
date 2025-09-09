@@ -102,8 +102,7 @@
               {
                 "group": "Offramps",
                 "pages": [
-                  "platform/offramps/index",
-                  "platform/offramps/accounts"
+                  "platform/offramps/index"
                 ]
               }
             ]
