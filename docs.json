@@ -18,7 +18,13 @@
             "group": "Overview",
             "pages": [
               "guides/index",
-              "guides/availability"
+              {
+                "group": "Availability",
+                "pages": [
+                  "guides/availability/currencies",
+                  "guides/availability/geographies"
+                ]
+              }
             ]
           },
           {
@@ -29,7 +35,9 @@
                 "pages": [
                   "guides/api/index",
                   "guides/api/authentication",
-                  "guides/api/webhooks"
+                  "guides/api/responses",
+                  "guides/api/events",
+                  "guides/api/errors"
                 ]
               },
               {
@@ -43,13 +51,13 @@
             ]
           },
           {
-            "group": "Concepts",
+            "group": "Product",
             "pages": [
               {
                 "group": "Users",
                 "pages": [
                   "guides/users/index",
-                  "guides/users/kyc"
+                  "guides/kyc/index"
                 ]
               },
               {
@@ -57,28 +65,37 @@
                 "pages": [
                   "guides/wallets/index",
                   "guides/wallets/balance",
-                  "guides/wallets/deposits",
-                  "guides/wallets/payins",
-                  "guides/wallets/payouts"
+                  "guides/wallets/deposits"
                 ]
               },
               {
-                "group": "Transfers",
+                "group": "Payins",
                 "pages": [
-                  "guides/transfers/index",
-                  "guides/transfers/convert",
-                  "guides/transfers/bridge",
-                  "guides/transfers/swap",
-                  "guides/transfers/send"
+                  "guides/payins/index",
+                  "guides/virtual-accounts/index"
+                ]
+              },
+              {
+                "group": "Convert",
+                "pages": [
+                  "guides/convert/index",
+                  "guides/convert/bridge",
+                  "guides/convert/swap"
+                ]
+              },
+              {
+                "group": "Payouts",
+                "pages": [
+                  "guides/payouts/index",
+                  "guides/transfers/index"
                 ]
               }
             ]
           },
           {
             "group": "Features",
-            "pages": [
-              "guides/kyc-link/index",
-              "guides/virtual-accounts/index",
+            "pages": [              
+              "guides/kyc/kyc-link",
               "guides/virtual-accounts/settlement-rules",
               "guides/transfer-approvals/index"
             ]
