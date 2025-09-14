@@ -12,17 +12,17 @@
   "navigation": {
     "tabs": [
       {
-        "tab": "Platform",
+        "tab": "Docs",
         "groups": [
           {
             "group": "Overview",
             "pages": [
-              "platform/index",
+              "index",
               {
                 "group": "Availability",
                 "pages": [
-                  "platform/availability/currencies",
-                  "platform/availability/geographies"
+                  "docs/availability/currencies",
+                  "docs/availability/geographies"
                 ]
               }
             ]
@@ -33,21 +33,18 @@
               {
                 "group": "API",
                 "pages": [
-                  "platform/api/index",
-                  "platform/api/authentication",
-                  "platform/api/responses",
-                  "platform/api/events",
-                  "platform/api/errors"
+                  "docs/api/index",
+                  "docs/api/authentication",
+                  "docs/api/responses",
+                  "docs/api/events",
+                  "docs/api/errors"
                 ]
               },
               {
                 "group": "Dashboard",
-                "pages": [
-                  "platform/dashboard/index",
-                  "platform/dashboard/roles"
-                ]
+                "pages": ["docs/dashboard/index", "docs/dashboard/roles"]
               },
-              "platform/sandbox"
+              "docs/sandbox"
             ]
           },
           {
@@ -56,26 +53,26 @@
               {
                 "group": "Users",
                 "pages": [
-                  "platform/users/index",
-                  "platform/users/terms-of-service",
-                  "platform/users/compliance"
+                  "docs/users/index",
+                  "docs/users/terms-of-service",
+                  "docs/users/compliance"
                 ]
               },
               {
                 "group": "Wallets",
                 "pages": [
-                  "platform/wallets/index",
-                  "platform/wallets/balance",
-                  "platform/wallets/deposits"
+                  "docs/wallets/index",
+                  "docs/wallets/balance",
+                  "docs/wallets/deposits"
                 ]
               },
               {
                 "group": "Transfers",
                 "pages": [
-                  "platform/transfers/index",
-                  "platform/transfers/onramps",
-                  "platform/transfers/onchain",
-                  "platform/transfers/offramps"
+                  "docs/transfers/index",
+                  "docs/transfers/onramps",
+                  "docs/transfers/onchain",
+                  "docs/transfers/offramps"
                 ]
               }
             ]
@@ -86,27 +83,25 @@
               {
                 "group": "Onramps",
                 "pages": [
-                  "platform/onramps/index",
-                  "platform/onramps/plaid",
-                  "platform/virtual-accounts/index"
+                  "docs/onramps/index",
+                  "docs/onramps/plaid",
+                  "docs/virtual-accounts/index"
                 ]
               },
-              "platform/onchain/bridge",
-              "platform/onchain/swap",
+              "docs/onchain/bridge",
+              "docs/onchain/swap",
               {
                 "group": "Offramps",
-                "pages": [
-                  "platform/offramps/index"
-                ]
+                "pages": ["docs/offramps/index"]
               }
             ]
           },
           {
             "group": "Features",
-            "pages": [              
-              "platform/kyc/kyc-link",
-              "platform/virtual-accounts/settlement-rules",
-              "platform/transfer-approvals/index"
+            "pages": [
+              "docs/kyc/kyc-link",
+              "docs/virtual-accounts/settlement-rules",
+              "docs/transfer-approvals/index"
             ]
           }
         ]
@@ -117,10 +112,7 @@
           "guides/index",
           {
             "group": "Finance",
-            "pages": [
-              "guides/finance/payments",
-              "guides/finance/fx"
-            ]
+            "pages": ["guides/finance/payments", "guides/finance/fx"]
           },
           {
             "group": "Corporate",
@@ -130,11 +122,8 @@
             ]
           },
           {
-            "group": "Platforms",
-            "pages": [
-              "guides/platforms/marketplaces",
-              "guides/platforms/ledgers"
-            ]
+            "group": "docss",
+            "pages": ["guides/docss/marketplaces", "guides/docss/ledgers"]
           }
         ]
       },
