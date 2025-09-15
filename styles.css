@@ -1,26 +1,29 @@
-/* Full height page */
-html,
-body {
+/* Full height page - only for landing page */
+[data-mintlify-page="/"] html,
+[data-mintlify-page="/"] body {
   height: 100%;
   margin: 0;
   padding: 0;
   overflow: hidden;
 }
 
-/* Ensure no scrolling on the main content */
-#__next,
-#root,
-.mdx-content {
+/* Ensure no scrolling on the main content - only for landing page */
+[data-mintlify-page="/"] #__next,
+[data-mintlify-page="/"] #root,
+[data-mintlify-page="/"] .mdx-content {
   height: 100vh;
   overflow: hidden;
 }
 
-/* Target Mintlify specific elements */
-.almond-layout,
-.content-container,
-.content-area {
+/* Target Mintlify specific elements - only for landing page */
+[data-mintlify-page="/"] .almond-layout,
+[data-mintlify-page="/"] .content-container,
+[data-mintlify-page="/"] .content-area {
   height: 100vh;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Hide any potential scrollbars */
@@ -28,8 +31,8 @@ body {
   box-sizing: border-box;
 }
 
-/* Ensure the main page container doesn't overflow */
-[data-mintlify-page] {
+/* Ensure the main page container doesn't overflow - only for landing page */
+[data-mintlify-page="/"] {
   height: 100vh;
   overflow: hidden;
 }
@@ -156,11 +159,11 @@ body {
   background: transparent;
 }
 
-/* Force centering for all Mintlify layout containers */
-.almond-layout .content,
-.almond-layout .content-wrapper,
-.content-wrapper,
-.layout-wrapper {
+/* Force centering for all Mintlify layout containers - only for landing page */
+[data-mintlify-page="/"] .almond-layout .content,
+[data-mintlify-page="/"] .almond-layout .content-wrapper,
+[data-mintlify-page="/"] .content-wrapper,
+[data-mintlify-page="/"] .layout-wrapper {
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;

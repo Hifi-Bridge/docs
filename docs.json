@@ -19,13 +19,10 @@
           {
             "group": "Introduction",
             "pages": [
-              "docs/index",
+              "overview",
               {
                 "group": "Availability",
-                "pages": [
-                  "docs/availability/currencies",
-                  "docs/availability/geographies"
-                ]
+                "pages": ["availability/currencies", "availability/geographies"]
               }
             ]
           },
@@ -35,26 +32,26 @@
               {
                 "group": "API",
                 "pages": [
-                  "docs/api/authentication",
-                  "docs/api/responses",
-                  "docs/api/events",
-                  "docs/api/errors"
+                  "api/authentication",
+                  "api/responses",
+                  "api/events",
+                  "api/errors"
                 ]
               },
               {
                 "group": "Dashboard",
-                "pages": ["docs/dashboard/index", "docs/dashboard/roles"]
+                "pages": ["dashboard/index", "dashboard/roles"]
               },
-              "docs/sandbox"
+              "sandbox"
             ]
           },
           {
             "group": "Models",
             "pages": [
-              "docs/users/index",
-              "docs/wallets/index",
-              "docs/accounts/index",
-              "docs/transfers/index"
+              "users/index",
+              "wallets/index",
+              "accounts/index",
+              "transfers/index"
             ]
           },
           {
@@ -63,22 +60,22 @@
               {
                 "group": "Onramps",
                 "pages": [
-                  "docs/onramps/index",
-                  "docs/onramps/plaid",
-                  "docs/virtual-accounts/index"
+                  "onramps/index",
+                  "onramps/plaid",
+                  "virtual-accounts/index"
                 ]
               },
-              "docs/bridges/index",
-              "docs/swaps/index",
-              "docs/offramps/index"
+              "bridges/index",
+              "swaps/index",
+              "offramps/index"
             ]
           },
           {
             "group": "Features",
             "pages": [
-              "docs/kyc/kyc-link",
-              "docs/virtual-accounts/settlement-rules",
-              "docs/transfer-approvals/index"
+              "kyc/kyc-link",
+              "virtual-accounts/settlement-rules",
+              "transfer-approvals/index"
             ]
           }
         ]
@@ -86,9 +83,12 @@
       {
         "tab": "Guides",
         "pages": [
-          "guides/index",
           {
-            "group": "Core Workflows",
+            "group": "Guides",
+            "pages": ["guides/index"]
+          },
+          {
+            "group": "Primitives",
             "pages": [
               "guides/convert",
               "guides/route",
@@ -97,21 +97,12 @@
             ]
           },
           {
-            "group": "Finance",
-            "pages": ["guides/finance/payments", "guides/finance/fx"]
-          },
-          {
-            "group": "Corporate",
+            "group": "Use Cases",
             "pages": [
-              "guides/corporate/treasury-management",
-              "guides/corporate/vendor-payments"
-            ]
-          },
-          {
-            "group": "Platforms",
-            "pages": [
-              "guides/platforms/marketplaces",
-              "guides/platforms/ledgers"
+              "guides/use-cases/dollar-access",
+              "guides/use-cases/cross-border",
+              "guides/use-cases/treasury-management",
+              "guides/use-cases/treasury"
             ]
           }
         ]
