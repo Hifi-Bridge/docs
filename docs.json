@@ -8,6 +8,8 @@
     "light": "#F2FF66",
     "dark": "#191314"
   },
+  "css": "/styles.css",
+  "js": "/flowing-light.js",
   "favicon": "/favicon.svg",
   "navigation": {
     "tabs": [
@@ -15,9 +17,9 @@
         "tab": "Docs",
         "groups": [
           {
-            "group": "Overview",
+            "group": "Introduction",
             "pages": [
-              "index",
+              "docs/index",
               {
                 "group": "Availability",
                 "pages": [
@@ -33,7 +35,6 @@
               {
                 "group": "API",
                 "pages": [
-                  "docs/api/index",
                   "docs/api/authentication",
                   "docs/api/responses",
                   "docs/api/events",
@@ -48,33 +49,12 @@
             ]
           },
           {
-            "group": "Product",
+            "group": "Models",
             "pages": [
-              {
-                "group": "Users",
-                "pages": [
-                  "docs/users/index",
-                  "docs/users/terms-of-service",
-                  "docs/users/compliance"
-                ]
-              },
-              {
-                "group": "Wallets",
-                "pages": [
-                  "docs/wallets/index",
-                  "docs/wallets/balance",
-                  "docs/wallets/deposits"
-                ]
-              },
-              {
-                "group": "Transfers",
-                "pages": [
-                  "docs/transfers/index",
-                  "docs/transfers/onramps",
-                  "docs/transfers/onchain",
-                  "docs/transfers/offramps"
-                ]
-              }
+              "docs/users/index",
+              "docs/wallets/index",
+              "docs/accounts/index",
+              "docs/transfers/index"
             ]
           },
           {
@@ -88,12 +68,9 @@
                   "docs/virtual-accounts/index"
                 ]
               },
-              "docs/onchain/bridge",
-              "docs/onchain/swap",
-              {
-                "group": "Offramps",
-                "pages": ["docs/offramps/index"]
-              }
+              "docs/bridges/index",
+              "docs/swaps/index",
+              "docs/offramps/index"
             ]
           },
           {
@@ -111,6 +88,15 @@
         "pages": [
           "guides/index",
           {
+            "group": "Core Workflows",
+            "pages": [
+              "guides/convert",
+              "guides/route",
+              "guides/send",
+              "guides/screen"
+            ]
+          },
+          {
             "group": "Finance",
             "pages": ["guides/finance/payments", "guides/finance/fx"]
           },
@@ -122,8 +108,11 @@
             ]
           },
           {
-            "group": "docss",
-            "pages": ["guides/docss/marketplaces", "guides/docss/ledgers"]
+            "group": "Platforms",
+            "pages": [
+              "guides/platforms/marketplaces",
+              "guides/platforms/ledgers"
+            ]
           }
         ]
       },

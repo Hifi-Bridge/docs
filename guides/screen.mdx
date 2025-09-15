@@ -1,0 +1,355 @@
+---
+title: "Screen"
+description: "Verify and monitor users and transactions"
+---
+
+# Screen: Verify and Monitor Users and Transactions
+
+The Screen workflow provides comprehensive verification and monitoring capabilities for users and transactions. This ensures compliance with regulatory requirements, prevents fraud, and maintains the integrity of the HIFI platform.
+
+## Overview
+
+Screening involves:
+
+- **User Verification**: KYC/AML checks for all users
+- **Transaction Monitoring**: Real-time analysis of all transactions
+- **Risk Assessment**: Continuous evaluation of user and transaction risk
+- **Compliance Reporting**: Automated regulatory reporting
+
+## User Screening
+
+### KYC (Know Your Customer)
+
+Comprehensive identity verification for all users:
+
+```bash
+# Initiate KYC verification
+POST /kyc/verify
+{
+  "user_id": "user_123",
+  "kyc_level": "individual",
+  "country": "US",
+  "documents": {
+    "id_type": "drivers_license",
+    "id_number": "D123456789",
+    "id_issuer": "CA"
+  }
+}
+```
+
+**KYC Levels:**
+
+- **Basic**: Email verification, phone number
+- **Individual**: Government ID, address verification
+- **Enhanced**: Additional documentation, source of funds
+- **Institutional**: Corporate documentation, beneficial ownership
+
+### Document Verification
+
+Automated document processing and verification:
+
+```bash
+# Upload and verify documents
+POST /kyc/documents
+{
+  "user_id": "user_123",
+  "document_type": "drivers_license",
+  "document_data": "base64_encoded_image",
+  "metadata": {
+    "country": "US",
+    "state": "CA"
+  }
+}
+```
+
+**Supported Documents:**
+
+- **Government IDs**: Driver's license, passport, national ID
+- **Address Proof**: Utility bills, bank statements, lease agreements
+- **Financial Documents**: Bank statements, tax returns, pay stubs
+- **Corporate Documents**: Articles of incorporation, operating agreements
+
+### Biometric Verification
+
+Advanced biometric checks for enhanced security:
+
+```bash
+# Submit biometric data
+POST /kyc/biometric
+{
+  "user_id": "user_123",
+  "biometric_type": "selfie",
+  "biometric_data": "base64_encoded_image",
+  "liveness_check": true
+}
+```
+
+**Biometric Types:**
+
+- **Selfie Verification**: Face matching with ID photo
+- **Liveness Detection**: Ensure real person, not photo/video
+- **Document Matching**: Match selfie with ID document
+- **Age Verification**: Verify user meets age requirements
+
+## Transaction Screening
+
+### Real-time Monitoring
+
+Continuous analysis of all transactions:
+
+```bash
+# Screen transaction
+POST /transactions/screen
+{
+  "transaction_id": "tx_123",
+  "user_id": "user_123",
+  "amount": 1000.00,
+  "currency": "USDC",
+  "destination": "0x456...",
+  "transaction_type": "transfer"
+}
+```
+
+**Screening Criteria:**
+
+- **Amount thresholds**: Flag large or unusual amounts
+- **Velocity checks**: Monitor transaction frequency
+- **Pattern analysis**: Detect suspicious patterns
+- **Destination screening**: Check recipient addresses
+
+### Risk Scoring
+
+Automated risk assessment for each transaction:
+
+```bash
+# Get risk score
+GET /transactions/{tx_id}/risk-score
+
+# Response
+{
+  "transaction_id": "tx_123",
+  "risk_score": 25,
+  "risk_level": "low",
+  "factors": [
+    {
+      "factor": "amount",
+      "score": 10,
+      "description": "Amount within normal range"
+    },
+    {
+      "factor": "destination",
+      "score": 5,
+      "description": "Known good address"
+    }
+  ],
+  "recommendation": "approve"
+}
+```
+
+**Risk Factors:**
+
+- **Amount**: Transaction size relative to user history
+- **Frequency**: How often user transacts
+- **Destination**: Reputation of recipient address
+- **Timing**: Unusual transaction times
+- **Geography**: Cross-border transaction patterns
+
+### Sanctions Screening
+
+Check against global sanctions and watchlists:
+
+```bash
+# Screen against sanctions lists
+POST /screening/sanctions
+{
+  "user_id": "user_123",
+  "name": "John Doe",
+  "date_of_birth": "1990-01-01",
+  "country": "US"
+}
+```
+
+**Sanctions Lists:**
+
+- **OFAC** (US): Office of Foreign Assets Control
+- **EU Sanctions**: European Union sanctions
+- **UN Sanctions**: United Nations sanctions
+- **PEP Lists**: Politically Exposed Persons
+- **Adverse Media**: Negative news screening
+
+## Compliance Monitoring
+
+### Regulatory Reporting
+
+Automated generation of compliance reports:
+
+```bash
+# Generate compliance report
+POST /compliance/reports
+{
+  "report_type": "suspicious_activity",
+  "period": "2024-01",
+  "jurisdiction": "US"
+}
+```
+
+**Report Types:**
+
+- **SAR**: Suspicious Activity Reports
+- **CTR**: Currency Transaction Reports
+- **AML**: Anti-Money Laundering reports
+- **KYC**: Know Your Customer reports
+- **Audit**: Compliance audit reports
+
+### Audit Trails
+
+Complete audit trail for all activities:
+
+```bash
+# Get audit trail
+GET /audit/trail?user_id=user_123&start_date=2024-01-01
+
+# Response
+{
+  "user_id": "user_123",
+  "events": [
+    {
+      "timestamp": "2024-01-15T10:30:00Z",
+      "event_type": "kyc_verification",
+      "status": "approved",
+      "details": "Government ID verified"
+    },
+    {
+      "timestamp": "2024-01-15T11:00:00Z",
+      "event_type": "transaction",
+      "status": "completed",
+      "details": "Transfer of 1000 USDC"
+    }
+  ]
+}
+```
+
+## Advanced Screening Features
+
+### Machine Learning Models
+
+AI-powered risk detection:
+
+```bash
+# Get ML risk assessment
+POST /ml/risk-assessment
+{
+  "user_id": "user_123",
+  "transaction_data": {
+    "amount": 1000.00,
+    "frequency": "daily",
+    "patterns": ["regular", "consistent"]
+  }
+}
+```
+
+**ML Models:**
+
+- **Fraud Detection**: Identify fraudulent transactions
+- **Anomaly Detection**: Find unusual patterns
+- **Behavioral Analysis**: User behavior modeling
+- **Network Analysis**: Transaction network analysis
+
+### Real-time Alerts
+
+Immediate notifications for suspicious activity:
+
+```bash
+# Configure alerts
+POST /alerts/configure
+{
+  "user_id": "user_123",
+  "alert_types": ["high_risk", "sanctions_match", "unusual_pattern"],
+  "notification_methods": ["email", "webhook", "dashboard"]
+}
+```
+
+**Alert Types:**
+
+- **High Risk**: Transactions above risk threshold
+- **Sanctions Match**: Potential sanctions list match
+- **Unusual Pattern**: Unusual transaction patterns
+- **Velocity Alert**: High transaction frequency
+- **Amount Alert**: Large or unusual amounts
+
+## Integration and APIs
+
+### Webhook Integration
+
+Real-time event notifications:
+
+```bash
+# Webhook endpoint
+POST /webhooks/screening-events
+{
+  "event_type": "user_verified",
+  "user_id": "user_123",
+  "status": "approved",
+  "timestamp": "2024-01-15T10:30:00Z",
+  "details": {
+    "kyc_level": "individual",
+    "verification_method": "government_id"
+  }
+}
+```
+
+### SDK Integration
+
+Easy integration with existing applications:
+
+```javascript
+// JavaScript SDK example
+const hifi = new HifiClient(apiKey);
+
+// Screen user
+const result = await hifi.screen.verifyUser({
+  userId: "user_123",
+  kycLevel: "individual",
+  documents: {
+    idType: "drivers_license",
+    idNumber: "D123456789",
+  },
+});
+
+// Screen transaction
+const riskScore = await hifi.screen.assessTransaction({
+  transactionId: "tx_123",
+  amount: 1000.0,
+  currency: "USDC",
+});
+```
+
+## Best Practices
+
+1. **Proactive Screening**: Screen users before enabling transactions
+2. **Continuous Monitoring**: Monitor all transactions in real-time
+3. **Risk Management**: Set appropriate risk thresholds
+4. **Documentation**: Maintain complete audit trails
+5. **Regular Updates**: Keep screening rules and lists current
+6. **Staff Training**: Train staff on compliance procedures
+
+## Error Handling
+
+Common screening errors and solutions:
+
+| Error                     | Description                        | Solution                               |
+| ------------------------- | ---------------------------------- | -------------------------------------- |
+| `DOCUMENT_INVALID`        | Document format not supported      | Use supported document format          |
+| `VERIFICATION_FAILED`     | Identity verification failed       | Resubmit with better quality documents |
+| `SANCTIONS_MATCH`         | Potential sanctions list match     | Manual review required                 |
+| `RISK_THRESHOLD_EXCEEDED` | Transaction exceeds risk threshold | Additional verification required       |
+| `SYSTEM_ERROR`            | Screening system error             | Retry or contact support               |
+
+## API Reference
+
+For detailed API documentation, see:
+
+- [KYC API](/docs/kyc/index)
+- [Compliance API](/docs/users/compliance)
+- [Transfers API](/docs/transfers/index)
+- [Users API](/docs/users/index)

@@ -1,46 +1,30 @@
 ---
-title: "Get started"
-mode: "wide"
+title: "Welcome to HIFI"
+sidebarTitle: "Introduction"
+mode: "custom"
 ---
 
-HIFI is a developer platform to build financial infrastructure with stablecoins. We provide programmable primitives that give you full control over how money is issued, routed, and reconciled. We've put this guide together to help you get started quickly.
-
-### Set up your account
-
-<Columns cols={2}>
-  <Card title="Request access" href="https://dashboard.hifibridge.com/login?request_access=true">
-    Schedule a call with our team
-  </Card>
-  <Card title="Set up API">
-    Authentication and keys
-  </Card>
-</Columns>
-
-### What you can do with HIFI
-
-- **Convert** – Exchange fiat into stablecoins
-- **Route** – Move stablecoins between wallets and chains
-- **Send** – Pay out stablecoins into fiat accounts
-- **Screen** – Verify and monitor users and transactions
-
-### Start building
-
-<Columns cols={2}>
-  <Card title="Onboard a user">
-    Identify and screen customers
-  </Card>
-  <Card title="Manage wallets">
-    Hold balances across chains
-  </Card>
-</Columns>
-
-### Try the product
-
-<Columns cols={2}>
-  <Card title="Convert to USDC">
-    Pay in to a HIFI wallet
-  </Card>
-  <Card title="Send to USD">
-    Pay out of a HIFI wallet
-  </Card>
-</Columns>
+<div className="hero-section">
+  <div id="flowing-light-container" className="flowing-light-container"></div>
+  <div className="hero-content">
+    <h1 className="hero-title">Docs</h1>
+    <p className="hero-description">
+      HIFI is a developer platform for building financial infrastructure with
+      stablecoins. We provide programmable primitives for issuing, routing and
+      reconciling money.
+    </p>
+    <section className="setup-section">
+      <Columns cols={2}>
+        <Card
+          title="Request access"
+          href="https://dashboard.hifibridge.com/login?request_access=true"
+        >
+          Schedule a call with our team
+        </Card>
+        <Card title="Explore the API" href="/docs">
+          Learn what you can do with HIFI
+        </Card>
+      </Columns>
+    </section>
+  </div>
+</div>

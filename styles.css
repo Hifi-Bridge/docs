@@ -1,0 +1,195 @@
+/* Full height page */
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+/* Ensure no scrolling on the main content */
+#__next,
+#root,
+.mdx-content {
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Target Mintlify specific elements */
+.almond-layout,
+.content-container,
+.content-area {
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Hide any potential scrollbars */
+* {
+  box-sizing: border-box;
+}
+
+/* Ensure the main page container doesn't overflow */
+[data-mintlify-page] {
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Hero Section */
+.hero-section {
+  height: 100vh;
+  min-height: 100vh;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-align: center;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.dots-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+      circle at 20px 20px,
+      rgba(255, 255, 255, 0.15) 1px,
+      transparent 1px
+    ),
+    radial-gradient(
+      circle at 20px 20px,
+      rgba(255, 255, 255, 0.1) 1px,
+      transparent 1px
+    );
+  background-size: 40px 40px;
+  background-position: 0 0, 20px 20px;
+  background-attachment: fixed;
+  pointer-events: none;
+}
+
+/* Flowing Light Animation */
+.flowing-light-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.flowing-dot {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: white;
+  border-radius: 50%;
+  opacity: 0.06;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.08);
+}
+
+.flowing-dot.active {
+  opacity: 0.2;
+  transform: scale(1.5);
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.16);
+}
+
+.flowing-dot.bright {
+  opacity: 0.16;
+  transform: scale(1.2);
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.12);
+}
+
+.hero-content {
+  max-width: 800px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hero-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0 0 0.75rem 0;
+  color: #f2ff66;
+}
+
+.hero-description {
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 0 0 2rem 0;
+  opacity: 0.9;
+  max-width: 600px;
+}
+
+.setup-section {
+  width: 100%;
+  max-width: 600px;
+}
+
+/* Feature Cards */
+.feature-card {
+  transition: all 0.3s ease;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  overflow: hidden;
+  background: transparent;
+}
+
+.feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  border-color: #f2ff66;
+  background: transparent;
+}
+
+.primary-card {
+  border-color: #f2ff66;
+  background: transparent;
+}
+
+/* Force centering for all Mintlify layout containers */
+.almond-layout .content,
+.almond-layout .content-wrapper,
+.content-wrapper,
+.layout-wrapper {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  height: 100vh !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Ensure hero content is centered within any container */
+.hero-content {
+  max-width: 800px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  text-align: center;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 1.5rem;
+  }
+
+  .hero-description {
+    font-size: 0.9rem;
+  }
+}

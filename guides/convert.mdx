@@ -1,0 +1,260 @@
+---
+title: "Convert"
+description: "Exchange fiat into stablecoins"
+---
+
+<div className="guide-hero">
+  <div className="guide-hero-content">
+    <div className="guide-icon">💱</div>
+    <h1 className="guide-title">Convert: Exchange Fiat into Stablecoins</h1>
+    <p className="guide-description">
+      The Convert workflow enables users to exchange traditional fiat currencies into stablecoins through HIFI's infrastructure. 
+      This is the first step in the digital asset journey, allowing seamless conversion from traditional banking to crypto-native operations.
+    </p>
+  </div>
+</div>
+
+<div className="guide-content">
+  <section className="overview-section">
+    <h2 className="section-title">Overview</h2>
+    <p className="section-description">Converting fiat to stablecoins involves:</p>
+    <div className="overview-grid">
+      <div className="overview-item">
+        <div className="overview-icon">👤</div>
+        <h3>Onboarding</h3>
+        <p>User verification and compliance checks</p>
+      </div>
+      <div className="overview-item">
+        <div className="overview-icon">🏦</div>
+        <h3>Account Setup</h3>
+        <p>Creating virtual accounts and enabling deposits</p>
+      </div>
+      <div className="overview-item">
+        <div className="overview-icon">🔄</div>
+        <h3>Conversion</h3>
+        <p>Processing fiat deposits and minting stablecoins</p>
+      </div>
+      <div className="overview-item">
+        <div className="overview-icon">✅</div>
+        <h3>Settlement</h3>
+        <p>Ensuring funds are properly credited to user wallets</p>
+      </div>
+    </div>
+  </section>
+
+  <section className="process-section">
+    <h2 className="section-title">Step-by-Step Process</h2>
+    
+    <div className="process-step">
+      <div className="step-header">
+        <div className="step-number">1</div>
+        <h3 className="step-title">User Onboarding</h3>
+      </div>
+      <p className="step-description">Before any conversion can occur, users must complete the onboarding process:</p>
+      
+      <div className="code-block">
+        <pre><code>{`# Create a new user
+POST /users
+{
+  "email": "user@example.com",
+  "country": "US",
+  "kyc_level": "individual"
+}`}</code></pre>
+      </div>
+
+      <div className="requirements-box">
+        <h4>Requirements:</h4>
+        <ul>
+          <li>Valid email address</li>
+          <li>Country of residence</li>
+          <li>KYC compliance level</li>
+          <li>Terms of service acceptance</li>
+        </ul>
+      </div>
+    </div>
+
+    <div className="process-step">
+      <div className="step-header">
+        <div className="step-number">2</div>
+        <h3 className="step-title">Account Setup</h3>
+      </div>
+      <p className="step-description">Create virtual accounts for fiat deposits:</p>
+      
+      <div className="code-block">
+        <pre><code>{`# Create a virtual account for USD deposits
+POST /virtual-accounts
+{
+  "currency": "USD",
+  "user_id": "user_123",
+  "account_type": "deposit"
+}`}</code></pre>
+      </div>
+
+      <div className="features-box">
+        <h4>Virtual Account Features:</h4>
+        <ul>
+          <li>Unique account numbers for each currency</li>
+          <li>Real-time balance tracking</li>
+          <li>Automated deposit detection</li>
+          <li>Compliance monitoring</li>
+        </ul>
+      </div>
+    </div>
+
+    <div className="process-step">
+      <div className="step-header">
+        <div className="step-number">3</div>
+        <h3 className="step-title">Enable Deposits</h3>
+      </div>
+      <p className="step-description">Configure deposit methods and limits:</p>
+      
+      <div className="code-block">
+        <pre><code>{`# Enable ACH deposits
+POST /virtual-accounts/{account_id}/deposit-methods
+{
+  "method": "ach",
+  "enabled": true,
+  "daily_limit": 10000
+}`}</code></pre>
+      </div>
+
+      <div className="methods-box">
+        <h4>Supported Methods:</h4>
+        <div className="methods-grid">
+          <div className="method-item">ACH (US)</div>
+          <div className="method-item">Wire transfers</div>
+          <div className="method-item">SEPA (EU)</div>
+          <div className="method-item">Faster Payments (UK)</div>
+        </div>
+      </div>
+    </div>
+
+    <div className="process-step">
+      <div className="step-header">
+        <div className="step-number">4</div>
+        <h3 className="step-title">Process Conversion</h3>
+      </div>
+      <p className="step-description">When fiat is deposited, automatically convert to stablecoins:</p>
+      
+      <div className="code-block">
+        <pre><code>{`# Monitor for deposits and trigger conversion
+POST /conversions
+{
+  "virtual_account_id": "va_123",
+  "amount": 1000.00,
+  "from_currency": "USD",
+  "to_currency": "USDC",
+  "conversion_rate": 1.0
+}`}</code></pre>
+      </div>
+
+      <div className="conversion-process">
+        <h4>Conversion Process:</h4>
+        <ol>
+          <li>Detect incoming fiat deposit</li>
+          <li>Verify deposit legitimacy</li>
+          <li>Calculate conversion rate</li>
+          <li>Mint equivalent stablecoins</li>
+          <li>Credit user's crypto wallet</li>
+        </ol>
+      </div>
+    </div>
+
+    <div className="process-step">
+      <div className="step-header">
+        <div className="step-number">5</div>
+        <h3 className="step-title">Settlement and Confirmation</h3>
+      </div>
+      <p className="step-description">Ensure proper settlement and notify user:</p>
+      
+      <div className="code-block">
+        <pre><code>{`# Get conversion status
+GET /conversions/{conversion_id}
+
+# Response
+{
+  "id": "conv_123",
+  "status": "completed",
+  "amount": 1000.00,
+  "usdc_amount": 1000.00,
+  "conversion_rate": 1.0,
+  "settlement_time": "2024-01-15T10:30:00Z"
+}`}</code></pre>
+      </div>
+    </div>
+  </section>
+
+## Supported Currencies
+
+### Fiat Currencies
+
+- **USD** (US Dollar)
+- **EUR** (Euro)
+- **GBP** (British Pound)
+- **CAD** (Canadian Dollar)
+- **AUD** (Australian Dollar)
+
+### Stablecoins
+
+- **USDC** (USD Coin)
+- **USDT** (Tether USD)
+- **DAI** (Dai Stablecoin)
+
+## Conversion Rates
+
+HIFI provides competitive conversion rates with:
+
+- **Real-time pricing** from multiple liquidity providers
+- **Transparent fees** with no hidden costs
+- **Best execution** across available markets
+- **Rate locking** for large transactions
+
+## Compliance and Security
+
+### KYC Requirements
+
+- Identity verification
+- Address confirmation
+- Source of funds documentation
+- Ongoing monitoring
+
+### AML Checks
+
+- Transaction screening
+- Sanctions list verification
+- Suspicious activity monitoring
+- Regulatory reporting
+
+### Security Measures
+
+- Multi-signature wallets
+- Cold storage for reserves
+- Insurance coverage
+- Regular security audits
+
+## Error Handling
+
+Common conversion errors and solutions:
+
+| Error                | Description                     | Solution                         |
+| -------------------- | ------------------------------- | -------------------------------- |
+| `INSUFFICIENT_FUNDS` | Not enough fiat balance         | Verify deposit completion        |
+| `RATE_EXPIRED`       | Conversion rate no longer valid | Request new rate                 |
+| `COMPLIANCE_FAILED`  | KYC/AML check failed            | Complete additional verification |
+| `ACCOUNT_SUSPENDED`  | Account temporarily disabled    | Contact support                  |
+
+## Best Practices
+
+1. **Pre-verify Users**: Complete KYC before enabling conversions
+2. **Monitor Limits**: Set appropriate daily/monthly conversion limits
+3. **Rate Management**: Use rate locking for large transactions
+4. **Error Handling**: Implement comprehensive error handling and user notifications
+5. **Compliance**: Maintain detailed audit trails for all conversions
+
+## API Reference
+
+For detailed API documentation, see:
+
+- [Virtual Accounts API](/docs/virtual-accounts/index)
+- [Transfers API](/docs/transfers/index)
+- [KYC API](/docs/kyc/index)

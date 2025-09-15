@@ -1,0 +1,291 @@
+---
+title: "Send"
+description: "Pay out stablecoins into fiat accounts"
+---
+
+# Send: Pay Out Stablecoins into Fiat Accounts
+
+The Send workflow enables users to convert stablecoins back into fiat currency and send funds to traditional bank accounts. This completes the digital-to-fiat conversion cycle, allowing seamless integration with existing financial infrastructure.
+
+## Overview
+
+Sending stablecoins to fiat involves:
+
+- **Offramp Processing**: Converting stablecoins to fiat
+- **Bank Integration**: Sending funds to traditional bank accounts
+- **Compliance Checks**: Ensuring regulatory compliance
+- **Settlement**: Final settlement to recipient accounts
+
+## Supported Destinations
+
+### Banking Systems
+
+- **ACH** (US) - Automated Clearing House
+- **SEPA** (EU) - Single Euro Payments Area
+- **Faster Payments** (UK) - Real-time payments
+- **Interac** (Canada) - Canadian payment network
+- **BACS** (UK) - Bankers' Automated Clearing Services
+
+### Payment Methods
+
+- **Wire Transfers** - International wire transfers
+- **Local Bank Transfers** - Country-specific systems
+- **Digital Wallets** - PayPal, Venmo, etc.
+- **Prepaid Cards** - Virtual and physical cards
+
+## Step-by-Step Process
+
+### 1. Create Offramp Request
+
+Initiate the stablecoin-to-fiat conversion:
+
+```bash
+# Create offramp request
+POST /offramps
+{
+  "user_id": "user_123",
+  "amount": 1000.00,
+  "from_token": "USDC",
+  "to_currency": "USD",
+  "destination": {
+    "type": "bank_account",
+    "account_number": "1234567890",
+    "routing_number": "021000021",
+    "account_holder": "John Doe"
+  }
+}
+```
+
+### 2. Validate Destination
+
+Verify the destination account details:
+
+```bash
+# Validate bank account
+POST /offramps/{offramp_id}/validate
+{
+  "account_number": "1234567890",
+  "routing_number": "021000021"
+}
+
+# Response
+{
+  "valid": true,
+  "bank_name": "Chase Bank",
+  "account_type": "checking",
+  "verification_method": "micro_deposits"
+}
+```
+
+### 3. Process Conversion
+
+Convert stablecoins to fiat:
+
+```bash
+# Process conversion
+POST /offramps/{offramp_id}/convert
+{
+  "conversion_rate": 1.0,
+  "fee_amount": 2.50,
+  "net_amount": 997.50
+}
+```
+
+**Conversion Process:**
+
+1. Burn stablecoins from user wallet
+2. Convert to fiat at current rate
+3. Deduct processing fees
+4. Prepare for bank transfer
+
+### 4. Execute Bank Transfer
+
+Send funds to the destination account:
+
+```bash
+# Execute bank transfer
+POST /offramps/{offramp_id}/transfer
+{
+  "transfer_method": "ach",
+  "priority": "standard"
+}
+```
+
+### 5. Monitor Settlement
+
+Track the transfer progress:
+
+```bash
+# Get transfer status
+GET /offramps/{offramp_id}/status
+
+# Response
+{
+  "id": "offramp_123",
+  "status": "completed",
+  "amount": 1000.00,
+  "fee": 2.50,
+  "net_amount": 997.50,
+  "transfer_id": "ach_456",
+  "settlement_date": "2024-01-16T00:00:00Z"
+}
+```
+
+## Supported Currencies
+
+### Stablecoins (Input)
+
+- **USDC** - USD Coin
+- **USDT** - Tether USD
+- **DAI** - Dai Stablecoin
+- **BUSD** - Binance USD
+
+### Fiat Currencies (Output)
+
+- **USD** - US Dollar
+- **EUR** - Euro
+- **GBP** - British Pound
+- **CAD** - Canadian Dollar
+- **AUD** - Australian Dollar
+- **JPY** - Japanese Yen
+
+## Transfer Methods
+
+### ACH (US)
+
+- **Speed**: 1-3 business days
+- **Cost**: $0.25 - $1.00 per transfer
+- **Limits**: $10,000 daily, $25,000 monthly
+- **Requirements**: US bank account, routing number
+
+### Wire Transfer
+
+- **Speed**: Same day or next business day
+- **Cost**: $15 - $50 per transfer
+- **Limits**: No daily limit
+- **Requirements**: SWIFT code, account details
+
+### SEPA (EU)
+
+- **Speed**: 1 business day
+- **Cost**: €0.50 - €2.00 per transfer
+- **Limits**: €15,000 daily
+- **Requirements**: IBAN, BIC code
+
+### Faster Payments (UK)
+
+- **Speed**: Real-time (within 2 hours)
+- **Cost**: £0.20 - £1.00 per transfer
+- **Limits**: £25,000 per transfer
+- **Requirements**: UK bank account, sort code
+
+## Fee Structure
+
+### Processing Fees
+
+- **Standard**: 0.25% of transaction amount
+- **Express**: 0.50% of transaction amount
+- **International**: 1.00% of transaction amount
+
+### Network Fees
+
+- **ACH**: $0.25 per transfer
+- **Wire**: $15 per transfer
+- **SEPA**: €0.50 per transfer
+- **Faster Payments**: £0.20 per transfer
+
+### Minimum Fees
+
+- **Minimum**: $1.00 per transaction
+- **Maximum**: $50.00 per transaction
+
+## Compliance and Verification
+
+### KYC Requirements
+
+- **Identity verification**: Government-issued ID
+- **Address verification**: Utility bill or bank statement
+- **Source of funds**: Documentation of crypto holdings
+- **Ongoing monitoring**: Regular compliance checks
+
+### AML Checks
+
+- **Transaction screening**: Real-time monitoring
+- **Sanctions screening**: OFAC, EU, UN lists
+- **PEP screening**: Politically exposed persons
+- **Suspicious activity**: Automated flagging
+
+### Regulatory Compliance
+
+- **Licensing**: Money transmitter licenses
+- **Reporting**: Suspicious activity reports
+- **Record keeping**: 5-year transaction records
+- **Audit trails**: Complete transaction history
+
+## Error Handling
+
+Common sending errors and solutions:
+
+| Error                  | Description                  | Solution                                |
+| ---------------------- | ---------------------------- | --------------------------------------- |
+| `INVALID_ACCOUNT`      | Bank account details invalid | Verify account number and routing       |
+| `INSUFFICIENT_BALANCE` | Not enough stablecoins       | Check wallet balance                    |
+| `DAILY_LIMIT_EXCEEDED` | Exceeds daily transfer limit | Wait until next day or request increase |
+| `BANK_REJECTED`        | Bank rejected the transfer   | Contact bank or use different account   |
+| `COMPLIANCE_FAILED`    | Failed compliance check      | Complete additional verification        |
+
+## Best Practices
+
+1. **Account Verification**: Always verify bank accounts before sending
+2. **Amount Limits**: Set appropriate daily/monthly limits
+3. **Fee Optimization**: Choose the right transfer method for your needs
+4. **Timing**: Consider processing times for urgent transfers
+5. **Compliance**: Maintain complete documentation for all transfers
+6. **Monitoring**: Track all outgoing transfers for reconciliation
+
+## Security Features
+
+### Transaction Security
+
+- **Multi-signature**: Multiple approvals for large transfers
+- **Time locks**: Delays for suspicious transactions
+- **Rate limiting**: Prevent rapid successive transfers
+- **IP whitelisting**: Restrict transfers to known IPs
+
+### Account Security
+
+- **2FA**: Two-factor authentication required
+- **Biometric**: Fingerprint/face ID for mobile
+- **Hardware wallets**: Support for hardware security
+- **Audit logs**: Complete access and transaction logs
+
+## Integration Options
+
+### API Integration
+
+```bash
+# Webhook for status updates
+POST /webhooks/offramp-status
+{
+  "offramp_id": "offramp_123",
+  "status": "completed",
+  "amount": 1000.00,
+  "timestamp": "2024-01-15T10:30:00Z"
+}
+```
+
+### SDK Support
+
+- **JavaScript**: Node.js and browser support
+- **Python**: Full Python SDK
+- **Mobile**: iOS and Android SDKs
+- **Webhooks**: Real-time event notifications
+
+## API Reference
+
+For detailed API documentation, see:
+
+- [Offramps API](/docs/offramps/index)
+- [Transfers API](/docs/transfers/index)
+- [Compliance API](/docs/users/compliance)
+- [Virtual Accounts API](/docs/virtual-accounts/index)
