@@ -3,7 +3,7 @@
   // ---- Config ----
   const GRID_SIZE = 25; // logical spacing between dots (px)
   const DOT_SIZE = 1; // radius of each dot (px)
-  const OPACITY_BASE = 0.03; // baseline opacity
+  const OPACITY_BASE = 0.2; // baseline opacity
   const OPACITY_SCALE = 0.14; // how much intensity boosts opacity
   const PROX_RADIUS = 150; // px for proximity boost
   const RESIZE_DEBOUNCE_MS = 150;
@@ -93,7 +93,7 @@
 
     function tick(ts) {
       if (!running) return;
-      time += 0.03;
+      time += 0.01;
 
       ctx.clearRect(0, 0, width, height);
 
@@ -111,11 +111,11 @@
         const dist = Math.hypot(dx, dy); // fast, avoids manual sqrt
 
         // Multi-wave intensity (mirrors your original)
-        const w1 = Math.sin(time * 2 - dist * 0.01) * 0.5 + 0.5;
+        const w1 = Math.sin(time * 0.8 - dist * 0.005) * 0.5 + 0.5;
         const w2 =
-          Math.sin(time * 1.5 - dist * 0.008 + Math.PI / 3) * 0.5 + 0.5;
+          Math.sin(time * 0.6 - dist * 0.004 + Math.PI / 3) * 0.5 + 0.5;
         const w3 =
-          Math.sin(time * 1.8 - dist * 0.012 + Math.PI / 6) * 0.5 + 0.5;
+          Math.sin(time * 0.7 - dist * 0.006 + Math.PI / 6) * 0.5 + 0.5;
         const intensity = (w1 + w2 + w3) / 3;
 
         // Proximity boost
@@ -125,8 +125,8 @@
         // Offset (tiny shimmer influenced by cursor direction)
         const dirX = dx / Math.max(1, width);
         const dirY = dy / Math.max(1, height);
-        const offsetX = Math.sin(time * 1.5 - dist * 0.01) * 3 + dirX * 2;
-        const offsetY = Math.cos(time * 1.2 - dist * 0.01) * 3 + dirY * 2;
+        const offsetX = Math.sin(time * 0.6 - dist * 0.005) * 3 + dirX * 2;
+        const offsetY = Math.cos(time * 0.5 - dist * 0.005) * 3 + dirY * 2;
 
         const x = x0 + offsetX;
         const y = y0 + offsetY;
