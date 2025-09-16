@@ -1,0 +1,69 @@
+---
+title: "Onramps"
+---
+
+Onramps are transactions that convert fiat currencies to stablecoins in HIFI wallets. The available onramp methods vary by region due to local payment infrastructure and regulatory requirements.
+
+## Regions
+
+### United States
+
+In the US, you have several options for onramping:
+
+- **One-time virtual accounts** – Create temporary accounts to deposit funds using the Onramps API
+- **Assigned virtual accounts** – Set up permanent accounts for recurring deposits using the Virtual Accounts API
+- **Plaid integration** – Use Plaid to connect directly to users' bank accounts
+
+### South America
+
+South American users can onramp through local payment methods:
+
+- **PIX** – Brazil's instant payment system
+- **SPEI** – Mexico's electronic payment system
+
+### Africa
+
+African users can access onramps through:
+
+- **One-time accounts** – Create temporary virtual accounts
+- **Local payment methods** – Country-specific payment systems
+
+## Quotes
+
+After initiating an onramp transaction, you'll get a quote that specifies the exchange rate and fees. Quotes are valid for a limited time window and must be accepted before proceeding with the transaction.
+
+### Getting a Quote
+
+To get an onramp quote:
+
+1. Specify the input currency (fiat) and amount
+2. Specify the desired output stablecoin
+3. Review the quote details:
+   - Exchange rate
+   - Network fees
+   - Processing time
+   - Quote expiration
+
+### Accepting a Quote
+
+Once you receive a quote:
+
+1. Review all terms and fees
+2. Accept the quote within the validity window (typically 30-60 seconds)
+3. Proceed with the payment using your chosen method
+
+If a quote expires before acceptance, you'll need to request a new quote with current market rates.
+
+## Guides
+
+<Card icon="code" title="Create an onramp" href="/guides/onramps">
+  Learn how to pay in to a wallet
+</Card>
+
+<Card
+  icon="code"
+  title="Virtual Accounts"
+  href="/docs/transfers/virtual-accounts"
+>
+  Understand virtual account setup and management
+</Card>
