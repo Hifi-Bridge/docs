@@ -3,8 +3,8 @@
   // ---- Config ----
   const GRID_SIZE = 25; // logical spacing between dots (px)
   const DOT_SIZE = 1; // radius of each dot (px)
-  const OPACITY_BASE = 0.2; // baseline opacity
-  const OPACITY_SCALE = 0.14; // how much intensity boosts opacity
+  const OPACITY_BASE = 0.05; // baseline opacity
+  const OPACITY_SCALE = 0.5; // how much intensity boosts opacity
   const PROX_RADIUS = 150; // px for proximity boost
   const RESIZE_DEBOUNCE_MS = 150;
 
