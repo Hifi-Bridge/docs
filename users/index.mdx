@@ -1,16 +1,45 @@
 ---
 title: "Users"
-description: "Represent individuals or businesses"
 ---
 
-## Overview
+A **User** represents an individual or a business entity interacting with the HIFI platform.
+Users are the foundation of most HIFI operations: before you can create wallets or move money, a user record must exist.
 
-Users represent individuals or businesses using the HIFI platform.
+HIFI supports two types of users:
 
-## Compliance
+- **Individual** – a natural person (e.g., a customer, freelancer, or employee).
+- **Business** – a legal entity (e.g., a company, NGO, or partnership).
 
-Identify and screen users for regulatory compliance.
+---
 
 ## Terms of Service
 
-Getting consent from users for platform usage.
+A **Terms of Service agreement ID** is required to create a user.
+This ensures you have consent for data handling, compliance screening, and financial activity.
+
+You can obtain a TOS agreement ID in two ways:
+
+1. **Using the API** – Call the [Generate Terms of Service Link](/api-reference/user/generate-a-terms-of-service-link) endpoint with an idempotency key to get a unique URL. After users accept the terms at this link, the key becomes your signed agreement ID.
+
+2. **Using the Dashboard** – On the Dashboard, you can simply click a button when creating a user to accept the TOS link.
+
+<Card icon="code" title="Generate TOS" href="/guides/screen/tos-links">
+  How to get an agreement ID
+</Card>
+
+---
+
+## KYC
+
+To interact with fiat accounts, HIFI enforces **KYC (Know Your Customer)** and **KYB (Know Your Business)** checks to comply with financial regulations.
+
+KYC verification typically takes:
+
+- **Individual Users**: 1 business day
+- **Business Users**: 1-3 business days, depending on complexity
+
+During the onboarding process, you'll be asked to provide a **compliance email address**. This email will be used to contact you for any additional information requests during KYC review.
+
+<Card icon="code" title="Screen a user" href="/guides/screen/submit-kyc">
+  How to submit KYC requirements
+</Card>
