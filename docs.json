@@ -15,36 +15,10 @@
     "tabs": [
       {
         "tab": "Docs",
-        "groups": [
-          {
-            "group": "Introduction",
-            "pages": [
-              "overview",
-              {
-                "group": "Availability",
-                "pages": ["availability/currencies", "availability/regions"]
-              }
-            ]
-          },
-          {
-            "group": "Integration",
-            "pages": [
-              {
-                "group": "API",
-                "pages": [
-                  "api/authentication",
-                  "api/responses",
-                  "api/events",
-                  "api/errors"
-                ]
-              },
-              {
-                "group": "Dashboard",
-                "pages": ["dashboard/index", "dashboard/roles"]
-              },
-              "sandbox"
-            ]
-          },
+        "pages": [
+          "overview",
+          "availability/currencies",
+          "availability/regions",
           {
             "group": "Models",
             "pages": [
@@ -112,7 +86,28 @@
         "openapi": {
           "source": "/api-reference/openapi.json",
           "directory": "api-reference"
-        }
+        },
+        "groups": [
+          {
+            "group": "Integration",
+            "pages": [
+              {
+                "group": "API",
+                "pages": [
+                  "api/authentication",
+                  "api/responses",
+                  "api/events",
+                  "api/errors"
+                ]
+              },
+              {
+                "group": "Dashboard",
+                "pages": ["dashboard/index", "dashboard/roles"]
+              },
+              "sandbox"
+            ]
+          }
+        ]
       }
     ]
   },
