@@ -1,0 +1,205 @@
+---
+title: "Onramps"
+---
+
+# Onramps
+
+Learn how to convert fiat currencies to stablecoins using HIFI's onramp services.
+
+## Overview
+
+HIFI's onramp services allow you to convert fiat currencies to stablecoins using local payment methods and bank rails. This enables:
+
+- Fiat to crypto conversions
+- Cross-border payments
+- Local payment method support
+- Competitive exchange rates
+
+## Supported currencies
+
+### Fiat currencies
+
+- **Americas**: USD, CAD, MXN, BRL, ARS, CLP, COP
+- **Europe**: EUR, GBP, CHF, SEK, NOK, DKK
+- **Asia-Pacific**: JPY, KRW, SGD, HKD, INR, AUD, NZD
+- **Middle East & Africa**: AED, SAR, ZAR, EGP
+
+### Stablecoins
+
+- USDC (Ethereum, Polygon, Arbitrum, Optimism, Base, Solana)
+- USDT (Ethereum, Polygon, Arbitrum, Optimism, Base, Solana)
+- DAI (Ethereum, Polygon, Arbitrum, Optimism, Base)
+- BUSD (Ethereum, BSC)
+
+## Payment methods
+
+### Bank transfers
+
+- **ACH** (US) - 1-3 business days
+- **SEPA** (EU) - 1-2 business days
+- **SWIFT** (International) - 2-5 business days
+- **Local bank transfers** - 1-3 business days
+
+### Cards
+
+- **Credit cards** - Instant to 1 hour
+- **Debit cards** - Instant to 1 hour
+- **Prepaid cards** - Instant to 1 hour
+
+### Digital wallets
+
+- **PayPal** - 5-30 minutes
+- **Apple Pay** - Instant to 15 minutes
+- **Google Pay** - Instant to 15 minutes
+- **Local wallets** - 5-60 minutes
+
+### Local payment methods
+
+- **OXXO** (Mexico) - 1-24 hours
+- **Boleto** (Brazil) - 1-24 hours
+- **Konbini** (Japan) - 1-24 hours
+- **GCash** (Philippines) - 5-30 minutes
+
+## Basic onramp
+
+```javascript
+const onramp = await hifi.onramps.create({
+  from_currency: "USD",
+  to_currency: "USDC",
+  amount: "1000.00",
+  wallet: "wallet_123",
+  payment_method: "bank_transfer",
+});
+```
+
+## Advanced onramp
+
+```javascript
+const onramp = await hifi.onramps.create({
+  from_currency: "USD",
+  to_currency: "USDC",
+  amount: "1000.00",
+  wallet: "wallet_123",
+  payment_method: "bank_transfer",
+  network: "ethereum",
+  memo: "Initial deposit",
+  metadata: {
+    source: "savings_account",
+    purpose: "investment",
+  },
+});
+```
+
+## Get quote
+
+```javascript
+// Get a quote before converting
+const quote = await hifi.onramps.getQuote({
+  from_currency: "USD",
+  to_currency: "USDC",
+  amount: "1000.00",
+  payment_method: "bank_transfer",
+});
+
+console.log(`Exchange rate: 1 USD = ${quote.rate} USDC`);
+console.log(`Expected output: ${quote.expected_output} USDC`);
+console.log(`Processing time: ${quote.estimated_time} hours`);
+console.log(`Fees: ${quote.fee} USD`);
+
+// Execute the onramp
+const onramp = await hifi.onramps.create({
+  from_currency: "USD",
+  to_currency: "USDC",
+  amount: "1000.00",
+  wallet: "wallet_123",
+  payment_method: "bank_transfer",
+  quote_id: quote.id,
+});
+```
+
+## Response
+
+```json
+{
+  "id": "onramp_abc123",
+  "status": "pending",
+  "from_currency": "USD",
+  "to_currency": "USDC",
+  "amount": "1000.00",
+  "expected_output": "1000.00",
+  "rate": "1.00",
+  "wallet": "wallet_123",
+  "payment_method": "bank_transfer",
+  "network": "ethereum",
+  "estimated_completion": "2024-01-15T16:30:00Z",
+  "created_at": "2024-01-15T10:30:00Z"
+}
+```
+
+## Processing times
+
+| Payment Method     | Processing Time   |
+| ------------------ | ----------------- |
+| Credit/Debit Cards | Instant - 1 hour  |
+| Digital Wallets    | 5-30 minutes      |
+| Local Methods      | 1-24 hours        |
+| ACH (US)           | 1-3 business days |
+| SEPA (EU)          | 1-2 business days |
+| SWIFT              | 2-5 business days |
+
+## Fees and limits
+
+### Fees by payment method
+
+- **Bank transfers**: 0.5-1.5% of amount
+- **Cards**: 2.5-3.5% of amount
+- **Digital wallets**: 1.0-2.0% of amount
+- **Local methods**: 1.5-2.5% of amount
+
+### Transaction limits
+
+- **Minimum**: $10 USD equivalent
+- **Maximum**: $50,000 USD equivalent per transaction
+- **Daily limit**: $100,000 USD equivalent per user
+- **Monthly limit**: $500,000 USD equivalent per user
+
+### KYC verification levels
+
+- **Basic**: $1,000 daily limit
+- **Enhanced**: $10,000 daily limit
+- **Premium**: $50,000 daily limit
+
+## Error handling
+
+Common onramp errors:
+
+- **Insufficient balance**: Check payment method has enough funds
+- **KYC required**: Complete identity verification
+- **Unsupported currency**: Check supported currency list
+- **Payment method declined**: Try alternative payment method
+- **Daily limit exceeded**: Wait for next day or upgrade KYC
+
+## Monitoring progress
+
+```javascript
+// Check onramp status
+const status = await hifi.onramps.get("onramp_abc123");
+
+// Get transaction details
+console.log(`Status: ${status.status}`);
+console.log(`Expected completion: ${status.estimated_completion}`);
+```
+
+## Best practices
+
+1. **Complete KYC early** to avoid delays
+2. **Check exchange rates** before large conversions
+3. **Use appropriate payment methods** for your needs
+4. **Keep transaction IDs** for support requests
+5. **Monitor processing times** for optimal timing
+
+## Next steps
+
+- Learn about [offramps](/guides/offramps)
+- Explore [wallet transfers](/guides/send/wallet-transfers)
+- Set up [webhook notifications](/api/events)

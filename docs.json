@@ -22,32 +22,30 @@
           {
             "group": "Models",
             "pages": [
-              "docs/users/index",
-              "docs/wallets/index",
-              "docs/transfers/index",
-              "docs/transfers/accounts"
-            ]
-          },
-          {
-            "group": "Transfers",
-            "pages": [
               {
-                "group": "Onramps",
-                "pages": [
-                  "docs/transfers/onramps/index",
-                  "docs/transfers/onramps/plaid"
-                ]
+                "group": "Users",
+                "pages": ["docs/users/index", "docs/users/kyc/index"]
               },
-              "docs/transfers/bridges",
-              "docs/transfers/swaps",
-              "docs/transfers/offramps",
-              "docs/transfers/batch-transfers"
+              "docs/wallets/index",
+              {
+                "group": "Transfers",
+                "pages": [
+                  "docs/transfers/index",
+                  "docs/transfers/onramps",
+                  "docs/transfers/swaps",
+                  "docs/transfers/bridging",
+                  "docs/transfers/offramps",
+                  "docs/transfers/accounts"
+                ]
+              }
             ]
           },
           {
             "group": "Features",
             "pages": [
               "docs/users/kyc/kyc-link",
+              "docs/transfers/batch-transfers",
+              "docs/transfers/virtual-accounts",
               "docs/transfers/virtual-accounts/settlement-rules",
               "docs/transfers/transfer-approvals/index"
             ]
