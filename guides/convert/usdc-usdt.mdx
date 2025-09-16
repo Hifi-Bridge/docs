@@ -1,0 +1,142 @@
+---
+title: "Convert USDC to USDT"
+---
+
+# Convert USDC to USDT
+
+Learn how to instantly convert between USDC and USDT stablecoins using HIFI's swap API.
+
+## Overview
+
+Stablecoin swaps allow you to convert between supported stablecoins at competitive rates. This is useful for:
+
+- Portfolio rebalancing
+- Taking advantage of different DeFi opportunities
+- Managing liquidity across protocols
+- Currency diversification
+
+## Prerequisites
+
+- API credentials configured
+- Source wallet with USDC balance
+- Destination wallet (can be the same wallet)
+
+## Basic swap
+
+```javascript
+const swap = await hifi.swaps.create({
+  from: "USDC",
+  to: "USDT",
+  amount: "1000.00",
+  wallet: "wallet_123",
+  network: "ethereum",
+});
+```
+
+## Advanced swap with slippage protection
+
+```javascript
+const swap = await hifi.swaps.create({
+  from: "USDC",
+  to: "USDT",
+  amount: "1000.00",
+  wallet: "wallet_123",
+  network: "ethereum",
+  slippage_tolerance: 0.5, // 0.5% max slippage
+  deadline: 300, // 5 minutes
+});
+```
+
+## Get quote first
+
+```javascript
+// Get a quote before executing
+const quote = await hifi.swaps.getQuote({
+  from: "USDC",
+  to: "USDT",
+  amount: "1000.00",
+  network: "ethereum",
+});
+
+console.log(`Rate: 1 USDC = ${quote.rate} USDT`);
+console.log(`Expected output: ${quote.expected_output} USDT`);
+console.log(`Minimum output: ${quote.minimum_output} USDT`);
+
+// Execute the swap
+const swap = await hifi.swaps.create({
+  from: "USDC",
+  to: "USDT",
+  amount: "1000.00",
+  wallet: "wallet_123",
+  network: "ethereum",
+  quote_id: quote.id,
+});
+```
+
+## Response
+
+```json
+{
+  "id": "swap_abc123",
+  "status": "completed",
+  "from": "USDC",
+  "to": "USDT",
+  "input_amount": "1000.00",
+  "output_amount": "999.50",
+  "rate": "0.9995",
+  "wallet": "wallet_123",
+  "network": "ethereum",
+  "transaction_hash": "0x123...",
+  "created_at": "2024-01-15T10:30:00Z",
+  "completed_at": "2024-01-15T10:30:15Z"
+}
+```
+
+## Supported pairs
+
+HIFI supports the following stablecoin pairs:
+
+- USDC ↔ USDT
+- USDC ↔ DAI
+- USDT ↔ DAI
+- USDC ↔ BUSD
+- USDT ↔ BUSD
+
+## Network support
+
+Swaps are available on:
+
+- Ethereum
+- Polygon
+- Arbitrum
+- Optimism
+- Base
+
+## Fees and limits
+
+- **Trading fees**: 0.1% per swap
+- **Minimum amount**: $10 USD equivalent
+- **Maximum amount**: $1M USD equivalent per transaction
+- **Daily limit**: $10M USD equivalent per wallet
+
+## Error handling
+
+Common swap errors:
+
+- **Insufficient balance**: Check wallet has enough USDC
+- **Slippage exceeded**: Increase slippage tolerance or try smaller amount
+- **Quote expired**: Get a fresh quote before executing
+- **Network congestion**: Retry during lower traffic periods
+
+## Best practices
+
+1. **Always get a quote first** to understand the expected output
+2. **Set appropriate slippage** based on market conditions
+3. **Monitor gas prices** for optimal transaction timing
+4. **Use deadline parameter** to prevent stale transactions
+
+## Next steps
+
+- Learn about [wallet transfers](/guides/send/wallet-transfers)
+- Explore [chain bridging](/guides/route)
+- Set up [webhook notifications](/api/events)

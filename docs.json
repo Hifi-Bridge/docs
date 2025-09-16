@@ -16,16 +16,16 @@
       {
         "tab": "Docs",
         "pages": [
-          "overview",
-          "availability/currencies",
-          "availability/regions",
+          "docs/overview",
+          "docs/currencies",
+          "docs/regions",
           {
             "group": "Models",
             "pages": [
-              "users/index",
-              "wallets/index",
-              "accounts/index",
-              "transfers/index"
+              "docs/users/index",
+              "docs/wallets/index",
+              "docs/transfers/index",
+              "docs/transfers/accounts"
             ]
           },
           {
@@ -34,22 +34,22 @@
               {
                 "group": "Onramps",
                 "pages": [
-                  "onramps/index",
-                  "onramps/plaid",
-                  "virtual-accounts/index"
+                  "docs/transfers/onramps/index",
+                  "docs/transfers/onramps/plaid"
                 ]
               },
-              "bridges/index",
-              "swaps/index",
-              "offramps/index"
+              "docs/transfers/bridges",
+              "docs/transfers/swaps",
+              "docs/transfers/offramps",
+              "docs/transfers/batch-transfers"
             ]
           },
           {
             "group": "Features",
             "pages": [
-              "kyc/kyc-link",
-              "virtual-accounts/settlement-rules",
-              "transfer-approvals/index"
+              "docs/users/kyc/kyc-link",
+              "docs/transfers/virtual-accounts/settlement-rules",
+              "docs/transfers/transfer-approvals/index"
             ]
           }
         ]
@@ -84,8 +84,8 @@
       {
         "tab": "API Reference",
         "openapi": {
-          "source": "/api-reference/openapi.json",
-          "directory": "api-reference"
+          "source": "/api/openapi.json",
+          "directory": "api"
         },
         "groups": [
           {
@@ -102,9 +102,9 @@
               },
               {
                 "group": "Dashboard",
-                "pages": ["dashboard/index", "dashboard/roles"]
+                "pages": ["docs/dashboard/index", "docs/dashboard/roles"]
               },
-              "sandbox"
+              "docs/sandbox"
             ]
           }
         ]

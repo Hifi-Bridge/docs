@@ -1,0 +1,41 @@
+---
+title: "Wallets"
+---
+
+A **Wallet** is the core account for holding and moving money on the HIFI platform.  
+Every wallet belongs to a **User** (individual or business) and can hold balances in supported stablecoins across blockchain networks.
+
+Wallets are the foundation for most financial operations.
+
+---
+
+## Balance
+
+You can a get real-time view of funds that can be spent or withdrawn from wallets via the Balance API.
+
+Balances are separated by currency and network. For example, a wallet may hold **USDC on Ethereum** and **USDC on Solana**.
+
+<Card
+  icon="code"
+  title="Balance API"
+  href="/api-reference/wallet/retrieve-wallet-balance"
+>
+  Get real-time wallet balances
+</Card>
+
+---
+
+## Deposits
+
+Wallets can receive funds through:
+
+- **Local payment methods** (onramps, e.g. bank transfers, PIX, ACH).  
+  When a user pays in fiat (e.g. USD), it is converted into stablecoin and credited to their wallet.
+
+- **Blockchain transfers** (stablecoin deposits from supported networks).
+
+You can subscribe to notifications to be alerted when a new deposit arrives or when funds are credited to a wallet.
+
+<Card icon="code" title="Receive deposits" href="/guides/wallets/deposits">
+  How to track incoming funds
+</Card>{" "}

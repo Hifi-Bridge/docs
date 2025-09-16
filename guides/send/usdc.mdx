@@ -1,0 +1,81 @@
+---
+title: "Send a wallet transfer"
+---
+
+# Send a wallet transfer
+
+Learn how to send funds between wallets using HIFI's transfer API.
+
+## Overview
+
+Wallet transfers allow you to move funds between wallets owned by the same or different users. This is useful for:
+
+- Peer-to-peer payments
+- Treasury management
+- Internal balance movements
+- Cross-user transfers
+
+## Prerequisites
+
+- API credentials configured
+- Source wallet with sufficient balance
+- Destination wallet address
+
+## Basic transfer
+
+```javascript
+const transfer = await hifi.transfers.create({
+  from: "wallet_123",
+  to: "wallet_456",
+  amount: "100.00",
+  currency: "USDC",
+  network: "ethereum",
+});
+```
+
+## Advanced options
+
+```javascript
+const transfer = await hifi.transfers.create({
+  from: "wallet_123",
+  to: "wallet_456",
+  amount: "100.00",
+  currency: "USDC",
+  network: "ethereum",
+  memo: "Payment for services",
+  metadata: {
+    invoice_id: "INV-001",
+    category: "services",
+  },
+});
+```
+
+## Response
+
+```json
+{
+  "id": "transfer_abc123",
+  "status": "pending",
+  "from": "wallet_123",
+  "to": "wallet_456",
+  "amount": "100.00",
+  "currency": "USDC",
+  "network": "ethereum",
+  "created_at": "2024-01-15T10:30:00Z"
+}
+```
+
+## Error handling
+
+Common errors and how to handle them:
+
+- **Insufficient funds**: Check wallet balance before transfer
+- **Invalid wallet**: Verify destination wallet exists
+- **Network issues**: Retry with exponential backoff
+- **Rate limits**: Implement proper rate limiting
+
+## Next steps
+
+- Learn about [batch transfers](/guides/send/batch-transfers)
+- Explore [stablecoin swaps](/guides/convert)
+- Set up [webhook notifications](/api/events)
