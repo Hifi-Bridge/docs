@@ -22,7 +22,7 @@
               "overview",
               {
                 "group": "Availability",
-                "pages": ["availability/currencies", "availability/geographies"]
+                "pages": ["availability/currencies", "availability/regions"]
               }
             ]
           },
