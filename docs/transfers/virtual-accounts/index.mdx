@@ -1,4 +1,38 @@
 ---
 title: "Virtual Accounts"
-description: "Convert fiat to stablecoins"
 ---
+
+Virtual accounts provide a way to convert fiat currency to stablecoins using dedicated accounts that can be reused for multiple transactions.
+
+## Account Types
+
+### Dedicated Virtual Accounts
+
+**Use the Virtual Account API** to create dedicated accounts that can be reused for multiple fiat-to-stablecoin conversions.
+
+- **Availability**: United States only
+- **Use Case**: Recurring conversions, ongoing operations
+- **Benefits**: Lower fees, better rates, account persistence
+
+### One-Time Onramps
+
+**Use the Onramp API** for single-use conversion links that don't require account creation.
+
+- **Availability**: US, Africa
+- **Use Case**: One-off conversions, user onboarding
+- **Benefits**: No account setup required, instant access
+
+## When to Use Each
+
+| Scenario            | Recommended API     | Reason                                      |
+| ------------------- | ------------------- | ------------------------------------------- |
+| Recurring payroll   | Virtual Account API | Dedicated accounts for ongoing operations   |
+| E-commerce platform | Virtual Account API | Persistent accounts for merchant operations |
+| User onboarding     | Onramp API          | One-time conversion without account setup   |
+| African markets     | Onramp API          | Limited virtual account availability        |
+
+## Next Steps
+
+- **Dedicated Accounts**: See [Virtual Account API documentation](/docs/transfers/virtual-accounts/)
+- **One-Time Conversions**: See [Onramp API documentation](/docs/transfers/onramps/)
+- **Settlement Rules**: See [Settlement Rules documentation](/docs/transfers/virtual-accounts/settlement-rules/)

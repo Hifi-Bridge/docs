@@ -1,4 +1,48 @@
 ---
 title: "Transfer Approvals"
-description: "Approve transactions from members"
 ---
+
+This feature introduces a maker–checker workflow ("Four Eyes Principle") to on-chain transfers, ensuring that any transfer initiated by one user must be explicitly approved by another authorized user before it is executed.
+
+<Note>
+  This release applies only to on-chain crypto transfers (wallet transfers,
+  batch transfers, and bridging).
+</Note>
+
+## How it works
+
+### Dashboard
+
+- Members can now initiate wallet transfers. Onramp or offramp transfers are still restricted to Admins.
+- At least one Admin approval is required for wallet transfers initiated by a Member before execution.
+- Members and Admins are notified by email when a transfer request is approved or rejected.
+- Admins retain their existing permissions. Transfers they create continue to execute without requiring approval.
+
+### API
+
+A new parameter `requireApproval` can be included when creating transfers. If set to `true`, the transfer will enter the approval workflow until it is approved or rejected.
+
+The parameter defaults to `false`, so existing integrations are unaffected. This gives you the flexibility to define your own rules for when Admin approval is required.
+
+**Supported endpoints:**
+
+- `POST /wallets/transfers` – crypto to crypto
+- `POST /wallets/transfers/batches` – crypto batch
+- `POST /wallets/bridges` – crypto bridging
+
+<Note>
+  {" "}
+  Bridging Because bridging is quote based, quotes are only generated after approval.
+  This ensures that they do not expire while waiting for review.
+</Note>
+
+## Notifications
+
+- Admins receive email notifications when a transfer is pending approval.
+- Members receive email notifications when their transfer request is approved or rejected.
+
+If your organization has enabled webhooks, you can also listen for transfer approval events:
+
+- `TRANSFER.APPROVAL.PENDING` - Request for approval
+- `TRANSFER.APPROVAL.APPROVED` - Transfer was approved
+- `TRANSFER.APPROVAL.REJECTED` - Transfer was rejected

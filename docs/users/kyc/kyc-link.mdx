@@ -1,4 +1,35 @@
 ---
 title: "KYC Link"
-description: "Generate a link to onboard users"
 ---
+
+The KYC Link API allows you to create a secure link for user onboarding and KYC (Know Your Customer) verification. This endpoint provides flexibility to either create new users or update existing ones through a single interface.
+
+## Overview
+
+The KYC link generation endpoint lets you:
+
+- Create a new user if no user ID is provided
+- Update an existing user if a user ID is passed
+- Configure redirect behavior after KYC completion
+- Send the link via email to users
+- Customize the KYC experience with a template
+
+## Redirect URL
+
+When a `redirectUrl` is provided, users will be redirected to that URL after completing their KYC information. The user ID will be automatically appended as a query parameter:
+
+```
+https://yourapp.com/kyc-complete?userId=user_123456789
+```
+
+## Recipient Email
+
+The `recipientEmail` parameter allows you to automatically send the KYC link to users. This feature is only available in production environments for security reasons.
+
+## Custom Templates
+
+You can set a template ID to show your company logo for a branded experience. Contact HIFI support to configure a template ID for your account.
+
+<Card icon="code" title="Use KYC Link" href="/guides/screen/use-kyc-link">
+  Learn how to screen users with ease
+</Card>

@@ -45,7 +45,7 @@
             "pages": [
               "docs/users/kyc/kyc-link",
               "docs/transfers/batch-transfers",
-              "docs/transfers/virtual-accounts",
+              "docs/transfers/virtual-accounts/index",
               "docs/transfers/virtual-accounts/settlement-rules",
               "docs/transfers/transfer-approvals/index"
             ]
@@ -73,7 +73,6 @@
             "pages": [
               "guides/use-cases/dollar-access",
               "guides/use-cases/cross-border",
-              "guides/use-cases/treasury-management",
               "guides/use-cases/treasury"
             ]
           }

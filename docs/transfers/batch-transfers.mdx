@@ -1,3 +1,296 @@
 ---
-title: "Onramps"
+title: "Batch Transfers"
 ---
+
+Batch transfers allow you to process multiple transfers in a single API call, significantly improving efficiency and reducing costs when handling multiple transactions. This is particularly useful for payroll, vendor payments, or any scenario where you need to send money to multiple recipients.
+
+## Overview
+
+Batch transfers enable you to:
+
+- Process up to 50 transfers in a single API call
+- Reduce API call overhead and improve performance
+- Lower transaction costs through bulk processing
+- Maintain individual transfer tracking and status
+- Handle partial failures gracefully
+
+## Key Benefits
+
+- **Cost Efficiency**: Reduced per-transaction fees for bulk operations
+- **Performance**: Single API call instead of multiple individual calls
+- **Reliability**: Built-in retry logic and error handling
+- **Tracking**: Individual transfer IDs for each transaction in the batch
+- **Flexibility**: Mix different currencies and amounts in one batch
+
+## Batch Transfer Structure
+
+```json
+{
+  "batchId": "batch_abc123",
+  "transfers": [
+    {
+      "transferId": "transfer_001",
+      "amount": "100.00",
+      "currency": "USD",
+      "recipient": {
+        "type": "bank_account",
+        "accountNumber": "1234567890",
+        "routingNumber": "021000021"
+      },
+      "memo": "Payroll - John Doe"
+    },
+    {
+      "transferId": "transfer_002",
+      "amount": "250.00",
+      "currency": "USD",
+      "recipient": {
+        "type": "bank_account",
+        "accountNumber": "0987654321",
+        "routingNumber": "021000021"
+      },
+      "memo": "Payroll - Jane Smith"
+    }
+  ],
+  "totalAmount": "350.00",
+  "totalCurrency": "USD",
+  "status": "pending"
+}
+```
+
+## API Usage
+
+### Creating a Batch Transfer
+
+```bash
+curl -X POST "https://api.hifi.com/v1/transfers/batch" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "transfers": [
+      {
+        "amount": "100.00",
+        "currency": "USD",
+        "recipient": {
+          "type": "bank_account",
+          "accountNumber": "1234567890",
+          "routingNumber": "021000021"
+        },
+        "memo": "Payroll - Employee 1"
+      },
+      {
+        "amount": "150.00",
+        "currency": "USD",
+        "recipient": {
+          "type": "bank_account",
+          "accountNumber": "0987654321",
+          "routingNumber": "021000021"
+        },
+        "memo": "Payroll - Employee 2"
+      }
+    ]
+  }'
+```
+
+### Response
+
+```json
+{
+  "batchId": "batch_abc123",
+  "status": "processing",
+  "totalTransfers": 2,
+  "successfulTransfers": 0,
+  "failedTransfers": 0,
+  "pendingTransfers": 2,
+  "transfers": [
+    {
+      "transferId": "transfer_001",
+      "status": "pending",
+      "amount": "100.00",
+      "currency": "USD"
+    },
+    {
+      "transferId": "transfer_002",
+      "status": "pending",
+      "amount": "150.00",
+      "currency": "USD"
+    }
+  ],
+  "createdAt": "2024-01-15T10:30:00Z",
+  "estimatedCompletion": "2024-01-15T10:35:00Z"
+}
+```
+
+## Batch Status Tracking
+
+### Status Values
+
+- `pending` - Batch is queued for processing
+- `processing` - Batch is currently being processed
+- `completed` - All transfers in the batch have been processed
+- `partially_completed` - Some transfers succeeded, others failed
+- `failed` - All transfers in the batch failed
+
+### Checking Batch Status
+
+```bash
+curl -X GET "https://api.hifi.com/v1/transfers/batch/batch_abc123" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+### Individual Transfer Status
+
+```bash
+curl -X GET "https://api.hifi.com/v1/transfers/transfer_001" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+## Error Handling
+
+### Partial Failures
+
+When some transfers in a batch fail while others succeed:
+
+```json
+{
+  "batchId": "batch_abc123",
+  "status": "partially_completed",
+  "totalTransfers": 3,
+  "successfulTransfers": 2,
+  "failedTransfers": 1,
+  "pendingTransfers": 0,
+  "errors": [
+    {
+      "transferId": "transfer_003",
+      "error": "INSUFFICIENT_FUNDS",
+      "message": "Account balance is insufficient for this transfer"
+    }
+  ]
+}
+```
+
+### Common Error Codes
+
+- `INSUFFICIENT_FUNDS` - Not enough balance for the transfer
+- `INVALID_RECIPIENT` - Recipient account information is invalid
+- `CURRENCY_NOT_SUPPORTED` - Currency is not supported for the recipient
+- `TRANSFER_LIMIT_EXCEEDED` - Transfer amount exceeds daily/monthly limits
+- `ACCOUNT_NOT_VERIFIED` - Sender account requires additional verification
+
+## Best Practices
+
+### 1. Batch Size Optimization
+
+- Keep batches between 10-50 transfers for optimal performance
+- Maximum 100 transfers per batch
+- Consider splitting very large batches into smaller chunks
+
+### 2. Error Handling
+
+```javascript
+// Example error handling
+const processBatchResponse = async (batchId) => {
+  const batch = await getBatchStatus(batchId);
+
+  if (batch.status === "partially_completed") {
+    // Handle successful transfers
+    batch.transfers
+      .filter((t) => t.status === "completed")
+      .forEach((transfer) => {
+        console.log(`Transfer ${transfer.transferId} completed`);
+      });
+
+    // Handle failed transfers
+    batch.transfers
+      .filter((t) => t.status === "failed")
+      .forEach((transfer) => {
+        console.error(
+          `Transfer ${transfer.transferId} failed: ${transfer.error}`
+        );
+      });
+  }
+};
+```
+
+### 3. Monitoring and Alerts
+
+- Set up webhooks to receive real-time batch status updates
+- Monitor batch completion rates and failure patterns
+- Implement retry logic for failed transfers
+
+### 4. Data Validation
+
+- Validate all transfer data before submitting the batch
+- Ensure sufficient account balance for the total batch amount
+- Verify recipient account information is correct
+
+## Webhooks
+
+Configure webhooks to receive real-time updates on batch processing:
+
+```json
+{
+  "event": "batch.completed",
+  "data": {
+    "batchId": "batch_abc123",
+    "status": "completed",
+    "completedAt": "2024-01-15T10:35:00Z"
+  }
+}
+```
+
+## Rate Limits
+
+- **Batch Creation**: 10 batches per minute
+- **Batch Status Checks**: 100 requests per minute
+- **Individual Transfer Checks**: 200 requests per minute
+
+## Use Cases
+
+### Payroll Processing
+
+```json
+{
+  "transfers": [
+    {
+      "amount": "2500.00",
+      "currency": "USD",
+      "recipient": { "type": "bank_account", "accountNumber": "..." },
+      "memo": "Salary - January 2024"
+    }
+  ]
+}
+```
+
+### Vendor Payments
+
+```json
+{
+  "transfers": [
+    {
+      "amount": "500.00",
+      "currency": "USD",
+      "recipient": { "type": "bank_account", "accountNumber": "..." },
+      "memo": "Invoice #INV-2024-001"
+    }
+  ]
+}
+```
+
+### Multi-Currency Transfers
+
+```json
+{
+  "transfers": [
+    {
+      "amount": "1000.00",
+      "currency": "USD",
+      "recipient": { "type": "bank_account", "accountNumber": "..." }
+    },
+    {
+      "amount": "850.00",
+      "currency": "EUR",
+      "recipient": { "type": "bank_account", "accountNumber": "..." }
+    }
+  ]
+}
+```

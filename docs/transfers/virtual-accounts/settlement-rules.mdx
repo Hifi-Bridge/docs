@@ -1,4 +1,535 @@
 ---
 title: "Settlement Rules"
-description: "Configure fee split for virtual accounts"
 ---
+
+Settlement rules allow you to configure how fees are calculated and distributed for virtual account transactions. You can set up complex fee structures with multiple rules, percentage-based or fixed fees, and tiered pricing models to optimize your revenue sharing strategy.
+
+## Overview
+
+Settlement rules enable you to:
+
+- Configure multiple fee calculation methods per virtual account
+- Set up percentage-based or fixed fee structures
+- Implement tiered pricing based on transaction amounts
+- Specify different wallet addresses for fee distribution
+- Exclude or include HIFI platform fees in calculations
+- Support different blockchain networks (Ethereum, Polygon, Base, etc.)
+
+## Key Features
+
+- **Multiple Rule Types**: Combine percentage and fixed fee rules
+- **Tiered Pricing**: Volume-based discounts with configurable tiers
+- **Flexible Distribution**: Route fees to different wallet addresses
+- **Network Support**: Configure rules for specific blockchain networks
+- **Fee Management**: Control HIFI platform fee inclusion/exclusion
+
+## Settlement Rule Structure
+
+### Basic Configuration
+
+```json
+{
+  "id": "15c786fb-de7a-520c-a4b3-f312d4a122d2",
+  "chain": "BASE",
+  "includeHIFIFee": false,
+  "rules": [
+    {
+      "type": "PERCENTAGE",
+      "calculationModel": "FIXED",
+      "value": 0.001,
+      "tiers": null,
+      "walletAddress": "0x15FB50680fEB2f726413416665c25f9B397b047b"
+    }
+  ]
+}
+```
+
+### Configuration Fields
+
+| Field            | Type    | Description                                           |
+| ---------------- | ------- | ----------------------------------------------------- |
+| `id`             | string  | Unique identifier for the settlement rule set         |
+| `chain`          | string  | Blockchain network (BASE, ETHEREUM, POLYGON, SOLANA)  |
+| `includeHIFIFee` | boolean | Whether to include HIFI platform fees in calculations |
+| `rules`          | array   | Array of fee calculation rules                        |
+
+## Rule Types
+
+### Percentage Rules
+
+Percentage rules calculate fees as a percentage of the transaction amount.
+
+#### Fixed Percentage
+
+```json
+{
+  "type": "PERCENTAGE",
+  "calculationModel": "FIXED",
+  "value": 0.001,
+  "tiers": null,
+  "walletAddress": "0x15FB50680fEB2f726413416665c25f9B397b047b"
+}
+```
+
+- **Value**: 0.001 = 0.1% fee
+- **Calculation**: Transaction amount × 0.001
+- **Example**: $1,000 transaction = $1.00 fee
+
+#### Tiered Percentage
+
+```json
+{
+  "type": "PERCENTAGE",
+  "calculationModel": "TIERED",
+  "value": null,
+  "tiers": [
+    {
+      "max": "1000",
+      "min": "",
+      "value": 0.0007
+    },
+    {
+      "max": "2000",
+      "min": "1000",
+      "value": 0.0005
+    },
+    {
+      "max": "",
+      "min": "2000",
+      "value": 0.0002
+    }
+  ],
+  "walletAddress": "0x15FB50680fEB2f726413416665c25f9B397b047b"
+}
+```
+
+**Tier Structure:**
+
+- **Tier 1**: $0 - $1,000 → 0.07% fee
+- **Tier 2**: $1,000 - $2,000 → 0.05% fee
+- **Tier 3**: $2,000+ → 0.02% fee
+
+**Tier Fields:**
+
+- `min`: Minimum amount for this tier (empty string = no minimum)
+- `max`: Maximum amount for this tier (empty string = no maximum)
+- `value`: Fee percentage for this tier
+
+### Fixed Rules
+
+Fixed rules charge a constant fee regardless of transaction amount.
+
+```json
+{
+  "type": "FIXED",
+  "calculationModel": "FIXED",
+  "value": 0.5,
+  "tiers": null,
+  "walletAddress": "0x15FB50680fEB2f726413416665c25f9B397b047b"
+}
+```
+
+- **Value**: 0.5 = $0.50 fixed fee
+- **Calculation**: Always $0.50 regardless of transaction size
+
+## Supported Networks
+
+| Network  | Chain ID | Native Currency |
+| -------- | -------- | --------------- |
+| Ethereum | ETHEREUM | ETH             |
+| Polygon  | POLYGON  | MATIC           |
+| Base     | BASE     | ETH             |
+| Solana   | SOLANA   | SOL             |
+
+## API Usage
+
+### Creating Settlement Rules
+
+```bash
+curl -X POST "https://api.hifi.com/v1/virtual-accounts/va_abc123/settlement-rules" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "chain": "BASE",
+    "includeHIFIFee": false,
+    "rules": [
+      {
+        "type": "PERCENTAGE",
+        "calculationModel": "FIXED",
+        "value": 0.001,
+        "tiers": null,
+        "walletAddress": "0x15FB50680fEB2f726413416665c25f9B397b047b"
+      },
+      {
+        "type": "FIXED",
+        "calculationModel": "FIXED",
+        "value": 0.5,
+        "tiers": null,
+        "walletAddress": "0x15FB50680fEB2f726413416665c25f9B397b047b"
+      }
+    ]
+  }'
+```
+
+### Response
+
+```json
+{
+  "id": "15c786fb-de7a-520c-a4b3-f312d4a122d2",
+  "chain": "BASE",
+  "includeHIFIFee": false,
+  "rules": [
+    {
+      "type": "PERCENTAGE",
+      "calculationModel": "FIXED",
+      "value": 0.001,
+      "tiers": null,
+      "walletAddress": "0x15FB50680fEB2f726413416665c25f9B397b047b"
+    },
+    {
+      "type": "FIXED",
+      "calculationModel": "FIXED",
+      "value": 0.5,
+      "tiers": null,
+      "walletAddress": "0x15FB50680fEB2f726413416665c25f9B397b047b"
+    }
+  ],
+  "status": "active",
+  "createdAt": "2024-01-15T10:30:00Z",
+  "updatedAt": "2024-01-15T10:30:00Z"
+}
+```
+
+### Updating Settlement Rules
+
+```bash
+curl -X PUT "https://api.hifi.com/v1/virtual-accounts/va_abc123/settlement-rules/15c786fb-de7a-520c-a4b3-f312d4a122d2" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "includeHIFIFee": true,
+    "rules": [
+      {
+        "type": "PERCENTAGE",
+        "calculationModel": "TIERED",
+        "value": null,
+        "tiers": [
+          {
+            "max": "1000",
+            "min": "",
+            "value": 0.0007
+          },
+          {
+            "max": "2000",
+            "min": "1000",
+            "value": 0.0005
+          },
+          {
+            "max": "",
+            "min": "2000",
+            "value": 0.0002
+          }
+        ],
+        "walletAddress": "0x15FB50680fEB2f726413416665c25f9B397b047b"
+      }
+    ]
+  }'
+```
+
+### Getting Settlement Rules
+
+```bash
+curl -X GET "https://api.hifi.com/v1/virtual-accounts/va_abc123/settlement-rules" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+### Deleting Settlement Rules
+
+```bash
+curl -X DELETE "https://api.hifi.com/v1/virtual-accounts/va_abc123/settlement-rules/15c786fb-de7a-520c-a4b3-f312d4a122d2" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+## Fee Calculation Examples
+
+### Example 1: Fixed Percentage + Fixed Fee
+
+**Configuration:**
+
+```json
+{
+  "rules": [
+    {
+      "type": "PERCENTAGE",
+      "calculationModel": "FIXED",
+      "value": 0.001,
+      "walletAddress": "0x15FB50680fEB2f726413416665c25f9B397b047b"
+    },
+    {
+      "type": "FIXED",
+      "calculationModel": "FIXED",
+      "value": 0.5,
+      "walletAddress": "0x15FB50680fEB2f726413416665c25f9B397b047b"
+    }
+  ]
+}
+```
+
+**Transaction:** $1,000 USDC conversion
+
+**Calculation:**
+
+- Percentage fee: $1,000 × 0.001 = $1.00
+- Fixed fee: $0.50
+- **Total fee: $1.50**
+
+### Example 2: Tiered Percentage
+
+**Configuration:**
+
+```json
+{
+  "rules": [
+    {
+      "type": "PERCENTAGE",
+      "calculationModel": "TIERED",
+      "tiers": [
+        {
+          "max": "1000",
+          "min": "",
+          "value": 0.0007
+        },
+        {
+          "max": "2000",
+          "min": "1000",
+          "value": 0.0005
+        },
+        {
+          "max": "",
+          "min": "2000",
+          "value": 0.0002
+        }
+      ],
+      "walletAddress": "0x15FB50680fEB2f726413416665c25f9B397b047b"
+    }
+  ]
+}
+```
+
+**Transaction:** $2,500 USDC conversion
+
+**Calculation:**
+
+- Tier 1 (0-1000): $1,000 × 0.0007 = $0.70
+- Tier 2 (1000-2000): $1,000 × 0.0005 = $0.50
+- Tier 3 (2000+): $500 × 0.0002 = $0.10
+- **Total fee: $1.30**
+
+## Use Cases
+
+### E-commerce Platform
+
+```json
+{
+  "chain": "BASE",
+  "includeHIFIFee": false,
+  "rules": [
+    {
+      "type": "PERCENTAGE",
+      "calculationModel": "FIXED",
+      "value": 0.002,
+      "walletAddress": "0xEcommerceWallet123..."
+    }
+  ]
+}
+```
+
+**Use Case:** 0.2% fee on all transactions to cover payment processing costs.
+
+### High-Volume Trading Platform
+
+```json
+{
+  "chain": "ETHEREUM",
+  "includeHIFIFee": true,
+  "rules": [
+    {
+      "type": "PERCENTAGE",
+      "calculationModel": "TIERED",
+      "tiers": [
+        {
+          "max": "10000",
+          "min": "",
+          "value": 0.001
+        },
+        {
+          "max": "100000",
+          "min": "10000",
+          "value": 0.0005
+        },
+        {
+          "max": "",
+          "min": "100000",
+          "value": 0.0001
+        }
+      ],
+      "walletAddress": "0xTradingPlatform456..."
+    }
+  ]
+}
+```
+
+**Use Case:** Volume-based discounts for institutional traders.
+
+### Multi-Wallet Revenue Split
+
+```json
+{
+  "chain": "POLYGON",
+  "includeHIFIFee": false,
+  "rules": [
+    {
+      "type": "PERCENTAGE",
+      "calculationModel": "FIXED",
+      "value": 0.0015,
+      "walletAddress": "0xPlatformRevenue789..."
+    },
+    {
+      "type": "FIXED",
+      "calculationModel": "FIXED",
+      "value": 1.0,
+      "walletAddress": "0xOperationsWallet012..."
+    }
+  ]
+}
+```
+
+**Use Case:** Split revenue between platform operations and fixed operational costs.
+
+## Best Practices
+
+### 1. Fee Structure Design
+
+- **Start Simple**: Begin with fixed percentage fees before implementing complex tiered structures
+- **Test Thoroughly**: Validate fee calculations with various transaction amounts
+- **Monitor Performance**: Track fee collection and adjust rates based on volume
+
+### 2. Wallet Management
+
+- **Use Dedicated Wallets**: Create separate wallets for different fee types
+- **Implement Monitoring**: Set up alerts for wallet balances and fee collection
+- **Regular Reconciliation**: Periodically verify fee calculations and distributions
+
+### 3. Network Selection
+
+- **Consider Gas Costs**: Choose networks with lower transaction fees for small transactions
+- **Volume Requirements**: Use high-throughput networks for high-volume applications
+- **User Experience**: Select networks that provide the best user experience
+
+### 4. Error Handling
+
+```javascript
+// Example error handling for settlement rules
+const createSettlementRules = async (accountId, rules) => {
+  try {
+    const response = await hifi.virtualAccounts.createSettlementRules(
+      accountId,
+      rules
+    );
+    console.log(`Settlement rules created: ${response.id}`);
+  } catch (error) {
+    if (error.code === "INVALID_WALLET_ADDRESS") {
+      console.error("Invalid wallet address provided");
+    } else if (error.code === "UNSUPPORTED_NETWORK") {
+      console.error("Network not supported for settlement rules");
+    } else if (error.code === "INVALID_TIER_STRUCTURE") {
+      console.error("Tier structure is invalid - check min/max values");
+    }
+  }
+};
+```
+
+## Error Handling
+
+### Common Error Codes
+
+- `INVALID_WALLET_ADDRESS` - Wallet address format is invalid
+- `UNSUPPORTED_NETWORK` - Specified blockchain network is not supported
+- `INVALID_TIER_STRUCTURE` - Tier configuration has overlapping or invalid ranges
+- `INVALID_FEE_VALUE` - Fee value is outside allowed range
+- `SETTLEMENT_RULES_LIMIT_EXCEEDED` - Too many rules configured for account
+- `ACCOUNT_NOT_ACTIVE` - Virtual account is not active
+
+### Error Response Example
+
+```json
+{
+  "error": "INVALID_TIER_STRUCTURE",
+  "message": "Tier ranges must not overlap and min values must be less than max values",
+  "details": {
+    "invalidTiers": [
+      {
+        "index": 1,
+        "min": "2000",
+        "max": "1000",
+        "issue": "min_greater_than_max"
+      }
+    ]
+  }
+}
+```
+
+## Rate Limits
+
+- **Settlement Rules Creation**: 10 rules per minute
+- **Settlement Rules Updates**: 20 updates per minute
+- **Settlement Rules Queries**: 100 requests per minute
+
+## Webhooks
+
+Configure webhooks to receive real-time updates on settlement rule activities:
+
+### Settlement Rules Created
+
+```json
+{
+  "event": "settlement_rules.created",
+  "data": {
+    "accountId": "va_abc123",
+    "ruleId": "15c786fb-de7a-520c-a4b3-f312d4a122d2",
+    "chain": "BASE",
+    "createdAt": "2024-01-15T10:30:00Z"
+  }
+}
+```
+
+### Settlement Rules Updated
+
+```json
+{
+  "event": "settlement_rules.updated",
+  "data": {
+    "accountId": "va_abc123",
+    "ruleId": "15c786fb-de7a-520c-a4b3-f312d4a122d2",
+    "changes": ["includeHIFIFee", "rules"],
+    "updatedAt": "2024-01-15T11:00:00Z"
+  }
+}
+```
+
+### Fee Collected
+
+```json
+{
+  "event": "fee.collected",
+  "data": {
+    "accountId": "va_abc123",
+    "ruleId": "15c786fb-de7a-520c-a4b3-f312d4a122d2",
+    "transactionId": "tx_789012",
+    "amount": "1.50",
+    "currency": "USDC",
+    "walletAddress": "0x15FB50680fEB2f726413416665c25f9B397b047b",
+    "collectedAt": "2024-01-15T10:31:00Z"
+  }
+}
+```
