@@ -2,3 +2,59 @@
 title: "Bridging"
 description: "Move money between chains"
 ---
+
+Bridging allows you to transfer cryptocurrencies across different blockchain networks. This enables you to move assets from one chain to another, such as transferring USDC from Ethereum to Polygon or Solana.
+
+## Supported Bridges
+
+Currently, we support bridging between the following networks:
+
+- **Ethereum ↔ Polygon** for USDC and USDT
+- **Ethereum ↔ Solana** for USDC and USDT
+- **Polygon ↔ Solana** for USDC and USDT
+
+## How Bridging Works
+
+Bridging follows a simple three-step process:
+
+1. **Create a bridge** – Initiate a bridge request with your source and destination chains
+2. **Review quote** – Examine the transfer fees, estimated time, and quote validity period
+3. **Accept bridge** – Confirm the transaction to execute the cross-chain transfer
+
+## Quote Information
+
+The quote includes several important details:
+
+- **sendGross/sendNet** – The amount you'll send (gross includes fees, net is what you actually send)
+- **receiveGross/receiveNet** – The amount you'll receive (gross includes fees, net is what you actually receive)
+- **railFee** – The fee charged for the cross-chain transfer
+- **rate** – The exchange rate between the currencies (typically 1:1 for same-asset bridges)
+- **expiresAt** – When the quote expires and becomes invalid
+
+### Quote Validity
+
+Quotes are time-sensitive and typically expire within 30-60 seconds. This ensures you get current network conditions and prevents stale pricing. If a quote expires before you accept it, you'll need to create a new bridge request to get updated information.
+
+## Bridging Operations
+
+Bridging involves several blockchain operations that are tracked in the response:
+
+- **Mint** – Creates new tokens on the destination chain
+- **Burn** – Destroys tokens on the source chain
+- **Approve** – Authorizes the bridge contract to spend your tokens
+
+Each operation includes transaction hashes and user operation hashes for complete traceability across both chains.
+
+## Fees
+
+Bridging includes network fees and processing fees that are clearly displayed in the quote. The fee structure varies by source and destination chains and is calculated based on current network conditions.
+
+## Guides
+
+<Card
+  icon="code"
+  title="Bridge USDC from ETH to SOL"
+  href="/guides/route/eth-sol"
+>
+  Learn how to bridge cryptocurrencies between chains
+</Card>

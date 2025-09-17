@@ -1,4 +1,83 @@
 ---
-title: "Offramps"
-description: "Withdraw from HIFI wallets"
 ---
+
+Offramps are transactions that convert stablecoins in HIFI wallets to fiat currencies. The available offramp methods vary by region due to local payment infrastructure and regulatory requirements.
+
+## Regions
+
+### United States
+
+In the US, you have several options for offramping:
+
+- **ACH transfers** – Direct bank account deposits using the ACH network
+- **Wire transfers** – Same-day or next-day bank transfers for larger amounts
+- **SWIFT transfers** – International wire transfers for global recipients
+
+### South America
+
+South American users can offramp through local payment methods:
+
+- **PIX** – Brazil's instant payment system for immediate transfers
+- **SPEI** – Mexico's electronic payment system for local bank transfers
+
+### Africa
+
+African users can access offramps through:
+
+- **Local bank transfers** – Direct deposits to regional bank accounts
+- **Mobile money** – Integration with local mobile payment systems
+
+## Currencies
+
+### Fiat Currencies
+
+- **Americas**: USD, BRL, MXN
+- **Africa**: NGN, KES, XOF, RWF, TZS, ZMW, MWK, XAF, ZAR, BWP
+- **Asia-Pacific**: USD (Hong Kong, China)
+
+### Stablecoins
+
+- USDC (Ethereum, Polygon, Solana, Base)
+- USDT (Ethereum, Polygon, Solana, Base)
+
+For a complete list of supported currencies and payment methods, see [Currencies](/docs/currencies).
+
+## Quotes
+
+After initiating an offramp transaction, you'll get a quote that specifies the exchange rate and fees. Quotes are valid for a limited time window and must be accepted before proceeding with the transaction.
+
+### Getting a Quote
+
+To get an offramp quote:
+
+1. Specify the input stablecoin and amount
+2. Specify the desired output currency (fiat)
+3. Review the quote details:
+   - Exchange rate
+   - Network fees
+   - Processing time
+   - Quote expiration
+
+### Accepting a Quote
+
+Once you receive a quote:
+
+1. Review all terms and fees
+2. Accept the quote within the validity window (typically 30-60 seconds)
+3. Proceed with the withdrawal using your chosen method
+
+If a quote expires before acceptance, you'll need to request a new quote with current market rates.
+
+## Account Requirements
+
+Before creating an offramp transaction, you need to set up an account:
+
+1. **Create an account** – Register the fiat destination using the Accounts API
+2. **Verify account details** – Ensure all account information is accurate
+3. **Create offramp** – Initiate the offramp transaction with the account details
+
+## Guides
+
+<Card icon="code" title="Convert USDC to USD" href="/guides/convert/usdc-usd">
+  Learn how to convert stablecoins to fiat
+</Card>

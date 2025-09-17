@@ -1,4 +1,47 @@
 ---
 title: "Swaps"
-description: "Move money between stablecoins"
+description: "Exchange one cryptocurrency for another within the same chain"
 ---
+
+Swaps allow you to exchange one cryptocurrency for another within the same blockchain network. This is useful for converting between different stablecoins or other supported tokens without needing to bridge across chains.
+
+## Supported Swaps
+
+Currently, we support the following swap pairs:
+
+- **USDC ↔ USDT** on Polygon, Ethereum and Solana networks
+
+## How Swaps Work
+
+Swaps follow a simple three-step process:
+
+1. **Create a swap** – Initiate a swap request with your source and destination currencies
+2. **Review quote** – Examine the exchange rate, fees, and quote validity period
+3. **Accept swap** – Confirm the transaction to execute the swap
+
+### Quote Validity
+
+Quotes are time-sensitive and typically expire within 30-60 seconds. This ensures you get current market rates and prevents stale pricing. If a quote expires before you accept it, you'll need to create a new swap request to get updated pricing.
+
+### Limits
+
+Swap limits vary based on your account tier and the specific currency pair. Check the [API documentation](/api) for current limit information and how to query your available limits.
+
+## Quote Information
+
+The quote includes several important details:
+
+- **sendGross/sendNet** – The amount you'll send (gross includes fees, net is what you actually send)
+- **receiveGross/receiveNet** – The amount you'll receive (gross includes fees, net is what you actually receive)
+- **rate** – The exchange rate between the currencies
+- **expiresAt** – When the quote expires and becomes invalid
+
+## Fees
+
+Swaps include exchange fees that are clearly displayed in the quote. The fee structure varies by currency pair and is calculated based on current market conditions.
+
+## Guides
+
+<Card icon="code" title="Convert USDC to USDT" href="/guides/convert/usdt-usdc">
+  Learn how to swap cryptocurrencies
+</Card>
