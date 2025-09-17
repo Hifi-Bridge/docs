@@ -11,6 +11,11 @@
   "css": "/styles.css",
   "js": "/flowing-light.js",
   "favicon": "/favicon.svg",
+  "seo": {
+    "metatags": {
+      "og:image": "/og.png"
+    }
+  },
   "navigation": {
     "tabs": [
       {
