@@ -1,0 +1,88 @@
+---
+title: "Rails"
+---
+
+A **Rail** enables users to perform pay-ins and pay-outs from specific regions. Rails are unlocked after a user completes KYC verification and determine which payment methods and currencies are available for onramps and offramps.
+
+HIFI supports four rails:
+
+- **USD Rail** – enables USD pay-ins and pay-outs via ACH, RTP and Wire
+- **Global Network Rail** – enables payouts to Asia and Africa
+- **Africa Rail** – enables payouts to African countries
+- **South America Rail** – enables payins from South American countries
+
+## Rail Comparison
+
+| Rail               | Direction | Currencies                                                 |
+| ------------------ | --------- | ---------------------------------------------------------- |
+| **USD**            | Both      | USD                                                        |
+| **Global Network** | Payouts   | USD, CNY, HKD, BRL, MXN, NGN                               |
+| **Africa**         | Payouts   | BWP, GHS, KES, MWK, NGN, RWF, TZS, UGX, XAF, XOF, ZAR, ZMW |
+| **South America**  | Payins    | ARS, BRL, COP, MXN                                         |
+
+<Card icon="unlock" title="Unlock Rails" href="/guides/submit-lyc">
+  Learn how to submit kyc and unlock rails
+</Card>
+
+## Rail Details
+
+<AccordionGroup>
+  <Accordion title="USD Rail">
+    The USD Rail enables USD pay-ins and pay-outs through multiple payment methods and supports virtual accounts for onramps.
+
+    **Payment Methods:**
+    - ACH (Automated Clearing House)
+    - RTP (Real-Time Payments)
+    - Wire transfers
+
+    **Features:**
+    - Virtual accounts for onramps
+    - Payouts include user's KYC/B name
+    - Full USD onramp and offramp capabilities
+
+  </Accordion>
+
+  <Accordion title="Global Network Rail">
+    The Global Network Rail enables payouts to Asia and Africa with support for multiple currencies.
+
+    **Supported Regions:**
+    - **China (CN)**: USD and CNY
+    - **Hong Kong (HK)**: USD and HKD
+    - **Other regions**: BRL, MXN, NGN
+
+  </Accordion>
+
+  <Accordion title="Africa Rail">
+    The Africa Rail enables payouts to various African countries with local currency support.
+
+    **Supported Currencies:**
+    - BWP (Botswana Pula)
+    - GHS (Ghanaian Cedi)
+    - KES (Kenyan Shilling)
+    - MWK (Malawian Kwacha)
+    - NGN (Nigerian Naira)
+    - RWF (Rwandan Franc)
+    - TZS (Tanzanian Shilling)
+    - UGX (Ugandan Shilling)
+    - XAF (Central African CFA Franc)
+    - XOF (West African CFA Franc)
+    - ZAR (South African Rand)
+    - ZMW (Zambian Kwacha)
+
+  </Accordion>
+
+  <Accordion title="South America Rail">
+    The South America Rail enables payins from South American countries with local currency support.
+
+    **Supported Currencies:**
+    - ARS (Argentine Peso)
+    - BRL (Brazilian Real)
+    - COP (Colombian Peso)
+    - MXN (Mexican Peso)
+
+  </Accordion>
+</AccordionGroup>
+
+## Unlocking Rails
+
+After a user completes KYC verification, you can unlock the relevant rails based on your business needs and target regions.

@@ -13,8 +13,10 @@ HIFI supports two types of Users:
 
 ## Creating Users
 
+There are two steps to creating a User.
+
 <AccordionGroup>
-  <Accordion title="1. Sign TOS">
+  <Accordion title="Sign TOS">
     Generate a Terms of Service link that users can accept to provide consent for data handling and compliance screening.
     
     <Card icon="link" title="Generate TOS Link" href="/api-reference/user/generate-a-terms-of-service-link">
@@ -24,7 +26,7 @@ HIFI supports two types of Users:
 
 {" "}
 
-<Accordion title="2. Create User">
+<Accordion title="Create User">
   Create a new User record with the required TOS agreement ID and user
   information.
   <Card icon="code" title="Create a user" href="/guides/screen/create-a-user">
@@ -32,9 +34,20 @@ HIFI supports two types of Users:
   </Card>
 </Accordion>
 
-{" "}
+</AccordionGroup>
 
-<Accordion title="3a. Submit KYC">
+<Note>
+  When a User is created, a Wallet is created for them. Use our Transfer APIs to
+  move money between this wallet and others.
+</Note>
+
+## Screening Users
+
+To interact with fiat accounts, you need to provide KYC. You can do this via the API, Dashboard or by sharing a link.
+
+<AccordionGroup>
+
+<Accordion title="Submit KYC">
   Submit Know Your Customer verification documents and information for User
   compliance screening.
   <Card icon="code" title="Submit KYC" href="/guides/screen/submit-kyc">
@@ -44,7 +57,7 @@ HIFI supports two types of Users:
 
 {" "}
 
-<Accordion title="3b. Share KYC Link">
+<Accordion title="Share KYC Link">
   Generate a shareable KYC link that allows Ysers to complete verification
   through a web interface.
   <Card icon="link" title="Use KYC Link" href="/guides/screen/use-kyc-link">
@@ -52,11 +65,14 @@ HIFI supports two types of Users:
   </Card>
 </Accordion>
 
-  <Accordion title="4. Unlock Rail">
-    Enable fiat on/off-ramp capabilities for users by completing the necessary verification and compliance steps.
-    
-    <Card icon="unlock" title="Unlock Rail" href="/docs/users/kyc">
-      Learn about KYC requirements for fiat account access
-    </Card>
-  </Accordion>
 </AccordionGroup>
+
+## Unlocking Rails
+
+After submitting KYC for a user, unlock the relevant Rail to start performing onramps and offramp transactions.
+
+{" "}
+
+<Card icon="unlock" title="Rails" href="/docs/rails">
+  Learn how to unlock onramps and offramps to various regions
+</Card>

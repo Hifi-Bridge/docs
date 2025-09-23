@@ -2,23 +2,81 @@
 title: "KYC"
 ---
 
-When a User needs to interact with a fiat account (on or offramps), HIFI enforces **KYC (Know Your Customer)** and **KYB (Know Your Business)** checks to comply with financial regulations.
+When a User needs to interact with a fiat account (for onramps or offramps), HIFI enforces **KYC (Know Your Customer)** and **KYB (Know Your Business)** checks to comply with financial regulations.
 
-KYC verification typically takes:
+During the onboarding process, you'll be asked to provide a **compliance email
+address**. This email will be used to contact you for any additional
+information requests during KYC review.
 
-- **Individual Users**: 1 business day
-- **Business Users**: 1-3 business days, depending on complexity
+<Note>
+  KYC verification typically takes a few minutes for Individual Users and
+  between 1 to 3 days for Business Users, depending on structure.
+</Note>
 
-During the onboarding process, you'll be asked to provide a **compliance email address**. This email will be used to contact you for any additional information requests during KYC review.
-
-<Card icon="code" title="Submit KYC" href="/guides/screen/submit-kyc">
+<Card icon="user" title="Submit KYC" href="/guides/screen/submit-kyc">
   Learn how to fulfil KYC requirements for a User
+</Card>
+
+## Rails
+
+KYC requirements are grouped by **Rail** - each rail has specific compliance requirements based on the regions and currencies it supports. Users must complete KYC for each rail they want to use.
+
+**Rail-specific KYC:**
+
+- **USD Rail**: US compliance requirements for ACH, RTP, and Wire transfers
+- **Global Network Rail**: Multi-region requirements for Asia and Africa payouts
+- **Africa Rail**: Local African market compliance requirements
+- **South America Rail**: South American market compliance requirements
+
+<Card icon="unlock" title="Rails" href="/docs/fiat/rails">
+  Learn about available rails and their requirements
+</Card>
+
+## KYC Requirements
+
+The KYC Requirements endpoint lets you retrieve what documents and information are required, optional, or invalid for a specific user and rail combination.
+
+**What you get:**
+
+- **Required**: Documents and information that must be provided
+- **Optional**: Additional documents that can help with verification
+- **Invalid**: Documents that are not accepted for this rail/user combination
+
+This endpoint helps you understand exactly what to collect from users before submitting their KYC information.
+
+<Card
+  icon="code"
+  title="Get KYC Requirements"
+  href="/api-reference/user/get-kyc-requirements"
+>
+  API reference for retrieving KYC requirements
+</Card>
+
+## KYC Status
+
+Once you submit KYC information, it enters the compliance review process. Use the KYC Status endpoint to track the progress and get real-time updates.
+
+**Status updates include:**
+
+- **Pending**: KYC is under review
+- **Approved**: User is verified and can use the rail
+- **Rejected**: Additional information or documents are needed
+- **Under Review**: Compliance team is actively reviewing
+
+The status endpoint provides detailed information about what's happening during the review process and any actions required from you or the user.
+
+<Card
+  icon="code"
+  title="Get KYC Status"
+  href="/api-reference/user/get-kyc-status"
+>
+  API reference for checking KYC status
 </Card>
 
 ## KYC Link
 
 If you don't want to use the API directly, you can generate a KYC link and share it with your users. This approach allows users to complete their KYC verification through a web interface without requiring API integration on your end.
 
-<Card icon="link" title="KYC Link" href="/docs/users/kyc/kyc-link">
+<Card icon="link" title="KYC Link" href="/docs/users/kyc-link">
   Learn how to onboard users using a link
 </Card>

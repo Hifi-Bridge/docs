@@ -36,7 +36,18 @@
                   "docs/users/kyc/index"
                 ]
               },
-              "docs/wallets/index",
+              {
+                "group": "Wallets",
+                "pages": [
+                  "docs/wallets/index",
+                  "docs/wallets/balances",
+                  "docs/wallets/deposits"
+                ]
+              },
+              {
+                "group": "Fiat",
+                "pages": ["docs/fiat/accounts", "docs/fiat/rails"]
+              },
               {
                 "group": "Transfers",
                 "pages": [
@@ -53,7 +64,7 @@
           {
             "group": "Features",
             "pages": [
-              "docs/users/kyc/kyc-link",
+              "docs/users/kyc-link",
               "docs/transfers/batch-transfers",
               "docs/transfers/virtual-accounts/index",
               "docs/transfers/virtual-accounts/settlement-rules",
