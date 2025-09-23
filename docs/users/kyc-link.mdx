@@ -2,21 +2,21 @@
 title: "KYC Link"
 ---
 
-The KYC Link API allows you to create a secure link for user onboarding and KYC (Know Your Customer) verification. This endpoint provides flexibility to either create new users or update existing ones through a single interface.
+The KYC Link API allows you to create a secure link for User onboarding and KYC (Know Your Customer) verification. This endpoint provides flexibility to either create new Users or update existing ones through a single interface.
 
 ## Overview
 
 The KYC link generation endpoint lets you:
 
-- Create a new user if no user ID is provided
-- Update an existing user if a user ID is passed
+- Create a new User if no User ID is provided
+- Update an existing User if a User ID is passed
 - Configure redirect behavior after KYC completion
 - Send the link via email to users
 - Customize the KYC experience with a template
 
 ## Redirect URL
 
-When a `redirectUrl` is provided, users will be redirected to that URL after completing their KYC information. The user ID will be automatically appended as a query parameter:
+When a `redirectUrl` is provided, users will be redirected to that URL after completing their KYC information. The User ID will be automatically appended as a query parameter:
 
 ```
 https://yourapp.com/kyc-complete?userId=user_123456789
