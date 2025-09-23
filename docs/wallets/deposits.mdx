@@ -4,12 +4,12 @@ title: "Deposits"
 
 Wallets can receive funds through:
 
-- **Transfers** (stablecoin deposits from supported networks). This includes other HIFI and external wallets.
+- **Blockchain transfers** (stablecoin deposits from supported networks). This includes other HIFI and external wallets.
 
-- **Onramps** (Local payment methods, e.g. bank transfers, PIX, ACH).  
+- **Fiat onramps** (local payment methods, e.g. bank transfers, PIX, ACH).  
   When a User pays in fiat (e.g. USD), it is converted into stablecoin and credited to their wallet.
 
-## Transfers
+## Blockchain transfers
 
 To track incoming transfers into a Wallet, use the Deposits API. This API provides updates on all incoming activity, including transaction hashes, amounts, and confirmation status.
 
@@ -17,12 +17,10 @@ To track incoming transfers into a Wallet, use the Deposits API. This API provid
   Explore the API Reference
 </Card>
 
-## Onramps
+## Fiat onramps
 
-Convert fiat currency to crypto using local payment methods like bank transfers, PIX, or ACH. When users pay in fiat (e.g. USD), it's automatically converted to stablecoin and credited to their wallet.
+Convert fiat currency to stablecoins using local payment methods like bank transfers, PIX, or ACH. When users pay in fiat (e.g. USD), it's automatically converted to stablecoin and credited to their wallet.
 
-<Card icon="arrow-down" title="Onramps" href="/docs/transfers/onramps">
+<Card icon="circle-dollar" title="Onramps" href="/docs/transfers/onramps">
   Learn how to set up fiat-to-crypto conversions
 </Card>
-
-You can subscribe to notifications to be alerted when a new deposit arrives or when funds are credited to a wallet.

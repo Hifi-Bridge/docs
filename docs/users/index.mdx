@@ -4,7 +4,7 @@ sidebarTitle: "Overview"
 ---
 
 A **User** represents an individual or a business entity interacting with the HIFI platform.
-Users are the foundation of most HIFI operations: before you can create wallets or move money, a User record must exist.
+Users are the foundation of most HIFI operations: before you can create Wallets or move money, a User record must exist.
 
 HIFI supports two types of Users:
 
@@ -36,14 +36,9 @@ There are two steps to creating a User.
 
 </AccordionGroup>
 
-<Note>
-  When a User is created, a Wallet is created for them. Use our Transfer APIs to
-  move money between this wallet and others.
-</Note>
-
 ## Screening Users
 
-To interact with fiat accounts, you need to provide KYC. You can do this via the API, Dashboard or by sharing a link.
+To interact with fiat accounts, you need to provide KYC/KYB for the User. You can do this via the API, Dashboard or by sharing a link.
 
 <AccordionGroup>
 
@@ -58,7 +53,7 @@ To interact with fiat accounts, you need to provide KYC. You can do this via the
 {" "}
 
 <Accordion title="Share KYC Link">
-  Generate a shareable KYC link that allows Ysers to complete verification
+  Generate a shareable KYC link that allows Users to complete verification
   through a web interface.
   <Card icon="link" title="Use KYC Link" href="/guides/screen/use-kyc-link">
     Learn how to screen users with ease using KYC links
@@ -66,13 +61,3 @@ To interact with fiat accounts, you need to provide KYC. You can do this via the
 </Accordion>
 
 </AccordionGroup>
-
-## Unlocking Rails
-
-After submitting KYC for a user, unlock the relevant Rail to start performing onramps and offramp transactions.
-
-{" "}
-
-<Card icon="unlock" title="Rails" href="/docs/rails">
-  Learn how to unlock onramps and offramps to various regions
-</Card>
