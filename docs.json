@@ -24,12 +24,17 @@
           "docs/overview",
           "docs/currencies",
           "docs/regions",
+          "docs/industries",
           {
             "group": "Models",
             "pages": [
               {
                 "group": "Users",
-                "pages": ["docs/users/index", "docs/users/kyc/index"]
+                "pages": [
+                  "docs/users/index",
+                  "docs/users/tos",
+                  "docs/users/kyc/index"
+                ]
               },
               "docs/wallets/index",
               {

@@ -11,19 +11,52 @@ HIFI supports two types of users:
 - **Individual** – a natural person (e.g., a customer, freelancer, or employee).
 - **Business** – a legal entity (e.g., a company, NGO, or partnership).
 
----
+## Creating users
 
-## Terms of Service
+<AccordionGroup>
+  <Accordion title="Create a TOS link">
+    Generate a Terms of Service link that users can accept to provide consent for data handling and compliance screening.
+    
+    <Card icon="link" title="Generate TOS Link" href="/api-reference/user/generate-a-terms-of-service-link">
+      API reference for TOS link generation
+    </Card>
+  </Accordion>
 
-A **Terms of Service agreement ID** is required to create a user.
-This ensures you have consent for data handling, compliance screening, and financial activity.
+{" "}
 
-You can obtain a TOS agreement ID in two ways:
+<Accordion title="Create a user">
+  Create a new user record with the required TOS agreement ID and user
+  information.
+  <Card icon="code" title="Create a user" href="/guides/screen/create-a-user">
+    Learn how to sign TOS and create a new user
+  </Card>
+</Accordion>
 
-1. **Using the API** – Call the [Generate Terms of Service Link](/api-reference/user/generate-a-terms-of-service-link) endpoint with an idempotency key to get a unique URL. After users accept the terms at this link, the key becomes your signed agreement ID.
+{" "}
 
-2. **Using the Dashboard** – On the Dashboard, you can simply click a button when creating a user to accept the TOS link.
+<Accordion title="Submit KYC">
+  Submit Know Your Customer verification documents and information for user
+  compliance screening.
+  <Card icon="code" title="Submit KYC" href="/guides/screen/submit-kyc">
+    Learn how to fulfil KYC requirements for a user
+  </Card>
+</Accordion>
 
-<Card icon="code" title="Create a user" href="/guides/screen/create-a-user">
-  Generate agreement ID and submit
-</Card>
+{" "}
+
+<Accordion title="Create KYC link">
+  Generate a shareable KYC link that allows users to complete verification
+  through a web interface.
+  <Card icon="link" title="Use KYC Link" href="/guides/screen/use-kyc-link">
+    Learn how to screen users with ease using KYC links
+  </Card>
+</Accordion>
+
+  <Accordion title="Unlock rail">
+    Enable fiat on/off-ramp capabilities for users by completing the necessary verification and compliance steps.
+    
+    <Card icon="unlock" title="Unlock Rail" href="/docs/users/kyc">
+      Learn about KYC requirements for fiat account access
+    </Card>
+  </Accordion>
+</AccordionGroup>
