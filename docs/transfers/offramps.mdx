@@ -1,7 +1,28 @@
 ---
+title: "Offramps"
 ---
 
 Offramps are transactions that convert stablecoins in HIFI wallets to fiat currencies. The available offramp methods vary by region due to local payment infrastructure and regulatory requirements.
+
+## Supported Offramps
+
+Currently, we support the following offramp methods:
+
+- **ACH transfers** for USD conversions
+- **Wire transfers** for larger amounts
+- **Regional payment methods** based on your location
+
+## How Offramps Work
+
+Offramps follow a simple three-step process:
+
+1. **Create an offramp** – Initiate an offramp request with your source stablecoin and destination fiat currency
+2. **Review quote** – Examine the exchange rate, fees, and quote validity period
+3. **Complete withdrawal** – The fiat currency will be transferred to your registered account
+
+### Quote Validity
+
+Quotes are time-sensitive and typically expire within 10 minutes. This ensures you get current market rates and prevents stale pricing. If a quote expires before you accept it, you'll need to create a new offramp request to get updated pricing.
 
 ## Regions
 
@@ -22,31 +43,105 @@ The available offramp methods vary by region due to local payment infrastructure
 
 For a complete list of supported currencies and payment methods, see [Currencies](/docs/currencies).
 
-## Quotes
+## Transaction Structure
 
-After initiating an offramp transaction, you'll get a quote that specifies the exchange rate and fees. Quotes are valid for a limited time window and must be accepted before proceeding with the transaction.
+When you create an offramp, the API response includes detailed information about the transaction:
 
-### Getting a Quote
+```json
+{
+  "transferType": "OFFRAMP",
+  "transferDetails": {
+    "id": "173c1e89-7bbd-4352-9e5d-73807681510d",
+    "requestId": "201ca31d-700f-4c76-ac4b-961623acbb79",
+    "createdAt": "2025-02-03T16:12:04.331652+00:00",
+    "updatedAt": "2025-02-03T16:12:08.732+00:00",
+    "status": "CREATED",
+    "failedReason": "",
+    "source": {
+      "userId": "7d54a7a7-dac3-4313-8b09-27fa4b7fd1ee",
+      "chain": "POLYGON_MAINNET",
+      "currency": "usdc",
+      "amount": 10,
+      "walletAddress": "0x366B759bAA089Fa57a08edd3F2E028E86b97f8D6"
+    },
+    "destination": {
+      "userId": "7d54a7a7-dac3-4313-8b09-27fa4b7fd1ee",
+      "amount": 0,
+      "currency": "mwk",
+      "accountId": "12c1c496-8f57-41a1-8292-dbe6547791ce"
+    },
+    "receipt": {
+      "transactionHash": null,
+      "uetr": null
+    },
+    "developerFee": {
+      "feeId": "9b354c37-d20d-4d94-bcd8-c852353ca406",
+      "feeType": "FIX",
+      "feeAmount": 0.5,
+      "feePercent": 0,
+      "status": "CREATED",
+      "transactionHash": null,
+      "failedReason": null
+    },
+    "quoteInformation": {
+      "sendGross": {
+        "amount": "10.00",
+        "currency": "usdc"
+      },
+      "sendNet": {
+        "amount": "10.00",
+        "currency": "usdc"
+      },
+      "receiveGross": {
+        "amount": "32500.00",
+        "currency": "mwk"
+      },
+      "receiveNet": {
+        "amount": "32500.00",
+        "currency": "mwk"
+      },
+      "rate": "3250.0000",
+      "expiresAt": "2025-02-03T16:22:08.668Z"
+    }
+  }
+}
+```
 
-To get an offramp quote:
+## Transaction Status
 
-1. Specify the input stablecoin and amount
-2. Specify the desired output currency (fiat)
-3. Review the quote details:
-   - Exchange rate
-   - Network fees
-   - Processing time
-   - Quote expiration
+Offramp transactions progress through several statuses:
 
-### Accepting a Quote
+- **CREATED**: Transaction has been created and is awaiting processing
+- **PROCESSING**: Stablecoins are being converted and fiat transfer is being initiated
+- **COMPLETED**: Fiat currency has been successfully transferred to your account
+- **FAILED**: Transaction failed (check `failedReason` for details)
 
-Once you receive a quote:
+## Quote Information
 
-1. Review all terms and fees
-2. Accept the quote within the validity window (typically 30-60 seconds)
-3. Proceed with the withdrawal using your chosen method
+The quote includes both gross and net amounts for both sending and receiving:
 
-If a quote expires before acceptance, you'll need to request a new quote with current market rates.
+- **sendGross**: Total amount you're sending in stablecoins
+- **sendNet**: Net amount after any fees are deducted
+- **receiveGross**: Total amount you'll receive in fiat currency
+- **receiveNet**: Net amount you'll actually receive
+- **rate**: Current exchange rate between stablecoin and fiat
+- **expiresAt**: When the quote expires and you'll need a new one
+
+## Fees
+
+Offramps may include various fees that are clearly displayed in the quote information and developer fee structure:
+
+### Fee Structure
+
+- **Developer fees**: Fixed or percentage-based fees for using the service
+- **Rail fees**: Fees charged by the payment rail (ACH, wire, etc.)
+- **Exchange fees**: Fees for converting stablecoin to fiat (if applicable)
+- **Timing**: Fees are typically included in the quote and deducted from the final amount
+
+### Developer Fee Types
+
+- **FIX**: Fixed fee amount regardless of transaction size
+- **PERCENT**: Percentage-based fee calculated on the transaction amount
 
 ## Account Requirements
 
@@ -55,6 +150,17 @@ Before creating an offramp transaction, you need to set up an account:
 1. **Create an account** – Register the fiat destination using the Accounts API
 2. **Verify account details** – Ensure all account information is accurate
 3. **Create offramp** – Initiate the offramp transaction with the account details
+
+<Note>
+  The account must be verified and active before you can create an offramp transaction. The account ID is required in the destination object when creating the offramp.
+</Note>
+
+## Receipt Information
+
+The `receipt` object contains transaction details once completed:
+
+- **transactionHash**: Blockchain transaction hash for the stablecoin transfer
+- **uetr**: Unique End-to-end Transaction Reference for international wire transfers
 
 ## Guides
 

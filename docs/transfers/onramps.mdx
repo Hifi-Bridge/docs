@@ -4,50 +4,163 @@ title: "Onramps"
 
 Onramps are transactions that convert fiat currencies to stablecoins in HIFI wallets. The available onramp methods vary by region due to local payment infrastructure and regulatory requirements.
 
-## Regions
-
-The available onramp methods vary by region due to local payment infrastructure and regulatory requirements. For detailed information about supported regions, payment methods, and currencies, see [Rails](/docs/fiat/rails).
-
-## Currencies
-
-### Fiat Currencies
-
-- **Americas**: USD, BRL, MXN
-- **Africa**: NGN, KES, XOF, RWF, TZS, ZMW, MWK, XAF, ZAR, BWP
-- **Asia-Pacific**: USD (Hong Kong, China)
-
-### Stablecoins
-
-- USDC (Ethereum, Polygon, Solana, Base)
-- USDT (Ethereum, Polygon, Solana, Base)
-
 For a complete list of supported currencies and payment methods, see [Currencies](/docs/currencies).
 
-## Quotes
+## Supported Onramps
 
-After initiating an onramp transaction, you'll get a quote that specifies the exchange rate and fees. Quotes are valid for a limited time window and must be accepted before proceeding with the transaction.
+Currently, we support the following onramp methods:
 
-### Getting a Quote
+- **ACH transfers** for USD to USDC conversions
+- **Wire transfers** for larger amounts
+- **Regional payment methods** based on your location
 
-To get an onramp quote:
+## How Onramps Work
 
-1. Specify the input currency (fiat) and amount
-2. Specify the desired output stablecoin
-3. Review the quote details:
-   - Exchange rate
-   - Network fees
-   - Processing time
-   - Quote expiration
+Onramps follow a simple three-step process:
 
-### Accepting a Quote
+1. **Create an onramp** – Initiate an onramp request with your source fiat currency and destination stablecoin
+2. **Review quote** – Examine the exchange rate, fees, and quote validity period
+3. **Deposit funds** – Transfer the fiat currency to the provided bank account using the reference ID
 
-Once you receive a quote:
+### Quote Validity
 
-1. Review all terms and fees
-2. Accept the quote within the validity window (typically 30-60 seconds)
-3. Proceed with the payment using your chosen method
+Quotes are time-sensitive and typically expire within 24 hours. This ensures you get current market rates and prevents stale pricing. If a quote expires before you deposit funds, you'll need to create a new onramp request to get updated pricing.
 
-If a quote expires before acceptance, you'll need to request a new quote with current market rates.
+## Transaction Structure
+
+When you create an onramp, the API response includes detailed information about the transaction:
+
+```json
+{
+  "transferType": "ONRAMP",
+  "transferDetails": {
+    "id": "b26927e6-2771-423c-af44-a3c7a3e815c5",
+    "requestId": "e1047def-6942-4fd7-be04-e62eb41813b6",
+    "createdAt": "2025-02-03T17:15:31.927121+00:00",
+    "updatedAt": "2025-02-03T17:15:35.882+00:00",
+    "status": "AWAITING_FUNDS",
+    "failedReason": null,
+    "source": {
+      "userId": "c15c0adf-3e45-4a62-b334-73aeec127649",
+      "currency": "usd",
+      "transferType": "ach",
+      "amount": 10,
+      "accountId": null,
+      "user": {
+        "email": "henry@hifibridge.com",
+        "lastName": "Wu",
+        "firstName": "Henry",
+        "businessName": null
+      },
+      "bankInfo": null
+    },
+    "destination": {
+      "userId": "c15c0adf-3e45-4a62-b334-73aeec127649",
+      "currency": "usdc",
+      "chain": "POLYGON_AMOY",
+      "walletAddress": "0x848732f6c834E05b17C56fa01E83EE095f72C3c3",
+      "externalWalletId": "335051d6-44ba-4ad7-ab78-bb433a568161",
+      "amount": null,
+      "user": {
+        "email": "henry@hifibridge.com",
+        "lastName": "Wu",
+        "firstName": "Henry",
+        "businessName": null
+      }
+    },
+    "receipt": {
+      "transactionHash": null
+    },
+    "developerFee": null,
+    "quoteInformation": {
+      "sendGross": {
+        "amount": "10.00",
+        "currency": "usd"
+      },
+      "sendNet": {
+        "amount": "10.00",
+        "currency": "usd"
+      },
+      "railFee": {
+        "amount": "0.00",
+        "currency": "usd"
+      },
+      "receiveGross": {
+        "amount": "10.00",
+        "currency": "usdc"
+      },
+      "receiveNet": {
+        "amount": "10.00",
+        "currency": "usdc"
+      },
+      "rate": "1.0000",
+      "expiresAt": "2025-02-04T17:15:31.927Z"
+    },
+    "depositInfo": {
+      "bankName": "Bank of Nowhere",
+      "bankAddress": "1800 North Pole St., Orlando, FL 32801",
+      "accountNumber": "11223344556677",
+      "routingNumber": "123456789",
+      "iban": "",
+      "bic": "",
+      "beneficiary": {
+        "name": "HiFi Bridge",
+        "address": "1234 Elm St, Springfield, IL 12345"
+      },
+      "referenceId": "BRGWX4J5BB7MP693BT8Z",
+      "amount": "10.0",
+      "currency": "usd",
+      "instruction": "Please deposit the exact amount of currency to the bank account provided. Use the reference ID as the deposit reference."
+    }
+  }
+}
+```
+
+## Transaction Status
+
+Onramp transactions progress through several statuses:
+
+- **AWAITING_FUNDS**: Waiting for you to deposit fiat currency to the provided bank account
+- **PROCESSING**: Funds have been received and are being converted to stablecoins
+- **COMPLETED**: Stablecoins have been successfully deposited to your wallet
+- **FAILED**: Transaction failed (check `failedReason` for details)
+
+## Deposit Information
+
+The `depositInfo` object contains all the details you need to complete your fiat deposit:
+
+- **Bank details**: Account number, routing number, and bank address
+- **Beneficiary information**: Name and address of the receiving entity
+- **Reference ID**: Unique identifier you must include with your deposit
+- **Amount**: Exact amount to deposit (must match exactly)
+- **Instructions**: Specific guidance for completing the deposit
+
+<Note>
+  Always use the exact reference ID provided in the deposit information when
+  making your fiat transfer. This ensures your funds are properly credited to
+  your onramp transaction.
+</Note>
+
+## Quote Information
+
+The quote includes both gross and net amounts for both sending and receiving:
+
+- **sendGross**: Total amount you're sending in fiat currency
+- **sendNet**: Net amount after any rail fees are deducted
+- **receiveGross**: Total amount you'll receive in stablecoins
+- **receiveNet**: Net amount you'll actually receive
+- **rate**: Current exchange rate between fiat and stablecoin
+- **expiresAt**: When the quote expires and you'll need a new one
+
+## Fees
+
+Onramps may include rail fees for processing fiat transfers, which are clearly displayed in the quote information. The fee structure is transparent and calculated based on current market conditions.
+
+### Fee Structure
+
+- **Rail fees**: Fees charged by the payment rail (ACH, wire, etc.)
+- **Exchange fees**: Fees for converting fiat to stablecoin (if applicable)
+- **Timing**: Fees are typically included in the quote and deducted from the final amount
 
 ## Guides
 

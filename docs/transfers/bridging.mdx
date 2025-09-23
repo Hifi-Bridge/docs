@@ -21,19 +21,105 @@ Bridging follows a simple three-step process:
 2. **Review quote** – Examine the transfer fees, estimated time, and quote validity period
 3. **Accept bridge** – Confirm the transaction to execute the cross-chain transfer
 
-## Quote Information
-
-The quote includes several important details:
-
-- **sendGross/sendNet** – The amount you'll send (gross includes fees, net is what you actually send)
-- **receiveGross/receiveNet** – The amount you'll receive (gross includes fees, net is what you actually receive)
-- **railFee** – The fee charged for the cross-chain transfer
-- **rate** – The exchange rate between the currencies (typically 1:1 for same-asset bridges)
-- **expiresAt** – When the quote expires and becomes invalid
-
 ### Quote Validity
 
-Quotes are time-sensitive and typically expire within 30-60 seconds. This ensures you get current network conditions and prevents stale pricing. If a quote expires before you accept it, you'll need to create a new bridge request to get updated information.
+Quotes are time-sensitive and typically expire within 24 hours. This ensures you get current network conditions and prevents stale pricing. If a quote expires before you accept it, you'll need to create a new bridge request to get updated information.
+
+## Transaction Structure
+
+When you create a bridge, the API response includes detailed information about the transaction:
+
+```json
+{
+  "transferType": "WALLET.BRIDGE",
+  "transferDetails": {
+    "id": "9ccafd0f-e47f-43c2-8693-13741b67d638",
+    "requestId": "1d860428-1d0b-47c5-9e65-98961ff59215",
+    "createdAt": "2025-02-24T17:44:54.781519+00:00",
+    "updatedAt": "2025-02-24T17:57:01.185+00:00",
+    "amount": 0.01,
+    "status": "COMPLETED",
+    "source": {
+      "userId": "a804f891-b63c-4b36-99ee-0aa83e6facde",
+      "walletAddress": "0xE9cfBf1D690565579D823264170eE357f80e9A34",
+      "chain": "POLYGON",
+      "currency": "usdc"
+    },
+    "destination": {
+      "userId": "a804f891-b63c-4b36-99ee-0aa83e6facde",
+      "walletAddress": "0x17f043FB0a39334641beD627551AC095941157B0",
+      "chain": "ETHEREUM",
+      "currency": "usdc"
+    },
+    "receipt": {
+      "transactionHash": "0x17f043FB0a39334641beD627551AC095941157B0",
+      "operations": {
+        "mint": {
+          "transactionHash": "0x5784890f9efd0160e9401439a5cf2aa5350580ecf48f9ca2af617338ae089e53",
+          "userOpHash": "0xef7bdb071b1fcfb5df629bd4d27ffa6dc32d0a5df676f26fb8c25311df1185ac",
+          "chain": "ETHEREUM"
+        },
+        "burn": {
+          "transactionHash": "0x5784890f9efd0160e9401439a5cf2aa5350580ecf48f9ca2af617338ae089e53",
+          "userOpHash": "0xef7bdb071b1fcfb5df629bd4d27ffa6dc32d0a5df676f26fb8c25311df1185ac",
+          "chain": "POLYGON"
+        },
+        "approve": {
+          "transactionHash": "0x5784890f9efd0160e9401439a5cf2aa5350580ecf48f9ca2af617338ae089e53",
+          "userOpHash": "0xef7bdb071b1fcfb5df629bd4d27ffa6dc32d0a5df676f26fb8c25311df1185ac",
+          "chain": "POLYGON"
+        }
+      }
+    },
+    "failedReason": null,
+    "fee": null,
+    "quoteInformation": {
+      "sendGross": {
+        "amount": "0.01",
+        "currency": "usdc"
+      },
+      "sendNet": {
+        "amount": "0.01",
+        "currency": "usdc"
+      },
+      "railFee": {
+        "amount": "0",
+        "currency": "usdc"
+      },
+      "receiveGross": {
+        "amount": "0.01",
+        "currency": "usdc"
+      },
+      "receiveNet": {
+        "amount": "0.01",
+        "currency": "usdc"
+      },
+      "rate": "1",
+      "expiresAt": "2025-02-25T17:44:54.781Z"
+    }
+  }
+}
+```
+
+## Transaction Status
+
+Bridge transactions progress through several statuses:
+
+- **CREATED**: Bridge request has been created and is awaiting processing
+- **PROCESSING**: Cross-chain operations are being executed
+- **COMPLETED**: Assets have been successfully transferred to the destination chain
+- **FAILED**: Bridge failed (check `failedReason` for details)
+
+## Quote Information
+
+The quote includes both gross and net amounts for both sending and receiving:
+
+- **sendGross**: Total amount you're sending from the source chain
+- **sendNet**: Net amount after any rail fees are deducted
+- **receiveGross**: Total amount you'll receive on the destination chain
+- **receiveNet**: Net amount you'll actually receive
+- **rate**: Exchange rate between the currencies (typically 1:1 for same-asset bridges)
+- **expiresAt**: When the quote expires and you'll need a new one
 
 ## Bridging Operations
 
@@ -45,9 +131,36 @@ Bridging involves several blockchain operations that are tracked in the response
 
 Each operation includes transaction hashes and user operation hashes for complete traceability across both chains.
 
+### Operation Details
+
+The `operations` object in the receipt contains detailed information about each blockchain operation:
+
+- **transactionHash**: The blockchain transaction hash for the operation
+- **userOpHash**: The user operation hash (for account abstraction wallets)
+- **chain**: The blockchain network where the operation occurred
+
 ## Fees
 
 Bridging includes network fees and processing fees that are clearly displayed in the quote. The fee structure varies by source and destination chains and is calculated based on current network conditions.
+
+### Fee Structure
+
+- **Rail fees**: Fees charged for the cross-chain transfer service
+- **Network fees**: Gas fees for blockchain transactions
+- **Timing**: Fees are typically included in the quote and deducted from the final amount
+
+## Receipt Information
+
+The `receipt` object contains transaction details once completed:
+
+- **transactionHash**: Main transaction hash for the bridge operation
+- **operations**: Detailed breakdown of all blockchain operations performed
+
+<Note>
+  Bridge operations may take several minutes to complete depending on network
+  congestion and the specific chains involved. You can track the progress using
+  the transaction hashes provided in the operations object.
+</Note>
 
 ## Guides
 

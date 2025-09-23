@@ -1,6 +1,5 @@
 ---
 title: "Swaps"
-description: "Exchange one cryptocurrency for another within the same chain"
 ---
 
 Swaps allow you to exchange one cryptocurrency for another within the same blockchain network. This is useful for converting between different stablecoins or other supported tokens without needing to bridge across chains.
@@ -15,7 +14,7 @@ Currently, we support the following swap pairs:
 
 Swaps follow a simple three-step process:
 
-1. **Create a swap** – Initiate a swap request with your source and destination currencies
+1. **Create a swap** – Initiate a swap request with source and destination
 2. **Review quote** – Examine the exchange rate, fees, and quote validity period
 3. **Accept swap** – Confirm the transaction to execute the swap
 
@@ -23,25 +22,47 @@ Swaps follow a simple three-step process:
 
 Quotes are time-sensitive and typically expire within 30-60 seconds. This ensures you get current market rates and prevents stale pricing. If a quote expires before you accept it, you'll need to create a new swap request to get updated pricing.
 
-### Limits
-
-Swap limits vary based on your account tier and the specific currency pair. Check the [API documentation](/api) for current limit information and how to query your available limits.
-
-## Quote Information
-
-The quote includes several important details:
-
-- **sendGross/sendNet** – The amount you'll send (gross includes fees, net is what you actually send)
-- **receiveGross/receiveNet** – The amount you'll receive (gross includes fees, net is what you actually receive)
-- **rate** – The exchange rate between the currencies
-- **expiresAt** – When the quote expires and becomes invalid
-
 ## Fees
 
-Swaps include exchange fees that are clearly displayed in the quote. The fee structure varies by currency pair and is calculated based on current market conditions.
+Swaps include exchange fees that are clearly displayed in the quote and billing information. The fee structure is transparent and calculated based on current market conditions.
 
-## Guides
+### Fee Structure
+
+When you create a swap, the API response includes detailed billing information:
+
+```json
+{
+  "billingInformation": {
+    "fees": [
+      {
+        "id": "2ca381ec-9498-52f5-9a27-d0e392b2626b",
+        "amount": 0.01,
+        "currency": "USD",
+        "type": "EXCHANGE_FEE",
+        "timing": "ON_INVOICE"
+      }
+    ]
+  }
+}
+```
+
+### Fee Types
+
+- **EXCHANGE_FEE**: The fee charged for the currency exchange service
+- **Timing**: Fees are typically charged "ON_INVOICE" meaning they're included in your monthly billing
+
+### Quote Information
+
+The quote includes both gross and net amounts for both sending and receiving:
+
+- **sendGross**: Total amount you're sending (including any fees)
+- **sendNet**: Net amount after fees are deducted
+- **receiveGross**: Total amount you'll receive
+- **receiveNet**: Net amount you'll actually receive
+- **rate**: Current exchange rate between the currencies
+
+## Try it out
 
 <Card icon="code" title="Convert USDC to USDT" href="/guides/convert/usdt-usdc">
-  Learn how to swap cryptocurrencies
+  Learn how to swap stablecoins
 </Card>
