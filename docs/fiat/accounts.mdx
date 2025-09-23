@@ -2,14 +2,26 @@
 title: "Accounts"
 ---
 
-An onramp or offramp account represents a sender or recipient for fiat operations.
+To pay in or out of a HIFI Wallet, you need to create an Account.
 
-## Supported Accounts
+- **Onramp Accounts**: receive fiat money
+- **Offramp Accounts**: send fiat money
 
-- **US**: ACH, Wire, SWIFT
-- **Brazil**: PIX and local payment methods
-- **Colombia**: Local payment systems
-- **Argentina**: Local payment methods
-- **Mexico**: SPEI and local payment systems
-- **Africa**: Regional payment methods
-- **Global Network**: Brazil, Nigeria, Mexico, Hong Kong, and China
+## Onramp Accounts
+
+Onramp Accounts allow Users to receive money from a bank account into their HIFI Wallet.
+We support payins from first and third-party Accounts, which means Users can
+receive money from themselves or from others.
+
+## Offramp Accounts
+
+Offramp Accounts allow Users to transfer money from their HIFI Wallet to a bank account.
+We also support first and third-party payouts.
+
+## Creating Accounts
+
+To create an Account for a User, you have to first unlock the relevant Rail. A Rail is a collection of fiat payment methods.
+
+<Card icon="unlock" title="Rails" href="/docs/fiat/rails">
+  Learn about our fiat capabilities
+</Card>

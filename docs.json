@@ -52,7 +52,6 @@
                 "group": "Transfers",
                 "pages": [
                   "docs/transfers/index",
-                  "docs/transfers/accounts",
                   "docs/transfers/onramps",
                   "docs/transfers/swaps",
                   "docs/transfers/bridging",
