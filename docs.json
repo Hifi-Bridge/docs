@@ -62,7 +62,7 @@
         "pages": [
           {
             "group": "Guides",
-            "pages": ["guides/index"]
+            "pages": ["guides/index", "guides/quickstart"]
           },
           {
             "group": "Primitives",
