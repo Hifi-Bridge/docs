@@ -89,6 +89,10 @@
             ]
           },
           {
+            "group": "Implementation",
+            "pages": ["guides/settlement-rules"]
+          },
+          {
             "group": "Use Cases",
             "pages": [
               "guides/use-cases/dollar-access",

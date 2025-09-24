@@ -24,7 +24,7 @@ A new parameter `requireApproval` can be included when creating transfers. If se
 
 The parameter defaults to `false`, so existing integrations are unaffected. This gives you the flexibility to define your own rules for when Admin approval is required.
 
-**Supported endpoints:**
+### Endpoints
 
 - `POST /wallets/transfers` – crypto to crypto
 - `POST /wallets/transfers/batches` – crypto batch
@@ -32,14 +32,16 @@ The parameter defaults to `false`, so existing integrations are unaffected. This
 
 <Note>
   {" "}
-  Bridging Because bridging is quote based, quotes are only generated after approval.
-  This ensures that they do not expire while waiting for review.
+  Because bridging is quote based, quotes are only generated after approval. This
+  ensures that they do not expire while waiting for review.
 </Note>
 
 ## Notifications
 
 - Admins receive email notifications when a transfer is pending approval.
 - Members receive email notifications when their transfer request is approved or rejected.
+
+### Webhooks
 
 If your organization has enabled webhooks, you can also listen for transfer approval events:
 
