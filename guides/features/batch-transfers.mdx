@@ -1,0 +1,171 @@
+---
+title: "Batch Transfers"
+---
+
+Batch transfers allow you to send stablecoins to multiple wallet addresses in a single transaction, improving efficiency and reducing costs when handling multiple transfers.
+
+## Overview
+
+Batch transfers are ideal for:
+
+- **Payroll**: Paying multiple employees
+- **Rewards**: Distributing rewards to multiple users
+- **Refunds**: Processing multiple refunds
+- **Airdrops**: Distributing tokens to multiple addresses
+
+## Key Benefits
+
+- **Cost Efficiency**: Single transaction fee for multiple transfers
+- **Speed**: All transfers execute together
+- **Simplicity**: One API call for multiple recipients
+- **Reliability**: Atomic execution - all transfers succeed or fail together
+
+## Creating Batch Transfers
+
+### Basic Example
+
+```bash
+curl --request POST \
+     --url https://sandbox.hifibridge.com/v2/wallets/transfers/batches \
+     --header 'Authorization: Bearer YOUR_API_KEY' \
+     --header 'content-type: application/json' \
+     --data '{
+  "requestId": "batch-001",
+  "currency": "usdc",
+  "chain": "POLYGON",
+  "source": {
+    "userId": "your-user-id"
+  },
+  "destination": {
+    "batch": [
+      {
+        "userId": "recipient-1",
+        "amount": "100.00"
+      },
+      {
+        "userId": "recipient-2",
+        "amount": "250.00"
+      },
+      {
+        "userId": "recipient-3",
+        "amount": "75.50"
+      }
+    ]
+  }
+}'
+```
+
+### With External Wallets
+
+You can also send to external wallet addresses:
+
+```json
+{
+  "requestId": "batch-external-001",
+  "currency": "usdc",
+  "chain": "POLYGON",
+  "source": {
+    "userId": "your-user-id"
+  },
+  "destination": {
+    "batch": [
+      {
+        "walletAddress": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e",
+        "amount": "100.00"
+      },
+      {
+        "walletAddress": "0x8ba1f109551bD432803012645Hac136c",
+        "amount": "250.00"
+      }
+    ]
+  }
+}
+```
+
+## Transaction Status
+
+Batch transfers progress through these statuses:
+
+- **CREATED**: Transaction created, awaiting processing
+- **PROCESSING**: Batch transfer executing on blockchain
+- **COMPLETED**: All transfers successfully completed
+- **FAILED**: Transaction failed (check `failedReason`)
+
+## Best Practices
+
+### Request ID Management
+
+Always use unique request IDs to prevent duplicate transactions:
+
+```javascript
+const requestId = `batch-${Date.now()}-${Math.random()
+  .toString(36)
+  .substr(2, 9)}`;
+```
+
+### Amount Validation
+
+Validate amounts before creating batch transfers:
+
+```javascript
+const totalAmount = batch.reduce(
+  (sum, transfer) => sum + parseFloat(transfer.amount),
+  0
+);
+const walletBalance = await getWalletBalance(userId, currency);
+
+if (totalAmount > walletBalance) {
+  throw new Error("Insufficient balance for batch transfer");
+}
+```
+
+### Error Handling
+
+Handle partial failures gracefully:
+
+```javascript
+try {
+  const response = await createBatchTransfer(transferData);
+
+  if (response.status === "FAILED") {
+    console.error("Batch transfer failed:", response.failedReason);
+    // Handle failure case
+  }
+} catch (error) {
+  console.error("Error creating batch transfer:", error);
+}
+```
+
+## Limits and Constraints
+
+- **Maximum Recipients**: 50 transfers per batch
+- **Minimum Amount**: Varies by currency (typically $0.01)
+- **Supported Currencies**: USDC, USDT, and other supported stablecoins
+- **Supported Chains**: Ethereum, Polygon, and other supported networks
+
+## Monitoring and Tracking
+
+### Check Transfer Status
+
+```bash
+curl --request GET \
+     --url https://sandbox.hifibridge.com/v2/wallets/transfers/batches/{batchId} \
+     --header 'Authorization: Bearer YOUR_API_KEY'
+```
+
+### Webhook Events
+
+Listen for batch transfer events:
+
+- `TRANSFER.BATCH.CREATED` - Batch transfer created
+- `TRANSFER.BATCH.PROCESSING` - Batch transfer processing
+- `TRANSFER.BATCH.COMPLETED` - Batch transfer completed
+- `TRANSFER.BATCH.FAILED` - Batch transfer failed
+
+<Card icon="code" title="API Reference" href="/docs/transfers/batch-transfers">
+  View complete API documentation
+</Card>
+
+<Card icon="webhook" title="Webhook Events" href="/api/events">
+  Learn about webhook events
+</Card>

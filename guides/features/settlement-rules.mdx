@@ -1,5 +1,5 @@
 ---
-title: "Settlement Rules Implementation Guide"
+title: "Settlement Rules"
 ---
 
 This guide provides step-by-step instructions for implementing settlement rules in your application, including code examples and API usage patterns.
@@ -61,6 +61,7 @@ curl -X POST "https://api.hifi.com/v1/virtual-accounts/cfbc005d-8640-57a4-89e1-5
 **Endpoint:** `POST /v1/virtual-accounts/{virtualAccountId}/settlement-rules`
 
 **Request Body:**
+
 ```json
 {
   "chain": "BASE",
@@ -78,6 +79,7 @@ curl -X POST "https://api.hifi.com/v1/virtual-accounts/cfbc005d-8640-57a4-89e1-5
 ```
 
 **Response:**
+
 ```json
 {
   "id": "15c786fb-de7a-520c-a4b3-f312d4a122d2",
@@ -141,6 +143,7 @@ curl -X GET "https://api.hifi.com/v1/virtual-accounts/cfbc005d-8640-57a4-89e1-53
 ```
 
 **Response:**
+
 ```json
 {
   "virtualAccountId": "cfbc005d-8640-57a4-89e1-539c974fa780",
@@ -176,6 +179,7 @@ curl -X DELETE "https://api.hifi.com/v1/virtual-accounts/cfbc005d-8640-57a4-89e1
 ```
 
 **Response:**
+
 ```json
 {
   "message": "Settlement rules deleted successfully",
@@ -231,6 +235,7 @@ curl -X DELETE "https://api.hifi.com/v1/virtual-accounts/cfbc005d-8640-57a4-89e1
 ```
 
 **Tier Structure:**
+
 - **Tier 1**: $0 - $1,000 → 0.07% fee
 - **Tier 2**: $1,000 - $2,000 → 0.05% fee
 - **Tier 3**: $2,000+ → 0.02% fee
@@ -294,6 +299,7 @@ curl -X POST "https://sandbox-api.hifi.com/v1/virtual-accounts/test-va-123/settl
 ### Example 1: Fixed Percentage + Fixed Fee
 
 **Configuration:**
+
 ```json
 {
   "rules": [
@@ -316,6 +322,7 @@ curl -X POST "https://sandbox-api.hifi.com/v1/virtual-accounts/test-va-123/settl
 **Transaction:** $1,000 USDC conversion
 
 **Calculation:**
+
 - Percentage fee: $1,000 × 0.001 = $1.00
 - Fixed fee: $0.50
 - **Total fee: $1.50**
@@ -323,6 +330,7 @@ curl -X POST "https://sandbox-api.hifi.com/v1/virtual-accounts/test-va-123/settl
 ### Example 2: Tiered Percentage
 
 **Configuration:**
+
 ```json
 {
   "rules": [
@@ -355,6 +363,7 @@ curl -X POST "https://sandbox-api.hifi.com/v1/virtual-accounts/test-va-123/settl
 **Transaction:** $2,500 USDC conversion
 
 **Calculation:**
+
 - Tier 1 (0-1000): $1,000 × 0.0007 = $0.70
 - Tier 2 (1000-2000): $1,000 × 0.0005 = $0.50
 - Tier 3 (2000+): $500 × 0.0002 = $0.10

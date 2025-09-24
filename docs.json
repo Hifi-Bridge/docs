@@ -101,27 +101,58 @@
         "pages": [
           {
             "group": "Guides",
-            "pages": ["guides/index", "guides/quickstart"]
+            "pages": ["guides/quickstart"]
           },
           {
-            "group": "Primitives",
+            "group": "Users",
             "pages": [
-              "guides/convert",
-              "guides/route",
-              "guides/send",
-              "guides/screen"
+              "guides/users/create-user",
+              "guides/users/submit-kyc",
+              "guides/features/kyc-link"
             ]
           },
           {
-            "group": "Implementation",
-            "pages": ["guides/settlement-rules"]
+            "group": "Transfers",
+            "pages": [
+              {
+                "group": "Onramps",
+                "pages": [
+                  "guides/transfers/onramps/usd-usdc",
+                  "guides/transfers/onramps/mxn-usdc"
+                ]
+              },
+              {
+                "group": "Offramps",
+                "pages": [
+                  "guides/transfers/offramps/usdc-usd",
+                  "guides/transfers/offramps/usdc-mxn"
+                ]
+              },
+              {
+                "group": "Swaps",
+                "pages": ["guides/transfers/swaps/usdc-usdt"]
+              },
+              {
+                "group": "Bridges",
+                "pages": ["guides/transfers/bridges/eth-sol"]
+              },
+              {
+                "group": "Features",
+                "pages": [
+                  "guides/features/batch-transfers",
+                  "guides/features/virtual-accounts",
+                  "guides/features/settlement-rules",
+                  "guides/features/transfer-approvals"
+                ]
+              }
+            ]
           },
           {
             "group": "Use Cases",
             "pages": [
-              "guides/use-cases/dollar-access",
-              "guides/use-cases/cross-border",
-              "guides/use-cases/treasury"
+              "guides/use-cases/stablecoin-access",
+              "guides/use-cases/wallet-provisioning",
+              "guides/use-cases/global-payments"
             ]
           }
         ]

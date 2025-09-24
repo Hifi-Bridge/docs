@@ -247,6 +247,25 @@ table td {
   text-align: center;
 }
 
+/* Note Component Styling - Override blue background to white */
+.note,
+[class*="note"],
+[class*="Note"],
+.mintlify-note,
+.almond-note,
+div[class*="note"] {
+  background-color: white !important;
+  color: #333 !important;
+  border: 1px solid #e5e7eb !important;
+}
+
+/* Target specific Mintlify note classes */
+div[class*="note"] > *,
+.note > *,
+[class*="note"] > * {
+  color: #333 !important;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .hero-title {

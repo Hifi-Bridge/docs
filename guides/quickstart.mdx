@@ -15,3 +15,180 @@ Before you begin, make sure you have:
 ## Step 1: Authentication
 
 All API requests must be authenticated using your API key. Add it to the `Authorization` header:
+
+```bash
+curl -X GET "https://sandbox.hifibridge.com/v2/currencies" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+## Step 2: Generate Terms of Service Link
+
+Before creating a user, you need to generate a Terms of Service link that the user must accept. This provides consent for data handling and compliance screening.
+
+**POST** `/v2/tos-link`
+
+```bash
+curl -X POST "https://sandbox.hifibridge.com/v2/tos-link" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json"
+```
+
+The response will include a `signedAgreementId` that you'll need for the next step.
+
+## Step 3: Create a User
+
+Create a new user with the required information:
+
+**POST** `/v2/users`
+
+```json
+{
+  "type": "individual",
+  "firstName": "Hu",
+  "lastName": "Man",
+  "email": "human@gmail.com",
+  "dateOfBirth": "1999-03-17",
+  "address": {
+    "addressLine1": "Example St 1.",
+    "addressLine2": "Apt 123",
+    "city": "Hoboken",
+    "stateProvinceRegion": "WAR",
+    "postalCode": "CV34 8AS",
+    "country": "GBR"
+  },
+  "signedAgreementId": "8cb49537-bcf9-41b1-8d8c-c9c200d7341b"
+}
+```
+
+## Step 4: Update KYC Information
+
+Update the user's KYC information with additional details:
+
+**POST** `/v2/users/{userId}/kyc`
+
+```json
+{
+  "phone": "+8573491112",
+  "taxIdentificationNumber": "564213816",
+  "nationality": "USA"
+}
+```
+
+## Step 5: Upload Documents
+
+Upload required KYC documents:
+
+**POST** `/v2/users/{userId}/kyc/documents`
+
+```json
+[
+  {
+    "type": "ID_CARD",
+    "subType": "FRONT_SIDE",
+    "issuedCountry": "USA",
+    "issuedDate": "2024-05-04",
+    "expiryDate": "2030-05-04",
+    "number": "869950322",
+    "url": "https://picsum.photos/1000/1000"
+  },
+  {
+    "type": "ID_CARD",
+    "subType": "BACK_SIDE",
+    "issuedCountry": "USA",
+    "issuedDate": "2024-05-04",
+    "expiryDate": "2030-05-04",
+    "number": "869950322",
+    "url": "https://picsum.photos/1000/1000"
+  }
+]
+```
+
+## Step 6: Submit KYC for USD Rails
+
+Submit the KYC for USD rails processing:
+
+**POST** `/v2/users/{userId}/kyc/submissions`
+
+```bash
+curl --request POST \
+     --url https://sandbox.hifibridge.com/v2/users/{userId}/kyc/submissions \
+     --header 'Authorization: Bearer YOUR_API_KEY' \
+     --header 'accept: application/json' \
+     --header 'content-type: application/json' \
+     --data '{
+  "rails": "USD"
+}'
+```
+
+<Note>
+  After submission, the KYC review process begins. For individual users, this
+  typically takes a few minutes. You'll receive a `KYC.STATUS.UPDATE` webhook
+  when the review is complete. [Learn more about
+  statuses](/docs/users/kyc#kyc-status)
+</Note>
+
+## Step 7: Create Virtual Account
+
+Create a virtual account for the user:
+
+**POST** `/v2/users/{userId}/virtual-accounts`
+
+<Note>
+  If you don't have USD and can't make transfers, you can use an onramp to
+  convert your local currency to USDC. [Learn about MXN to USDC
+  onramps](/guides/onramps/mxn-usdc)
+</Note>
+
+```bash
+curl --request POST \
+     --url https://sandbox.hifibridge.com/v2/users/{userId}/virtual-accounts \
+     --header 'Authorization: Bearer YOUR_API_KEY' \
+     --header 'accept: application/json' \
+     --header 'content-type: application/json' \
+     --data '{
+  "sourceCurrency": "usd",
+  "destinationCurrency": "usdc",
+  "destinationChain": "POLYGON",
+  "externalWalletId": "string"
+}'
+```
+
+## Step 8: Simulate Deposit
+
+Simulate a deposit to the virtual account for testing:
+
+**POST** `/v2/virtual-accounts/{virtualAccountId}/simulate-deposit`
+
+```json
+{
+  "amount": "100.00",
+  "currency": "USD",
+  "description": "Test deposit"
+}
+```
+
+## Step 9: Check Balance
+
+Check the user's wallet balance to verify the deposit:
+
+**GET** `/v2/users/{userId}/wallets/balance`
+
+```bash
+curl -X GET "https://sandbox.hifibridge.com/v2/users/{userId}/wallets/balance" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+**Response:**
+
+```json
+{
+  "balances": [
+    {
+      "currency": "usdc",
+      "chain": "POLYGON",
+      "balance": "100.00",
+      "availableBalance": "100.00"
+    }
+  ]
+}
+```
