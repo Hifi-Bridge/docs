@@ -2,16 +2,12 @@
 title: "Send USDC"
 ---
 
-Learn how to send USDC between wallets using HIFI's transfer API.
-
 ## Prerequisites
 
 Before you begin, make sure you have:
 
-1. [Created a HIFI account](https://dashboard.hifibridge.com/login?request_access=true)
-2. Copied API keys from the Dashboard
-3. Users with sufficient USDC balance
-4. Basic familiarity with REST APIs
+1. A source User with sufficient USDC balance
+2. A destination User or Wallet address
 
 ## Step 1: Check Source Wallet Balance
 
@@ -173,9 +169,3 @@ Common errors and how to handle them:
 - **Invalid user**: Verify destination user exists
 - **Network issues**: Retry with exponential backoff
 - **Rate limits**: Implement proper rate limiting
-
-## Next Steps
-
-- Learn about [batch transfers](/guides/features/batch-transfers)
-- Explore [Virtual Accounts](/docs/transfers/features/virtual-accounts)
-- Set up [webhook notifications](/api/events)

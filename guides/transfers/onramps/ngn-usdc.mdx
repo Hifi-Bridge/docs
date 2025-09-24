@@ -1,12 +1,12 @@
 ---
-title: "USD to USDC"
+title: "NGN to USDC"
 ---
 
 ## Prerequisites
 
 Before you begin, make sure you have:
 
-1. A User with `USD` Rail enabled
+1. A User with `GLOBAL_NETWORK` Rail enabled
 2. Valid payment method (bank account, card, etc.)
 
 ## Step 1: Create Account
@@ -20,26 +20,26 @@ curl --request POST \
      --header 'content-type: application/json' \
      --data '{
   "rail": "onramp",
-  "type": "us",
+  "type": "nigeriaGlobalNetwork",
   "accountHolder": {
-    "name": "John Smith",
+    "name": "Adebayo Johnson",
     "type": "individual",
     "address": {
-      "city": "New York",
-      "country": "US",
-      "postalCode": "10001",
-      "addressLine1": "123 Main St",
-      "addressLine2": "Apt 4B",
-      "stateProvinceRegion": "NY"
+      "city": "Lagos",
+      "country": "NG",
+      "postalCode": "100001",
+      "addressLine1": "123 Victoria Island",
+      "addressLine2": "Block A",
+      "stateProvinceRegion": "Lagos"
     },
-    "dateOfBirth": "1990-05-15",
-    "idNumber": "123-45-6789",
-    "nationality": "USA"
+    "dateOfBirth": "1985-03-20",
+    "idNumber": "NG12345678901",
+    "nationality": "NGA"
   },
-  "us": {
-    "transferType": "ach",
-    "accountType": "Checking",
-    "currency": "usd"
+  "nigeriaGlobalNetwork": {
+    "bankName": "Access Bank",
+    "accountNumber": "1234567890",
+    "currency": "ngn"
   }
 }'
 ```
@@ -48,18 +48,18 @@ curl --request POST \
 
 ```json
 {
-  "id": "acc_123456789",
-  "type": "us",
+  "id": "acc_987654321",
+  "type": "nigeriaGlobalNetwork",
   "rail": "offramp",
   "status": "ACTIVE",
   "accountHolder": {
-    "name": "John Smith",
+    "name": "Adebayo Johnson",
     "type": "individual"
   },
-  "us": {
-    "transferType": "ach",
-    "accountType": "Checking",
-    "currency": "usd"
+  "nigeriaGlobalNetwork": {
+    "bankName": "Access Bank",
+    "accountNumber": "1234567890",
+    "currency": "ngn"
   },
   "createdAt": "2025-02-03T17:15:31.927121+00:00"
 }
@@ -81,14 +81,14 @@ curl --request POST \
   "purposeOfPayment": "gift",
   "isInstant": false,
   "source": {
-    "amount": 10,
-    "currency": "usd",
+    "amount": 60000,
+    "currency": "ngn",
     "transferType": "ach",
     "accountId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
     "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
   },
   "destination": {
-    "amount": 10,
+    "amount": 100,
     "currency": "usdc",
     "chain": "POLYGON_AMOY",
     "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
@@ -139,14 +139,14 @@ curl --request POST \
 <AccordionGroup>
 <Accordion title="transferDetails.source">
 
-Information about the source of funds (USD account). Includes user details, currency, transfer type, and amount.
+Information about the source of funds (NGN account). Includes user details, currency, transfer type, and amount.
 
 ```json
 {
   "userId": "c15c0adf-3e45-4a62-b334-73aeec127649",
-  "currency": "usd",
+  "currency": "ngn",
   "transferType": "ach",
-  "amount": 10,
+  "amount": 60000,
   "accountId": null,
   "user": {
     "email": "henry@hifibridge.com",
@@ -210,26 +210,26 @@ Exchange rate and fee breakdown including:
 ```json
 {
   "sendGross": {
-    "amount": "10.00",
-    "currency": "usd"
+    "amount": "60000.00",
+    "currency": "ngn"
   },
   "sendNet": {
-    "amount": "10.00",
-    "currency": "usd"
+    "amount": "60000.00",
+    "currency": "ngn"
   },
   "railFee": {
     "amount": "0.00",
-    "currency": "usd"
+    "currency": "ngn"
   },
   "receiveGross": {
-    "amount": "10.00",
+    "amount": "100.00",
     "currency": "usdc"
   },
   "receiveNet": {
-    "amount": "10.00",
+    "amount": "100.00",
     "currency": "usdc"
   },
-  "rate": "1.0000",
+  "rate": "0.0017",
   "expiresAt": "2025-02-04T17:15:31.927Z"
 }
 ```
@@ -262,8 +262,8 @@ Bank deposit information for ACH transfers. Includes:
     "address": "1234 Elm St, Springfield, IL 12345"
   },
   "referenceId": "BRGWX4J5BB7MP693BT8Z",
-  "amount": "10.0",
-  "currency": "usd",
+  "amount": "60000.0",
+  "currency": "ngn",
   "instruction": "Please deposit the exact amount of currency to the bank account provided. Use the reference ID as the deposit reference."
 }
 ```
@@ -307,7 +307,7 @@ Use the deposit information from the response to send funds:
 2. **Account Number**: 11223344556677
 3. **Routing Number**: 123456789
 4. **Reference ID**: BRGWX4J5BB7MP693BT8Z
-5. **Amount**: $10.00 USD (exact amount)
+5. **Amount**: 60000.00 NGN (exact amount)
 6. **Beneficiary**: HiFi Bridge
 
 ## Step 5: Confirm Transaction

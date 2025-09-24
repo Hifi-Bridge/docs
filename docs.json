@@ -101,24 +101,20 @@
           },
           {
             "group": "Users",
-            "pages": [
-              "guides/users/create-user",
-              "guides/users/submit-kyc",
-              "guides/users/features/kyc-link"
-            ]
+            "pages": ["guides/users/create-user", "guides/users/submit-kyc"]
           },
           {
             "group": "Transfers",
             "pages": [
               {
-                "group": "Wallet",
-                "pages": ["guides/transfers/wallet/send-usdc"]
+                "group": "Wallets",
+                "pages": ["guides/transfers/wallets/send-usdc"]
               },
               {
                 "group": "Onramps",
                 "pages": [
                   "guides/transfers/onramps/usd-usdc",
-                  "guides/transfers/onramps/mxn-usdc"
+                  "guides/transfers/onramps/ngn-usdc"
                 ]
               },
               {
