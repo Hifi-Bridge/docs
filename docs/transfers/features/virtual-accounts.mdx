@@ -2,11 +2,44 @@
 title: "Virtual Accounts"
 ---
 
-The Virtual Accounts API allows you to create dedicated bank accounts for converting fiat currency to stablecoins. These accounts can be reused for multiple transactions and provide better rates for recurring operations.
+The Virtual Accounts API allows you to create dedicated bank accounts for converting fiat currency to stablecoins. These accounts can be reused for multiple transactions and provide better rates for recurring operations. You can settle funds to external wallets or internal wallet addresses.
+
+## How Virtual Accounts Work
+
+Virtual accounts follow a simple three-step process:
+
+1. **Create virtual account** – Generate a dedicated bank account for fiat-to-stablecoin conversions
+2. **Receive deposits** – Accept fiat deposits through multiple payment rails (ACH, Wire, RTP, SWIFT)
+3. **Convert automatically** – Deposits are automatically converted to stablecoins and sent to a Wallet
+
+### Account Configuration
+
+Virtual accounts are configured per user and support multiple payment rails and destination currencies. You can create accounts for different blockchain networks and stablecoin types.
 
 ## Create Virtual Account
 
-Create a virtual account by specifying the source payment rails and destination wallet.
+```bash
+curl --request POST \
+     --url https://production.hifibridge.com/v2/users/userId/virtual-accounts \
+     --header 'accept: application/json' \
+     --header 'content-type: application/json' \
+     --data '{
+  "sourceCurrency": "usd",
+  "destinationCurrency": "usdc",
+  "destinationChain": "POLYGON",
+  "externalWalletId": "string"
+}'
+```
+
+<Note>
+  Either `destinationChain` or `externalWalletId` must be provided. If
+  `externalWalletId` is specified, the system will use the associated wallet's
+  chain and address. USDT is only supported on Ethereum.
+</Note>
+
+## Response Structure
+
+When you create a Virtual Account, the API response includes detailed information about the account configuration:
 
 ```json
 {
@@ -50,37 +83,65 @@ Create a virtual account by specifying the source payment rails and destination 
 }
 ```
 
-## Account Management
+## Account Features
 
-### Deactivate and Reactivate
+<Warning>
+  We only support 🇺🇸 USD Virtual Accounts for automatic onramps. For other
+  currencies, use our [Onramp API](/docs/transfers/onramps/).
+</Warning>
 
-You can deactivate virtual accounts when not in use and reactivate them when needed:
+### Payment Rail Support
 
-- **Deactivate**: Temporarily disable the account to prevent new deposits
-- **Reactivate**: Re-enable the account to accept new deposits
-- **Status**: Account status is reflected in the `status` field (`activated` or `deactivated`)
+Virtual accounts support multiple payment methods for maximum flexibility:
 
-### Change Destination Currency
+- **ACH**: Direct bank transfers for domestic US transactions
+- **Wire**: International wire transfers with SWIFT codes
+- **RTP**: Real-time payments for instant transfers
+- **SWIFT**: International wire transfers with full SWIFT support
 
-Virtual accounts support updating the destination currency after creation:
+### Destination Options
+
+Configure where converted stablecoins are sent:
 
 - **Supported Currencies**: USDC, USDT, and other supported stablecoins
-- **Chain Support**: Ethereum, Polygon, and other supported networks
-- **Real-time Updates**: Changes take effect immediately for new deposits
+- **Chain Support**: Ethereum, Polygon, Base, and other supported networks
+
+<Card
+  title="Settlement Rules"
+  icon="calculator"
+  href="/docs/transfers/features/settlement-rules"
+>
+  Configure fee calculations and distribution
+</Card>
+
+## Account Management
+
+You can change the destination or status of a Virtual Account.
+
+- **Activated**: Account accepts new deposits and processes conversions
+- **Deactivated**: Account temporarily disabled, preventing new deposits
+
+<CardGroup cols={2}>
+  <Card
+    title="Update Account"
+    icon="pen-to-square"
+    href="api/virtual-account/update-a-virtual-account"
+  ></Card>
+  <Card
+    title="Deactivate Account"
+    icon="circle-stop"
+    href="/api/virtual-account/deactivate-a-virtual-account"
+  ></Card>
+</CardGroup>
 
 ## Sandbox Testing
 
 In sandbox mode, you can simulate deposits to test your integration:
 
-- **Simulate Deposits**: Test deposit flows without real money
-- **Mock Responses**: Use test data to verify your application logic
-- **Full Testing**: Validate the complete deposit-to-stablecoin conversion process
-
-## API Reference
-
-For detailed API documentation, see the [Virtual Accounts API Reference](/api/virtual-accounts/).
-
-## Related Documentation
-
-- **Settlement Rules**: See [Settlement Rules documentation](/docs/transfers/settlement-rules/)
-- **Onramp API**: For one-time conversions, see [Onramp API documentation](/docs/transfers/onramps/)
+<Card
+  title="Simulate Deposit"
+  icon="code"
+  href="/api/virtual-account/simulate-a-deposit-to-a-virtual-account"
+>
+  Learn how to simulate Virtual Account deposits
+</Card>

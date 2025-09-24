@@ -3,52 +3,46 @@ title: "Transfers Overview"
 sidebarTitle: "Overview"
 ---
 
-HIFI provides multiple ways to move money across different currencies, networks, and use cases. Read the guides below to learn more.
+HIFI provides multiple ways to move money across different currencies, networks, and use cases. The core transfer types are **onramps**, **offramps**, **swaps**, and **bridges**.
 
-## Convert
+## Wallet Transfers
 
-Exchange money between fiat currencies and stablecoins.
+The simplest use case for sending money on HIFI is transferring funds between wallets on the same blockchain network.
 
-<Columns cols={2}>
-<Card icon="code" title="Convert USD to USDC" href="/guides/convert/usd-usdc">
-  Exchange fiat to stablecoins
+<Card
+  icon="arrow-right"
+  title="Send USDC on Ethereum"
+  href="/guides/transfers/usdc-eth"
+>
+  Transfer USDC between wallets
 </Card>
 
-<Card icon="code" title="Convert USDC to USD" href="/guides/convert/usdc-usd">
-  Exchange stablecoins to fiat
+## Other Transfers
+
+<AccordionGroup>
+  <Accordion title="Onramps - Convert Fiat to Stablecoins">
+    Convert traditional fiat currencies (USD, EUR, etc.) into stablecoins like USDC. Learn more about [onramps](/docs/transfers/onramps).
+  </Accordion>
+
+{" "}
+
+<Accordion title="Offramps - Convert Stablecoins to Fiat">
+  Convert stablecoins back to traditional fiat currencies for withdrawal. Learn
+  more about [offramps](/docs/transfers/offramps).
+</Accordion>
+
+{" "}
+
+<Accordion title="Swaps - Exchange Cryptocurrencies">
+  Exchange one cryptocurrency for another on the same blockchain network. Learn
+  more about [swaps](/docs/transfers/swaps).
+</Accordion>
+
+  <Accordion title="Bridges - Move Assets Across Chains">
+    Transfer cryptocurrencies between different blockchain networks. Learn more about [bridging](/docs/transfers/bridging).
+  </Accordion>
+</AccordionGroup>
+
+<Card icon="globe" title="Supported Currencies" href="/docs/currencies">
+  Learn about supported regions, payment methods, and currencies
 </Card>
-</Columns>
-
-## Route
-
-Move money between currencies, wallets, accounts and chains.
-
-<Columns cols={2}>
-<Card icon="code" title="Send USDC" href="/guides/send/usdc">
-  Transfer funds between wallets
-</Card>
-
-<Card icon="code" title="Swap USDC to USDT" href="/guides/convert/usdc-usdt">
-  Exchange between stablecoins
-</Card>
-
-<Card icon="code" title="Bridge from ETH to SOL" href="/guides/route/eth-sol">
-  Move assets across blockchains
-</Card>
-
-<Card icon="code" title="Send USD to MXN" href="/guides/send/usdc-mxn">
-  Exchange fiat currencies
-</Card>
-</Columns>
-
-## Send
-
-<Columns cols={2}>
-<Card icon="code" title="Send USDC on ETH" href="/guides/send/usdc">
-  Transfer funds between wallets
-</Card>
-
-<Card icon="code" title="Send USD to MXN" href="/guides/send/usdc-mxn">
-  Exchange fiat currencies
-</Card>
-</Columns>

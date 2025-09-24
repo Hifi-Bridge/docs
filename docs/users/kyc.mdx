@@ -13,10 +13,6 @@ information requests during KYC review.
   between 1 to 3 days for Business Users, depending on structure.
 </Note>
 
-<Card icon="user" title="Submit KYC" href="/guides/screen/submit-kyc">
-  Learn how to fulfil KYC requirements for a User
-</Card>
-
 ## Rails
 
 KYC requirements are grouped by **Rail** - each rail has specific compliance requirements based on the regions and currencies it supports. Users must complete KYC for each rail they want to use.
@@ -34,7 +30,7 @@ KYC requirements are grouped by **Rail** - each rail has specific compliance req
 
 ## KYC Requirements
 
-The KYC Requirements endpoint lets you retrieve what documents and information are required, optional, or invalid for a specific user and rail combination.
+The KYC Requirements endpoint lets you retrieve what documents and information are required, optional, or invalid for a specific user and rail combination. If you want to figure out what to submit for a user's KYC, you can fetch the requirements first to understand exactly what information and documents are needed.
 
 **What you get:**
 
@@ -43,6 +39,45 @@ The KYC Requirements endpoint lets you retrieve what documents and information a
 - **Invalid**: Documents that are not accepted for this rail/user combination
 
 This endpoint helps you understand exactly what to collect from users before submitting their KYC information.
+
+<AccordionGroup>
+  <Accordion title="Required Fields">
+    These fields must be provided for KYC submission:
+    
+    - **Personal Information**: firstName, lastName, email, phone
+    - **Address**: Complete address with required fields (addressLine1, city, stateProvinceRegion, postalCode, country)
+    - **Identity**: dateOfBirth, taxIdentificationNumber, govIdType, govIdFrontUrl, govIdCountry
+    - **Proof of Address**: proofOfAddressType, proofOfAddressUrl
+    
+    <Note>
+      Address has both required and optional fields. Required fields must be provided, while optional fields like addressLine2 can be included if available.
+    </Note>
+  </Accordion>
+
+{" "}
+
+<Accordion title="Optional Fields">
+  These fields can be provided to enhance verification: - **Source of Funds
+  Questionnaire**: Complete sofEuQuestionnaire with employment status, expected
+  monthly payments, primary purpose, and source of funds - **Additional
+  Documents**: govIdBackUrl for back side of government ID
+  <Note>
+    The Source of Funds questionnaire has its own required and optional
+    sub-fields. All required questionnaire fields must be completed if you
+    choose to submit this information.
+  </Note>
+</Accordion>
+
+  <Accordion title="Invalid Fields">
+    These fields are either missing or invalid and need to be corrected:
+    
+    The API response will include a list of fields that are missing or invalid, along with the specific reason (e.g., "missing" or "invalid format").
+    
+    <Note>
+      You must address all invalid fields before KYC submission can be successful. Check the invalid fields list and provide the missing information or correct any formatting issues.
+    </Note>
+  </Accordion>
+</AccordionGroup>
 
 <Card
   icon="code"
@@ -77,6 +112,6 @@ The status endpoint provides detailed information about what's happening during 
 
 If you don't want to use the API directly, you can generate a KYC link and share it with your users. This approach allows users to complete their KYC verification through a web interface without requiring API integration on your end.
 
-<Card icon="link" title="Create KYC Link" href="/docs/users/kyc-link">
+<Card icon="link" title="Create KYC Link" href="/docs/users/features/kyc-link">
   Learn how to onboard users using a link
 </Card>

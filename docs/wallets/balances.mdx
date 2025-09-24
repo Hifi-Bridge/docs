@@ -4,25 +4,69 @@ title: "Balances"
 
 You can get a real-time view of funds that can be spent or withdrawn from a Wallet. Balances are separated by currency and network. For example, a wallet may hold **USDC on Ethereum** and **USDC on Solana**.
 
-<Card
-  icon="code"
-  title="Balance API"
-  href="/api-reference/wallet/retrieve-wallet-balance"
->
-  Get real-time wallet balances
+<Card icon="coins" title="Supported Currencies" href="/docs/currencies">
+  View all supported stablecoins and networks
 </Card>
 
-## Supported Chains
+## Using the API
 
-The following blockchain networks are supported for wallet balances:
+Use the Balance API to get real-time information about funds available in a wallet.
 
-<Card>
+**GET** `/v2/users/{userId}/wallets/balance`
 
-| Network  | USDC | USDT |
-| -------- | ---- | ---- |
-| Ethereum | ✅   | ✅   |
-| Polygon  | ✅   | ✅   |
-| Solana   | ✅   | ✅   |
-| Base     | ✅   | ✅   |
+```bash
+curl -X GET "https://sandbox.hifibridge.com/v2/users/{userId}/wallets/balance?chain=POLYGON&currency=usdc" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
 
-</Card>
+## Query Parameters
+
+The balance API requires specific parameters to retrieve wallet balances:
+
+| Parameter  | Type   | Required | Description        | Allowed Values                          |
+| ---------- | ------ | -------- | ------------------ | --------------------------------------- |
+| `chain`    | string | ✅       | Blockchain network | `POLYGON`, `ETHEREUM`, `SOLANA`, `BASE` |
+| `currency` | string | ✅       | Currency type      | `usdc`, `usdt`, `usdHifi`               |
+
+## Response Format
+
+The API returns detailed balance information for each token:
+
+```json
+{
+  "balance": "10000",
+  "displayBalance": "0.01",
+  "tokenInfo": {
+    "chain": "POLYGON_MAINNET",
+    "contractAddress": "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359",
+    "assetType": "ERC20",
+    "quantity": "10000",
+    "symbol": "USDC",
+    "decimals": 6
+  }
+}
+```
+
+## Balance Information
+
+The balance fields provide both raw and human-readable amounts:
+
+- **balance**: Raw balance amount in the token's smallest unit (e.g., 10000 for 0.01 USDC)
+- **displayBalance**: Human-readable balance amount formatted for display (e.g., "0.01")
+
+<Accordion title="Understanding Token Decimals">
+  USDC uses 6 decimal places, so a balance of "10000" represents 0.01 USDC
+  (10000 ÷ 10^6 = 0.01). Always use the `displayBalance` field for user-facing
+  amounts.
+</Accordion>
+
+## Token Information
+
+The `tokenInfo` object contains metadata about the token:
+
+- **chain**: Blockchain network where the token is held (e.g., "POLYGON_MAINNET", "ETHEREUM_MAINNET")
+- **contractAddress**: Smart contract address of the token on the blockchain
+- **assetType**: Token standard (ERC20 for Ethereum-based chains, SPL for Solana)
+- **quantity**: Total token supply (not the user's balance)
+- **symbol**: Token symbol (USDC, USDT, etc.)
+- **decimals**: Number of decimal places used by the token

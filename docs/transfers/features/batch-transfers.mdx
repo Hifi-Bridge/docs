@@ -4,6 +4,61 @@ title: "Batch Transfers"
 
 Batch transfers allow you to send stablecoins to up to 50 wallet addresses in a single transaction, improving efficiency and reducing costs when handling multiple transfers.
 
+## How Batch Transfers Work
+
+Batch transfers follow a simple three-step process:
+
+1. **Create batch transfer** – Submit a single request with multiple destination addresses and amounts
+2. **Process batch** – The system groups all transfers into a single blockchain transaction
+3. **Execute transfers** – All recipients receive their funds simultaneously in one transaction
+
+### Batch Processing
+
+Batch transfers are processed as a single transaction on the blockchain, which means:
+
+- **Cost Efficiency**: Pay gas fees once for multiple transfers instead of per transfer
+- **Atomic Execution**: All transfers succeed or fail together
+- **Faster Processing**: Single transaction reduces blockchain congestion
+- **Simplified Tracking**: One transaction hash for the entire batch
+
+## Request Structure
+
+To create a batch transfer, send a POST request with the following structure:
+
+```bash
+curl --request POST \
+     --url https://production.hifibridge.com/v2/wallets/transfers/batches \
+     --header 'accept: application/json' \
+     --header 'content-type: application/json' \
+     --data '{
+  "requestId": "123e4567-e89b-12d3-a456-426614174000",
+  "currency": "usdc",
+  "chain": "POLYGON",
+  "source": {
+    "userId": "a1f70737-3844-4782-a321-ad481108a8ec"
+  },
+  "destination": {
+    "batch": [
+      /* Batch */
+    ]
+  },
+  "requireApproval": false
+}'
+```
+
+<Accordion title="Batch">
+Each batch transfer destination includes the userId (ID of the user receiving funds), walletAddress (blockchain address receiving the transfer), and amount (the amount to transfer in human-readable format, e.g. "0.01" USDC).
+
+```
+{
+"userId": "a1f70737-3844-4782-a321-ad481108a8ec",
+"walletAddress": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e",
+"amount": "0.01"
+}
+```
+
+</Accordion>
+
 ## Transaction Structure
 
 When you create a batch transfer, the API response includes detailed information about the transaction:
@@ -83,35 +138,6 @@ When you create a batch transfer, the API response includes detailed information
   </Accordion>
 </AccordionGroup>
 
-## Request Structure
-
-To create a batch transfer, send a POST request with the following structure:
-
-```bash
-curl --request POST \
-     --url https://production.hifibridge.com/v2/wallets/transfers/batches \
-     --header 'accept: application/json' \
-     --header 'content-type: application/json' \
-     --data '{
-  "requestId": "123e4567-e89b-12d3-a456-426614174000",
-  "currency": "usdc",
-  "chain": "POLYGON",
-  "source": {
-    "userId": "a1f70737-3844-4782-a321-ad481108a8ec"
-  },
-  "destination": {
-    "batch": [
-      {
-        "userId": "a1f70737-3844-4782-a321-ad481108a8ec",
-        "walletAddress": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e",
-        "amount": "0.01"
-      }
-    ]
-  },
-  "requireApproval": false
-}'
-```
-
 ## Transaction Status
 
 Batch transfer transactions progress through several statuses:
@@ -120,23 +146,6 @@ Batch transfer transactions progress through several statuses:
 - **PROCESSING**: Batch transfer is being executed on the blockchain
 - **COMPLETED**: All transfers in the batch have been successfully completed
 - **FAILED**: Transaction failed (check `failedReason` for details)
-
-## Source Information
-
-The `source` object contains information about the wallet sending the batch transfer:
-
-- **userId**: Unique identifier for the user initiating the transfer
-- **walletAddress**: Blockchain address of the source wallet
-- **walletType**: Type of wallet (e.g., "INDIVIDUAL")
-
-## Destination Information
-
-The `destination` object contains the batch of transfers to execute:
-
-- **batch**: Array of transfer objects, each containing:
-  - **userId**: Recipient user identifier
-  - **walletAddress**: Destination wallet address (optional, can be omitted if userId is provided)
-  - **amount**: Amount to transfer in the specified currency
 
 ## Receipt Information
 

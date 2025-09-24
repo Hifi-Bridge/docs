@@ -13,14 +13,101 @@ Wallets can receive funds through:
 
 To track incoming transfers into a Wallet, use the Deposits API. This API provides updates on all incoming activity, including transaction hashes, amounts, and confirmation status.
 
-<Card icon="code" title="Deposits" href="/api-reference/wallet/list-deposits">
-  Explore the API Reference
-</Card>
+**GET** `/v2/users/{userId}/wallets/deposits`
+
+```bash
+curl -X GET "https://sandbox.hifibridge.com/v2/users/{userId}/wallets/deposits" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+## Query Parameters
+
+The deposits API supports several query parameters for filtering and pagination:
+
+| Parameter       | Type   | Required | Description                 | Example                                 |
+| --------------- | ------ | -------- | --------------------------- | --------------------------------------- |
+| `chain`         | string | ✅       | Blockchain network          | `POLYGON`, `ETHEREUM`, `SOLANA`, `BASE` |
+| `currency`      | string | ✅       | Currency type               | `usdc`, `usdt`, `usdHifi`               |
+| `status`        | string | ❌       | Deposit status              | `CONFIRMED`, `COMPLETED`                |
+| `createdAfter`  | date   | ❌       | Filter deposits after date  | `2024-01-01`                            |
+| `createdBefore` | date   | ❌       | Filter deposits before date | `2024-12-31`                            |
+| `limit`         | string | ❌       | Number of results (1-100)   | `10` (default), `50`                    |
+| `minAmount`     | number | ❌       | Minimum deposit amount      | `0.01`                                  |
+
+### Response Format
+
+The API returns a paginated list of deposit records:
+
+```json
+{
+  "count": 1,
+  "records": [
+    {
+      "userId": "f4c99c2f-ce05-4f61-8ed6-9064a5689197",
+      "id": "2e084846-00d6-5e4c-806f-eac45e197108",
+      "createdAt": "2025-06-25T15:47:16.983978+00:00",
+      "updatedAt": "2025-06-25T15:47:16.983978+00:00",
+      "wallet": {
+        "id": "24b4917d-694e-4d81-ace8-9ba5261b6f4e",
+        "address": "0x0B95D270400BE4319EAFbfDD82F6C38B59ab54Ef",
+        "chain": "POLYGON",
+        "walletType": "INDIVIDUAL"
+      },
+      "transaction": {
+        "transactionHash": "0xe5284c4cb35ae9b5eb0ae23b840032f320b87b63f8967ee9b67ee09dfe6a194a",
+        "chain": "POLYGON",
+        "currency": "usdc",
+        "status": "COMPLETED",
+        "sourceAddress": "0x0B95D270400BE4319EAFbfDD82F6C38B59ab54Ef",
+        "destinationAddress": "0x0B95D270400BE4319EAFbfDD82F6C38B59ab54Ef",
+        "contractAddress": "0x41E94Eb019C0762f9Bfcf9Fb1E58725BfB0e7582",
+        "amount": "19",
+        "unitAmount": "19000000"
+      }
+    }
+  ],
+  "nextCursor": "2025-06-25T15:47:16.983978+00:00"
+}
+```
+
+## Deposit Record Fields
+
+### Record Information
+
+- **userId**: ID of the user who owns the wallet
+- **id**: Unique identifier for this deposit record
+- **createdAt**: Timestamp when the deposit was first detected
+- **updatedAt**: Timestamp when the deposit record was last updated
+
+### Wallet Information
+
+- **wallet.id**: Unique identifier for the wallet
+- **wallet.address**: Blockchain address of the wallet
+- **wallet.chain**: Blockchain network (POLYGON, ETHEREUM, etc.)
+- **wallet.walletType**: Type of wallet (INDIVIDUAL, BUSINESS)
+
+### Transaction Details
+
+- **transactionHash**: Blockchain transaction hash
+- **chain**: Blockchain network where the transaction occurred
+- **currency**: Token symbol (usdc, usdt, etc.)
+- **status**: Transaction status (COMPLETED, PENDING, FAILED)
+- **sourceAddress**: Address that sent the funds
+- **destinationAddress**: Address that received the funds
+- **contractAddress**: Smart contract address of the token
+- **amount**: Human-readable amount (e.g., "19" for 19 USDC)
+- **unitAmount**: Raw amount in smallest token unit (e.g., "19000000" for 19 USDC with 6 decimals)
+
+<Accordion title="Understanding Amount Fields">
+  The `amount` field shows the human-readable value (19 USDC), while
+  `unitAmount` shows the raw blockchain value (19000000). For USDC with 6
+  decimals: 19 USDC = 19,000,000 units.
+</Accordion>
 
 ## Fiat onramps
 
 Convert fiat currency to stablecoins using local payment methods like bank transfers, PIX, or ACH. When users pay in fiat (e.g. USD), it's automatically converted to stablecoin and credited to their wallet.
 
 <Card icon="circle-dollar" title="Onramps" href="/docs/transfers/onramps">
-  Learn how to set up fiat-to-crypto conversions
+  Learn how to convert to stablecoinsa
 </Card>

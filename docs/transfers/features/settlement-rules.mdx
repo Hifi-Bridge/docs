@@ -2,84 +2,117 @@
 title: "Settlement Rules"
 ---
 
-Settlement rules allow you to configure how fees are calculated and distributed for virtual account transactions. You can set up complex fee structures with multiple rules, percentage-based or fixed fees, and tiered pricing models to optimize your revenue sharing strategy.
+Settlement rules allow you to configure how fees are calculated and distributed for Virtual Account transactions. You can set up complex fee structures with multiple rules, percentage-based or fixed fees, and tiered pricing models to optimize your revenue sharing strategy.
 
-## How it works
+## How Settlement Rules Work
 
-Settlement rules let you configure how fees are handled:
+Settlement rules follow a simple two-step process:
 
-- **Calculate fees** using percentages or fixed amounts
-- **Set tiered pricing** for volume discounts
-- **Distribute fees** to multiple wallet addresses
+1. **Create settlement rules** – Configure fee calculation and distribution rules for your Virtual Accounts
+2. **Apply to Virtual Accounts** – Rules automatically apply to all transactions on configured Virtual Accounts
 
-## Key Features
+## Creating a Rule
 
-- **Multiple Rule Types**: Combine percentage and fixed fee rules
-- **Tiered Pricing**: Volume-based discounts with configurable tiers
-- **Flexible Distribution**: Route fees to different wallet addresses
-- **Network Support**: Configure rules for specific blockchain networks
-- **Fee Management**: Control HIFI platform fee inclusion/exclusion
+```json
+{
+  "requestId": "1d860428-1d0b-47c5-9e65-98961ff59215",
+  "chain": "POLYGON",
+  "includeHIFIFee": true,
+  "rules": [
+    {
+      "type": "PERCENTAGE",
+      "calculationModel": "TIERED",
+      "value": null,
+      "tiers": [
+        {
+          "walletAddress": "0x1234...5678",
+          "threshold": 1000,
+          "percentage": 0.5
+        }
+      ]
+    }
+  ]
+}
+```
+
+<AccordionGroup>
+  <Accordion title="Fixed Fee Rule">
+    ```json
+    {
+      "type": "FIXED",
+      "calculationModel": "FIXED",
+      "value": 5.0,
+      "tiers": null,
+      "walletAddress": "0x1234...5678"
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="Percentage Fee Rule">
+    ```json
+    {
+      "type": "PERCENTAGE",
+      "calculationModel": "FIXED",
+      "value": 2.5,
+      "tiers": null,
+      "walletAddress": "0x1234...5678"
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="Tiered Fee Rule">
+    ```json
+    {
+      "type": "PERCENTAGE",
+      "calculationModel": "TIERED",
+      "value": null,
+      "tiers": [
+        {
+          "walletAddress": "0x1234...5678",
+          "threshold": 0,
+          "percentage": 3.0
+        },
+        {
+          "walletAddress": "0x1234...5678",
+          "threshold": 10000,
+          "percentage": 2.0
+        }
+      ]
+    }
+    ```
+  </Accordion>
+</AccordionGroup>
 
 ## Rule Types
 
-### Percentage Rules
+### Fixed Fee Rules
+
+Fixed fee rules charge a constant amount regardless of transaction size. This is useful for covering base processing costs or minimum fees.
+
+**Example**: $5.00 fee on every transaction
+
+### Percentage Fee Rules
 
 Percentage rules calculate fees as a percentage of the transaction amount. You can set either fixed percentages or tiered structures that offer volume discounts.
 
-**Fixed Percentage**: A consistent percentage fee applied to all transactions
-**Tiered Percentage**: Volume-based pricing with decreasing rates for larger transactions
+### Tiered Fee Rules
 
-### Fixed Rules
+Tiered fee rules allow you to set different fee percentages based on transaction volume thresholds. This enables volume-based discounts and progressive fee structures.
 
-Fixed rules charge a constant fee regardless of transaction amount. This is useful for covering base processing costs or minimum fees.
+**Example**: 3% fee for transactions up to $10,000, then 2% fee for amounts above $10,000
 
-### Combined Rules
+Key components of tiered rules:
 
-You can combine multiple rule types to create complex fee structures. For example, a percentage fee plus a fixed processing fee.
-
-## Supported Networks
-
-| Network  | Chain ID | Native Currency |
-| -------- | -------- | --------------- |
-| Ethereum | ETHEREUM | ETH             |
-| Polygon  | POLYGON  | MATIC           |
-| Base     | BASE     | ETH             |
-| Solana   | SOLANA   | SOL             |
-
-## Fee Calculation Logic
-
-### Percentage Fees
-
-Percentage fees are calculated as: `Transaction Amount × Fee Percentage`
-
-For tiered pricing, the system evaluates each tier in order and applies the appropriate rate based on the transaction amount.
-
-### Fixed Fees
-
-Fixed fees are added as a constant amount regardless of transaction size.
-
-### Combined Calculations
-
-When multiple rules are applied, fees are calculated separately and then summed together.
-
-## Use Cases
-
-### E-commerce Platforms
-
-Set percentage-based fees to cover payment processing costs while maintaining profitability.
-
-### Trading Platforms
-
-Implement tiered pricing to offer volume discounts to high-frequency traders.
-
-### Financial Services
-
-Use fixed fees for minimum transaction costs combined with percentage fees for revenue sharing.
+- **Threshold**: The transaction amount where the tier begins
+- **Percentage**: Fee percentage applied for amounts in that tier
+- **Wallet Address**: Destination for fees collected in each tier
 
 ## Try it out
 
-Read our comprehensive guide for settlement rules:
-
-<Card title="Settlement Rules" icon="code" href="/guides/settlement-rules">
-  Learn how to split onramp transaction
+<Card
+  title="Create Settlement Rule"
+  icon="code"
+  href="/guides/features/settlement-rules"
+>
+  Learn how to configure fee calculations
 </Card>

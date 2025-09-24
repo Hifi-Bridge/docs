@@ -1,0 +1,181 @@
+---
+title: "Send USDC"
+---
+
+Learn how to send USDC between wallets using HIFI's transfer API.
+
+## Prerequisites
+
+Before you begin, make sure you have:
+
+1. [Created a HIFI account](https://dashboard.hifibridge.com/login?request_access=true)
+2. Copied API keys from the Dashboard
+3. Users with sufficient USDC balance
+4. Basic familiarity with REST APIs
+
+## Step 1: Check Source Wallet Balance
+
+First, verify that the source wallet has sufficient USDC balance:
+
+**GET** `/v2/users/{userId}/wallets/balance`
+
+```bash
+curl -X GET "https://sandbox.hifibridge.com/v2/users/{userId}/wallets/balance" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+**Response:**
+
+```json
+{
+  "balances": [
+    {
+      "currency": "usdc",
+      "chain": "POLYGON",
+      "balance": "1000.00",
+      "availableBalance": "1000.00"
+    }
+  ]
+}
+```
+
+## Step 2: Create Transfer
+
+Send USDC from one wallet to another:
+
+**POST** `/v2/wallets/transfers`
+
+```bash
+curl --request POST \
+     --url https://sandbox.hifibridge.com/v2/wallets/transfers \
+     --header 'Authorization: Bearer YOUR_API_KEY' \
+     --header 'accept: application/json' \
+     --header 'content-type: application/json' \
+     --data '{
+  "requestId": "transfer-001",
+  "currency": "usdc",
+  "amount": "100.00",
+  "chain": "POLYGON",
+  "source": {
+    "userId": "source-user-id"
+  },
+  "destination": {
+    "userId": "destination-user-id"
+  },
+  "requireApproval": false
+}'
+```
+
+## Step 3: Monitor Transfer Status
+
+Check the status of your transfer:
+
+**GET** `/v2/wallets/transfers/{transferId}`
+
+```bash
+curl -X GET "https://sandbox.hifibridge.com/v2/wallets/transfers/{transferId}" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+**Response:**
+
+```json
+{
+  "transferType": "WALLET.TRANSFER",
+  "transferDetails": {
+    "id": "transfer-abc123",
+    "requestId": "transfer-001",
+    "status": "COMPLETED",
+    "chain": "POLYGON",
+    "currency": "usdc",
+    "amount": "100.00",
+    "source": {
+      "userId": "source-user-id",
+      "walletAddress": "0x1234...5678"
+    },
+    "destination": {
+      "userId": "destination-user-id",
+      "walletAddress": "0x8765...4321"
+    },
+    "receipt": {
+      "transactionHash": "0x57f0cd3429ea425d982882243428ef4a1eda5f1be2157c1b34ea48b49b24fe7f"
+    }
+  }
+}
+```
+
+## Transfer Statuses
+
+Transfers progress through several statuses:
+
+- **CREATED**: Transfer has been created and is awaiting processing
+- **PROCESSING**: Transfer is being executed on the blockchain
+- **COMPLETED**: Transfer has been successfully completed
+- **FAILED**: Transfer failed (check `failedReason` for details)
+
+## Advanced Options
+
+### Transfer with Approval
+
+Require admin approval before execution:
+
+```bash
+curl --request POST \
+     --url https://sandbox.hifibridge.com/v2/wallets/transfers \
+     --header 'Authorization: Bearer YOUR_API_KEY' \
+     --header 'accept: application/json' \
+     --header 'content-type: application/json' \
+     --data '{
+  "requestId": "transfer-002",
+  "currency": "usdc",
+  "amount": "500.00",
+  "chain": "POLYGON",
+  "source": {
+    "userId": "source-user-id"
+  },
+  "destination": {
+    "userId": "destination-user-id"
+  },
+  "requireApproval": true
+}'
+```
+
+### Transfer to External Wallet
+
+Send to a specific wallet address:
+
+```bash
+curl --request POST \
+     --url https://sandbox.hifibridge.com/v2/wallets/transfers \
+     --header 'Authorization: Bearer YOUR_API_KEY' \
+     --header 'accept: application/json' \
+     --header 'content-type: application/json' \
+     --data '{
+  "requestId": "transfer-003",
+  "currency": "usdc",
+  "amount": "50.00",
+  "chain": "POLYGON",
+  "source": {
+    "userId": "source-user-id"
+  },
+  "destination": {
+    "walletAddress": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e"
+  },
+  "requireApproval": false
+}'
+```
+
+## Error Handling
+
+Common errors and how to handle them:
+
+- **Insufficient funds**: Check wallet balance before transfer
+- **Invalid user**: Verify destination user exists
+- **Network issues**: Retry with exponential backoff
+- **Rate limits**: Implement proper rate limiting
+
+## Next Steps
+
+- Learn about [batch transfers](/guides/features/batch-transfers)
+- Explore [Virtual Accounts](/docs/transfers/features/virtual-accounts)
+- Set up [webhook notifications](/api/events)

@@ -1,3 +1,82 @@
 ---
 title: "Create User"
 ---
+
+## Prerequisites
+
+Before creating a user, you need:
+
+1. A valid API key
+2. A signed Terms of Service agreement ID
+
+## Step 1: Generate Terms of Service Link
+
+First, create a Terms of Service link that the user must accept:
+
+**POST** `/v2/tos-link`
+
+```bash
+curl -X POST "https://sandbox.hifibridge.com/v2/tos-link" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json"
+```
+
+**Response:**
+
+```json
+{
+  "url": "https://dashboard.hifibridge.com/accept-terms-of-service?sessionToken=e12d9c3f-75a8-4bd1-aa3d-97a2cfaf2c40&redirectUrl=undefined&templateId=2fb2da24-472a-4e5b-b160-038d9dc82a40",
+  "signedAgreementId": "e12d9c3f-75a8-4bd1-aa3d-97a2cfaf2c40"
+}
+```
+
+Share the `url` with the user so they can accept the Terms of Service. Save the `signedAgreementId` from the response for the next step.
+
+## Step 2: Create the User
+
+Create a new user with the required information:
+
+**POST** `/v2/users`
+
+```bash
+curl -X POST "https://sandbox.hifibridge.com/v2/users" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "type": "individual",
+    "firstName": "Hu",
+    "lastName": "Man",
+    "email": "human@gmail.com",
+    "dateOfBirth": "1999-03-17",
+    "address": {
+      "addressLine1": "Example St 1.",
+      "addressLine2": "Apt 123",
+      "city": "Hoboken",
+      "stateProvinceRegion": "WAR",
+      "postalCode": "CV34 8AS",
+      "country": "GBR"
+    },
+    "signedAgreementId": "8cb49537-bcf9-41b1-8d8c-c9c200d7341b"
+  }'
+```
+
+**Response:**
+
+```json
+{
+  "id": "user_123",
+  "type": "individual",
+  "firstName": "Hu",
+  "lastName": "Man",
+  "email": "human@gmail.com",
+  "status": "ACTIVE"
+}
+```
+
+## Next Steps
+
+After creating a User, you can:
+
+- [Submit KYC information](/guides/users/submit-kyc)
+- [Create Virtual Account](/docs/transfers/features/virtual-accounts)
+- [Initiate transfers](/docs/transfers/index)

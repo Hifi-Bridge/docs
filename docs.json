@@ -54,11 +54,7 @@
             "pages": [
               {
                 "group": "Users",
-                "pages": [
-                  "docs/users/index",
-                  "docs/users/tos",
-                  "docs/users/kyc/index"
-                ]
+                "pages": ["docs/users/index", "docs/users/kyc"]
               },
               {
                 "group": "Wallets",
@@ -105,11 +101,19 @@
           },
           {
             "group": "Users",
-            "pages": ["guides/users/create-user", "guides/users/submit-kyc"]
+            "pages": [
+              "guides/users/create-user",
+              "guides/users/submit-kyc",
+              "guides/users/features/kyc-link"
+            ]
           },
           {
             "group": "Transfers",
             "pages": [
+              {
+                "group": "Wallet",
+                "pages": ["guides/transfers/wallet/send-usdc"]
+              },
               {
                 "group": "Onramps",
                 "pages": [
@@ -135,10 +139,10 @@
               {
                 "group": "Features",
                 "pages": [
-                  "guides/features/batch-transfers",
-                  "guides/features/virtual-accounts",
-                  "guides/features/settlement-rules",
-                  "guides/features/transfer-approvals"
+                  "guides/transfers/features/batch-transfers",
+                  "guides/transfers/features/virtual-accounts",
+                  "guides/transfers/features/settlement-rules",
+                  "guides/transfers/features/transfer-approvals"
                 ]
               }
             ]
