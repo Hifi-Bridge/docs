@@ -8,6 +8,30 @@
     "light": "#F2FF66",
     "dark": "#191314"
   },
+  "fonts": {
+    "family": "Rhithmic Sans",
+    "source": "http://dashboard.hifibridge.com/fonts/rhithmic/RhithmicSans-Regular.woff2",
+    "format": "woff2",
+    "weight": 400,
+    "heading": {
+      "family": "Rhithmic Sans",
+      "source": "http://dashboard.hifibridge.com/fonts/rhithmic/RhithmicSans-Regular.woff2",
+      "format": "woff2",
+      "weight": 400
+    },
+    "body": {
+      "family": "Rhithmic Sans",
+      "source": "http://dashboard.hifibridge.com/fonts/rhithmic/RhithmicSans-Regular.woff2",
+      "format": "woff2",
+      "weight": 400
+    },
+    "code": {
+      "family": "Space Mono",
+      "source": "http://dashboard.hifibridge.com/fonts/rhithmic/SpaceMono-Regular.woff2",
+      "format": "woff2",
+      "weight": 400
+    }
+  },
   "css": "/styles.css",
   "js": "/flowing-light.js",
   "favicon": "/favicon.svg",

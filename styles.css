@@ -1,3 +1,23 @@
+/* Font Face Declaration for Rhithmic Sans */
+@font-face {
+  font-family: "Rhithmic Sans";
+  src: url("http://dashboard.hifibridge.com/fonts/rhithmic/RhithmicSans-Regular.woff2")
+    format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Font Face Declaration for Space Mono */
+@font-face {
+  font-family: "Space Mono";
+  src: url("http://dashboard.hifibridge.com/fonts/rhithmic/SpaceMono-Regular.woff2")
+    format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* Full height page - only for landing page */
 [data-mintlify-page="/"] html,
 [data-mintlify-page="/"] body {
@@ -29,6 +49,37 @@
 /* Hide any potential scrollbars */
 * {
   box-sizing: border-box;
+}
+
+/* Apply Rhithmic Sans font to the entire site */
+body,
+html {
+  font-family: "Rhithmic Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, sans-serif;
+}
+
+/* Override heading font weights to normal */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Rhithmic Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, sans-serif;
+  font-weight: 400 !important;
+}
+
+/* Apply Space Mono font to code elements */
+code,
+pre,
+.code,
+.code-block,
+.highlight,
+.language-* {
+  font-family: "Space Mono", "SF Mono", "Monaco", "Inconsolata", "Roboto Mono",
+    "Source Code Pro", monospace;
+  font-weight: 400;
 }
 
 /* Table Styles for Currency Support */
@@ -125,6 +176,8 @@ table td {
 }
 
 .hero-title {
+  font-family: "Rhithmic Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, sans-serif;
   font-size: 2rem;
   font-weight: 700;
   margin: 0 0 0.75rem 0;
@@ -132,6 +185,8 @@ table td {
 }
 
 .hero-description {
+  font-family: "Rhithmic Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, sans-serif;
   font-size: 1rem;
   line-height: 1.6;
   margin: 0 0 2rem 0;
