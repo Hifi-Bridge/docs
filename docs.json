@@ -97,6 +97,24 @@
         "pages": [
           "guides/quickstart",
           {
+            "group": "Integration",
+            "pages": [
+              {
+                "group": "API",
+                "pages": [
+                  "guides/integration/authentication",
+                  "guides/integration/responses",
+                  "guides/integration/errors"
+                ]
+              },
+              {
+                "group": "Dashboard",
+                "pages": ["docs/dashboard/index", "docs/dashboard/roles"]
+              },
+              "docs/sandbox"
+            ]
+          },
+          {
             "group": "Use Cases",
             "pages": [
               "guides/use-cases/stablecoin-access",
@@ -136,16 +154,16 @@
               {
                 "group": "Bridges",
                 "pages": ["guides/transfers/bridges/eth-sol"]
-              },
-              {
-                "group": "Features",
-                "pages": [
-                  "guides/transfers/features/batch-transfers",
-                  "guides/transfers/features/virtual-accounts",
-                  "guides/transfers/features/settlement-rules",
-                  "guides/transfers/features/transfer-approvals"
-                ]
               }
+            ]
+          },
+          {
+            "group": "Features",
+            "pages": [
+              "guides/transfers/features/batch-transfers",
+              "guides/transfers/features/virtual-accounts",
+              "guides/transfers/features/settlement-rules",
+              "guides/transfers/features/transfer-approvals"
             ]
           }
         ]
@@ -155,28 +173,7 @@
         "openapi": {
           "source": "/api/openapi.json",
           "directory": "api"
-        },
-        "groups": [
-          {
-            "group": "Integration",
-            "pages": [
-              {
-                "group": "API",
-                "pages": [
-                  "api/authentication",
-                  "api/responses",
-                  "api/events",
-                  "api/errors"
-                ]
-              },
-              {
-                "group": "Dashboard",
-                "pages": ["docs/dashboard/index", "docs/dashboard/roles"]
-              },
-              "docs/sandbox"
-            ]
-          }
-        ]
+        }
       }
     ]
   },

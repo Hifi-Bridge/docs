@@ -2,320 +2,52 @@
 title: "Wallet Provisioning"
 ---
 
-Wallet provisioning enables you to create and manage crypto wallets for your users automatically, providing a seamless onboarding experience without requiring users to manage their own private keys.
+HIFI enables you to create and manage stablecoin wallets for your users automatically, providing a seamless onboarding experience without requiring users to manage their own private keys.
 
 ## Overview
 
 Wallet provisioning is ideal for:
 
-- **Consumer Apps**: Users who want crypto functionality without complexity
+- **Consumer Apps**: Users who want easy blockchain finance
 - **Business Solutions**: Corporate treasury management
 - **Marketplace Platforms**: Multi-vendor payment systems
 - **Gaming Applications**: In-game currency and rewards
 
 ## Key Benefits
 
-- **User-Friendly**: No need for users to understand crypto wallets
+- **User-Friendly**: No need for users to understand stablecoin wallets
 - **Secure**: Private keys managed by HIFI's secure infrastructure
 - **Scalable**: Automated wallet creation for thousands of users
 - **Compliant**: Built-in KYC and compliance features
 
-## Implementation
+## Getting Started
 
-### Create User and Wallet
+<CardGroup cols={2}>
+  <Card
+    title="Create User"
+    icon="user-plus"
+    href="/guides/users/create-user"
+  >
+    Set up user accounts with KYC verification
+  </Card>
 
-```bash
-# Step 1: Create user
-curl --request POST \
-     --url https://sandbox.hifibridge.com/v2/users \
-     --header 'Authorization: Bearer YOUR_API_KEY' \
-     --header 'content-type: application/json' \
-     --data '{
-  "type": "individual",
-  "firstName": "John",
-  "lastName": "Doe",
-  "email": "john@example.com",
-  "dateOfBirth": "1990-01-01",
-  "address": {
-    "addressLine1": "123 Main St",
-    "city": "New York",
-    "stateProvinceRegion": "NY",
-    "postalCode": "10001",
-    "country": "USA"
-  },
-  "signedAgreementId": "agreement-id"
-}'
+{" "}
 
-# Step 2: Create wallet for user
-curl --request POST \
-     --url https://sandbox.hifibridge.com/v2/users/{userId}/wallets \
-     --header 'Authorization: Bearer YOUR_API_KEY' \
-     --header 'content-type: application/json' \
-     --data '{
-  "chain": "POLYGON",
-  "currency": "usdc"
-}'
-```
-
-### Wallet Response
-
-```json
-{
-  "wallet": {
-    "id": "wallet-123",
-    "userId": "user-456",
-    "chain": "POLYGON",
-    "currency": "usdc",
-    "address": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e",
-    "status": "active",
-    "createdAt": "2024-01-01T00:00:00Z"
-  }
-}
-```
-
-## Multi-Chain Support
-
-### Create Multiple Wallets
-
-```javascript
-// Create wallets for different chains
-const chains = ["ETHEREUM", "POLYGON", "ARBITRUM"];
-const wallets = [];
-
-for (const chain of chains) {
-  const wallet = await createWallet(userId, {
-    chain: chain,
-    currency: "usdc",
-  });
-  wallets.push(wallet);
-}
-
-console.log("Created wallets:", wallets);
-```
-
-### Wallet Management
-
-```javascript
-// Get all wallets for a user
-const userWallets = await getUserWallets(userId);
-
-// Get specific wallet
-const wallet = await getWallet(walletId);
-
-// Check wallet balance
-const balance = await getWalletBalance(walletId);
-```
-
-## Integration Patterns
-
-### Consumer App Integration
-
-```javascript
-class WalletService {
-  async provisionWallet(userId, preferences) {
-    // Create wallet based on user preferences
-    const wallet = await createWallet(userId, {
-      chain: preferences.preferredChain || "POLYGON",
-      currency: preferences.preferredCurrency || "usdc",
-    });
-
-    // Store wallet info in your database
-    await this.storeWalletInfo(userId, wallet);
-
-    return wallet;
-  }
-
-  async getWalletForUser(userId) {
-    // Get or create wallet for user
-    let wallet = await this.getStoredWallet(userId);
-
-    if (!wallet) {
-      wallet = await this.provisionWallet(userId, {});
-    }
-
-    return wallet;
-  }
-}
-```
-
-### Business Treasury Integration
-
-```javascript
-class TreasuryService {
-  async setupCorporateWallets(companyId, departments) {
-    const wallets = [];
-
-    for (const dept of departments) {
-      // Create department-specific wallet
-      const wallet = await createWallet(companyId, {
-        chain: "POLYGON",
-        currency: "usdc",
-        label: `${dept.name} Treasury`,
-      });
-
-      wallets.push({
-        department: dept.name,
-        wallet: wallet,
-      });
-    }
-
-    return wallets;
-  }
-}
-```
-
-## Security Considerations
-
-### Access Control
-
-```javascript
-// Implement proper access controls
-class WalletAccessControl {
-  async canAccessWallet(userId, walletId) {
-    const wallet = await getWallet(walletId);
-    return wallet.userId === userId;
-  }
-
-  async getWalletsForUser(userId) {
-    // Only return wallets owned by the user
-    return await getUserWallets(userId);
-  }
-}
-```
-
-### Audit Logging
-
-```javascript
-// Log all wallet operations
-class WalletAuditLogger {
-  async logWalletCreation(userId, walletId) {
-    await this.log({
-      action: "WALLET_CREATED",
-      userId: userId,
-      walletId: walletId,
-      timestamp: new Date().toISOString(),
-    });
-  }
-
-  async logWalletAccess(userId, walletId) {
-    await this.log({
-      action: "WALLET_ACCESSED",
-      userId: userId,
-      walletId: walletId,
-      timestamp: new Date().toISOString(),
-    });
-  }
-}
-```
-
-## Use Cases
-
-### E-commerce Platform
-
-```javascript
-// Create wallet for customer checkout
-async function handleCustomerCheckout(customerId, orderAmount) {
-  // Get or create customer wallet
-  const wallet = await getOrCreateWallet(customerId);
-
-  // Process payment
-  const payment = await processPayment(wallet.id, orderAmount);
-
-  return {
-    success: true,
-    transactionId: payment.id,
-    walletAddress: wallet.address,
-  };
-}
-```
-
-### Gaming Platform
-
-```javascript
-// Create wallet for gaming rewards
-async function setupGamingWallet(playerId) {
-  const wallet = await createWallet(playerId, {
-    chain: "POLYGON",
-    currency: "usdc",
-    label: "Gaming Rewards",
-  });
-
-  // Send welcome bonus
-  await sendWelcomeBonus(wallet.id, "10.00");
-
-  return wallet;
-}
-```
-
-### Marketplace Platform
-
-```javascript
-// Create wallets for vendors
-async function onboardVendor(vendorId, vendorInfo) {
-  // Create vendor wallet
-  const wallet = await createWallet(vendorId, {
-    chain: "POLYGON",
-    currency: "usdc",
-    label: `${vendorInfo.name} Vendor Wallet`,
-  });
-
-  // Set up payout preferences
-  await setVendorPayoutPreferences(vendorId, {
-    walletId: wallet.id,
-    payoutSchedule: "weekly",
-  });
-
-  return wallet;
-}
-```
-
-## Best Practices
-
-### Error Handling
-
-```javascript
-async function safeWalletCreation(userId, walletConfig) {
-  try {
-    const wallet = await createWallet(userId, walletConfig);
-    return { success: true, wallet };
-  } catch (error) {
-    console.error("Wallet creation failed:", error);
-
-    // Handle specific error cases
-    if (error.code === "INSUFFICIENT_FUNDS") {
-      return {
-        success: false,
-        error: "Insufficient funds for wallet creation",
-      };
-    }
-
-    return { success: false, error: "Wallet creation failed" };
-  }
-}
-```
-
-### Performance Optimization
-
-```javascript
-// Batch wallet creation for multiple users
-async function createWalletsBatch(userIds, walletConfig) {
-  const promises = userIds.map((userId) => createWallet(userId, walletConfig));
-
-  const results = await Promise.allSettled(promises);
-
-  return results.map((result, index) => ({
-    userId: userIds[index],
-    success: result.status === "fulfilled",
-    wallet: result.status === "fulfilled" ? result.value : null,
-    error: result.status === "rejected" ? result.reason : null,
-  }));
-}
-```
-
-<Card icon="code" title="Wallet API Reference" href="/docs/wallets">
-  View complete wallet API documentation
+<Card title="Create Wallet" icon="wallet" href="/docs/wallets">
+  Provision stablecoin wallets for your users
 </Card>
 
-<Card icon="user" title="User Management" href="/docs/users">
-  Learn about user management
+{" "}
+
+<Card title="Check Balances" icon="coins" href="/docs/wallets/balances">
+  Monitor wallet balances and transaction history
 </Card>
+
+  <Card
+    title="Send Funds"
+    icon="paper-plane"
+    href="/guides/transfers/wallets/send-usdc"
+  >
+    Transfer funds between wallets and addresses
+  </Card>
+</CardGroup>

@@ -5,7 +5,7 @@ title: "Transfer Approvals"
 This feature introduces a maker–checker workflow ("Four Eyes Principle") to on-chain transfers, ensuring that any transfer initiated by one User must be explicitly approved by another authorized User before it is executed.
 
 <Note>
-  This release applies only to on-chain crypto transfers (wallet transfers,
+  This release applies only to on-chain stablecoin transfers (wallet transfers,
   batch transfers, and bridging).
 </Note>
 
@@ -47,9 +47,9 @@ The parameter defaults to `false`, so existing integrations are unaffected. This
 
 ### Endpoints
 
-- `POST /wallets/transfers` – crypto to crypto
-- `POST /wallets/transfers/batches` – crypto batch
-- `POST /wallets/bridges` – crypto bridging
+- `POST /wallets/transfers` – stablecoin to stablecoin
+- `POST /wallets/transfers/batches` – stablecoin batch
+- `POST /wallets/bridges` – stablecoin bridging
 
 <Note>
   {" "}
