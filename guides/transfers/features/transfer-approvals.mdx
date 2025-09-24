@@ -2,40 +2,24 @@
 title: "Transfer Approvals"
 ---
 
-Transfer approvals implement a maker-checker workflow ("Four Eyes Principle") for on-chain transfers, ensuring that transfers initiated by one user must be explicitly approved by another authorized user before execution.
+## Prerequisites
 
-## Overview
+Before you begin, make sure you have:
 
-Transfer approvals provide:
+1. A User with admin permissions to approve transfers
+2. A User with member permissions to create transfers
+3. API credentials configured
 
-- **Security**: Dual authorization for sensitive transactions
-- **Compliance**: Audit trail for all transfer decisions
-- **Control**: Granular permission management
-- **Transparency**: Clear approval workflow
+## Step 1: Create Transfer Requiring Approval
 
-## How It Works
+Create a transfer that requires admin approval before execution:
 
-### Workflow
-
-1. **Initiate Transfer**: User creates a transfer with `requireApproval: true`
-2. **Pending Approval**: Transfer enters approval queue
-3. **Review**: Authorized user reviews and approves/rejects
-4. **Execution**: Approved transfers execute automatically
-
-### Supported Transfer Types
-
-- **Wallet Transfers**: Crypto to crypto transfers
-- **Batch Transfers**: Multiple recipient transfers
-- **Bridging**: Cross-chain transfers
-
-## Implementation
-
-### Enable Approval for Transfers
+**POST** `/v2/wallets/transfers`
 
 ```bash
 curl --request POST \
-     --url https://sandbox.hifibridge.com/v2/wallets/transfers \
-     --header 'Authorization: Bearer YOUR_API_KEY' \
+     --url https://production.hifibridge.com/v2/wallets/transfers \
+     --header 'accept: application/json' \
      --header 'content-type: application/json' \
      --data '{
   "requestId": "transfer-001",
@@ -46,18 +30,185 @@ curl --request POST \
   },
   "destination": {
     "userId": "recipient-user-id",
-    "amount": "100.00"
+    "amount": "1000.00"
   },
   "requireApproval": true
 }'
 ```
 
-### Batch Transfer with Approval
+**Response:**
+
+```json
+{
+  "transferType": "WALLET.TRANSFER",
+  "transferDetails": {
+    "id": "transfer-abc123",
+    "requestId": "transfer-001",
+    "status": "PENDING_APPROVAL",
+    "chain": "POLYGON",
+    "currency": "usdc",
+    "amount": "1000.00",
+    "source": {
+      "userId": "sender-user-id",
+      "walletAddress": "0x1234...5678"
+    },
+    "destination": {
+      "userId": "recipient-user-id",
+      "walletAddress": "0x8765...4321"
+    },
+    "approval": {
+      "status": "PENDING",
+      "requestedAt": "2025-02-24T17:44:54.781519+00:00"
+    }
+  }
+}
+```
+
+## Step 2: List Pending Approvals
+
+Check for transfers awaiting approval:
+
+**GET** `/v2/transfer-approvals/pending`
+
+```bash
+curl -X GET "https://production.hifibridge.com/v2/transfer-approvals/pending" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+**Response:**
+
+```json
+{
+  "approvals": [
+    {
+      "id": "approval-123",
+      "transferId": "transfer-abc123",
+      "status": "PENDING",
+      "requestedBy": "sender-user-id",
+      "requestedAt": "2025-02-24T17:44:54.781519+00:00",
+      "transfer": {
+        "currency": "usdc",
+        "amount": "1000.00",
+        "chain": "POLYGON",
+        "source": {
+          "userId": "sender-user-id"
+        },
+        "destination": {
+          "userId": "recipient-user-id",
+          "amount": "1000.00"
+        }
+      }
+    }
+  ]
+}
+```
+
+## Step 3: Approve Transfer
+
+Approve a pending transfer:
+
+**POST** `/v2/transfer-approvals/{approvalId}/approve`
 
 ```bash
 curl --request POST \
-     --url https://sandbox.hifibridge.com/v2/wallets/transfers/batches \
-     --header 'Authorization: Bearer YOUR_API_KEY' \
+     --url https://production.hifibridge.com/v2/transfer-approvals/approval-123/approve \
+     --header 'accept: application/json' \
+     --header 'content-type: application/json' \
+     --data '{
+  "reason": "Approved for payroll processing"
+}'
+```
+
+**Response:**
+
+```json
+{
+  "id": "approval-123",
+  "transferId": "transfer-abc123",
+  "status": "APPROVED",
+  "approvedBy": "admin-user-id",
+  "approvedAt": "2025-02-24T17:45:30.123456+00:00",
+  "reason": "Approved for payroll processing"
+}
+```
+
+## Step 4: Monitor Transfer Execution
+
+Check the status of the approved transfer:
+
+**GET** `/v2/wallets/transfers/{transferId}`
+
+```bash
+curl -X GET "https://production.hifibridge.com/v2/wallets/transfers/transfer-abc123" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+**Response:**
+
+```json
+{
+  "transferType": "WALLET.TRANSFER",
+  "transferDetails": {
+    "id": "transfer-abc123",
+    "requestId": "transfer-001",
+    "status": "COMPLETED",
+    "chain": "POLYGON",
+    "currency": "usdc",
+    "amount": "1000.00",
+    "source": {
+      "userId": "sender-user-id",
+      "walletAddress": "0x1234...5678"
+    },
+    "destination": {
+      "userId": "recipient-user-id",
+      "walletAddress": "0x8765...4321"
+    },
+    "approval": {
+      "status": "APPROVED",
+      "approvedBy": "admin-user-id",
+      "approvedAt": "2025-02-24T17:45:30.123456+00:00",
+      "reason": "Approved for payroll processing"
+    },
+    "receipt": {
+      "transactionHash": "0x57f0cd3429ea425d982882243428ef4a1eda5f1be2157c1b34ea48b49b24fe7f"
+    }
+  }
+}
+```
+
+## Transfer Approval Statuses
+
+Transfer approvals progress through several statuses:
+
+- **PENDING**: Transfer is awaiting approval
+- **APPROVED**: Transfer has been approved and will execute
+- **REJECTED**: Transfer has been rejected and will not execute
+- **EXPIRED**: Transfer approval request has expired
+
+## Advanced Options
+
+### Reject Transfer
+
+Reject a pending transfer:
+
+```bash
+curl --request POST \
+     --url https://production.hifibridge.com/v2/transfer-approvals/approval-123/reject \
+     --header 'accept: application/json' \
+     --header 'content-type: application/json' \
+     --data '{
+  "reason": "Insufficient documentation provided"
+}'
+```
+
+### Batch Transfer with Approval
+
+Create a batch transfer requiring approval:
+
+```bash
+curl --request POST \
+     --url https://production.hifibridge.com/v2/wallets/transfers/batches \
+     --header 'accept: application/json' \
      --header 'content-type: application/json' \
      --data '{
   "requestId": "batch-001",
@@ -70,11 +221,11 @@ curl --request POST \
     "batch": [
       {
         "userId": "recipient-1",
-        "amount": "100.00"
+        "amount": "1000.00"
       },
       {
         "userId": "recipient-2",
-        "amount": "200.00"
+        "amount": "2000.00"
       }
     ]
   },
@@ -82,177 +233,33 @@ curl --request POST \
 }'
 ```
 
-## Approval Management
+### Bridge Transfer with Approval
 
-### List Pending Approvals
-
-```bash
-curl --request GET \
-     --url https://sandbox.hifibridge.com/v2/transfer-approvals/pending \
-     --header 'Authorization: Bearer YOUR_API_KEY'
-```
-
-### Approve Transfer
+Create a bridge transfer requiring approval:
 
 ```bash
 curl --request POST \
-     --url https://sandbox.hifibridge.com/v2/transfer-approvals/{approvalId}/approve \
-     --header 'Authorization: Bearer YOUR_API_KEY' \
+     --url https://production.hifibridge.com/v2/wallets/bridges \
+     --header 'accept: application/json' \
      --header 'content-type: application/json' \
      --data '{
-  "reason": "Approved for payroll processing"
+  "source": {
+    "chain": "ETHEREUM",
+    "currency": "usdc"
+  },
+  "destination": {
+    "chain": "SOLANA",
+    "currency": "usdc"
+  },
+  "amount": "5000.00",
+  "requireApproval": true
 }'
 ```
-
-### Reject Transfer
-
-```bash
-curl --request POST \
-     --url https://sandbox.hifibridge.com/v2/transfer-approvals/{approvalId}/reject \
-     --header 'Authorization: Bearer YOUR_API_KEY' \
-     --header 'content-type: application/json' \
-     --data '{
-  "reason": "Insufficient documentation provided"
-}'
-```
-
-## Dashboard Integration
-
-### User Roles
-
-- **Members**: Can initiate transfers (require approval)
-- **Admins**: Can approve/reject transfers and create transfers without approval
-
-### Email Notifications
-
-- **Pending Approval**: Admins receive notifications for pending transfers
-- **Approved/Rejected**: Members receive notifications for their transfer status
 
 ## Webhook Events
 
-### Approval Events
+Listen for approval events:
 
-```javascript
-// Listen for approval events
-webhook.on("TRANSFER.APPROVAL.PENDING", (data) => {
-  console.log("Transfer pending approval:", data.transferId);
-  // Notify admins
-});
-
-webhook.on("TRANSFER.APPROVAL.APPROVED", (data) => {
-  console.log("Transfer approved:", data.transferId);
-  // Notify member
-});
-
-webhook.on("TRANSFER.APPROVAL.REJECTED", (data) => {
-  console.log("Transfer rejected:", data.transferId);
-  // Notify member with reason
-});
-```
-
-## Best Practices
-
-### Approval Policies
-
-```javascript
-// Define approval rules based on amount
-function requiresApproval(amount, currency) {
-  const thresholds = {
-    usdc: 10000, // $10,000
-    usdt: 10000,
-    eth: 5,
-  };
-
-  return amount > (thresholds[currency] || 1000);
-}
-
-// Apply approval requirement
-const transferData = {
-  // ... transfer details
-  requireApproval: requiresApproval(amount, currency),
-};
-```
-
-### Error Handling
-
-```javascript
-try {
-  const transfer = await createTransfer(transferData);
-
-  if (transfer.status === "PENDING_APPROVAL") {
-    console.log("Transfer pending approval");
-    // Handle pending state
-  }
-} catch (error) {
-  console.error("Transfer creation failed:", error);
-}
-```
-
-### Approval Workflow
-
-```javascript
-// Check pending approvals
-const pendingApprovals = await getPendingApprovals();
-
-for (const approval of pendingApprovals) {
-  // Review transfer details
-  const transfer = await getTransfer(approval.transferId);
-
-  // Make approval decision
-  if (shouldApprove(transfer)) {
-    await approveTransfer(approval.id, "Approved after review");
-  } else {
-    await rejectTransfer(approval.id, "Does not meet criteria");
-  }
-}
-```
-
-## Use Cases
-
-### Corporate Treasury
-
-```javascript
-// High-value transfers require approval
-const treasuryTransfer = {
-  currency: "usdc",
-  amount: "50000.00",
-  requireApproval: true,
-  // ... other details
-};
-```
-
-### Payroll Processing
-
-```javascript
-// Batch payroll with approval
-const payrollBatch = {
-  currency: "usdc",
-  batch: payrollRecipients,
-  requireApproval: true,
-  // ... other details
-};
-```
-
-### Compliance Requirements
-
-```javascript
-// All transfers above threshold require approval
-const complianceTransfer = {
-  currency: "usdc",
-  amount: transferAmount,
-  requireApproval: amount > complianceThreshold,
-  // ... other details
-};
-```
-
-<Card
-  icon="code"
-  title="API Reference"
-  href="/docs/transfers/transfer-approvals"
->
-  View complete API documentation
-</Card>
-
-<Card icon="webhook" title="Webhook Events" href="/api/events">
-  Learn about webhook events
-</Card>
+- `TRANSFER.APPROVAL.PENDING` - Transfer requires approval
+- `TRANSFER.APPROVAL.APPROVED` - Transfer has been approved
+- `TRANSFER.APPROVAL.REJECTED` - Transfer has been rejected

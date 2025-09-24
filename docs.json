@@ -95,9 +95,14 @@
       {
         "tab": "Guides",
         "pages": [
+          "guides/quickstart",
           {
-            "group": "Guides",
-            "pages": ["guides/quickstart"]
+            "group": "Use Cases",
+            "pages": [
+              "guides/use-cases/stablecoin-access",
+              "guides/use-cases/wallet-provisioning",
+              "guides/use-cases/global-payments"
+            ]
           },
           {
             "group": "Users",
@@ -141,14 +146,6 @@
                   "guides/transfers/features/transfer-approvals"
                 ]
               }
-            ]
-          },
-          {
-            "group": "Use Cases",
-            "pages": [
-              "guides/use-cases/stablecoin-access",
-              "guides/use-cases/wallet-provisioning",
-              "guides/use-cases/global-payments"
             ]
           }
         ]

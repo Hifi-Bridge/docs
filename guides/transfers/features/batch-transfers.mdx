@@ -2,90 +2,44 @@
 title: "Batch Transfers"
 ---
 
-Batch transfers allow you to send stablecoins to up to 50 wallet addresses in a single transaction, improving efficiency and reducing costs when handling multiple transfers.
+## Prerequisites
 
-## Transaction Structure
+Before you begin, make sure you have:
 
-When you create a batch transfer, the API response includes detailed information about the transaction:
+1. A source User with sufficient USDC balance
+2. Multiple destination Users or wallet addresses
+
+## Step 1: Check Source Wallet Balance
+
+First, verify that the source wallet has sufficient USDC balance for all transfers:
+
+**GET** `/v2/users/{userId}/wallets/balance`
+
+```bash
+curl -X GET "https://production.hifibridge.com/v2/users/{userId}/wallets/balance?chain=POLYGON&currency=usdc" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+**Response:**
 
 ```json
 {
-  "transferType": "WALLET.TRANSFER.BATCH",
-  "transferDetails": {
-    "id": "879af7af-67bf-469f-b718-d262a39d4857",
-    "requestId": "14a84906-b72e-4847-b34d-51b9048fa6a5",
-    "createdAt": "2025-04-05T00:55:50.609Z",
-    "updatedAt": "2025-04-05T00:56:33.236Z",
-    "chain": "POLYGON",
-    "currency": "usdc",
-    "contractAddress": "0x41e94eb019c0762f9bfcf9fb1e58725bfb0e7582",
-    "status": "COMPLETED",
-    "source": {
-      /* Source */
-    },
-    "destination": {
-      /* Destination */
-    },
-    "receipt": {
-      /* Receipt */
+  "balances": [
+    {
+      "currency": "usdc",
+      "chain": "POLYGON",
+      "balance": "1000.00",
+      "availableBalance": "1000.00"
     }
-  }
+  ]
 }
 ```
 
-<AccordionGroup>
-  <Accordion title="Source">
-    ```json
-    {
-      "userId": "6a13bd30-b3a3-4d44-af33-0b32e58261be",
-      "walletAddress": "0x99a8c5ED386d217BC6ff0AA1b3585606D475432B",
-      "walletType": "INDIVIDUAL"
-    }
-    ```
-  </Accordion>
+## Step 2: Create Batch Transfer
 
-  <Accordion title="Destination">
-    ```json
-    {
-      "batch": [
-        {
-          "amount": "0.04",
-          "userId": "6a13bd30-b3a3-4d44-af33-0b32e58261be"
-        },
-        {
-          "amount": "0.05",
-          "userId": "6a13bd30-b3a3-4d44-af33-0b32e58261be"
-        },
-        {
-          "amount": "0.06",
-          "userId": "6a13bd30-b3a3-4d44-af33-0b32e58261be"
-        },
-        {
-          "amount": "0.03",
-          "userId": "6a13bd30-b3a3-4d44-af33-0b32e58261be"
-        },
-        {
-          "amount": "0.03",
-          "userId": "6a13bd30-b3a3-4d44-af33-0b32e58261be"
-        }
-      ]
-    }
-    ```
-  </Accordion>
+Send USDC to multiple recipients in a single transaction:
 
-  <Accordion title="Receipt">
-    ```json
-    {
-      "transactionHash": "0x57f0cd3429ea425d982882243428ef4a1eda5f1be2157c1b34ea48b49b24fe7f",
-      "userOpHash": "0xef7bdb071b1fcfb5df629bd4d27ffa6dc32d0a5df676f26fb8c25311df1185ac"
-    }
-    ```
-  </Accordion>
-</AccordionGroup>
-
-## Request Structure
-
-To create a batch transfer, send a POST request with the following structure:
+**POST** `/v2/wallets/transfers/batches`
 
 ```bash
 curl --request POST \
@@ -93,18 +47,25 @@ curl --request POST \
      --header 'accept: application/json' \
      --header 'content-type: application/json' \
      --data '{
-  "requestId": "123e4567-e89b-12d3-a456-426614174000",
+  "requestId": "batch-001",
   "currency": "usdc",
   "chain": "POLYGON",
   "source": {
-    "userId": "a1f70737-3844-4782-a321-ad481108a8ec"
+    "userId": "sender-user-id"
   },
   "destination": {
     "batch": [
       {
-        "userId": "a1f70737-3844-4782-a321-ad481108a8ec",
+        "userId": "recipient-1",
+        "amount": "100.00"
+      },
+      {
+        "userId": "recipient-2",
+        "amount": "200.00"
+      },
+      {
         "walletAddress": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e",
-        "amount": "0.01"
+        "amount": "50.00"
       }
     ]
   },
@@ -112,18 +73,75 @@ curl --request POST \
 }'
 ```
 
-## Transaction Status
+**Response:**
 
-Batch transfer transactions progress through several statuses:
+```json
+{
+  "transferType": "WALLET.TRANSFER.BATCH",
+  "transferDetails": {
+    "id": "879af7af-67bf-469f-b718-d262a39d4857",
+    "requestId": "batch-001",
+    "createdAt": "2025-04-05T00:55:50.609Z",
+    "updatedAt": "2025-04-05T00:56:33.236Z",
+    "chain": "POLYGON",
+    "currency": "usdc",
+    "status": "PENDING",
+    "source": {
+      "userId": "sender-user-id",
+      "walletAddress": "0x99a8c5ED386d217BC6ff0AA1b3585606D475432B",
+      "walletType": "INDIVIDUAL"
+    },
+    "destination": {
+      "batch": [
+        {
+          "amount": "100.00",
+          "userId": "recipient-1"
+        },
+        {
+          "amount": "200.00",
+          "userId": "recipient-2"
+        },
+        {
+          "amount": "50.00",
+          "walletAddress": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e"
+        }
+      ]
+    },
+    "receipt": {
+      "transactionHash": null,
+      "userOpHash": null
+    }
+  }
+}
+```
 
-- **CREATED**: Transaction has been created and is awaiting processing
+## Step 3: Monitor Batch Status
+
+Check the status of your batch transfer:
+
+**GET** `/v2/wallets/transfers/batches/{batchId}`
+
+```bash
+curl -X GET "https://production.hifibridge.com/v2/wallets/transfers/batches/879af7af-67bf-469f-b718-d262a39d4857" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+## Batch Transfer Statuses
+
+Batch transfers progress through several statuses:
+
+- **PENDING**: Batch transfer has been created and is awaiting processing
 - **PROCESSING**: Batch transfer is being executed on the blockchain
 - **COMPLETED**: All transfers in the batch have been successfully completed
-- **FAILED**: Transaction failed (check `failedReason` for details)
+- **FAILED**: Batch transfer failed (check `failedReason` for details)
 
-## Receipt Information
+## Step 4: Verify Recipient Balances
 
-The `receipt` object contains transaction details once completed:
+Check that recipients received their funds:
 
-- **transactionHash**: Blockchain transaction hash for the batch transfer
-- **userOpHash**: User operation hash for account abstraction transactions
+**GET** `/v2/users/{userId}/wallets/balance`
+
+```bash
+curl -X GET "https://production.hifibridge.com/v2/users/recipient-1/wallets/balance?chain=POLYGON&currency=usdc" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```

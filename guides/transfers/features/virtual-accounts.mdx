@@ -2,48 +2,32 @@
 title: "Virtual Accounts"
 ---
 
-Virtual accounts provide dedicated bank accounts for converting fiat currency to stablecoins. These accounts can be reused for multiple transactions and provide better rates for recurring operations.
+## Prerequisites
 
-## Overview
+Before you begin, make sure you have:
 
-Virtual accounts are perfect for:
+1. A User with `USD` Rail enabled
+2. A destination Wallet created
 
-- **Recurring Deposits**: Regular fiat-to-crypto conversions
-- **Business Operations**: Automated treasury management
-- **Customer Onboarding**: Seamless fiat-to-stablecoin conversion
-- **Compliance**: Dedicated accounts for regulatory requirements
+## Step 1: Create Virtual Account
 
-## Key Benefits
+Create a dedicated bank account for fiat-to-crypto conversions:
 
-- **Reusable**: One account for multiple transactions
-- **Better Rates**: Improved pricing for recurring operations
-- **Flexibility**: Support for multiple payment rails (ACH, Wire, RTP, SWIFT)
-- **Real-time**: Instant conversion upon deposit detection
-
-## Creating Virtual Accounts
-
-### Basic Setup
+**POST** `/v2/users/{userId}/virtual-accounts`
 
 ```bash
 curl --request POST \
-     --url https://sandbox.hifibridge.com/v2/virtual-accounts \
-     --header 'Authorization: Bearer YOUR_API_KEY' \
+     --url https://production.hifibridge.com/v2/users/userId/virtual-accounts \
+     --header 'accept: application/json' \
      --header 'content-type: application/json' \
      --data '{
-  "userId": "your-user-id",
-  "source": {
-    "paymentRail": ["ach", "wire", "rtp"],
-    "currency": "usd"
-  },
-  "destination": {
-    "chain": "POLYGON",
-    "currency": "usdc",
-    "walletAddress": "0xd102C4130985B7fcB95697616eaf5542c4f98d49"
-  }
+  "sourceCurrency": "usd",
+  "destinationCurrency": "usdc",
+  "destinationChain": "POLYGON"
 }'
 ```
 
-### Response Example
+**Response:**
 
 ```json
 {
@@ -51,6 +35,16 @@ curl --request POST \
   "accountInfo": {
     "id": "cfbc005d-8640-57a4-89e1-539c974fa780",
     "userId": "840c28f2-ea7d-5c3a-9271-b10fd8b6ae6d",
+    "source": {
+      "paymentRail": ["ach", "wire", "rtp", "swift"],
+      "currency": "usd"
+    },
+    "destination": {
+      "chain": "POLYGON",
+      "currency": "usdc",
+      "walletAddress": "0xd102C4130985B7fcB95697616eaf5542c4f98d49",
+      "externalWalletId": null
+    },
     "status": "activated",
     "depositInstructions": {
       "bankName": "Bank of NoWhere",
@@ -58,7 +52,7 @@ curl --request POST \
       "swiftCode": "XXXXXXXX",
       "beneficiary": {
         "name": "Henry Wu",
-        "address": "123 Main St, New York, NY 10001"
+        "address": "<development>, <development>"
       },
       "ach": {
         "routingNumber": "028000024",
@@ -67,34 +61,80 @@ curl --request POST \
       "wire": {
         "routingNumber": "021000021",
         "accountNumber": "123456789"
+      },
+      "rtp": {
+        "routingNumber": "021000021",
+        "accountNumber": "123456789"
       }
     }
   }
 }
 ```
 
-## Account Management
+## Step 2: Share Deposit Instructions
 
-### Activate/Deactivate Accounts
+Provide the deposit instructions to Users
+
+- **Bank Name**: Bank of NoWhere
+- **ACH Routing Number**: 028000024
+- **Account Number**: 123456789
+- **Wire Routing Number**: 021000021
+- **SWIFT Code**: XXXXXXXX
+- **Beneficiary**: Henry Wu
+
+## Step 3: Monitor Deposits
+
+Track incoming deposits to your virtual account:
+
+### Webhook Events
+
+- `ONRAMP.CREATED` - Transaction received
+
+## Step 4: Verify Destination Wallet
+
+Check that the stablecoins were received in the destination wallet:
+
+**GET** `/v2/users/{userId}/wallets/balance`
 
 ```bash
-# Deactivate account
-curl --request POST \
-     --url https://sandbox.hifibridge.com/v2/virtual-accounts/{accountId}/deactivate \
-     --header 'Authorization: Bearer YOUR_API_KEY'
-
-# Reactivate account
-curl --request POST \
-     --url https://sandbox.hifibridge.com/v2/virtual-accounts/{accountId}/reactivate \
-     --header 'Authorization: Bearer YOUR_API_KEY'
+curl -X GET "https://production.hifibridge.com/v2/users/840c28f2-ea7d-5c3a-9271-b10fd8b6ae6d/wallets/balance?chain=POLYGON&currency=usdc" \
+  -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
-### Update Destination Currency
+**Response:**
+
+```json
+{
+  "balances": [
+    {
+      "currency": "usdc",
+      "chain": "POLYGON",
+      "balance": "1000.00",
+      "availableBalance": "1000.00"
+    }
+  ]
+}
+```
+
+## Virtual Account Statuses
+
+Virtual accounts progress through several statuses:
+
+- **CREATED**: Account has been created and is being set up
+- **ACTIVATED**: Account is ready to receive deposits
+- **DEACTIVATED**: Account is temporarily disabled
+- **SUSPENDED**: Account is suspended due to compliance issues
+
+## Advanced Options
+
+### Update Destination Settings
+
+Modify the destination wallet or currency:
 
 ```bash
-curl --request POST \
-     --url https://sandbox.hifibridge.com/v2/virtual-accounts/{accountId} \
-     --header 'Authorization: Bearer YOUR_API_KEY' \
+curl --request PUT \
+     --url https://production.hifibridge.com/v2/virtual-accounts/cfbc005d-8640-57a4-89e1-539c974fa780 \
+     --header 'accept: application/json' \
      --header 'content-type: application/json' \
      --data '{
   "destination": {
@@ -105,14 +145,34 @@ curl --request POST \
 }'
 ```
 
-## Testing with Sandbox
+### Deactivate Account
 
-### Simulate Deposits
+Temporarily disable the virtual account:
 
 ```bash
 curl --request POST \
-     --url https://sandbox.hifibridge.com/v2/virtual-accounts/{accountId}/simulate-deposit \
-     --header 'Authorization: Bearer YOUR_API_KEY' \
+     --url https://production.hifibridge.com/v2/virtual-accounts/cfbc005d-8640-57a4-89e1-539c974fa780/deactivate \
+     --header 'accept: application/json'
+```
+
+### Reactivate Account
+
+Re-enable a deactivated account:
+
+```bash
+curl --request POST \
+     --url https://production.hifibridge.com/v2/virtual-accounts/cfbc005d-8640-57a4-89e1-539c974fa780/reactivate \
+     --header 'accept: application/json'
+```
+
+### Test with Sandbox
+
+Simulate deposits for testing:
+
+```bash
+curl --request POST \
+     --url https://sandbox.hifibridge.com/v2/virtual-accounts/cfbc005d-8640-57a4-89e1-539c974fa780/simulate-deposit \
+     --header 'accept: application/json' \
      --header 'content-type: application/json' \
      --data '{
   "amount": "1000.00",
@@ -120,102 +180,3 @@ curl --request POST \
   "description": "Test deposit"
 }'
 ```
-
-## Use Cases
-
-### Business Treasury Management
-
-```javascript
-// Create virtual account for business operations
-const virtualAccount = await createVirtualAccount({
-  userId: businessUserId,
-  source: {
-    paymentRail: ["ach", "wire"],
-    currency: "usd",
-  },
-  destination: {
-    chain: "POLYGON",
-    currency: "usdc",
-    walletAddress: treasuryWallet,
-  },
-});
-
-// Share deposit instructions with accounting team
-const depositInstructions = virtualAccount.accountInfo.depositInstructions;
-console.log(`ACH Routing: ${depositInstructions.ach.routingNumber}`);
-console.log(`Account Number: ${depositInstructions.ach.accountNumber}`);
-```
-
-### Customer Onboarding
-
-```javascript
-// Create virtual account for customer
-const customerAccount = await createVirtualAccount({
-  userId: customerId,
-  source: {
-    paymentRail: ["ach"],
-    currency: "usd",
-  },
-  destination: {
-    chain: "POLYGON",
-    currency: "usdc",
-    walletAddress: customerWallet,
-  },
-});
-
-// Display deposit instructions to customer
-displayDepositInstructions(customerAccount.accountInfo.depositInstructions);
-```
-
-## Best Practices
-
-### Account Lifecycle Management
-
-```javascript
-// Monitor account status
-const account = await getVirtualAccount(accountId);
-
-if (account.status === "deactivated") {
-  // Reactivate when needed
-  await reactivateVirtualAccount(accountId);
-}
-```
-
-### Error Handling
-
-```javascript
-try {
-  const account = await createVirtualAccount(accountData);
-
-  if (account.status === "activated") {
-    console.log("Virtual account ready for deposits");
-  }
-} catch (error) {
-  console.error("Failed to create virtual account:", error);
-  // Handle error appropriately
-}
-```
-
-### Webhook Integration
-
-Listen for virtual account events:
-
-- `VIRTUAL_ACCOUNT.CREATED` - Account created
-- `VIRTUAL_ACCOUNT.DEPOSIT.DETECTED` - Deposit detected
-- `VIRTUAL_ACCOUNT.DEPOSIT.PROCESSED` - Deposit processed
-- `VIRTUAL_ACCOUNT.DEPOSIT.COMPLETED` - Deposit completed
-
-## Limits and Constraints
-
-- **Supported Rails**: ACH, Wire, RTP, SWIFT
-- **Supported Currencies**: USD, EUR, GBP (varies by region)
-- **Destination Chains**: Ethereum, Polygon, and other supported networks
-- **Destination Currencies**: USDC, USDT, and other supported stablecoins
-
-<Card icon="code" title="API Reference" href="/docs/transfers/virtual-accounts">
-  View complete API documentation
-</Card>
-
-<Card icon="webhook" title="Webhook Events" href="/api/events">
-  Learn about webhook events
-</Card>

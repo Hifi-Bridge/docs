@@ -2,84 +2,202 @@
 title: "Settlement Rules"
 ---
 
-Settlement rules allow you to configure how fees are calculated and distributed for virtual account transactions. You can set up complex fee structures with multiple rules, percentage-based or fixed fees, and tiered pricing models to optimize your revenue sharing strategy.
+## Prerequisites
 
-## How it works
+Before you begin, make sure you have:
 
-Settlement rules let you configure how fees are handled:
+1. A User with `USD` Rail enabled
+2. A Virtual Account configured
 
-- **Calculate fees** using percentages or fixed amounts
-- **Set tiered pricing** for volume discounts
-- **Distribute fees** to multiple wallet addresses
+## Step 1: Create Settlement Rule
 
-## Key Features
+**POST** `/v2/virtual-accounts/settlement-rules`
 
-- **Multiple Rule Types**: Combine percentage and fixed fee rules
-- **Tiered Pricing**: Volume-based discounts with configurable tiers
-- **Flexible Distribution**: Route fees to different wallet addresses
-- **Network Support**: Configure rules for specific blockchain networks
-- **Fee Management**: Control HIFI platform fee inclusion/exclusion
+```bash
+curl --request POST \
+     --url https://production.hifibridge.com/v2/virtual-accounts/settlement-rules \
+     --header 'accept: application/json' \
+     --header 'content-type: application/json' \
+     --data '{
+  "chain": "BASE",
+  "includeHIFIFee": true,
+  "rules": [
+    {
+      "type": "PERCENTAGE",
+      "calculationModel": "FIXED",
+      "value": 0.001,
+      "walletAddress": "0x15FB50680fEB2f726413416665c25f9B397b047b"
+    },
+    {
+      "type": "FIXED",
+      "calculationModel": "FIXED",
+      "value": 0.5,
+      "walletAddress": "0x15FB50680fEB2f726413416665c25f9B397b047b"
+    },
+    {
+      "type": "PERCENTAGE",
+      "calculationModel": "TIERED",
+      "tiers": [
+        {
+          "max": "1000",
+          "min": "",
+          "value": 0.0007
+        },
+        {
+          "max": "2000",
+          "min": "1000",
+          "value": 0.0005
+        },
+        {
+          "max": "",
+          "min": "2000",
+          "value": 0.0002
+        }
+      ],
+      "walletAddress": "0x15FB50680fEB2f726413416665c25f9B397b047b"
+    }
+  ]
+}'
+```
 
-## Rule Types
+**Response:**
 
-### Percentage Rules
+```json
+{
+  "id": "15c786fb-de7a-520c-a4b3-f312d4a122d2",
+  "chain": "BASE",
+  "includeHIFIFee": false,
+  "rules": [
+    {
+      "type": "PERCENTAGE",
+      "calculationModel": "FIXED",
+      "value": 0.001,
+      "tiers": null,
+      "walletAddress": "0x15FB50680fEB2f726413416665c25f9B397b047b"
+    },
+    {
+      "type": "FIXED",
+      "calculationModel": "FIXED",
+      "value": 0.5,
+      "tiers": null,
+      "walletAddress": "0x15FB50680fEB2f726413416665c25f9B397b047b"
+    },
+    {
+      "type": "PERCENTAGE",
+      "calculationModel": "TIERED",
+      "value": null,
+      "tiers": [
+        {
+          "max": "1000",
+          "min": "",
+          "value": 0.0007
+        },
+        {
+          "max": "2000",
+          "min": "1000",
+          "value": 0.0005
+        },
+        {
+          "max": "",
+          "min": "2000",
+          "value": 0.0002
+        }
+      ],
+      "walletAddress": "0x15FB50680fEB2f726413416665c25f9B397b047b"
+    }
+  ]
+}
+```
 
-Percentage rules calculate fees as a percentage of the transaction amount. You can set either fixed percentages or tiered structures that offer volume discounts.
+## Rule Type Examples
 
-**Fixed Percentage**: A consistent percentage fee applied to all transactions
-**Tiered Percentage**: Volume-based pricing with decreasing rates for larger transactions
+<AccordionGroup>
+  <Accordion title="Fixed Fee Rule">
+    ```json
+    {
+      "type": "FIXED",
+      "calculationModel": "FIXED",
+      "value": 0.5,
+      "walletAddress": "0x15FB50680fEB2f726413416665c25f9B397b047b"
+    }
+    ```
+  </Accordion>
 
-### Fixed Rules
+  <Accordion title="Fixed Percentage Rule">
+    ```json
+    {
+      "type": "PERCENTAGE",
+      "calculationModel": "FIXED",
+      "value": 0.001,
+      "walletAddress": "0x15FB50680fEB2f726413416665c25f9B397b047b"
+    }
+    ```
+  </Accordion>
 
-Fixed rules charge a constant fee regardless of transaction amount. This is useful for covering base processing costs or minimum fees.
+  <Accordion title="Tiered Percentage Rule">
+    ```json
+    {
+      "type": "PERCENTAGE",
+      "calculationModel": "TIERED",
+      "tiers": [
+        {
+          "max": "1000",
+          "min": "",
+          "value": 0.0007
+        },
+        {
+          "max": "2000",
+          "min": "1000",
+          "value": 0.0005
+        },
+        {
+          "max": "",
+          "min": "2000",
+          "value": 0.0002
+        }
+      ],
+      "walletAddress": "0x15FB50680fEB2f726413416665c25f9B397b047b"
+    }
+    ```
+  </Accordion>
+</AccordionGroup>
 
-### Combined Rules
+## Step 2: Apply Rule to Virtual Account
 
-You can combine multiple rule types to create complex fee structures. For example, a percentage fee plus a fixed processing fee.
+Associate the settlement rule with a specific user's virtual account:
 
-## Supported Networks
+**POST** `/v2/users/{userId}/virtual-accounts/{accountId}/settlement-rules/{ruleId}`
 
-| Network  | Chain ID | Native Currency |
-| -------- | -------- | --------------- |
-| Ethereum | ETHEREUM | ETH             |
-| Polygon  | POLYGON  | MATIC           |
-| Base     | BASE     | ETH             |
-| Solana   | SOLANA   | SOL             |
+```bash
+curl --request POST \
+     --url https://production.hifibridge.com/v2/users/{userId}/virtual-accounts/{accountId}/settlement-rules/{ruleId} \
+     --header 'accept: application/json'
+```
 
-## Fee Calculation Logic
+## Step 3: Monitor Settlement Activity
 
-### Percentage Fees
+Track settlement transactions and fee distributions by:
 
-Percentage fees are calculated as: `Transaction Amount × Fee Percentage`
+### Check Wallet Balances
 
-For tiered pricing, the system evaluates each tier in order and applies the appropriate rate based on the transaction amount.
+Monitor the specified wallet addresses in your settlement rules to see incoming fee payments:
 
-### Fixed Fees
+```bash
+# Example: Check wallet balance on Base network
+# Use your preferred blockchain explorer or wallet interface
+```
 
-Fixed fees are added as a constant amount regardless of transaction size.
+### Look Up Transaction Hashes
 
-### Combined Calculations
+When transactions occur, you can look up the transaction hash on the appropriate blockchain explorer:
 
-When multiple rules are applied, fees are calculated separately and then summed together.
+- **Base Network**: [BaseScan](https://basescan.org)
+- **Polygon Network**: [PolygonScan](https://polygonscan.com)
+- **Ethereum Network**: [Etherscan](https://etherscan.io)
 
-## Use Cases
+Simply paste the transaction hash into the explorer to view:
 
-### E-commerce Platforms
-
-Set percentage-based fees to cover payment processing costs while maintaining profitability.
-
-### Trading Platforms
-
-Implement tiered pricing to offer volume discounts to high-frequency traders.
-
-### Financial Services
-
-Use fixed fees for minimum transaction costs combined with percentage fees for revenue sharing.
-
-## Try it out
-
-Read our comprehensive guide for settlement rules:
-
-<Card title="Settlement Rules" icon="code" href="/guides/settlement-rules">
-  Learn how to split onramp transaction
-</Card>
+- Transaction details
+- Fee amounts transferred
+- Confirmation status
+- Block information
