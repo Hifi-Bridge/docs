@@ -21,7 +21,7 @@ curl -X GET "https://sandbox.hifibridge.com/v2/currencies" \
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
-## Step 2: Generate Terms of Service Link
+## Step 2: Terms of Service
 
 Before creating a user, you need to generate a Terms of Service link that the user must accept. This provides consent for data handling and compliance screening.
 
@@ -60,7 +60,7 @@ Create a new user with the required information:
 }
 ```
 
-## Step 4: Update KYC Information
+## Step 4: Update KYC
 
 Update the user's KYC information with additional details:
 
@@ -103,7 +103,7 @@ Upload required KYC documents:
 ]
 ```
 
-## Step 6: Submit KYC for USD Rails
+## Step 6: Submit KYC
 
 Submit the KYC for USD rails processing:
 
@@ -135,8 +135,8 @@ Create a virtual account for the user:
 
 <Note>
   If you don't have USD and can't make transfers, you can use an onramp to
-  convert your local currency to USDC. [Learn about MXN to USDC
-  onramps](/guides/onramps/mxn-usdc)
+  convert your local currency to USDC. [See an
+  example](/guides/transfers/onramps/mxn-usdc)
 </Note>
 
 ```bash
