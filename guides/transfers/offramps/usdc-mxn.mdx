@@ -1,183 +1,186 @@
 ---
-title: "USD to MXN"
+title: "USDC to MXN"
 ---
-
-# Send USD to MXN
-
-Learn how to convert between fiat currencies using HIFI's onramp and offramp services.
-
-## Overview
-
-HIFI's onramp and offramp services allow you to convert between fiat currencies and stablecoins using local payment methods and bank rails. This enables:
-
-- Cross-border payments
-- Fiat to crypto conversions
-- Local payment method support
-- Competitive exchange rates
 
 ## Prerequisites
 
-- API credentials configured
-- Source wallet with USD balance
-- Destination wallet for MXN
-- KYC verification completed
+Before you begin, make sure you have:
 
-## Basic fiat conversion
+1. A User with `GLOBAL_NETWORK` Rail enabled
+2. Valid payment method (bank account, card, etc.)
 
-```javascript
-const conversion = await hifi.onramps.create({
-  from_currency: "USD",
-  to_currency: "MXN",
-  amount: "1000.00",
-  from_wallet: "wallet_123",
-  to_wallet: "wallet_456",
-  payment_method: "bank_transfer",
-});
-```
+## Step 1: Create Account
 
-## Advanced conversion with routing
+**POST** `/v2/users/{userId}/accounts`
 
-```javascript
-const conversion = await hifi.onramps.create({
-  from_currency: "USD",
-  to_currency: "MXN",
-  amount: "1000.00",
-  from_wallet: "wallet_123",
-  to_wallet: "wallet_456",
-  payment_method: "bank_transfer",
-  routing_preference: "fastest", // or "cheapest"
-  memo: "Payment to Mexico",
-  metadata: {
-    invoice_id: "INV-001",
-    recipient_name: "Juan Pérez",
+```bash
+curl --request POST \
+     --url https://production.hifibridge.com/v2/users/{userId}/accounts \
+     --header 'accept: application/json' \
+     --header 'content-type: application/json' \
+     --data '{
+  "rail": "onramp",
+  "type": "mexicoGlobalNetwork",
+  "accountHolder": {
+    "name": "María González",
+    "type": "individual",
+    "address": {
+      "city": "Mexico City",
+      "country": "MX",
+      "postalCode": "01000",
+      "addressLine1": "123 Reforma",
+      "addressLine2": "Piso 5",
+      "stateProvinceRegion": "CDMX"
+    },
+    "dateOfBirth": "1988-07-12",
+    "idNumber": "MX12345678901",
+    "nationality": "MEX"
   },
-});
+  "mexicoGlobalNetwork": {
+    "bankName": "Banco Santander",
+    "accountNumber": "1234567890",
+    "currency": "mxn"
+  }
+}'
 ```
 
-## Get conversion quote
-
-```javascript
-// Get a quote before converting
-const quote = await hifi.onramps.getQuote({
-  from_currency: "USD",
-  to_currency: "MXN",
-  amount: "1000.00",
-  payment_method: "bank_transfer",
-});
-
-console.log(`Exchange rate: 1 USD = ${quote.rate} MXN`);
-console.log(`Expected output: ${quote.expected_output} MXN`);
-console.log(`Processing time: ${quote.estimated_time} hours`);
-console.log(`Fees: ${quote.fee} USD`);
-
-// Execute the conversion
-const conversion = await hifi.onramps.create({
-  from_currency: "USD",
-  to_currency: "MXN",
-  amount: "1000.00",
-  from_wallet: "wallet_123",
-  to_wallet: "wallet_456",
-  payment_method: "bank_transfer",
-  quote_id: quote.id,
-});
-```
-
-## Response
+**Response:**
 
 ```json
 {
-  "id": "conversion_abc123",
-  "status": "pending",
-  "from_currency": "USD",
-  "to_currency": "MXN",
-  "amount": "1000.00",
-  "expected_output": "17000.00",
-  "rate": "17.00",
-  "from_wallet": "wallet_123",
-  "to_wallet": "wallet_456",
-  "payment_method": "bank_transfer",
-  "estimated_completion": "2024-01-15T16:30:00Z",
-  "created_at": "2024-01-15T10:30:00Z"
+  "id": "acc_456789123",
+  "type": "mexicoGlobalNetwork",
+  "rail": "offramp",
+  "status": "ACTIVE",
+  "accountHolder": {
+    "name": "María González",
+    "type": "individual"
+  },
+  "mexicoGlobalNetwork": {
+    "bankName": "Banco Santander",
+    "accountNumber": "1234567890",
+    "currency": "mxn"
+  },
+  "createdAt": "2025-02-03T17:15:31.927121+00:00"
 }
 ```
 
-## Supported currencies
+## Step 2: Create Offramp
 
-### Fiat currencies
+Create the offramp transaction directly:
 
-- USD, EUR, GBP, CAD, AUD
-- MXN, BRL, ARS, CLP, COP
-- JPY, KRW, SGD, HKD, INR
+**POST** `/v2/offramps`
 
-### Payment methods
-
-- Bank transfers (ACH, SEPA, SWIFT)
-- Credit/debit cards
-- Digital wallets (PayPal, Apple Pay, Google Pay)
-- Local payment methods (OXXO, Boleto, etc.)
-
-## Processing times
-
-Typical processing times by payment method:
-
-- **Bank transfers**: 1-3 business days
-- **Credit/debit cards**: Instant to 1 hour
-- **Digital wallets**: 5-30 minutes
-- **Local methods**: 1-24 hours
-
-## Fees and limits
-
-### Fees
-
-- **Bank transfers**: 0.5-1.5% of amount
-- **Cards**: 2.5-3.5% of amount
-- **Digital wallets**: 1.0-2.0% of amount
-- **Local methods**: 1.5-2.5% of amount
-
-### Limits
-
-- **Minimum**: $10 USD equivalent
-- **Maximum**: $50,000 USD equivalent per transaction
-- **Daily limit**: $100,000 USD equivalent per user
-- **Monthly limit**: $500,000 USD equivalent per user
-
-## KYC requirements
-
-Different limits based on verification level:
-
-- **Basic**: $1,000 daily limit
-- **Enhanced**: $10,000 daily limit
-- **Premium**: $50,000 daily limit
-
-## Error handling
-
-Common conversion errors:
-
-- **Insufficient balance**: Check wallet has enough funds
-- **KYC required**: Complete identity verification
-- **Unsupported currency**: Check supported currency list
-- **Payment method declined**: Try alternative payment method
-
-## Monitoring progress
-
-```javascript
-// Check conversion status
-const status = await hifi.onramps.get("conversion_abc123");
-
-// Get transaction details
-console.log(`Status: ${status.status}`);
-console.log(`Expected completion: ${status.estimated_completion}`);
+```bash
+curl --request POST \
+     --url https://production.hifibridge.com/v2/offramps \
+     --header 'accept: application/json' \
+     --header 'content-type: application/json' \
+     --data '{
+  "requestId": "string",
+  "purposeOfPayment": "gift",
+  "isInstant": false,
+  "source": {
+    "amount": 1000,
+    "currency": "usdc",
+    "transferType": "crypto",
+    "accountId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+  },
+  "destination": {
+    "amount": 17000,
+    "currency": "mxn",
+    "chain": "POLYGON_AMOY",
+    "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "externalWalletId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "virtualAccountId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+  },
+  "fee": {
+    "type": "FIX",
+    "value": 0
+  }
+}'
 ```
 
-## Best practices
+**Response:**
 
-1. **Complete KYC early** to avoid delays
-2. **Check exchange rates** before large conversions
-3. **Use appropriate payment methods** for your needs
-4. **Keep transaction IDs** for support requests
+```json
+{
+  "transferType": "OFFRAMP",
+  "transferDetails": {
+    "id": "b26927e6-2771-423c-af44-a3c7a3e815c5",
+    "requestId": "e1047def-6942-4fd7-be04-e62eb41813b6",
+    "createdAt": "2025-02-03T17:15:31.927121+00:00",
+    "updatedAt": "2025-02-03T17:15:35.882+00:00",
+    "status": "AWAITING_FUNDS",
+    "failedReason": null,
+    "source": {
+      /* source wallet details */
+    },
+    "destination": {
+      /* destination account details */
+    },
+    "receipt": {
+      /* transaction receipt */
+    },
+    "developerFee": null,
+    "quoteInformation": {
+      /* exchange rate and fees */
+    }
+  }
+}
+```
 
-## Next steps
+### Refresh Quote
 
-- Learn about [wallet transfers](/guides/send/wallet-transfers)
-- Explore [stablecoin swaps](/guides/convert)
-- Set up [webhook notifications](/api/events)
+While the quote is still valid, you can refresh it to get updated rates:
+
+**POST** `/v2/offramps/{transferId}/quote/refresh`
+
+```bash
+curl --request POST \
+     --url https://production.hifibridge.com/v2/offramps/{transferId}/quote/refresh \
+     --header 'accept: application/json'
+```
+
+**Note:** You can only refresh quotes while the offramp is in `AWAITING_FUNDS` status and before the quote expires.
+
+## Step 3: Accept Quote
+
+Once you're satisfied with the quote, accept it to proceed with the offramp:
+
+**POST** `/v2/offramps/{transferId}/quote/accept`
+
+```bash
+curl --request POST \
+     --url https://production.hifibridge.com/v2/offramps/{transferId}/quote/accept \
+     --header 'accept: application/json'
+```
+
+**Note:** Once you accept the quote, you cannot refresh it again. Make sure you're ready to proceed with the withdrawal.
+
+## Step 4: Process Withdrawal
+
+The offramp will be processed automatically once the quote is accepted. Monitor the transaction status.
+
+## Step 5: Confirm Transaction
+
+### Listen for Webhooks
+
+Set up webhook notifications to track status changes:
+
+**Webhook Events:**
+
+- `OFFRAMP.CREATE` - Creation for offramps
+- `OFFRAMP.UPDATE` - Updates for offramps
+
+### Check Bank Account
+
+Verify the MXN has been received in your bank account:
+
+**GET** `/v2/users/{userId}/accounts/{accountId}/balance`
+
+```bash
+curl -X GET "https://production.hifibridge.com/v2/users/{userId}/accounts/{accountId}/balance" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```

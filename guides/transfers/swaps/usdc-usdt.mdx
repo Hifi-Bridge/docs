@@ -2,141 +2,178 @@
 title: "USDC to USDT"
 ---
 
-# Convert USDC to USDT
-
-Learn how to instantly convert between USDC and USDT stablecoins using HIFI's swap API.
-
-## Overview
-
-Stablecoin swaps allow you to convert between supported stablecoins at competitive rates. This is useful for:
-
-- Portfolio rebalancing
-- Taking advantage of different DeFi opportunities
-- Managing liquidity across protocols
-- Currency diversification
-
 ## Prerequisites
 
-- API credentials configured
-- Source wallet with USDC balance
-- Destination wallet (can be the same wallet)
+Before you begin, make sure you have:
 
-## Basic swap
+1. A User with `USD` Rail enabled
+2. Valid payment method (bank account, card, etc.)
 
-```javascript
-const swap = await hifi.swaps.create({
-  from: "USDC",
-  to: "USDT",
-  amount: "1000.00",
-  wallet: "wallet_123",
-  network: "ethereum",
-});
+## Step 1: Create Account
+
+Create a US account for the swap:
+
+**POST** `/v2/users/{userId}/accounts`
+
+```bash
+curl --request POST \
+     --url https://production.hifibridge.com/v2/users/{userId}/accounts \
+     --header 'accept: application/json' \
+     --header 'content-type: application/json' \
+     --data '{
+  "rail": "onramp",
+  "type": "us",
+  "accountHolder": {
+    "name": "John Smith",
+    "type": "individual",
+    "address": {
+      "city": "New York",
+      "country": "US",
+      "postalCode": "10001",
+      "addressLine1": "123 Main St",
+      "addressLine2": "Apt 4B",
+      "stateProvinceRegion": "NY"
+    },
+    "dateOfBirth": "1990-05-15",
+    "idNumber": "123-45-6789",
+    "nationality": "USA"
+  },
+  "us": {
+    "transferType": "ach",
+    "accountType": "Checking",
+    "currency": "usd"
+  }
+}'
 ```
 
-## Advanced swap with slippage protection
-
-```javascript
-const swap = await hifi.swaps.create({
-  from: "USDC",
-  to: "USDT",
-  amount: "1000.00",
-  wallet: "wallet_123",
-  network: "ethereum",
-  slippage_tolerance: 0.5, // 0.5% max slippage
-  deadline: 300, // 5 minutes
-});
-```
-
-## Get quote first
-
-```javascript
-// Get a quote before executing
-const quote = await hifi.swaps.getQuote({
-  from: "USDC",
-  to: "USDT",
-  amount: "1000.00",
-  network: "ethereum",
-});
-
-console.log(`Rate: 1 USDC = ${quote.rate} USDT`);
-console.log(`Expected output: ${quote.expected_output} USDT`);
-console.log(`Minimum output: ${quote.minimum_output} USDT`);
-
-// Execute the swap
-const swap = await hifi.swaps.create({
-  from: "USDC",
-  to: "USDT",
-  amount: "1000.00",
-  wallet: "wallet_123",
-  network: "ethereum",
-  quote_id: quote.id,
-});
-```
-
-## Response
+**Response:**
 
 ```json
 {
-  "id": "swap_abc123",
-  "status": "completed",
-  "from": "USDC",
-  "to": "USDT",
-  "input_amount": "1000.00",
-  "output_amount": "999.50",
-  "rate": "0.9995",
-  "wallet": "wallet_123",
-  "network": "ethereum",
-  "transaction_hash": "0x123...",
-  "created_at": "2024-01-15T10:30:00Z",
-  "completed_at": "2024-01-15T10:30:15Z"
+  "id": "acc_123456789",
+  "type": "us",
+  "rail": "onramp",
+  "status": "ACTIVE",
+  "accountHolder": {
+    "name": "John Smith",
+    "type": "individual"
+  },
+  "us": {
+    "transferType": "ach",
+    "accountType": "Checking",
+    "currency": "usd"
+  },
+  "createdAt": "2025-02-03T17:15:31.927121+00:00"
 }
 ```
 
-## Supported pairs
+## Step 2: Create Swap
 
-HIFI supports the following stablecoin pairs:
+Create the swap transaction directly:
 
-- USDC ↔ USDT
-- USDC ↔ DAI
-- USDT ↔ DAI
-- USDC ↔ BUSD
-- USDT ↔ BUSD
+**POST** `/v2/swaps`
 
-## Network support
+```bash
+curl --request POST \
+     --url https://production.hifibridge.com/v2/swaps \
+     --header 'accept: application/json' \
+     --header 'content-type: application/json' \
+     --data '{
+  "requestId": "string",
+  "purposeOfPayment": "gift",
+  "isInstant": true,
+  "source": {
+    "amount": 1000,
+    "currency": "usdc",
+    "transferType": "crypto",
+    "accountId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+  },
+  "destination": {
+    "amount": 1000,
+    "currency": "usdt",
+    "chain": "POLYGON_AMOY",
+    "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "externalWalletId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "virtualAccountId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+  },
+  "fee": {
+    "type": "FIX",
+    "value": 0
+  }
+}'
+```
 
-Swaps are available on:
+**Response:**
 
-- Ethereum
-- Polygon
-- Arbitrum
-- Optimism
-- Base
+```json
+{
+  "transferType": "SWAP",
+  "transferDetails": {
+    "id": "b26927e6-2771-423c-af44-a3c7a3e815c5",
+    "requestId": "e1047def-6942-4fd7-be04-e62eb41813b6",
+    "createdAt": "2025-02-03T17:15:31.927121+00:00",
+    "updatedAt": "2025-02-03T17:15:35.882+00:00",
+    "status": "COMPLETED",
+    "failedReason": null,
+    "source": {
+      /* source wallet details */
+    },
+    "destination": {
+      /* destination wallet details */
+    },
+    "receipt": {
+      /* transaction receipt */
+    },
+    "developerFee": null,
+    "quoteInformation": {
+      /* exchange rate and fees */
+    }
+  }
+}
+```
 
-## Fees and limits
+### Refresh Quote
 
-- **Trading fees**: 0.1% per swap
-- **Minimum amount**: $10 USD equivalent
-- **Maximum amount**: $1M USD equivalent per transaction
-- **Daily limit**: $10M USD equivalent per wallet
+While the quote is still valid, you can refresh it to get updated rates:
 
-## Error handling
+**POST** `/v2/swaps/{transferId}/quote/refresh`
 
-Common swap errors:
+```bash
+curl --request POST \
+     --url https://production.hifibridge.com/v2/swaps/{transferId}/quote/refresh \
+     --header 'accept: application/json'
+```
 
-- **Insufficient balance**: Check wallet has enough USDC
-- **Slippage exceeded**: Increase slippage tolerance or try smaller amount
-- **Quote expired**: Get a fresh quote before executing
-- **Network congestion**: Retry during lower traffic periods
+**Note:** You can only refresh quotes while the swap is in `PENDING` status and before the quote expires.
 
-## Best practices
+## Step 3: Accept Quote
 
-1. **Always get a quote first** to understand the expected output
-2. **Set appropriate slippage** based on market conditions
-3. **Monitor gas prices** for optimal transaction timing
-4. **Use deadline parameter** to prevent stale transactions
+Once you're satisfied with the quote, accept it to proceed with the swap:
 
-## Next steps
+**POST** `/v2/swaps/{transferId}/quote/accept`
 
-- Learn about [wallet transfers](/guides/send/wallet-transfers)
-- Explore [chain bridging](/guides/route)
-- Set up [webhook notifications](/api/events)
+```bash
+curl --request POST \
+     --url https://production.hifibridge.com/v2/swaps/{transferId}/quote/accept \
+     --header 'accept: application/json'
+```
+
+**Note:** Once you accept the quote, you cannot refresh it again. Make sure you're ready to proceed with the swap.
+
+## Step 4: Execute Swap
+
+The swap will be executed automatically once the quote is accepted. Monitor the transaction status.
+
+## Step 5: Confirm Transaction
+
+### Check Wallet Balance
+
+Verify the USDT has been received in your wallet:
+
+**GET** `/v2/users/{userId}/wallets/balance`
+
+```bash
+curl -X GET "https://production.hifibridge.com/v2/users/{userId}/wallets/balance?chain=ETHEREUM&currency=usdt" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```

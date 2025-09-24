@@ -1,160 +1,244 @@
 ---
-title: "Bridge from ETH to SOL"
+title: "Bridge ETH to SOL"
 ---
-
-Learn how to move stablecoins from Ethereum to Solana using HIFI's cross-chain bridging.
-
-## Overview
-
-Chain bridging allows you to move assets across different blockchain networks while keeping your balances unified in your HIFI wallet. This enables you to:
-
-- Access different DeFi ecosystems
-- Take advantage of lower fees on other chains
-- Diversify across multiple networks
-- Maintain unified balance management
 
 ## Prerequisites
 
-- API credentials configured
-- Source wallet with USDC on Ethereum
-- Destination wallet on Solana (can be the same wallet)
+Before you begin, make sure you have:
 
-## Basic bridge
+1. A source User with USDC balance on Ethereum
+2. A destination User with wallet on Solana (can be the same user)
 
-```javascript
-const bridge = await hifi.bridges.create({
-  from_network: "ethereum",
-  to_network: "solana",
-  currency: "USDC",
-  amount: "1000.00",
-  wallet: "wallet_123",
-});
+## Step 1: Check Source Wallet Balance
+
+First, verify that the source wallet has sufficient USDC balance:
+
+**GET** `/v2/users/{userId}/wallets/balance`
+
+```bash
+curl -X GET "https://production.hifibridge.com/v2/users/{userId}/wallets/balance?chain=ETHEREUM&currency=usdc" \
+  -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
-## Advanced bridge with custom routing
-
-```javascript
-const bridge = await hifi.bridges.create({
-  from_network: "ethereum",
-  to_network: "solana",
-  currency: "USDC",
-  amount: "1000.00",
-  wallet: "wallet_123",
-  routing_preference: "fastest", // or "cheapest"
-  slippage_tolerance: 1.0, // 1% max slippage
-  memo: "Moving to Solana for DeFi",
-});
-```
-
-## Get bridge quote
-
-```javascript
-// Get a quote before bridging
-const quote = await hifi.bridges.getQuote({
-  from_network: "ethereum",
-  to_network: "solana",
-  currency: "USDC",
-  amount: "1000.00",
-});
-
-console.log(`Estimated time: ${quote.estimated_time} minutes`);
-console.log(`Bridge fee: ${quote.fee} USDC`);
-console.log(`Expected output: ${quote.expected_output} USDC`);
-
-// Execute the bridge
-const bridge = await hifi.bridges.create({
-  from_network: "ethereum",
-  to_network: "solana",
-  currency: "USDC",
-  amount: "1000.00",
-  wallet: "wallet_123",
-  quote_id: quote.id,
-});
-```
-
-## Response
+**Response:**
 
 ```json
 {
-  "id": "bridge_xyz789",
-  "status": "pending",
-  "from_network": "ethereum",
-  "to_network": "solana",
-  "currency": "USDC",
-  "amount": "1000.00",
-  "wallet": "wallet_123",
-  "source_transaction": "0x123...",
-  "destination_transaction": null,
-  "estimated_completion": "2024-01-15T10:35:00Z",
-  "created_at": "2024-01-15T10:30:00Z"
+  "balances": [
+    {
+      "currency": "usdc",
+      "chain": "ETHEREUM",
+      "balance": "1000.00",
+      "availableBalance": "1000.00"
+    }
+  ]
 }
 ```
 
-## Supported networks
+## Step 2: Create Bridging Request
 
-HIFI supports bridging between:
+Create a bridge from Ethereum to Solana:
 
-- **Ethereum** ↔ Polygon, Arbitrum, Optimism, Base, Solana
-- **Polygon** ↔ Ethereum, Arbitrum, Optimism, Base
-- **Arbitrum** ↔ Ethereum, Polygon, Optimism, Base
-- **Optimism** ↔ Ethereum, Polygon, Arbitrum, Base
-- **Base** ↔ Ethereum, Polygon, Arbitrum, Optimism
-- **Solana** ↔ Ethereum
+**POST** `/v2/wallets/bridges`
 
-## Supported currencies
-
-- USDC
-- USDT
-- DAI
-- BUSD
-
-## Bridge times
-
-Typical bridge completion times:
-
-- **Ethereum ↔ L2s**: 5-15 minutes
-- **L2 ↔ L2**: 2-10 minutes
-- **Ethereum ↔ Solana**: 10-30 minutes
-- **Cross-chain**: 15-45 minutes
-
-## Fees
-
-Bridge fees vary by route and are typically:
-
-- **Ethereum ↔ L2s**: $5-15
-- **L2 ↔ L2**: $2-8
-- **Ethereum ↔ Solana**: $10-25
-- **Cross-chain**: $15-40
-
-## Monitoring progress
-
-```javascript
-// Check bridge status
-const status = await hifi.bridges.get("bridge_xyz789");
-
-// Get transaction hashes
-console.log(`Source TX: ${status.source_transaction}`);
-console.log(`Destination TX: ${status.destination_transaction}`);
+```bash
+curl --request POST \
+     --url https://production.hifibridge.com/v2/wallets/bridges \
+     --header 'accept: application/json' \
+     --header 'content-type: application/json' \
+     --data '{
+  "source": {
+    "chain": "ETHEREUM",
+    "currency": "usdc"
+  },
+  "destination": {
+    "chain": "SOLANA",
+    "currency": "usdc"
+  },
+  "amount": "100.00"
+}'
 ```
 
-## Error handling
+**Response:**
 
-Common bridge errors:
+```json
+{
+  "transferType": "WALLET.BRIDGE",
+  "transferDetails": {
+    "id": "9ccafd0f-e47f-43c2-8693-13741b67d638",
+    "requestId": "1d860428-1d0b-47c5-9e65-98961ff59215",
+    "createdAt": "2025-02-24T17:44:54.781519+00:00",
+    "updatedAt": "2025-02-24T17:57:01.185+00:00",
+    "amount": 100.0,
+    "status": "PENDING",
+    "source": {
+      "userId": "a804f891-b63c-4b36-99ee-0aa83e6facde",
+      "walletAddress": "0xE9cfBf1D690565579D823264170eE357f80e9A34",
+      "chain": "ETHEREUM",
+      "currency": "usdc"
+    },
+    "destination": {
+      "userId": "a804f891-b63c-4b36-99ee-0aa83e6facde",
+      "walletAddress": "0x17f043FB0a39334641beD627551AC095941157B0",
+      "chain": "SOLANA",
+      "currency": "usdc"
+    },
+    "receipt": {
+      "transactionHash": null,
+      "operations": {
+        "mint": null,
+        "burn": null,
+        "approve": null
+      }
+    },
+    "failedReason": null,
+    "fee": null,
+    "quoteInformation": {
+      "sendGross": {
+        "amount": "100.00",
+        "currency": "usdc"
+      },
+      "sendNet": {
+        "amount": "100.00",
+        "currency": "usdc"
+      },
+      "railFee": {
+        "amount": "0",
+        "currency": "usdc"
+      },
+      "receiveGross": {
+        "amount": "100.00",
+        "currency": "usdc"
+      },
+      "receiveNet": {
+        "amount": "100.00",
+        "currency": "usdc"
+      },
+      "rate": "1",
+      "expiresAt": "2025-02-25T17:44:54.781Z"
+    }
+  }
+}
+```
 
-- **Insufficient balance**: Ensure wallet has enough funds
-- **Network congestion**: Try during lower traffic periods
-- **Invalid destination**: Verify destination network is supported
-- **Bridge timeout**: Contact support if bridge takes >2 hours
+## Step 3: Monitor Bridge Status
 
-## Best practices
+Check the status of your bridge:
 
-1. **Check network status** before bridging
-2. **Use appropriate slippage** for volatile conditions
-3. **Monitor gas prices** for optimal timing
-4. **Keep transaction hashes** for tracking
+**GET** `/v2/wallets/bridges/{bridgeId}`
 
-## Next steps
+```bash
+curl -X GET "https://production.hifibridge.com/v2/wallets/bridges/9ccafd0f-e47f-43c2-8693-13741b67d638" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
 
-- Learn about [wallet transfers](/guides/send/wallet-transfers)
-- Explore [stablecoin swaps](/guides/convert)
-- Set up [webhook notifications](/api/events)
+**Response:**
+
+```json
+{
+  "transferType": "WALLET.BRIDGE",
+  "transferDetails": {
+    "id": "9ccafd0f-e47f-43c2-8693-13741b67d638",
+    "requestId": "1d860428-1d0b-47c5-9e65-98961ff59215",
+    "createdAt": "2025-02-24T17:44:54.781519+00:00",
+    "updatedAt": "2025-02-24T17:57:01.185+00:00",
+    "amount": 100.0,
+    "status": "COMPLETED",
+    "source": {
+      "userId": "a804f891-b63c-4b36-99ee-0aa83e6facde",
+      "walletAddress": "0xE9cfBf1D690565579D823264170eE357f80e9A34",
+      "chain": "ETHEREUM",
+      "currency": "usdc"
+    },
+    "destination": {
+      "userId": "a804f891-b63c-4b36-99ee-0aa83e6facde",
+      "walletAddress": "0x17f043FB0a39334641beD627551AC095941157B0",
+      "chain": "SOLANA",
+      "currency": "usdc"
+    },
+    "receipt": {
+      "transactionHash": "0x17f043FB0a39334641beD627551AC095941157B0",
+      "operations": {
+        "mint": {
+          "transactionHash": "0x5784890f9efd0160e9401439a5cf2aa5350580ecf48f9ca2af617338ae089e53",
+          "userOpHash": "0xef7bdb071b1fcfb5df629bd4d27ffa6dc32d0a5df676f26fb8c25311df1185ac",
+          "chain": "SOLANA"
+        },
+        "burn": {
+          "transactionHash": "0x5784890f9efd0160e9401439a5cf2aa5350580ecf48f9ca2af617338ae089e53",
+          "userOpHash": "0xef7bdb071b1fcfb5df629bd4d27ffa6dc32d0a5df676f26fb8c25311df1185ac",
+          "chain": "ETHEREUM"
+        },
+        "approve": {
+          "transactionHash": "0x5784890f9efd0160e9401439a5cf2aa5350580ecf48f9ca2af617338ae089e53",
+          "userOpHash": "0xef7bdb071b1fcfb5df629bd4d27ffa6dc32d0a5df676f26fb8c25311df1185ac",
+          "chain": "ETHEREUM"
+        }
+      }
+    },
+    "failedReason": null,
+    "fee": null,
+    "quoteInformation": {
+      "sendGross": {
+        "amount": "100.00",
+        "currency": "usdc"
+      },
+      "sendNet": {
+        "amount": "100.00",
+        "currency": "usdc"
+      },
+      "railFee": {
+        "amount": "0",
+        "currency": "usdc"
+      },
+      "receiveGross": {
+        "amount": "100.00",
+        "currency": "usdc"
+      },
+      "receiveNet": {
+        "amount": "100.00",
+        "currency": "usdc"
+      },
+      "rate": "1",
+      "expiresAt": "2025-02-25T17:44:54.781Z"
+    }
+  }
+}
+```
+
+### Bridge Statuses
+
+Bridges progress through several statuses:
+
+- **PENDING**: Bridge has been created and is awaiting processing
+- **PROCESSING**: Bridge is being executed on the blockchain
+- **COMPLETED**: Bridge has been successfully completed
+- **FAILED**: Bridge failed (check `failedReason` for details)
+
+## Step 4: Confirm Transaction
+
+### Check Destination Wallet
+
+Verify the USDC has been received in your Solana wallet:
+
+**GET** `/v2/users/{userId}/wallets/balance`
+
+```bash
+curl -X GET "https://production.hifibridge.com/v2/users/{userId}/wallets/balance?chain=SOLANA&currency=usdc" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+**Response:**
+
+```json
+{
+  "balances": [
+    {
+      "currency": "usdc",
+      "chain": "SOLANA",
+      "balance": "100.00",
+      "availableBalance": "100.00"
+    }
+  ]
+}
+```
