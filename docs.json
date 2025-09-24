@@ -65,9 +65,9 @@
             "pages": [
               "docs/users/kyc-link",
               "docs/transfers/batch-transfers",
-              "docs/transfers/virtual-accounts/index",
-              "docs/transfers/virtual-accounts/settlement-rules",
-              "docs/transfers/transfer-approvals/index"
+              "docs/transfers/virtual-accounts",
+              "docs/transfers/settlement-rules",
+              "docs/transfers/transfer-approvals"
             ]
           }
         ]

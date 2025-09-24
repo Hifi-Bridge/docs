@@ -2,295 +2,153 @@
 title: "Batch Transfers"
 ---
 
-Batch transfers allow you to process multiple transfers in a single API call, significantly improving efficiency and reducing costs when handling multiple transactions. This is particularly useful for payroll, vendor payments, or any scenario where you need to send money to multiple recipients.
+Batch transfers allow you to send stablecoins to multiple wallet addresses in a single transaction, improving efficiency and reducing costs when handling multiple transfers.
 
-## Overview
+## How Batch Transfers Work
 
-Batch transfers enable you to:
+Batch transfers follow a simple process:
 
-- Process up to 50 transfers in a single API call
-- Reduce API call overhead and improve performance
-- Lower transaction costs through bulk processing
-- Maintain individual transfer tracking and status
-- Handle partial failures gracefully
+1. **Create a batch transfer** – Initiate a single transaction to multiple wallet addresses
+2. **Process the batch** – All transfers are executed in one blockchain transaction
+3. **Confirm completion** – Receive confirmation when all transfers are completed
 
-## Key Benefits
+## Transaction Structure
 
-- **Cost Efficiency**: Reduced per-transaction fees for bulk operations
-- **Performance**: Single API call instead of multiple individual calls
-- **Reliability**: Built-in retry logic and error handling
-- **Tracking**: Individual transfer IDs for each transaction in the batch
-- **Flexibility**: Mix different currencies and amounts in one batch
-
-## Batch Transfer Structure
+When you create a batch transfer, the API response includes detailed information about the transaction:
 
 ```json
 {
-  "batchId": "batch_abc123",
-  "transfers": [
-    {
-      "transferId": "transfer_001",
-      "amount": "100.00",
-      "currency": "USD",
-      "recipient": {
-        "type": "bank_account",
-        "accountNumber": "1234567890",
-        "routingNumber": "021000021"
-      },
-      "memo": "Payroll - John Doe"
+  "transferType": "WALLET.TRANSFER.BATCH",
+  "transferDetails": {
+    "id": "879af7af-67bf-469f-b718-d262a39d4857",
+    "requestId": "14a84906-b72e-4847-b34d-51b9048fa6a5",
+    "createdAt": "2025-04-05T00:55:50.609Z",
+    "updatedAt": "2025-04-05T00:56:33.236Z",
+    "chain": "POLYGON",
+    "currency": "usdc",
+    "contractAddress": "0x41e94eb019c0762f9bfcf9fb1e58725bfb0e7582",
+    "status": "COMPLETED",
+    "source": {
+      /* Source */
     },
-    {
-      "transferId": "transfer_002",
-      "amount": "250.00",
-      "currency": "USD",
-      "recipient": {
-        "type": "bank_account",
-        "accountNumber": "0987654321",
-        "routingNumber": "021000021"
-      },
-      "memo": "Payroll - Jane Smith"
+    "destination": {
+      /* Destination */
+    },
+    "receipt": {
+      /* Receipt */
     }
-  ],
-  "totalAmount": "350.00",
-  "totalCurrency": "USD",
-  "status": "pending"
+  }
 }
 ```
 
-## API Usage
+<AccordionGroup>
+  <Accordion title="Source">
+    ```json
+    {
+      "userId": "6a13bd30-b3a3-4d44-af33-0b32e58261be",
+      "walletAddress": "0x99a8c5ED386d217BC6ff0AA1b3585606D475432B",
+      "walletType": "INDIVIDUAL"
+    }
+    ```
+  </Accordion>
 
-### Creating a Batch Transfer
+  <Accordion title="Destination">
+    ```json
+    {
+      "batch": [
+        {
+          "amount": "0.04",
+          "userId": "6a13bd30-b3a3-4d44-af33-0b32e58261be"
+        },
+        {
+          "amount": "0.05",
+          "userId": "6a13bd30-b3a3-4d44-af33-0b32e58261be"
+        },
+        {
+          "amount": "0.06",
+          "userId": "6a13bd30-b3a3-4d44-af33-0b32e58261be"
+        },
+        {
+          "amount": "0.03",
+          "userId": "6a13bd30-b3a3-4d44-af33-0b32e58261be"
+        },
+        {
+          "amount": "0.03",
+          "userId": "6a13bd30-b3a3-4d44-af33-0b32e58261be"
+        }
+      ]
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="Receipt">
+    ```json
+    {
+      "transactionHash": "0x57f0cd3429ea425d982882243428ef4a1eda5f1be2157c1b34ea48b49b24fe7f",
+      "userOpHash": "0xef7bdb071b1fcfb5df629bd4d27ffa6dc32d0a5df676f26fb8c25311df1185ac"
+    }
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Request Structure
+
+To create a batch transfer, send a POST request with the following structure:
 
 ```bash
-curl -X POST "https://api.hifi.com/v1/transfers/batch" \
-  -H "Authorization: Bearer YOUR_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "transfers": [
+curl --request POST \
+     --url https://production.hifibridge.com/v2/wallets/transfers/batches \
+     --header 'accept: application/json' \
+     --header 'content-type: application/json' \
+     --data '{
+  "requestId": "123e4567-e89b-12d3-a456-426614174000",
+  "currency": "usdc",
+  "chain": "POLYGON",
+  "source": {
+    "userId": "a1f70737-3844-4782-a321-ad481108a8ec"
+  },
+  "destination": {
+    "batch": [
       {
-        "amount": "100.00",
-        "currency": "USD",
-        "recipient": {
-          "type": "bank_account",
-          "accountNumber": "1234567890",
-          "routingNumber": "021000021"
-        },
-        "memo": "Payroll - Employee 1"
-      },
-      {
-        "amount": "150.00",
-        "currency": "USD",
-        "recipient": {
-          "type": "bank_account",
-          "accountNumber": "0987654321",
-          "routingNumber": "021000021"
-        },
-        "memo": "Payroll - Employee 2"
+        "userId": "a1f70737-3844-4782-a321-ad481108a8ec",
+        "walletAddress": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e",
+        "amount": "0.01"
       }
     ]
-  }'
+  },
+  "requireApproval": false
+}'
 ```
 
-### Response
+## Transaction Status
 
-```json
-{
-  "batchId": "batch_abc123",
-  "status": "processing",
-  "totalTransfers": 2,
-  "successfulTransfers": 0,
-  "failedTransfers": 0,
-  "pendingTransfers": 2,
-  "transfers": [
-    {
-      "transferId": "transfer_001",
-      "status": "pending",
-      "amount": "100.00",
-      "currency": "USD"
-    },
-    {
-      "transferId": "transfer_002",
-      "status": "pending",
-      "amount": "150.00",
-      "currency": "USD"
-    }
-  ],
-  "createdAt": "2024-01-15T10:30:00Z",
-  "estimatedCompletion": "2024-01-15T10:35:00Z"
-}
-```
+Batch transfer transactions progress through several statuses:
 
-## Batch Status Tracking
+- **CREATED**: Transaction has been created and is awaiting processing
+- **PROCESSING**: Batch transfer is being executed on the blockchain
+- **COMPLETED**: All transfers in the batch have been successfully completed
+- **FAILED**: Transaction failed (check `failedReason` for details)
 
-### Status Values
+## Source Information
 
-- `pending` - Batch is queued for processing
-- `processing` - Batch is currently being processed
-- `completed` - All transfers in the batch have been processed
-- `partially_completed` - Some transfers succeeded, others failed
-- `failed` - All transfers in the batch failed
+The `source` object contains information about the wallet sending the batch transfer:
 
-### Checking Batch Status
+- **userId**: Unique identifier for the user initiating the transfer
+- **walletAddress**: Blockchain address of the source wallet
+- **walletType**: Type of wallet (e.g., "INDIVIDUAL")
 
-```bash
-curl -X GET "https://api.hifi.com/v1/transfers/batch/batch_abc123" \
-  -H "Authorization: Bearer YOUR_API_KEY"
-```
+## Destination Information
 
-### Individual Transfer Status
+The `destination` object contains the batch of transfers to execute:
 
-```bash
-curl -X GET "https://api.hifi.com/v1/transfers/transfer_001" \
-  -H "Authorization: Bearer YOUR_API_KEY"
-```
+- **batch**: Array of transfer objects, each containing:
+  - **userId**: Recipient user identifier
+  - **walletAddress**: Destination wallet address (optional, can be omitted if userId is provided)
+  - **amount**: Amount to transfer in the specified currency
 
-## Error Handling
+## Receipt Information
 
-### Partial Failures
+The `receipt` object contains transaction details once completed:
 
-When some transfers in a batch fail while others succeed:
-
-```json
-{
-  "batchId": "batch_abc123",
-  "status": "partially_completed",
-  "totalTransfers": 3,
-  "successfulTransfers": 2,
-  "failedTransfers": 1,
-  "pendingTransfers": 0,
-  "errors": [
-    {
-      "transferId": "transfer_003",
-      "error": "INSUFFICIENT_FUNDS",
-      "message": "Account balance is insufficient for this transfer"
-    }
-  ]
-}
-```
-
-### Common Error Codes
-
-- `INSUFFICIENT_FUNDS` - Not enough balance for the transfer
-- `INVALID_RECIPIENT` - Recipient account information is invalid
-- `CURRENCY_NOT_SUPPORTED` - Currency is not supported for the recipient
-- `TRANSFER_LIMIT_EXCEEDED` - Transfer amount exceeds daily/monthly limits
-- `ACCOUNT_NOT_VERIFIED` - Sender account requires additional verification
-
-## Best Practices
-
-### 1. Batch Size Optimization
-
-- Keep batches between 10-50 transfers for optimal performance
-- Maximum 100 transfers per batch
-- Consider splitting very large batches into smaller chunks
-
-### 2. Error Handling
-
-```javascript
-// Example error handling
-const processBatchResponse = async (batchId) => {
-  const batch = await getBatchStatus(batchId);
-
-  if (batch.status === "partially_completed") {
-    // Handle successful transfers
-    batch.transfers
-      .filter((t) => t.status === "completed")
-      .forEach((transfer) => {
-        console.log(`Transfer ${transfer.transferId} completed`);
-      });
-
-    // Handle failed transfers
-    batch.transfers
-      .filter((t) => t.status === "failed")
-      .forEach((transfer) => {
-        console.error(
-          `Transfer ${transfer.transferId} failed: ${transfer.error}`
-        );
-      });
-  }
-};
-```
-
-### 3. Monitoring and Alerts
-
-- Set up webhooks to receive real-time batch status updates
-- Monitor batch completion rates and failure patterns
-- Implement retry logic for failed transfers
-
-### 4. Data Validation
-
-- Validate all transfer data before submitting the batch
-- Ensure sufficient account balance for the total batch amount
-- Verify recipient account information is correct
-
-## Webhooks
-
-Configure webhooks to receive real-time updates on batch processing:
-
-```json
-{
-  "event": "batch.completed",
-  "data": {
-    "batchId": "batch_abc123",
-    "status": "completed",
-    "completedAt": "2024-01-15T10:35:00Z"
-  }
-}
-```
-
-## Rate Limits
-
-- **Batch Creation**: 10 batches per minute
-- **Batch Status Checks**: 100 requests per minute
-- **Individual Transfer Checks**: 200 requests per minute
-
-## Use Cases
-
-### Payroll Processing
-
-```json
-{
-  "transfers": [
-    {
-      "amount": "2500.00",
-      "currency": "USD",
-      "recipient": { "type": "bank_account", "accountNumber": "..." },
-      "memo": "Salary - January 2024"
-    }
-  ]
-}
-```
-
-### Vendor Payments
-
-```json
-{
-  "transfers": [
-    {
-      "amount": "500.00",
-      "currency": "USD",
-      "recipient": { "type": "bank_account", "accountNumber": "..." },
-      "memo": "Invoice #INV-2024-001"
-    }
-  ]
-}
-```
-
-### Multi-Currency Transfers
-
-```json
-{
-  "transfers": [
-    {
-      "amount": "1000.00",
-      "currency": "USD",
-      "recipient": { "type": "bank_account", "accountNumber": "..." }
-    },
-    {
-      "amount": "850.00",
-      "currency": "EUR",
-      "recipient": { "type": "bank_account", "accountNumber": "..." }
-    }
-  ]
-}
-```
+- **transactionHash**: Blockchain transaction hash for the batch transfer
+- **userOpHash**: User operation hash for account abstraction transactions

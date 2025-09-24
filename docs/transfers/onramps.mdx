@@ -4,27 +4,23 @@ title: "Onramps"
 
 Onramps are transactions that convert fiat currencies to stablecoins in HIFI wallets. The available onramp methods vary by region due to local payment infrastructure and regulatory requirements.
 
-For a complete list of supported currencies and payment methods, see [Currencies](/docs/currencies).
-
-## Supported Onramps
-
-Currently, we support the following onramp methods:
-
-- **ACH transfers** for USD to USDC conversions
-- **Wire transfers** for larger amounts
-- **Regional payment methods** based on your location
+<Card icon="globe" title="Currencies" href="/docs/currencies">
+  Learn about supported regions, payment methods, and currencies
+</Card>
 
 ## How Onramps Work
 
 Onramps follow a simple three-step process:
 
-1. **Create an onramp** – Initiate an onramp request with your source fiat currency and destination stablecoin
+1. **Create an onramp** – Initiate a payment from an Account into a Wallet
 2. **Review quote** – Examine the exchange rate, fees, and quote validity period
-3. **Deposit funds** – Transfer the fiat currency to the provided bank account using the reference ID
+3. **Send money** – Transfer the fiat currency to the provided bank account using the reference ID
 
 ### Quote Validity
 
-Quotes are time-sensitive and typically expire within 24 hours. This ensures you get current market rates and prevents stale pricing. If a quote expires before you deposit funds, you'll need to create a new onramp request to get updated pricing.
+Quotes are time-sensitive and typically expire within 24 hours. This ensures you get current market rates and prevents stale pricing.
+
+If a quote expires before you deposit funds, you'll need to create a new onramp request to get updated pricing.
 
 ## Transaction Structure
 
@@ -41,6 +37,27 @@ When you create an onramp, the API response includes detailed information about 
     "status": "AWAITING_FUNDS",
     "failedReason": null,
     "source": {
+      /* Source */
+    },
+    "destination": {
+      /* Destination */
+    },
+    "receipt": { "transactionHash": null },
+    "developerFee": null,
+    "quoteInformation": {
+      /* Quote */
+    },
+    "depositInfo": {
+      /* Deposit Info */
+    }
+  }
+}
+```
+
+<AccordionGroup>
+  <Accordion title="Source">
+    ```json
+    {
       "userId": "c15c0adf-3e45-4a62-b334-73aeec127649",
       "currency": "usd",
       "transferType": "ach",
@@ -53,8 +70,13 @@ When you create an onramp, the API response includes detailed information about 
         "businessName": null
       },
       "bankInfo": null
-    },
-    "destination": {
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="Destination">
+    ```json
+    {
       "userId": "c15c0adf-3e45-4a62-b334-73aeec127649",
       "currency": "usdc",
       "chain": "POLYGON_AMOY",
@@ -67,12 +89,13 @@ When you create an onramp, the API response includes detailed information about 
         "firstName": "Henry",
         "businessName": null
       }
-    },
-    "receipt": {
-      "transactionHash": null
-    },
-    "developerFee": null,
-    "quoteInformation": {
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="Quote">
+    ```json
+    {
       "sendGross": {
         "amount": "10.00",
         "currency": "usd"
@@ -95,8 +118,13 @@ When you create an onramp, the API response includes detailed information about 
       },
       "rate": "1.0000",
       "expiresAt": "2025-02-04T17:15:31.927Z"
-    },
-    "depositInfo": {
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="Deposit Info">
+    ```json
+    {
       "bankName": "Bank of Nowhere",
       "bankAddress": "1800 North Pole St., Orlando, FL 32801",
       "accountNumber": "11223344556677",
@@ -112,9 +140,9 @@ When you create an onramp, the API response includes detailed information about 
       "currency": "usd",
       "instruction": "Please deposit the exact amount of currency to the bank account provided. Use the reference ID as the deposit reference."
     }
-  }
-}
-```
+    ```
+  </Accordion>
+</AccordionGroup>
 
 ## Transaction Status
 
@@ -152,18 +180,25 @@ The quote includes both gross and net amounts for both sending and receiving:
 - **rate**: Current exchange rate between fiat and stablecoin
 - **expiresAt**: When the quote expires and you'll need a new one
 
-## Fees
+## Settlement Rules
 
-Onramps may include rail fees for processing fiat transfers, which are clearly displayed in the quote information. The fee structure is transparent and calculated based on current market conditions.
+You can configure settlement rules to automatically calculate and distribute fees for onramp transactions. Settlement rules support:
 
-### Fee Structure
+- Percentage-based or fixed fee structures
+- Tiered pricing based on transaction volume
+- Fee distribution to multiple wallet addresses
+- Network-specific configurations
 
-- **Rail fees**: Fees charged by the payment rail (ACH, wire, etc.)
-- **Exchange fees**: Fees for converting fiat to stablecoin (if applicable)
-- **Timing**: Fees are typically included in the quote and deducted from the final amount
+<Card
+  icon="gear"
+  title="Settlement Rules"
+  href="/docs/transfers/virtual-accounts/settlement-rules"
+>
+  Learn how to configure fee calculations and distribution
+</Card>
 
-## Guides
+## Try it out
 
 <Card icon="code" title="Convert USD to USDC" href="/guides/convert/usd-usdc">
-  Learn how to pay in to a wallet
+  Learn how to pay in to a Wallet
 </Card>

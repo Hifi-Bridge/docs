@@ -1,0 +1,86 @@
+---
+title: "Virtual Accounts API"
+---
+
+The Virtual Accounts API allows you to create dedicated bank accounts for converting fiat currency to stablecoins. These accounts can be reused for multiple transactions and provide better rates for recurring operations.
+
+## Create Virtual Account
+
+Create a virtual account by specifying the source payment rails and destination wallet.
+
+```json
+{
+  "message": "Virtual account created successfully",
+  "accountInfo": {
+    "id": "cfbc005d-8640-57a4-89e1-539c974fa780",
+    "userId": "840c28f2-ea7d-5c3a-9271-b10fd8b6ae6d",
+    "source": {
+      "paymentRail": ["ach", "wire", "rtp", "swift"],
+      "currency": "usd"
+    },
+    "destination": {
+      "chain": "POLYGON",
+      "currency": "usdc",
+      "walletAddress": "0xd102C4130985B7fcB95697616eaf5542c4f98d49",
+      "externalWalletId": null
+    },
+    "status": "activated",
+    "depositInstructions": {
+      "bankName": "Bank of NoWhere",
+      "bankAddress": "123 Main St, New York, NY 10001, USA",
+      "swiftCode": "XXXXXXXX",
+      "beneficiary": {
+        "name": "Henry Wu",
+        "address": "<development>, <development>"
+      },
+      "ach": {
+        "routingNumber": "028000024",
+        "accountNumber": "123456789"
+      },
+      "wire": {
+        "routingNumber": "021000021",
+        "accountNumber": "123456789"
+      },
+      "rtp": {
+        "routingNumber": "021000021",
+        "accountNumber": "123456789"
+      }
+    }
+  }
+}
+```
+
+## Account Management
+
+### Deactivate and Reactivate
+
+You can deactivate virtual accounts when not in use and reactivate them when needed:
+
+- **Deactivate**: Temporarily disable the account to prevent new deposits
+- **Reactivate**: Re-enable the account to accept new deposits
+- **Status**: Account status is reflected in the `status` field (`activated` or `deactivated`)
+
+### Change Destination Currency
+
+Virtual accounts support updating the destination currency after creation:
+
+- **Supported Currencies**: USDC, USDT, and other supported stablecoins
+- **Chain Support**: Ethereum, Polygon, and other supported networks
+- **Real-time Updates**: Changes take effect immediately for new deposits
+
+## Sandbox Testing
+
+In sandbox mode, you can simulate deposits to test your integration:
+
+- **Simulate Deposits**: Test deposit flows without real money
+- **Mock Responses**: Use test data to verify your application logic
+- **Full Testing**: Validate the complete deposit-to-stablecoin conversion process
+
+## API Reference
+
+For detailed API documentation, see the [Virtual Accounts API Reference](/api/virtual-accounts/).
+
+## Related Documentation
+
+- **Settlement Rules**: See [Settlement Rules documentation](/docs/transfers/settlement-rules/)
+- **Onramp API**: For one-time conversions, see [Onramp API documentation](/docs/transfers/onramps/)

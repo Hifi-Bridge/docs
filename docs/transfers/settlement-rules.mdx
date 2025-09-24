@@ -4,16 +4,13 @@ title: "Settlement Rules"
 
 Settlement rules allow you to configure how fees are calculated and distributed for virtual account transactions. You can set up complex fee structures with multiple rules, percentage-based or fixed fees, and tiered pricing models to optimize your revenue sharing strategy.
 
-## Overview
+## How it works
 
-Settlement rules enable you to:
+Settlement rules let you configure how fees are handled:
 
-- Configure multiple fee calculation methods per virtual account
-- Set up percentage-based or fixed fee structures
-- Implement tiered pricing based on transaction amounts
-- Specify different wallet addresses for fee distribution
-- Exclude or include HIFI platform fees in calculations
-- Support different blockchain networks (Ethereum, Polygon, Base, etc.)
+- **Calculate fees** using percentages or fixed amounts
+- **Set tiered pricing** for volume discounts
+- **Distribute fees** to multiple wallet addresses
 
 ## Key Features
 
@@ -143,7 +140,7 @@ Fixed rules charge a constant fee regardless of transaction amount.
 
 ## API Usage
 
-### Creating Settlement Rules
+### Create Settlement Rules
 
 ```bash
 curl -X POST "https://api.hifi.com/v1/virtual-accounts/va_abc123/settlement-rules" \
@@ -200,34 +197,79 @@ curl -X POST "https://api.hifi.com/v1/virtual-accounts/va_abc123/settlement-rule
 }
 ```
 
-### Updating Settlement Rules
+### Apply to Virtual Account
+
+Apply settlement rules to an existing virtual account:
 
 ```bash
-curl -X PUT "https://api.hifi.com/v1/virtual-accounts/va_abc123/settlement-rules/15c786fb-de7a-520c-a4b3-f312d4a122d2" \
+curl -X POST "https://api.hifi.com/v1/virtual-accounts/cfbc005d-8640-57a4-89e1-539c974fa780/settlement-rules" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
-    "includeHIFIFee": true,
+    "chain": "POLYGON",
+    "includeHIFIFee": false,
+    "rules": [
+      {
+        "type": "PERCENTAGE",
+        "calculationModel": "FIXED",
+        "value": 0.001,
+        "walletAddress": "0x15FB50680fEB2f726413416665c25f9B397b047b"
+      }
+    ]
+  }'
+```
+
+**Response:**
+
+```json
+{
+  "message": "Settlement rules applied successfully",
+  "virtualAccountId": "cfbc005d-8640-57a4-89e1-539c974fa780",
+  "settlementRule": {
+    "id": "15c786fb-de7a-520c-a4b3-f312d4a122d2",
+    "chain": "POLYGON",
+    "includeHIFIFee": false,
+    "rules": [
+      {
+        "type": "PERCENTAGE",
+        "calculationModel": "FIXED",
+        "value": 0.001,
+        "tiers": null,
+        "walletAddress": "0x15FB50680fEB2f726413416665c25f9B397b047b"
+      }
+    ],
+    "status": "active",
+    "createdAt": "2024-01-15T10:30:00Z",
+    "updatedAt": "2024-01-15T10:30:00Z"
+  }
+}
+```
+
+### Update Settlement Rules
+
+Update existing settlement rules for a virtual account:
+
+```bash
+curl -X PUT "https://api.hifi.com/v1/virtual-accounts/cfbc005d-8640-57a4-89e1-539c974fa780/settlement-rules/15c786fb-de7a-520c-a4b3-f312d4a122d2" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "chain": "POLYGON",
+    "includeHIFIFee": false,
     "rules": [
       {
         "type": "PERCENTAGE",
         "calculationModel": "TIERED",
-        "value": null,
         "tiers": [
           {
-            "max": "1000",
+            "max": "5000",
             "min": "",
-            "value": 0.0007
-          },
-          {
-            "max": "2000",
-            "min": "1000",
-            "value": 0.0005
+            "value": 0.0008
           },
           {
             "max": "",
-            "min": "2000",
-            "value": 0.0002
+            "min": "5000",
+            "value": 0.0005
           }
         ],
         "walletAddress": "0x15FB50680fEB2f726413416665c25f9B397b047b"
@@ -236,18 +278,102 @@ curl -X PUT "https://api.hifi.com/v1/virtual-accounts/va_abc123/settlement-rules
   }'
 ```
 
-### Getting Settlement Rules
+### List Settlement Rules
+
+Get all settlement rules for a virtual account:
 
 ```bash
-curl -X GET "https://api.hifi.com/v1/virtual-accounts/va_abc123/settlement-rules" \
+curl -X GET "https://api.hifi.com/v1/virtual-accounts/cfbc005d-8640-57a4-89e1-539c974fa780/settlement-rules" \
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
-### Deleting Settlement Rules
+**Response:**
+
+```json
+{
+  "virtualAccountId": "cfbc005d-8640-57a4-89e1-539c974fa780",
+  "settlementRules": [
+    {
+      "id": "15c786fb-de7a-520c-a4b3-f312d4a122d2",
+      "chain": "POLYGON",
+      "includeHIFIFee": false,
+      "rules": [
+        {
+          "type": "PERCENTAGE",
+          "calculationModel": "FIXED",
+          "value": 0.001,
+          "tiers": null,
+          "walletAddress": "0x15FB50680fEB2f726413416665c25f9B397b047b"
+        }
+      ],
+      "status": "active",
+      "createdAt": "2024-01-15T10:30:00Z",
+      "updatedAt": "2024-01-15T10:30:00Z"
+    }
+  ]
+}
+```
+
+### Delete Settlement Rules
+
+Remove settlement rules from a virtual account:
 
 ```bash
-curl -X DELETE "https://api.hifi.com/v1/virtual-accounts/va_abc123/settlement-rules/15c786fb-de7a-520c-a4b3-f312d4a122d2" \
+curl -X DELETE "https://api.hifi.com/v1/virtual-accounts/cfbc005d-8640-57a4-89e1-539c974fa780/settlement-rules/15c786fb-de7a-520c-a4b3-f312d4a122d2" \
   -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+**Response:**
+
+```json
+{
+  "message": "Settlement rules deleted successfully",
+  "virtualAccountId": "cfbc005d-8640-57a4-89e1-539c974fa780",
+  "deletedRuleId": "15c786fb-de7a-520c-a4b3-f312d4a122d2"
+}
+```
+
+## Sandbox Testing
+
+### Test Settlement Rule Application
+
+In sandbox mode, you can test settlement rule functionality:
+
+```bash
+curl -X POST "https://sandbox-api.hifi.com/v1/virtual-accounts/test-va-123/settlement-rules" \
+  -H "Authorization: Bearer YOUR_SANDBOX_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "chain": "BASE",
+    "includeHIFIFee": true,
+    "rules": [
+      {
+        "type": "PERCENTAGE",
+        "calculationModel": "FIXED",
+        "value": 0.002,
+        "walletAddress": "0xTestWallet123..."
+      }
+    ]
+  }'
+```
+
+### Simulate Fee Calculation
+
+Test fee calculations with different transaction amounts:
+
+```json
+{
+  "testTransaction": {
+    "amount": 1000,
+    "currency": "usdc",
+    "chain": "BASE"
+  },
+  "expectedFee": {
+    "percentage": 2.0,
+    "currency": "usdc",
+    "walletAddress": "0xTestWallet123..."
+  }
+}
 ```
 
 ## Fee Calculation Examples
@@ -379,157 +505,12 @@ curl -X DELETE "https://api.hifi.com/v1/virtual-accounts/va_abc123/settlement-ru
 }
 ```
 
-**Use Case:** Volume-based discounts for institutional traders.
+---
 
-### Multi-Wallet Revenue Split
-
-```json
-{
-  "chain": "POLYGON",
-  "includeHIFIFee": false,
-  "rules": [
-    {
-      "type": "PERCENTAGE",
-      "calculationModel": "FIXED",
-      "value": 0.0015,
-      "walletAddress": "0xPlatformRevenue789..."
-    },
-    {
-      "type": "FIXED",
-      "calculationModel": "FIXED",
-      "value": 1.0,
-      "walletAddress": "0xOperationsWallet012..."
-    }
-  ]
-}
-```
-
-**Use Case:** Split revenue between platform operations and fixed operational costs.
-
-## Best Practices
-
-### 1. Fee Structure Design
-
-- **Start Simple**: Begin with fixed percentage fees before implementing complex tiered structures
-- **Test Thoroughly**: Validate fee calculations with various transaction amounts
-- **Monitor Performance**: Track fee collection and adjust rates based on volume
-
-### 2. Wallet Management
-
-- **Use Dedicated Wallets**: Create separate wallets for different fee types
-- **Implement Monitoring**: Set up alerts for wallet balances and fee collection
-- **Regular Reconciliation**: Periodically verify fee calculations and distributions
-
-### 3. Network Selection
-
-- **Consider Gas Costs**: Choose networks with lower transaction fees for small transactions
-- **Volume Requirements**: Use high-throughput networks for high-volume applications
-- **User Experience**: Select networks that provide the best user experience
-
-### 4. Error Handling
-
-```javascript
-// Example error handling for settlement rules
-const createSettlementRules = async (accountId, rules) => {
-  try {
-    const response = await hifi.virtualAccounts.createSettlementRules(
-      accountId,
-      rules
-    );
-    console.log(`Settlement rules created: ${response.id}`);
-  } catch (error) {
-    if (error.code === "INVALID_WALLET_ADDRESS") {
-      console.error("Invalid wallet address provided");
-    } else if (error.code === "UNSUPPORTED_NETWORK") {
-      console.error("Network not supported for settlement rules");
-    } else if (error.code === "INVALID_TIER_STRUCTURE") {
-      console.error("Tier structure is invalid - check min/max values");
-    }
-  }
-};
-```
-
-## Error Handling
-
-### Common Error Codes
-
-- `INVALID_WALLET_ADDRESS` - Wallet address format is invalid
-- `UNSUPPORTED_NETWORK` - Specified blockchain network is not supported
-- `INVALID_TIER_STRUCTURE` - Tier configuration has overlapping or invalid ranges
-- `INVALID_FEE_VALUE` - Fee value is outside allowed range
-- `SETTLEMENT_RULES_LIMIT_EXCEEDED` - Too many rules configured for account
-- `ACCOUNT_NOT_ACTIVE` - Virtual account is not active
-
-### Error Response Example
-
-```json
-{
-  "error": "INVALID_TIER_STRUCTURE",
-  "message": "Tier ranges must not overlap and min values must be less than max values",
-  "details": {
-    "invalidTiers": [
-      {
-        "index": 1,
-        "min": "2000",
-        "max": "1000",
-        "issue": "min_greater_than_max"
-      }
-    ]
-  }
-}
-```
-
-## Rate Limits
-
-- **Settlement Rules Creation**: 10 rules per minute
-- **Settlement Rules Updates**: 20 updates per minute
-- **Settlement Rules Queries**: 100 requests per minute
-
-## Webhooks
-
-Configure webhooks to receive real-time updates on settlement rule activities:
-
-### Settlement Rules Created
-
-```json
-{
-  "event": "settlement_rules.created",
-  "data": {
-    "accountId": "va_abc123",
-    "ruleId": "15c786fb-de7a-520c-a4b3-f312d4a122d2",
-    "chain": "BASE",
-    "createdAt": "2024-01-15T10:30:00Z"
-  }
-}
-```
-
-### Settlement Rules Updated
-
-```json
-{
-  "event": "settlement_rules.updated",
-  "data": {
-    "accountId": "va_abc123",
-    "ruleId": "15c786fb-de7a-520c-a4b3-f312d4a122d2",
-    "changes": ["includeHIFIFee", "rules"],
-    "updatedAt": "2024-01-15T11:00:00Z"
-  }
-}
-```
-
-### Fee Collected
-
-```json
-{
-  "event": "fee.collected",
-  "data": {
-    "accountId": "va_abc123",
-    "ruleId": "15c786fb-de7a-520c-a4b3-f312d4a122d2",
-    "transactionId": "tx_789012",
-    "amount": "1.50",
-    "currency": "USDC",
-    "walletAddress": "0x15FB50680fEB2f726413416665c25f9B397b047b",
-    "collectedAt": "2024-01-15T10:31:00Z"
-  }
-}
-```
+<Card
+  title="Settlement Rules API Reference"
+  icon="book"
+  href="/api-reference/settlement-rules"
+>
+  View API Reference
+</Card>

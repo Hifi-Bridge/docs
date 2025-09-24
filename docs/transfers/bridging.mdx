@@ -1,17 +1,12 @@
 ---
 title: "Bridging"
-description: "Move money between chains"
 ---
 
 Bridging allows you to transfer cryptocurrencies across different blockchain networks. This enables you to move assets from one chain to another, such as transferring USDC from Ethereum to Polygon or Solana.
 
-## Supported Bridges
-
-Currently, we support bridging between the following networks:
-
-- **Ethereum ↔ Polygon** for USDC and USDT
-- **Ethereum ↔ Solana** for USDC and USDT
-- **Polygon ↔ Solana** for USDC and USDT
+<Card icon="globe" title="Currencies" href="/docs/currencies">
+  Learn about supported networks and currencies
+</Card>
 
 ## How Bridging Works
 
@@ -40,40 +35,49 @@ When you create a bridge, the API response includes detailed information about t
     "amount": 0.01,
     "status": "COMPLETED",
     "source": {
-      "userId": "a804f891-b63c-4b36-99ee-0aa83e6facde",
-      "walletAddress": "0xE9cfBf1D690565579D823264170eE357f80e9A34",
-      "chain": "POLYGON",
-      "currency": "usdc"
+      /* Source */
     },
     "destination": {
-      "userId": "a804f891-b63c-4b36-99ee-0aa83e6facde",
-      "walletAddress": "0x17f043FB0a39334641beD627551AC095941157B0",
-      "chain": "ETHEREUM",
-      "currency": "usdc"
+      /* Destination */
     },
     "receipt": {
-      "transactionHash": "0x17f043FB0a39334641beD627551AC095941157B0",
-      "operations": {
-        "mint": {
-          "transactionHash": "0x5784890f9efd0160e9401439a5cf2aa5350580ecf48f9ca2af617338ae089e53",
-          "userOpHash": "0xef7bdb071b1fcfb5df629bd4d27ffa6dc32d0a5df676f26fb8c25311df1185ac",
-          "chain": "ETHEREUM"
-        },
-        "burn": {
-          "transactionHash": "0x5784890f9efd0160e9401439a5cf2aa5350580ecf48f9ca2af617338ae089e53",
-          "userOpHash": "0xef7bdb071b1fcfb5df629bd4d27ffa6dc32d0a5df676f26fb8c25311df1185ac",
-          "chain": "POLYGON"
-        },
-        "approve": {
-          "transactionHash": "0x5784890f9efd0160e9401439a5cf2aa5350580ecf48f9ca2af617338ae089e53",
-          "userOpHash": "0xef7bdb071b1fcfb5df629bd4d27ffa6dc32d0a5df676f26fb8c25311df1185ac",
-          "chain": "POLYGON"
-        }
-      }
+      /* Receipt */
     },
     "failedReason": null,
     "fee": null,
     "quoteInformation": {
+      /* Quote */
+    }
+  }
+}
+```
+
+<AccordionGroup>
+  <Accordion title="Source">
+    ```json
+    {
+      "userId": "a804f891-b63c-4b36-99ee-0aa83e6facde",
+      "walletAddress": "0xE9cfBf1D690565579D823264170eE357f80e9A34",
+      "chain": "POLYGON",
+      "currency": "usdc"
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="Destination">
+    ```json
+    {
+      "userId": "a804f891-b63c-4b36-99ee-0aa83e6facde",
+      "walletAddress": "0x17f043FB0a39334641beD627551AC095941157B0",
+      "chain": "ETHEREUM",
+      "currency": "usdc"
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="Quote">
+    ```json
+    {
       "sendGross": {
         "amount": "0.01",
         "currency": "usdc"
@@ -97,9 +101,34 @@ When you create a bridge, the API response includes detailed information about t
       "rate": "1",
       "expiresAt": "2025-02-25T17:44:54.781Z"
     }
-  }
-}
-```
+    ```
+  </Accordion>
+
+  <Accordion title="Receipt">
+    ```json
+    {
+      "transactionHash": "0x17f043FB0a39334641beD627551AC095941157B0",
+      "operations": {
+        "mint": {
+          "transactionHash": "0x5784890f9efd0160e9401439a5cf2aa5350580ecf48f9ca2af617338ae089e53",
+          "userOpHash": "0xef7bdb071b1fcfb5df629bd4d27ffa6dc32d0a5df676f26fb8c25311df1185ac",
+          "chain": "ETHEREUM"
+        },
+        "burn": {
+          "transactionHash": "0x5784890f9efd0160e9401439a5cf2aa5350580ecf48f9ca2af617338ae089e53",
+          "userOpHash": "0xef7bdb071b1fcfb5df629bd4d27ffa6dc32d0a5df676f26fb8c25311df1185ac",
+          "chain": "POLYGON"
+        },
+        "approve": {
+          "transactionHash": "0x5784890f9efd0160e9401439a5cf2aa5350580ecf48f9ca2af617338ae089e53",
+          "userOpHash": "0xef7bdb071b1fcfb5df629bd4d27ffa6dc32d0a5df676f26fb8c25311df1185ac",
+          "chain": "POLYGON"
+        }
+      }
+    }
+    ```
+  </Accordion>
+</AccordionGroup>
 
 ## Transaction Status
 
@@ -131,38 +160,13 @@ Bridging involves several blockchain operations that are tracked in the response
 
 Each operation includes transaction hashes and user operation hashes for complete traceability across both chains.
 
-### Operation Details
-
-The `operations` object in the receipt contains detailed information about each blockchain operation:
-
-- **transactionHash**: The blockchain transaction hash for the operation
-- **userOpHash**: The user operation hash (for account abstraction wallets)
-- **chain**: The blockchain network where the operation occurred
-
-## Fees
-
-Bridging includes network fees and processing fees that are clearly displayed in the quote. The fee structure varies by source and destination chains and is calculated based on current network conditions.
-
-### Fee Structure
-
-- **Rail fees**: Fees charged for the cross-chain transfer service
-- **Network fees**: Gas fees for blockchain transactions
-- **Timing**: Fees are typically included in the quote and deducted from the final amount
-
-## Receipt Information
-
-The `receipt` object contains transaction details once completed:
-
-- **transactionHash**: Main transaction hash for the bridge operation
-- **operations**: Detailed breakdown of all blockchain operations performed
-
 <Note>
   Bridge operations may take several minutes to complete depending on network
   congestion and the specific chains involved. You can track the progress using
   the transaction hashes provided in the operations object.
 </Note>
 
-## Guides
+## Try it out
 
 <Card
   icon="code"

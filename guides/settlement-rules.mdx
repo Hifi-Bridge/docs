@@ -1,0 +1,454 @@
+---
+title: "Settlement Rules Implementation Guide"
+---
+
+This guide provides step-by-step instructions for implementing settlement rules in your application, including code examples and API usage patterns.
+
+## Quick Start
+
+### 1. Create Settlement Rules
+
+```bash
+curl -X POST "https://api.hifi.com/v1/virtual-accounts/va_abc123/settlement-rules" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "chain": "BASE",
+    "includeHIFIFee": false,
+    "rules": [
+      {
+        "type": "PERCENTAGE",
+        "calculationModel": "FIXED",
+        "value": 0.001,
+        "tiers": null,
+        "walletAddress": "0x15FB50680fEB2f726413416665c25f9B397b047b"
+      },
+      {
+        "type": "FIXED",
+        "calculationModel": "FIXED",
+        "value": 0.5,
+        "tiers": null,
+        "walletAddress": "0x15FB50680fEB2f726413416665c25f9B397b047b"
+      }
+    ]
+  }'
+```
+
+### 2. Apply to Virtual Account
+
+```bash
+curl -X POST "https://api.hifi.com/v1/virtual-accounts/cfbc005d-8640-57a4-89e1-539c974fa780/settlement-rules" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "chain": "POLYGON",
+    "includeHIFIFee": false,
+    "rules": [
+      {
+        "type": "PERCENTAGE",
+        "calculationModel": "FIXED",
+        "value": 0.001,
+        "walletAddress": "0x15FB50680fEB2f726413416665c25f9B397b047b"
+      }
+    ]
+  }'
+```
+
+## API Reference
+
+### Create Settlement Rules
+
+**Endpoint:** `POST /v1/virtual-accounts/{virtualAccountId}/settlement-rules`
+
+**Request Body:**
+```json
+{
+  "chain": "BASE",
+  "includeHIFIFee": false,
+  "rules": [
+    {
+      "type": "PERCENTAGE",
+      "calculationModel": "FIXED",
+      "value": 0.001,
+      "tiers": null,
+      "walletAddress": "0x15FB50680fEB2f726413416665c25f9B397b047b"
+    }
+  ]
+}
+```
+
+**Response:**
+```json
+{
+  "id": "15c786fb-de7a-520c-a4b3-f312d4a122d2",
+  "chain": "BASE",
+  "includeHIFIFee": false,
+  "rules": [
+    {
+      "type": "PERCENTAGE",
+      "calculationModel": "FIXED",
+      "value": 0.001,
+      "tiers": null,
+      "walletAddress": "0x15FB50680fEB2f726413416665c25f9B397b047b"
+    }
+  ],
+  "status": "active",
+  "createdAt": "2024-01-15T10:30:00Z",
+  "updatedAt": "2024-01-15T10:30:00Z"
+}
+```
+
+### Update Settlement Rules
+
+**Endpoint:** `PUT /v1/virtual-accounts/{virtualAccountId}/settlement-rules/{ruleId}`
+
+```bash
+curl -X PUT "https://api.hifi.com/v1/virtual-accounts/cfbc005d-8640-57a4-89e1-539c974fa780/settlement-rules/15c786fb-de7a-520c-a4b3-f312d4a122d2" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "chain": "POLYGON",
+    "includeHIFIFee": false,
+    "rules": [
+      {
+        "type": "PERCENTAGE",
+        "calculationModel": "TIERED",
+        "tiers": [
+          {
+            "max": "5000",
+            "min": "",
+            "value": 0.0008
+          },
+          {
+            "max": "",
+            "min": "5000",
+            "value": 0.0005
+          }
+        ],
+        "walletAddress": "0x15FB50680fEB2f726413416665c25f9B397b047b"
+      }
+    ]
+  }'
+```
+
+### List Settlement Rules
+
+**Endpoint:** `GET /v1/virtual-accounts/{virtualAccountId}/settlement-rules`
+
+```bash
+curl -X GET "https://api.hifi.com/v1/virtual-accounts/cfbc005d-8640-57a4-89e1-539c974fa780/settlement-rules" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+**Response:**
+```json
+{
+  "virtualAccountId": "cfbc005d-8640-57a4-89e1-539c974fa780",
+  "settlementRules": [
+    {
+      "id": "15c786fb-de7a-520c-a4b3-f312d4a122d2",
+      "chain": "POLYGON",
+      "includeHIFIFee": false,
+      "rules": [
+        {
+          "type": "PERCENTAGE",
+          "calculationModel": "FIXED",
+          "value": 0.001,
+          "tiers": null,
+          "walletAddress": "0x15FB50680fEB2f726413416665c25f9B397b047b"
+        }
+      ],
+      "status": "active",
+      "createdAt": "2024-01-15T10:30:00Z",
+      "updatedAt": "2024-01-15T10:30:00Z"
+    }
+  ]
+}
+```
+
+### Delete Settlement Rules
+
+**Endpoint:** `DELETE /v1/virtual-accounts/{virtualAccountId}/settlement-rules/{ruleId}`
+
+```bash
+curl -X DELETE "https://api.hifi.com/v1/virtual-accounts/cfbc005d-8640-57a4-89e1-539c974fa780/settlement-rules/15c786fb-de7a-520c-a4b3-f312d4a122d2" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+**Response:**
+```json
+{
+  "message": "Settlement rules deleted successfully",
+  "virtualAccountId": "cfbc005d-8640-57a4-89e1-539c974fa780",
+  "deletedRuleId": "15c786fb-de7a-520c-a4b3-f312d4a122d2"
+}
+```
+
+## Rule Configuration Examples
+
+### Fixed Percentage Rule
+
+```json
+{
+  "type": "PERCENTAGE",
+  "calculationModel": "FIXED",
+  "value": 0.001,
+  "tiers": null,
+  "walletAddress": "0x15FB50680fEB2f726413416665c25f9B397b047b"
+}
+```
+
+- **Value**: 0.001 = 0.1% fee
+- **Calculation**: Transaction amount × 0.001
+- **Example**: $1,000 transaction = $1.00 fee
+
+### Tiered Percentage Rule
+
+```json
+{
+  "type": "PERCENTAGE",
+  "calculationModel": "TIERED",
+  "value": null,
+  "tiers": [
+    {
+      "max": "1000",
+      "min": "",
+      "value": 0.0007
+    },
+    {
+      "max": "2000",
+      "min": "1000",
+      "value": 0.0005
+    },
+    {
+      "max": "",
+      "min": "2000",
+      "value": 0.0002
+    }
+  ],
+  "walletAddress": "0x15FB50680fEB2f726413416665c25f9B397b047b"
+}
+```
+
+**Tier Structure:**
+- **Tier 1**: $0 - $1,000 → 0.07% fee
+- **Tier 2**: $1,000 - $2,000 → 0.05% fee
+- **Tier 3**: $2,000+ → 0.02% fee
+
+### Fixed Amount Rule
+
+```json
+{
+  "type": "FIXED",
+  "calculationModel": "FIXED",
+  "value": 0.5,
+  "tiers": null,
+  "walletAddress": "0x15FB50680fEB2f726413416665c25f9B397b047b"
+}
+```
+
+- **Value**: 0.5 = $0.50 fixed fee
+- **Calculation**: Always $0.50 regardless of transaction size
+
+## Sandbox Testing
+
+### Test Settlement Rule Application
+
+```bash
+curl -X POST "https://sandbox-api.hifi.com/v1/virtual-accounts/test-va-123/settlement-rules" \
+  -H "Authorization: Bearer YOUR_SANDBOX_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "chain": "BASE",
+    "includeHIFIFee": true,
+    "rules": [
+      {
+        "type": "PERCENTAGE",
+        "calculationModel": "FIXED",
+        "value": 0.002,
+        "walletAddress": "0xTestWallet123..."
+      }
+    ]
+  }'
+```
+
+### Simulate Fee Calculation
+
+```json
+{
+  "testTransaction": {
+    "amount": 1000,
+    "currency": "usdc",
+    "chain": "BASE"
+  },
+  "expectedFee": {
+    "percentage": 2.0,
+    "currency": "usdc",
+    "walletAddress": "0xTestWallet123..."
+  }
+}
+```
+
+## Fee Calculation Examples
+
+### Example 1: Fixed Percentage + Fixed Fee
+
+**Configuration:**
+```json
+{
+  "rules": [
+    {
+      "type": "PERCENTAGE",
+      "calculationModel": "FIXED",
+      "value": 0.001,
+      "walletAddress": "0x15FB50680fEB2f726413416665c25f9B397b047b"
+    },
+    {
+      "type": "FIXED",
+      "calculationModel": "FIXED",
+      "value": 0.5,
+      "walletAddress": "0x15FB50680fEB2f726413416665c25f9B397b047b"
+    }
+  ]
+}
+```
+
+**Transaction:** $1,000 USDC conversion
+
+**Calculation:**
+- Percentage fee: $1,000 × 0.001 = $1.00
+- Fixed fee: $0.50
+- **Total fee: $1.50**
+
+### Example 2: Tiered Percentage
+
+**Configuration:**
+```json
+{
+  "rules": [
+    {
+      "type": "PERCENTAGE",
+      "calculationModel": "TIERED",
+      "tiers": [
+        {
+          "max": "1000",
+          "min": "",
+          "value": 0.0007
+        },
+        {
+          "max": "2000",
+          "min": "1000",
+          "value": 0.0005
+        },
+        {
+          "max": "",
+          "min": "2000",
+          "value": 0.0002
+        }
+      ],
+      "walletAddress": "0x15FB50680fEB2f726413416665c25f9B397b047b"
+    }
+  ]
+}
+```
+
+**Transaction:** $2,500 USDC conversion
+
+**Calculation:**
+- Tier 1 (0-1000): $1,000 × 0.0007 = $0.70
+- Tier 2 (1000-2000): $1,000 × 0.0005 = $0.50
+- Tier 3 (2000+): $500 × 0.0002 = $0.10
+- **Total fee: $1.30**
+
+## Use Case Examples
+
+### E-commerce Platform
+
+```json
+{
+  "chain": "BASE",
+  "includeHIFIFee": false,
+  "rules": [
+    {
+      "type": "PERCENTAGE",
+      "calculationModel": "FIXED",
+      "value": 0.002,
+      "walletAddress": "0xEcommerceWallet123..."
+    }
+  ]
+}
+```
+
+**Use Case:** 0.2% fee on all transactions to cover payment processing costs.
+
+### High-Volume Trading Platform
+
+```json
+{
+  "chain": "ETHEREUM",
+  "includeHIFIFee": true,
+  "rules": [
+    {
+      "type": "PERCENTAGE",
+      "calculationModel": "TIERED",
+      "tiers": [
+        {
+          "max": "10000",
+          "min": "",
+          "value": 0.001
+        },
+        {
+          "max": "100000",
+          "min": "10000",
+          "value": 0.0005
+        },
+        {
+          "max": "",
+          "min": "100000",
+          "value": 0.0001
+        }
+      ],
+      "walletAddress": "0xTradingPlatform456..."
+    }
+  ]
+}
+```
+
+**Use Case:** Volume-based fee structure for high-frequency trading with decreasing rates for larger transactions.
+
+## Supported Networks
+
+| Network  | Chain ID | Native Currency |
+| -------- | -------- | --------------- |
+| Ethereum | ETHEREUM | ETH             |
+| Polygon  | POLYGON  | MATIC           |
+| Base     | BASE     | ETH             |
+| Solana   | SOLANA   | SOL             |
+
+## Error Handling
+
+### Common Error Responses
+
+```json
+{
+  "error": "INVALID_RULE_CONFIGURATION",
+  "message": "Invalid tier configuration: min value must be less than max value",
+  "code": 400
+}
+```
+
+```json
+{
+  "error": "WALLET_ADDRESS_INVALID",
+  "message": "Wallet address is not valid for the specified chain",
+  "code": 400
+}
+```
+
+### Best Practices
+
+1. **Validate wallet addresses** before creating rules
+2. **Test in sandbox** before production deployment
+3. **Monitor fee calculations** to ensure accuracy
+4. **Use appropriate error handling** for API responses
+5. **Implement retry logic** for transient failures
