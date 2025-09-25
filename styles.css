@@ -176,9 +176,9 @@ table td {
 }
 
 .hero-title {
-  font-family: "Rhithmic Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Roboto, sans-serif;
-  font-size: 2rem;
+  font-family: "Space Mono", "SF Mono", "Monaco", "Inconsolata", "Roboto Mono",
+    "Source Code Pro", monospace;
+  font-size: 1.2rem;
   font-weight: 700;
   margin: 0 0 0.75rem 0;
   color: #f2ff66;
@@ -191,7 +191,7 @@ table td {
   line-height: 1.6;
   margin: 0 0 2rem 0;
   opacity: 0.9;
-  max-width: 600px;
+  max-width: 500px;
 }
 
 .setup-section {
@@ -232,17 +232,4 @@ table td {
   width: 100% !important;
   margin: 0 !important;
   padding: 0 !important;
-}
-
-/* Ensure hero content is centered within any container */
-.hero-content {
-  max-width: 800px;
-  margin: 0 auto;
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  text-align: center;
 }
