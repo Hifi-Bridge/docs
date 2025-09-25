@@ -1,5 +1,5 @@
 ---
-title: "API Error Codes"
+title: "Error Codes"
 ---
 
 This document provides a comprehensive guide to the error handling system used in the HIFI API. Understanding these error codes will help you effectively handle exceptions and communicate issues to your users.
@@ -18,28 +18,85 @@ Where:
 
 **Example**: Error code `100001` indicates a generic validation error (Service ID: 10, Category: 00, Sequence: 01).
 
-## Service Identifiers
+<AccordionGroup>
+  <Accordion title="Service Identifiers">
+    <table>
+      <thead>
+        <tr>
+          <th>Service ID</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>10</td>
+          <td>Generic Services</td>
+        </tr>
+        <tr>
+          <td>20</td>
+          <td>Authentication</td>
+        </tr>
+        <tr>
+          <td>30</td>
+          <td>User Management</td>
+        </tr>
+        <tr>
+          <td>40</td>
+          <td>Transaction Processing</td>
+        </tr>
+        <tr>
+          <td>50</td>
+          <td>Account Management</td>
+        </tr>
+        <tr>
+          <td>60</td>
+          <td>Wallet Services</td>
+        </tr>
+        <tr>
+          <td>70</td>
+          <td>System Infrastructure</td>
+        </tr>
+      </tbody>
+    </table>
+  </Accordion>
 
-| Service ID | Description            |
-| ---------- | ---------------------- |
-| 10         | Generic Services       |
-| 20         | Authentication         |
-| 30         | User Management        |
-| 40         | Transaction Processing |
-| 50         | Account Management     |
-| 60         | Wallet Services        |
-| 70         | System Infrastructure  |
-
-## Error Categories
-
-| Category ID | Description          |
-| ----------- | -------------------- |
-| 00          | Validation Error     |
-| 01          | Authentication Error |
-| 02          | Authorization Error  |
-| 03          | Not Found Error      |
-| 04          | Service Unavailable  |
-| 05          | Inactive Resource    |
+  <Accordion title="Error Categories">
+    <table>
+      <thead>
+        <tr>
+          <th>Category ID</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>00</td>
+          <td>Validation Error</td>
+        </tr>
+        <tr>
+          <td>01</td>
+          <td>Authentication Error</td>
+        </tr>
+        <tr>
+          <td>02</td>
+          <td>Authorization Error</td>
+        </tr>
+        <tr>
+          <td>03</td>
+          <td>Not Found Error</td>
+        </tr>
+        <tr>
+          <td>04</td>
+          <td>Service Unavailable</td>
+        </tr>
+        <tr>
+          <td>05</td>
+          <td>Inactive Resource</td>
+        </tr>
+      </tbody>
+    </table>
+  </Accordion>
+</AccordionGroup>
 
 ## Error Response Format
 
@@ -55,76 +112,297 @@ All error responses follow a consistent JSON structure:
 
 ## Error Code Reference
 
-### Generic Errors (10xxxx)
+<AccordionGroup>
+  <Accordion title="Generic Errors (10xxxx)">
+    <table>
+      <thead>
+        <tr>
+          <th>Code</th>
+          <th>Error</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>100001</td>
+          <td>FIELD_VALIDATION_ERROR</td>
+          <td>Fields provided are either missing or invalid</td>
+        </tr>
+        <tr>
+          <td>100002</td>
+          <td>METHOD_NOT_ALLOWED</td>
+          <td>Method not allowed</td>
+        </tr>
+        <tr>
+          <td>100003</td>
+          <td>INVALID_VERSION</td>
+          <td>Invalid version</td>
+        </tr>
+        <tr>
+          <td>100004</td>
+          <td>DEPRECATED_RESOURCE</td>
+          <td>This resource has been deprecated</td>
+        </tr>
+        <tr>
+          <td>100005</td>
+          <td>RESOURCE_CONFLICT</td>
+          <td>Resource conflict, please try different request id</td>
+        </tr>
+      </tbody>
+    </table>
+  </Accordion>
 
-| Code   | Error                  | Description                                        |
-| ------ | ---------------------- | -------------------------------------------------- |
-| 100001 | FIELD_VALIDATION_ERROR | Fields provided are either missing or invalid      |
-| 100002 | METHOD_NOT_ALLOWED     | Method not allowed                                 |
-| 100003 | INVALID_VERSION        | Invalid version                                    |
-| 100004 | DEPRECATED_RESOURCE    | This resource has been deprecated                  |
-| 100005 | RESOURCE_CONFLICT      | Resource conflict, please try different request id |
+{" "}
 
-### Authentication Errors (20xxxx)
+<Accordion title="Authentication Errors (20xxxx)">
+  <table>
+    <thead>
+      <tr>
+        <th>Code</th>
+        <th>Error</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>200001</td>
+        <td>INVALID_API_KEY</td>
+        <td>Invalid API key</td>
+      </tr>
+      <tr>
+        <td>200201</td>
+        <td>PRODUCTION_NOT_ENABLED</td>
+        <td>Production is not enabled for this profile</td>
+      </tr>
+      <tr>
+        <td>200202</td>
+        <td>USER_ROLE_NOT_ALLOWED</td>
+        <td>User role not allowed to perform this action</td>
+      </tr>
+      <tr>
+        <td>200203</td>
+        <td>UNAUTHORIZED</td>
+        <td>Unauthorized</td>
+      </tr>
+      <tr>
+        <td>200204</td>
+        <td>PROFILE_FROZEN</td>
+        <td>Profile is not authorized to access this resource</td>
+      </tr>
+      <tr>
+        <td>200301</td>
+        <td>BILLING_CONFIG_NOT_FOUND</td>
+        <td>Billing configuration not found</td>
+      </tr>
+      <tr>
+        <td>200301</td>
+        <td>KEY_DOES_NOT_EXIST</td>
+        <td>Key does not exist</td>
+      </tr>
+    </tbody>
+  </table>
+</Accordion>
 
-| Code   | Error                    | Description                                       |
-| ------ | ------------------------ | ------------------------------------------------- |
-| 200001 | INVALID_API_KEY          | Invalid API key                                   |
-| 200201 | PRODUCTION_NOT_ENABLED   | Production is not enabled for this profile        |
-| 200202 | USER_ROLE_NOT_ALLOWED    | User role not allowed to perform this action      |
-| 200203 | UNAUTHORIZED             | Unauthorized                                      |
-| 200204 | PROFILE_FROZEN           | Profile is not authorized to access this resource |
-| 200301 | BILLING_CONFIG_NOT_FOUND | Billing configuration not found                   |
-| 200301 | KEY_DOES_NOT_EXIST       | Key does not exist                                |
+{" "}
 
-### User Management Errors (30xxxx)
+<Accordion title="User Management Errors (30xxxx)">
+  <table>
+    <thead>
+      <tr>
+        <th>Code</th>
+        <th>Error</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>300001</td>
+        <td>USER_ALREADY_EXISTS</td>
+        <td>User already exists</td>
+      </tr>
+      <tr>
+        <td>300201</td>
+        <td>USER_ACTION_NOT_ALLOWED</td>
+        <td>User is not allowed to perform this action</td>
+      </tr>
+      <tr>
+        <td>300201</td>
+        <td>USER_COMPLIANCE_VERIFICATION_FAILED</td>
+        <td>User compliance information is not approved</td>
+      </tr>
+      <tr>
+        <td>300202</td>
+        <td>USER_COMPLIANCE_DATA_INVALID</td>
+        <td>User compliance data is invalid</td>
+      </tr>
+      <tr>
+        <td>300202</td>
+        <td>USER_FROZEN</td>
+        <td>User is not authorized to access this resource</td>
+      </tr>
+      <tr>
+        <td>300301</td>
+        <td>USER_NOT_FOUND</td>
+        <td>User not found</td>
+      </tr>
+    </tbody>
+  </table>
+</Accordion>
 
-| Code   | Error                               | Description                                    |
-| ------ | ----------------------------------- | ---------------------------------------------- |
-| 300001 | USER_ALREADY_EXISTS                 | User already exists                            |
-| 300201 | USER_ACTION_NOT_ALLOWED             | User is not allowed to perform this action     |
-| 300201 | USER_COMPLIANCE_VERIFICATION_FAILED | User compliance information is not approved    |
-| 300202 | USER_COMPLIANCE_DATA_INVALID        | User compliance data is invalid                |
-| 300202 | USER_FROZEN                         | User is not authorized to access this resource |
-| 300301 | USER_NOT_FOUND                      | User not found                                 |
+{" "}
 
-### Transaction Errors (40xxxx)
+<Accordion title="Transaction Errors (40xxxx)">
+  <table>
+    <thead>
+      <tr>
+        <th>Code</th>
+        <th>Error</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>400001</td>
+        <td>INVALID_TRANSACTION_ROUTE</td>
+        <td>
+          Invalid transaction route (combination of currency, crypto, and rail)
+        </td>
+      </tr>
+      <tr>
+        <td>400002</td>
+        <td>INVALID_ACCOUNT_FOR_TRANSACTION</td>
+        <td>Invalid bank account for the transaction</td>
+      </tr>
+      <tr>
+        <td>400003</td>
+        <td>TRANSACTION_REQUEST_ALREADY_EXISTS</td>
+        <td>Transaction request already exists</td>
+      </tr>
+      <tr>
+        <td>400005</td>
+        <td>QUOTE_NOT_READY</td>
+        <td>Quote is not ready yet</td>
+      </tr>
+      <tr>
+        <td>400006</td>
+        <td>INVALID_QUOTE</td>
+        <td>Expired or invalid quote</td>
+      </tr>
+      <tr>
+        <td>400301</td>
+        <td>TRANSACTION_NOT_FOUND</td>
+        <td>Transaction not found</td>
+      </tr>
+      <tr>
+        <td>400302</td>
+        <td>QUOTE_NOT_FOUND</td>
+        <td>Quote not found</td>
+      </tr>
+      <tr>
+        <td>400401</td>
+        <td>INSUFFICIENT_BALANCE</td>
+        <td>Insufficient balance for transaction</td>
+      </tr>
+      <tr>
+        <td>400402</td>
+        <td>INSUFFICIENT_CREDIT_BALANCE</td>
+        <td>Insufficient credit balance for transaction fee</td>
+      </tr>
+      <tr>
+        <td>400403</td>
+        <td>TRANSACTION_INITIATION_FAILED</td>
+        <td>Transaction initiation failed</td>
+      </tr>
+    </tbody>
+  </table>
+</Accordion>
 
-| Code   | Error                              | Description                                                           |
-| ------ | ---------------------------------- | --------------------------------------------------------------------- |
-| 400001 | INVALID_TRANSACTION_ROUTE          | Invalid transaction route (combination of currency, crypto, and rail) |
-| 400002 | INVALID_ACCOUNT_FOR_TRANSACTION    | Invalid bank account for the transaction                              |
-| 400003 | TRANSACTION_REQUEST_ALREADY_EXISTS | Transaction request already exists                                    |
-| 400005 | QUOTE_NOT_READY                    | Quote is not ready yet                                                |
-| 400006 | INVALID_QUOTE                      | Expired or invalid quote                                              |
-| 400301 | TRANSACTION_NOT_FOUND              | Transaction not found                                                 |
-| 400302 | QUOTE_NOT_FOUND                    | Quote not found                                                       |
-| 400401 | INSUFFICIENT_BALANCE               | Insufficient balance for transaction                                  |
-| 400402 | INSUFFICIENT_CREDIT_BALANCE        | Insufficient credit balance for transaction fee                       |
-| 400403 | TRANSACTION_INITIATION_FAILED      | Transaction initiation failed                                         |
+{" "}
 
-### Account Management Errors (50xxxx)
+<Accordion title="Account Management Errors (50xxxx)">
+  <table>
+    <thead>
+      <tr>
+        <th>Code</th>
+        <th>Error</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>500001</td>
+        <td>INVALID_ACCOUNT_DATA</td>
+        <td>Invalid bank account data provided</td>
+      </tr>
+      <tr>
+        <td>500301</td>
+        <td>ACCOUNT_NOT_FOUND</td>
+        <td>Bank account ID not found</td>
+      </tr>
+      <tr>
+        <td>500501</td>
+        <td>INACTIVE_ACCOUNT</td>
+        <td>Bank account is not active</td>
+      </tr>
+    </tbody>
+  </table>
+</Accordion>
 
-| Code   | Error                | Description                        |
-| ------ | -------------------- | ---------------------------------- |
-| 500001 | INVALID_ACCOUNT_DATA | Invalid bank account data provided |
-| 500301 | ACCOUNT_NOT_FOUND    | Bank account ID not found          |
-| 500501 | INACTIVE_ACCOUNT     | Bank account is not active         |
+{" "}
 
-### Wallet Management Errors (60xxxx)
+<Accordion title="Wallet Management Errors (60xxxx)">
+  <table>
+    <thead>
+      <tr>
+        <th>Code</th>
+        <th>Error</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>600001</td>
+        <td>INVALID_WALLET_CONFIG</td>
+        <td>Invalid wallet configuration provided</td>
+      </tr>
+      <tr>
+        <td>600001</td>
+        <td>WALLET_ALREADY_EXISTS</td>
+        <td>Wallet already exists for this configuration</td>
+      </tr>
+      <tr>
+        <td>600301</td>
+        <td>WALLET_NOT_FOUND</td>
+        <td>Wallet not found for the user</td>
+      </tr>
+      <tr>
+        <td>600501</td>
+        <td>INACTIVE_WALLET</td>
+        <td>Wallet is not active</td>
+      </tr>
+    </tbody>
+  </table>
+</Accordion>
 
-| Code   | Error                 | Description                                  |
-| ------ | --------------------- | -------------------------------------------- |
-| 600001 | INVALID_WALLET_CONFIG | Invalid wallet configuration provided        |
-| 600001 | WALLET_ALREADY_EXISTS | Wallet already exists for this configuration |
-| 600301 | WALLET_NOT_FOUND      | Wallet not found for the user                |
-| 600501 | INACTIVE_WALLET       | Wallet is not active                         |
-
-### System/Infrastructure Errors (70xxxx)
-
-| Code   | Error                 | Description           |
-| ------ | --------------------- | --------------------- |
-| 700401 | INTERNAL_SERVER_ERROR | Internal server error |
+  <Accordion title="System/Infrastructure Errors (70xxxx)">
+    <table>
+      <thead>
+        <tr>
+          <th>Code</th>
+          <th>Error</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>700401</td>
+          <td>INTERNAL_SERVER_ERROR</td>
+          <td>Internal server error</td>
+        </tr>
+      </tbody>
+    </table>
+  </Accordion>
+</AccordionGroup>
 
 ## Usage Examples
 

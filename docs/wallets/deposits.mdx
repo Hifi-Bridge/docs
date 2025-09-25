@@ -24,15 +24,18 @@ curl -X GET "https://sandbox.hifibridge.com/v2/users/{userId}/wallets/deposits" 
 
 The deposits API supports several query parameters for filtering and pagination:
 
-| Parameter       | Type   | Required | Description                 | Example                                 |
-| --------------- | ------ | -------- | --------------------------- | --------------------------------------- |
-| `chain`         | string | ✅       | Blockchain network          | `POLYGON`, `ETHEREUM`, `SOLANA`, `BASE` |
-| `currency`      | string | ✅       | Currency type               | `usdc`, `usdt`, `usdHifi`               |
-| `status`        | string | ❌       | Deposit status              | `CONFIRMED`, `COMPLETED`                |
-| `createdAfter`  | date   | ❌       | Filter deposits after date  | `2024-01-01`                            |
-| `createdBefore` | date   | ❌       | Filter deposits before date | `2024-12-31`                            |
-| `limit`         | string | ❌       | Number of results (1-100)   | `10` (default), `50`                    |
-| `minAmount`     | number | ❌       | Minimum deposit amount      | `0.01`                                  |
+<Accordion title="View all query parameters">
+  | Parameter | Type | Required | Description | Example | | --------------- |
+  ------ | -------- | --------------------------- |
+  --------------------------------------- | | `chain` | string | ✅ | Blockchain
+  network | `POLYGON`, `ETHEREUM`, `SOLANA`, `BASE` | | `currency` | string | ✅
+  | Currency type | `usdc`, `usdt`, `usdHifi` | | `status` | string | ❌ |
+  Deposit status | `CONFIRMED`, `COMPLETED` | | `createdAfter` | date | ❌ |
+  Filter deposits after date | `2024-01-01` | | `createdBefore` | date | ❌ |
+  Filter deposits before date | `2024-12-31` | | `limit` | string | ❌ | Number
+  of results (1-100) | `10` (default), `50` | | `minAmount` | number | ❌ |
+  Minimum deposit amount | `0.01` |
+</Accordion>
 
 ### Response Format
 
