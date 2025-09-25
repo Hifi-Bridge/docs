@@ -45,10 +45,17 @@
       {
         "tab": "Docs",
         "pages": [
-          "docs/overview",
-          "docs/currencies",
-          "docs/regions",
-          "docs/industries",
+          {
+            "group": "Platform",
+            "pages": [
+              "docs/overview",
+              "docs/currencies",
+              {
+                "group": "Compliance",
+                "pages": ["docs/regions", "docs/industries"]
+              }
+            ]
+          },
           {
             "group": "Models",
             "pages": [
@@ -69,12 +76,14 @@
                 "pages": ["docs/fiat/accounts", "docs/fiat/rails"]
               },
               {
+                "group": "Stablecoins",
+                "pages": ["docs/stablecoins/swaps", "docs/stablecoins/bridging"]
+              },
+              {
                 "group": "Transfers",
                 "pages": [
-                  "docs/transfers/index",
+                  "docs/transfers/wallets",
                   "docs/transfers/onramps",
-                  "docs/transfers/swaps",
-                  "docs/transfers/bridging",
                   "docs/transfers/offramps"
                 ]
               }
