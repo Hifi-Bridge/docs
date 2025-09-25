@@ -1,4 +1,238 @@
 ---
-title: "Responses"
-description: "API structure for responses"
+title: "Expanding Responses"
 ---
+
+Learn how to reduce the number of requests you make to the HIFI API by expanding objects in responses for KYC and UBO endpoints.
+
+## Overview
+
+The HIFI API supports expanding related objects in responses to reduce API calls and improve efficiency. Instead of making multiple requests to fetch related data, you can use the `expand` parameter to include nested objects directly in a single response.
+
+## How Expanding Works
+
+By default, API responses include only basic object properties and IDs for related objects. When you use the `expand` parameter, the API replaces these IDs with the full related objects, including all their properties.
+
+**Example without expansion:**
+
+```json
+{
+  "userId": "6513dcd0-2161-4d18-bdca-c1ef94ebf21d",
+  "kycInfo": {
+    "type": "business",
+    "businessName": "Random Bizz",
+    "ultimateBeneficialOwners": [
+      "1f432735-24fa-4c72-8f99-37c540206688",
+      "393edc1e-6c8d-4d6e-a924-4b7c28c29a70"
+    ]
+  }
+}
+```
+
+**Example with expansion:**
+
+```json
+{
+  "userId": "6513dcd0-2161-4d18-bdca-c1ef94ebf21d",
+  "kycInfo": {
+    "type": "business",
+    "businessName": "Random Bizz",
+    "ultimateBeneficialOwners": [
+      {
+        "id": "1f432735-24fa-4c72-8f99-37c540206688",
+        "firstName": "William",
+        "lastName": "Y",
+        "email": "william@example.com",
+        "documents": [
+          {
+            "id": "a36920a2-2bb6-4d24-b1ca-e3cca39bd33a",
+            "type": "PASSPORT",
+            "subType": "FRONT_SIDE",
+            "url": "example.com"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+## KYC Endpoints
+
+### Update KYC Endpoint
+
+**POST** `/v2/users/{userId}/kyc`
+
+When updating KYC information, you can expand related objects to get immediate access to updated data:
+
+```bash
+curl -X POST "https://production.hifibridge.com/v2/users/{userId}/kyc" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "phone": "+8573491112",
+    "taxIdentificationNumber": "564213816"
+  }' \
+  "?expand[]=ultimateBeneficialOwners&expand[]=documents&expand[]=ultimateBeneficialOwners.documents"
+```
+
+**Supported expansions:**
+
+- `ultimateBeneficialOwners` - Include full UBO objects
+- `documents` - Include all KYC documents
+- `ultimateBeneficialOwners.documents` - Include documents for each UBO
+
+### Retrieve KYC Information
+
+**GET** `/v2/users/{userId}/kyc`
+
+Retrieve KYC information with expanded related objects:
+
+```bash
+curl -X GET "https://production.hifibridge.com/v2/users/{userId}/kyc?expand[]=ultimateBeneficialOwners&expand[]=documents&expand[]=ultimateBeneficialOwners.documents" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+**Use cases:**
+
+- Display complete KYC status including UBO details
+- Show all associated documents in a single request
+- Access nested document information for each UBO
+
+## UBO (Ultimate Beneficial Owner) Endpoints
+
+### Add a UBO
+
+**POST** `/v2/users/{userId}/kyc/ultimateBeneficialOwners`
+
+When adding a new UBO, expand documents to immediately see associated documents:
+
+```bash
+curl -X POST "https://production.hifibridge.com/v2/users/{userId}/kyc/ultimateBeneficialOwners" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "firstName": "John",
+    "lastName": "Doe",
+    "email": "john@example.com"
+  }' \
+  "?expand[]=documents"
+```
+
+**Supported expansions:**
+
+- `documents` - Include all documents for the UBO
+
+### Update a UBO
+
+**PUT** `/v2/users/{userId}/kyc/ultimateBeneficialOwners/{uboId}`
+
+Update UBO information with expanded document details:
+
+```bash
+curl -X PUT "https://production.hifibridge.com/v2/users/{userId}/kyc/ultimateBeneficialOwners/{uboId}" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "phone": "+1234567890"
+  }' \
+  "?expand[]=documents"
+```
+
+### Retrieve a UBO
+
+**GET** `/v2/users/{userId}/kyc/ultimateBeneficialOwners/{uboId}`
+
+Get specific UBO details with expanded documents:
+
+```bash
+curl -X GET "https://production.hifibridge.com/v2/users/{userId}/kyc/ultimateBeneficialOwners/{uboId}?expand[]=documents" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+### List all UBOs
+
+**GET** `/v2/users/{userId}/kyc/ultimateBeneficialOwners`
+
+Retrieve all UBOs with their associated documents:
+
+```bash
+curl -X GET "https://production.hifibridge.com/v2/users/{userId}/kyc/ultimateBeneficialOwners?expand[]=documents" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+## Advanced Expansion Techniques
+
+### Multiple Properties
+
+Expand multiple properties in a single request by adding multiple `expand[]` parameters:
+
+```bash
+curl -X GET "https://production.hifibridge.com/v2/users/{userId}/kyc?expand[]=ultimateBeneficialOwners&expand[]=documents" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+### Multi-Level Expansion
+
+Use dot notation to expand nested relationships across multiple levels:
+
+```bash
+curl -X GET "https://production.hifibridge.com/v2/users/{userId}/kyc?expand[]=ultimateBeneficialOwners.documents" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+This expands the `documents` property within each `ultimateBeneficialOwner`, giving you:
+
+- Full UBO objects with all their properties
+- Complete document objects for each UBO
+
+### Combining Expansions
+
+You can combine single-level and multi-level expansions:
+
+```bash
+curl -X GET "https://production.hifibridge.com/v2/users/{userId}/kyc?expand[]=ultimateBeneficialOwners&expand[]=documents&expand[]=ultimateBeneficialOwners.documents" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+## Best Practices
+
+### Performance Considerations
+
+1. **Only expand what you need** - Each expansion adds to response size and processing time
+2. **Use specific expansions** - Avoid expanding unnecessary relationships
+3. **Consider response size** - Large expansions can impact network performance
+
+### Common Use Cases
+
+1. **KYC Dashboard Display**
+
+   ```bash
+   # Get complete KYC status with all UBOs and documents
+   GET /v2/users/{userId}/kyc?expand[]=ultimateBeneficialOwners.documents
+   ```
+
+2. **Document Management**
+
+   ```bash
+   # Get all documents for a specific UBO
+   GET /v2/users/{userId}/kyc/ultimateBeneficialOwners/{uboId}?expand[]=documents
+   ```
+
+3. **Compliance Review**
+   ```bash
+   # Get KYC info with all related data for review
+   GET /v2/users/{userId}/kyc?expand[]=ultimateBeneficialOwners&expand[]=documents
+   ```
+
+## Error Handling
+
+If you try to expand a property that doesn't exist or isn't expandable, the API will ignore that expansion and return the response without it. Check the API reference to see which properties support expansion.
+
+<Info>
+  Not all properties can be expanded. The API reference marks expandable
+  properties with the "Expandable" label.
+</Info>
+
+## API Reference
+
+For complete details on which endpoints support expansion and which properties are expandable, refer to the [API Reference](/api-reference).

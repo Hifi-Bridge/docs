@@ -1,4 +1,69 @@
 ---
 title: "Authentication"
-description: "Getting your API keys"
 ---
+
+All API requests require authentication using API keys. This guide will walk you through requesting Dashboard access, creating API keys, and using them in your requests.
+
+## Requesting Dashboard Access
+
+Before you can create API keys, you'll need access to the HIFI Dashboard. Schedule a call with our team to discuss your use case and get access.
+
+<Card
+  title="Request Dashboard Access"
+  icon="key"
+  href="https://dashboard.hifibridge.com/request-access"
+>
+  Fill out our access request form to get started with the HIFI Dashboard
+</Card>
+
+## Creating API Keys
+
+After gaining Dashboard access, follow these steps to create your API keys:
+
+### Step 1: Access the API Keys Section
+
+1. Log in to the [HIFI Dashboard](https://dashboard.hifibridge.com)
+2. Navigate to **Developer** → **API Keys** or go directly to [https://dashboard.hifibridge.com/developer/apiKeys](https://dashboard.hifibridge.com/developer/apiKeys)
+
+### Step 2: Create a New API Key
+
+1. Click **"Create API Key"** or **"New API Key"**
+2. Provide a descriptive name for your API key (e.g., "Production App", "Development Testing")
+3. Select the appropriate permissions for your use case
+4. Click **"Generate"** or **"Create"**
+
+### Step 3: Copy Your API Key
+
+<Warning>
+  **Important**: API keys are only shown once during creation. Make sure to copy
+  and securely store your API key immediately.
+</Warning>
+
+1. Copy the generated API key from the dashboard
+2. Store it securely in your application's environment variables or secure key management system
+3. Never commit API keys to version control or share them in public repositories
+
+## Using API Keys
+
+Include your API key in every request using the `Authorization` header:
+
+```bash
+curl -X GET "https://production.hifibridge.com/v2/users" \
+  -H "Authorization: Bearer YOUR_API_KEY_HERE" \
+  -H "Content-Type: application/json"
+```
+
+### Getting Help
+
+If you encounter issues with authentication:
+
+1. Verify your API key is correct and active in the dashboard
+2. Check that you're using the correct header format: `Authorization: Bearer YOUR_KEY`
+3. Ensure your API key has the necessary permissions for the endpoint
+4. Contact support if problems persist
+
+<Info>
+  Need help with a specific integration? Check out our [quickstart
+  guide](/guides/quickstart) or browse our [use case
+  examples](/guides/use-cases).
+</Info>

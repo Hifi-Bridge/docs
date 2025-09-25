@@ -1,4 +1,200 @@
 ---
-title: "Errors"
-description: "Standardized error formatting"
+title: "API Error Codes"
 ---
+
+This document provides a comprehensive guide to the error handling system used in the HIFI API. Understanding these error codes will help you effectively handle exceptions and communicate issues to your users.
+
+## Error Code Structure
+
+Error codes follow a consistent format that provides information about the source and type of error:
+
+**`SSCEESS`**
+
+Where:
+
+- **SS**: Service identifier (2 digits)
+- **C**: Error category (2 digits)
+- **EE**: Error sequence (2 digits)
+
+**Example**: Error code `100001` indicates a generic validation error (Service ID: 10, Category: 00, Sequence: 01).
+
+## Service Identifiers
+
+| Service ID | Description            |
+| ---------- | ---------------------- |
+| 10         | Generic Services       |
+| 20         | Authentication         |
+| 30         | User Management        |
+| 40         | Transaction Processing |
+| 50         | Account Management     |
+| 60         | Wallet Services        |
+| 70         | System Infrastructure  |
+
+## Error Categories
+
+| Category ID | Description          |
+| ----------- | -------------------- |
+| 00          | Validation Error     |
+| 01          | Authentication Error |
+| 02          | Authorization Error  |
+| 03          | Not Found Error      |
+| 04          | Service Unavailable  |
+| 05          | Inactive Resource    |
+
+## Error Response Format
+
+All error responses follow a consistent JSON structure:
+
+```json
+{
+  "code": 100001,
+  "error": "FIELD_VALIDATION_ERROR",
+  "errorDetails": "Fields provided are either missing or invalid"
+}
+```
+
+## Error Code Reference
+
+### Generic Errors (10xxxx)
+
+| Code   | Error                  | Description                                        |
+| ------ | ---------------------- | -------------------------------------------------- |
+| 100001 | FIELD_VALIDATION_ERROR | Fields provided are either missing or invalid      |
+| 100002 | METHOD_NOT_ALLOWED     | Method not allowed                                 |
+| 100003 | INVALID_VERSION        | Invalid version                                    |
+| 100004 | DEPRECATED_RESOURCE    | This resource has been deprecated                  |
+| 100005 | RESOURCE_CONFLICT      | Resource conflict, please try different request id |
+
+### Authentication Errors (20xxxx)
+
+| Code   | Error                    | Description                                       |
+| ------ | ------------------------ | ------------------------------------------------- |
+| 200001 | INVALID_API_KEY          | Invalid API key                                   |
+| 200201 | PRODUCTION_NOT_ENABLED   | Production is not enabled for this profile        |
+| 200202 | USER_ROLE_NOT_ALLOWED    | User role not allowed to perform this action      |
+| 200203 | UNAUTHORIZED             | Unauthorized                                      |
+| 200204 | PROFILE_FROZEN           | Profile is not authorized to access this resource |
+| 200301 | BILLING_CONFIG_NOT_FOUND | Billing configuration not found                   |
+| 200301 | KEY_DOES_NOT_EXIST       | Key does not exist                                |
+
+### User Management Errors (30xxxx)
+
+| Code   | Error                               | Description                                    |
+| ------ | ----------------------------------- | ---------------------------------------------- |
+| 300001 | USER_ALREADY_EXISTS                 | User already exists                            |
+| 300201 | USER_ACTION_NOT_ALLOWED             | User is not allowed to perform this action     |
+| 300201 | USER_COMPLIANCE_VERIFICATION_FAILED | User compliance information is not approved    |
+| 300202 | USER_COMPLIANCE_DATA_INVALID        | User compliance data is invalid                |
+| 300202 | USER_FROZEN                         | User is not authorized to access this resource |
+| 300301 | USER_NOT_FOUND                      | User not found                                 |
+
+### Transaction Errors (40xxxx)
+
+| Code   | Error                              | Description                                                           |
+| ------ | ---------------------------------- | --------------------------------------------------------------------- |
+| 400001 | INVALID_TRANSACTION_ROUTE          | Invalid transaction route (combination of currency, crypto, and rail) |
+| 400002 | INVALID_ACCOUNT_FOR_TRANSACTION    | Invalid bank account for the transaction                              |
+| 400003 | TRANSACTION_REQUEST_ALREADY_EXISTS | Transaction request already exists                                    |
+| 400005 | QUOTE_NOT_READY                    | Quote is not ready yet                                                |
+| 400006 | INVALID_QUOTE                      | Expired or invalid quote                                              |
+| 400301 | TRANSACTION_NOT_FOUND              | Transaction not found                                                 |
+| 400302 | QUOTE_NOT_FOUND                    | Quote not found                                                       |
+| 400401 | INSUFFICIENT_BALANCE               | Insufficient balance for transaction                                  |
+| 400402 | INSUFFICIENT_CREDIT_BALANCE        | Insufficient credit balance for transaction fee                       |
+| 400403 | TRANSACTION_INITIATION_FAILED      | Transaction initiation failed                                         |
+
+### Account Management Errors (50xxxx)
+
+| Code   | Error                | Description                        |
+| ------ | -------------------- | ---------------------------------- |
+| 500001 | INVALID_ACCOUNT_DATA | Invalid bank account data provided |
+| 500301 | ACCOUNT_NOT_FOUND    | Bank account ID not found          |
+| 500501 | INACTIVE_ACCOUNT     | Bank account is not active         |
+
+### Wallet Management Errors (60xxxx)
+
+| Code   | Error                 | Description                                  |
+| ------ | --------------------- | -------------------------------------------- |
+| 600001 | INVALID_WALLET_CONFIG | Invalid wallet configuration provided        |
+| 600001 | WALLET_ALREADY_EXISTS | Wallet already exists for this configuration |
+| 600301 | WALLET_NOT_FOUND      | Wallet not found for the user                |
+| 600501 | INACTIVE_WALLET       | Wallet is not active                         |
+
+### System/Infrastructure Errors (70xxxx)
+
+| Code   | Error                 | Description           |
+| ------ | --------------------- | --------------------- |
+| 700401 | INTERNAL_SERVER_ERROR | Internal server error |
+
+## Usage Examples
+
+### JavaScript
+
+```javascript
+try {
+  // API call
+  const response = await fetch("/api/transfers", {
+    method: "POST",
+    headers: {
+      Authorization: "Bearer " + apiKey,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(transferData),
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw error;
+  }
+} catch (error) {
+  if (error.code === 300301) {
+    // Handle USER_NOT_FOUND error
+    console.log("User was not found in the system");
+  } else if (error.code === 400401) {
+    // Handle INSUFFICIENT_BALANCE error
+    console.log("Transaction failed due to insufficient balance");
+  } else if (error.code === 200001) {
+    // Handle INVALID_API_KEY error
+    console.log("Please check your API key");
+  }
+}
+```
+
+### HTTP Response Example
+
+```http
+HTTP/1.1 400 Bad Request
+Content-Type: application/json
+
+{
+  "code": 400001,
+  "error": "INVALID_TRANSACTION_ROUTE",
+  "errorDetails": "Invalid transaction route with the provided transaction details"
+}
+```
+
+## Best Practices
+
+### Error Handling
+
+1. **Always check error codes** before displaying generic error messages
+2. **Implement retry logic** for transient errors (5xx status codes)
+3. **Log errors** for debugging and monitoring purposes
+4. **Provide user-friendly messages** based on error codes
+
+### Common Error Scenarios
+
+- **Authentication Issues**: Check API key validity and permissions
+- **User Not Found**: Verify user exists and is properly created
+- **Insufficient Balance**: Check account balances before transactions
+- **Invalid Routes**: Ensure currency/crypto/rail combinations are supported
+
+### Error Code Patterns
+
+- **1xxxxx**: Generic validation and system errors
+- **2xxxxx**: Authentication and authorization issues
+- **3xxxxx**: User-related problems
+- **4xxxxx**: Transaction processing errors
+- **5xxxxx**: Account management issues
+- **6xxxxx**: Wallet service problems
+- **7xxxxx**: System infrastructure errors

@@ -8,10 +8,10 @@ During the onboarding process, you'll be asked to provide a **compliance email
 address**. This email will be used to contact you for any additional
 information requests during KYC review.
 
-<Note>
+<Info>
   KYC verification typically takes a few minutes for Individual Users and
   between 1 to 3 days for Business Users, depending on structure.
-</Note>
+</Info>
 
 ## Rails
 
@@ -49,9 +49,9 @@ This endpoint helps you understand exactly what to collect from users before sub
     - **Identity**: dateOfBirth, taxIdentificationNumber, govIdType, govIdFrontUrl, govIdCountry
     - **Proof of Address**: proofOfAddressType, proofOfAddressUrl
     
-    <Note>
+    <Info>
       Address has both required and optional fields. Required fields must be provided, while optional fields like addressLine2 can be included if available.
-    </Note>
+    </Info>
   </Accordion>
 
 {" "}
@@ -61,11 +61,11 @@ This endpoint helps you understand exactly what to collect from users before sub
   Questionnaire**: Complete sofEuQuestionnaire with employment status, expected
   monthly payments, primary purpose, and source of funds - **Additional
   Documents**: govIdBackUrl for back side of government ID
-  <Note>
+  <Info>
     The Source of Funds questionnaire has its own required and optional
     sub-fields. All required questionnaire fields must be completed if you
     choose to submit this information.
-  </Note>
+  </Info>
 </Accordion>
 
   <Accordion title="Invalid Fields">
@@ -73,9 +73,9 @@ This endpoint helps you understand exactly what to collect from users before sub
     
     The API response will include a list of fields that are missing or invalid, along with the specific reason (e.g., "missing" or "invalid format").
     
-    <Note>
+    <Info>
       You must address all invalid fields before KYC submission can be successful. Check the invalid fields list and provide the missing information or correct any formatting issues.
-    </Note>
+    </Info>
   </Accordion>
 </AccordionGroup>
 

@@ -8,7 +8,7 @@ Welcome to HIFI! This guide will help you get started with integrating HIFI's AP
 
 Before you begin, make sure you have:
 
-1. [Created a HIFI account](https://dashboard.hifibridge.com/login?request_access=true)
+1. [Created a HIFI account](https://dashboard.hifibridge.com/request-access)
 2. Copied API keys from the Dashboard
 3. Basic familiarity with REST APIs
 
@@ -120,12 +120,12 @@ curl --request POST \
 }'
 ```
 
-<Note>
+<Info>
   After submission, the KYC review process begins. For individual users, this
   typically takes a few minutes. You'll receive a `KYC.STATUS.UPDATE` webhook
   when the review is complete. [Learn more about
   statuses](/docs/users/kyc#kyc-status)
-</Note>
+</Info>
 
 ## Step 7: Create Virtual Account
 
@@ -133,11 +133,11 @@ Create a virtual account for the user:
 
 **POST** `/v2/users/{userId}/virtual-accounts`
 
-<Note>
+<Info>
   If you don't have USD and can't make transfers, you can use an onramp to
   convert your local currency to USDC. [See an
   example](/guides/transfers/onramps/mxn-usdc)
-</Note>
+</Info>
 
 ```bash
 curl --request POST \
