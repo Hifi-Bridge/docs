@@ -1,4 +1,63 @@
 ---
 title: "Sandbox"
-description: "Using our test environment"
 ---
+
+HIFI's sandbox environment provides a safe testing space for developers to integrate and test our APIs without incurring real charges or affecting production systems. All tokens and balances in the sandbox are simulated and hold no real-world value.
+
+## Getting Started
+
+### Generate a Sandbox API Key
+
+To access the sandbox environment, you'll need to create a sandbox API key:
+
+1. **Request Access**: Visit [dashboard.hifibridge.com/request-access](https://dashboard.hifibridge.com/request-access) to create an account
+2. **Navigate to API Keys**: Once approved, go to the Developer Dashboard
+3. **Create New Key**: Click the "New API Key" button under Sandbox
+
+<Warning>
+  Keep your sandbox API key secure and never commit it to version control. Use
+  environment variables to store API keys in your applications.
+</Warning>
+
+### Sandbox Base URL
+
+All sandbox API requests should be made to:
+
+```
+https://sandbox.hifibridge.com/v2/
+```
+
+## Sandbox vs Production
+
+The sandbox environment is designed to simulate production behavior while providing a safe testing environment:
+
+### Automated KYC Approval
+
+- **User KYC**: Automatically approved upon submitting dummy personal information
+- **No Real Verification**: No actual KYC/KYB verification process occurs
+- **Instant Processing**: KYC submissions are processed immediately for testing purposes
+
+### Testnet Integration
+
+- **Testnet Wallets**: All wallet addresses are created for testnets, not mainnet
+- **Simulated Transactions**: Token movements are simulated and don't involve real blockchain transactions
+- **No Real Value**: All balances and transfers are purely for testing purposes
+
+### Currency and Network Support
+
+- **Testnet Tokens**: Most currency pairs support testnet token movements
+- **Network Compatibility**: Full support for all supported blockchain networks in testnet mode
+- **Cross-Chain Testing**: Test bridging functionality between different testnet networks
+
+### Getting Help
+
+If you encounter issues or have suggestions for improving the sandbox experience:
+
+- **Email Support**: Reach out to us at [support@hifibridge.com](mailto:support@hifibridge.com)
+- **Documentation**: Check our [API Reference](/api/reference) for detailed endpoint documentation
+
+<Info>
+  The sandbox environment is continuously updated to reflect production changes.
+  If you notice discrepancies between sandbox and production behavior, please
+  report them to our support team.
+</Info>

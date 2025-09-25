@@ -50,6 +50,25 @@
           "docs/regions",
           "docs/industries",
           {
+            "group": "Integration",
+            "pages": [
+              {
+                "group": "API",
+                "pages": [
+                  "guides/integration/authentication",
+                  "guides/integration/responses",
+                  "guides/integration/errors"
+                ]
+              },
+              {
+                "group": "Dashboard",
+                "pages": ["docs/dashboard/index", "docs/dashboard/roles"]
+              },
+              "docs/webhooks",
+              "docs/sandbox"
+            ]
+          },
+          {
             "group": "Models",
             "pages": [
               {
@@ -96,24 +115,6 @@
         "tab": "Guides",
         "pages": [
           "guides/quickstart",
-          {
-            "group": "Integration",
-            "pages": [
-              {
-                "group": "API",
-                "pages": [
-                  "guides/integration/authentication",
-                  "guides/integration/responses",
-                  "guides/integration/errors"
-                ]
-              },
-              {
-                "group": "Dashboard",
-                "pages": ["docs/dashboard/index", "docs/dashboard/roles"]
-              },
-              "docs/sandbox"
-            ]
-          },
           {
             "group": "Use Cases",
             "pages": [

@@ -1,0 +1,1037 @@
+---
+title: "Webhooks"
+---
+
+When integrating with HIFI's stablecoin infrastructure, it is essential for your application to respond to events in real time. By doing so, your backend systems can promptly take appropriate actions based on events occurring within your HIFI accounts.
+
+## How to Register
+
+Register your webhook endpoint in the [HIFI Developer Dashboard](https://dashboard.hifibridge.com/developer/webhooks). Once registered, you'll start receiving events.
+
+## User Events
+
+<AccordionGroup>
+<Accordion title="USER.STATUS.CREATE">
+
+Triggered when a user object is created.
+
+```json
+{
+  "eventId": "evt_1957117404034e3ade",
+  "eventCategory": "USER",
+  "eventType": "USER.STATUS.CREATE",
+  "eventAction": "CREATE",
+  "data": {
+    "id": "c5a11cdb-2696-4a2e-ac58-3e17fb230288",
+    "name": "William Yang",
+    "type": "individual",
+    "email": "[email protected]",
+    "wallets": {
+      "INDIVIDUAL": {
+        "POLYGON_AMOY": {
+          "address": "0xa8A642FBA80749318036C97344fC73aE0B64c608"
+        },
+        "ETHEREUM_TESTNET": {
+          "address": "0x5743Af611b44F0934A7eF0cCE6877879375824D9"
+        }
+      }
+    }
+  },
+  "createdAt": "2025-03-07T14:51:44.099Z",
+  "timestamp": "2025-03-07T14:52:00.375Z",
+  "version": "v2"
+}
+```
+
+</Accordion>
+
+<Accordion title="USER.STATUS.UPDATE">
+
+Triggered when a user object is updated.
+
+```json
+{
+  "eventId": "evt_1957117404034e3ade",
+  "eventCategory": "USER",
+  "eventType": "USER.STATUS.UPDATE",
+  "eventAction": "UPDATE",
+  "data": {
+    "id": "c5a11cdb-2696-4a2e-ac58-3e17fb230288",
+    "name": "William Yang",
+    "type": "individual",
+    "email": "[email protected]",
+    "wallets": {
+      "INDIVIDUAL": {
+        "POLYGON_AMOY": {
+          "address": "0xa8A642FBA80749318036C97344fC73aE0B64c608"
+        },
+        "ETHEREUM_TESTNET": {
+          "address": "0x5743Af611b44F0934A7eF0cCE6877879375824D9"
+        }
+      }
+    },
+    "updatedAt": "2025-03-07T14:52:00.375Z"
+  },
+  "createdAt": "2025-03-07T14:51:44.099Z",
+  "timestamp": "2025-03-07T14:52:00.375Z",
+  "version": "v2"
+}
+```
+
+</Accordion>
+</AccordionGroup>
+
+## KYC Events
+
+<AccordionGroup>
+<Accordion title="KYC.DATA.UPDATE">
+
+Triggered when a user's KYC data is updated.
+
+```json
+{
+  "eventId": "evt_19571191645da9be1",
+  "eventCategory": "KYC",
+  "eventType": "KYC.DATA.UPDATE",
+  "eventAction": "UPDATE",
+  "data": {
+    "userId": "c5a11cdb-2696-4a2e-ac58-3e17fb230288",
+    "kycInfo": {
+      "type": "individual",
+      "email": "[email protected]",
+      "address": {
+        "city": "New York",
+        "country": "USA",
+        "postalCode": "12345",
+        "addressLine1": "123 Main St.",
+        "stateProvinceRegion": "NY"
+      },
+      "lastName": "Yang",
+      "firstName": "William",
+      "dateOfBirth": "2000-01-16T00:00:00+00:00"
+    }
+  },
+  "createdAt": "2025-03-07T14:51:44.099Z",
+  "timestamp": "2025-03-07T14:52:00.375Z",
+  "version": "v2"
+}
+```
+
+</Accordion>
+
+<Accordion title="KYC.STATUS.CREATE">
+
+Triggered upon submission of a user's KYC status for any rail.
+
+```json
+{
+  "eventId": "evt_19571191645da9be1",
+  "eventCategory": "KYC",
+  "eventType": "KYC.STATUS.CREATE",
+  "eventAction": "CREATE",
+  "data": {
+    "userId": "c5a11cdb-2696-4a2e-ac58-3e17fb230288",
+    "kycStatus": {
+      "rail": "USD",
+      "status": "PENDING",
+      "submittedAt": "2025-03-07T14:51:44.099Z"
+    }
+  },
+  "createdAt": "2025-03-07T14:51:44.099Z",
+  "timestamp": "2025-03-07T14:52:00.375Z",
+  "version": "v2"
+}
+```
+
+</Accordion>
+
+<Accordion title="KYC.STATUS.UPDATE">
+
+Triggered when a user's KYC status for any rail is updated.
+
+</Accordion>
+
+<Accordion title="KYC_LINK.CREATE">
+
+Triggered when a KYC link is created.
+
+```json
+{
+  "data": {
+    "id": "ec3da56c-d498-4034-aefc-5f51e589f15f",
+    "rails": ["ON_CHAIN"],
+    "valid": true,
+    "userId": null,
+    "userType": "individual",
+    "createdAt": "2025-04-29T01:58:35.56784+00:00",
+    "expiredAt": "2025-05-04T01:58:35.528+00:00",
+    "templateId": "2fb2da24-472a-4e5b-b160-038d9dc82a40",
+    "redirectUrl": null,
+    "sessionToken": "ec9d38de822864bb34d4e68f8466487afb31bf0d015e9c4d2d1bf80f4f67f4764316e8f5f05a30c7a312b11b36d5"
+  },
+  "eventId": "evt_1967f4477811e8fa82",
+  "version": "v2",
+  "createdAt": "2025-04-29T01:58:35.689Z",
+  "eventType": "KYC_LINK.CREATE",
+  "timestamp": "2025-04-29T01:58:40.235Z",
+  "eventAction": "CREATE",
+  "eventCategory": "KYC_LINK"
+}
+```
+
+</Accordion>
+
+<Accordion title="KYC_LINK.UPDATE">
+
+Triggered when a KYC link is updated. This webhook event will be emitted upon KYC Link Submission via the hosted page by the end-user.
+
+```json
+{
+  "data": {
+    "id": "ec3da56c-d498-4034-aefc-5f51e589f15f",
+    "rails": ["ON_CHAIN"],
+    "valid": false,
+    "userId": "857e9b69-a629-4e86-9cf3-ec4bcf2e38b4",
+    "userType": "individual",
+    "createdAt": "2025-04-29T01:58:35.56784+00:00",
+    "expiredAt": "2025-05-04T01:58:35.528+00:00",
+    "templateId": "2fb2da24-472a-4e5b-b160-038d9dc82a40",
+    "redirectUrl": null,
+    "sessionToken": "ec9d38de822864bb34d48466487afb31bf0d015e9c4d2d1bf80f4f67f4764316e8f5f05a30c7a312b11b36d5"
+  },
+  "eventId": "evt_1967f45caef15027c0",
+  "version": "v2",
+  "createdAt": "2025-04-29T02:00:02.586Z",
+  "eventType": "KYC_LINK.UPDATE",
+  "timestamp": "2025-04-29T02:00:20.440Z",
+  "eventAction": "UPDATE",
+  "eventCategory": "KYC_LINK"
+}
+```
+
+</Accordion>
+</AccordionGroup>
+
+## Account Events
+
+<AccordionGroup>
+<Accordion title="ACCOUNT.ONRAMP.CREATE">
+
+Triggered upon creation of onramp accounts.
+
+```json
+{
+  "eventId": "evt_1957137285df23c61",
+  "eventCategory": "ACCOUNT",
+  "eventType": "ACCOUNT.ONRAMP.CREATE",
+  "eventAction": "CREATE",
+  "data": {
+    "rail": {
+      "currency": "usd",
+      "railType": "onramp",
+      "paymentRail": "ach"
+    },
+    "userId": "42c784f4-eb84-4e87-b0de-8c2183aed67c",
+    "bankName": "Bank of America",
+    "accountId": "1dc854a5-0e11-492a-9adc-489a89e3602a",
+    "createdAt": "2025-03-07T15:26:34.261503+00:00",
+    "accountType": "SAVINGS",
+    "accountNumber": "0000",
+    "routingNumber": "011401533"
+  },
+  "createdAt": "2025-03-07T15:26:35.165Z",
+  "timestamp": "2025-03-07T15:26:40.461Z",
+  "version": "v2"
+}
+```
+
+</Accordion>
+
+<Accordion title="ACCOUNT.ONRAMP.UPDATE">
+
+Triggered when onramp accounts are updated.
+
+```json
+{
+  "eventId": "evt_1957137285df23c61",
+  "eventCategory": "ACCOUNT",
+  "eventType": "ACCOUNT.ONRAMP.UPDATE",
+  "eventAction": "UPDATE",
+  "data": {
+    "rail": {
+      "currency": "usd",
+      "railType": "onramp",
+      "paymentRail": "ach"
+    },
+    "userId": "42c784f4-eb84-4e87-b0de-8c2183aed67c",
+    "bankName": "Bank of America",
+    "accountId": "1dc854a5-0e11-492a-9adc-489a89e3602a",
+    "createdAt": "2025-03-07T15:26:34.261503+00:00",
+    "accountType": "SAVINGS",
+    "accountNumber": "0000",
+    "routingNumber": "011401533",
+    "updatedAt": "2025-03-07T15:30:00.123+00:00",
+    "status": "ACTIVE"
+  },
+  "createdAt": "2025-03-07T15:26:35.165Z",
+  "timestamp": "2025-03-07T15:30:05.461Z",
+  "version": "v2"
+}
+```
+
+</Accordion>
+
+<Accordion title="ACCOUNT.OFFRAMP.CREATE">
+
+Triggered upon creation of offramp accounts.
+
+```json
+{
+  "eventId": "evt_19571355a56577a5c4",
+  "eventCategory": "ACCOUNT",
+  "eventType": "ACCOUNT.OFFRAMP.CREATE",
+  "eventAction": "CREATE",
+  "data": {
+    "iban": null,
+    "rail": {
+      "currency": "usd",
+      "railType": "offramp",
+      "paymentRail": "ach"
+    },
+    "userId": "42c784f4-eb84-4e87-b0de-8c2183aed67c",
+    "bankName": "Chase",
+    "currency": "usd",
+    "accountId": "baffe8d3-9097-47a1-8db3-74061d6fccfc",
+    "createdAt": "2025-03-07T15:24:35.662881+00:00",
+    "accountType": "us",
+    "bankCountry": null,
+    "accountNumber": "9942123499",
+    "routingNumber": "011103093",
+    "beneficiaryCity": "Hoboken",
+    "accountOwnerName": "Henry Wu",
+    "accountOwnerType": "individual",
+    "beneficiaryState": "NJ",
+    "beneficiaryCountry": "USA",
+    "beneficiaryPostalCode": "07030",
+    "beneficiaryStreetLine1": "Example St 1.",
+    "beneficiaryStreetLine2": null,
+    "businessIdentifierCode": null
+  },
+  "createdAt": "2025-03-07T15:24:37.009Z",
+  "timestamp": "2025-03-07T15:24:40.194Z",
+  "version": "v2"
+}
+```
+
+</Accordion>
+
+<Accordion title="ACCOUNT.OFFRAMP.UPDATE">
+
+Triggered when offramp accounts are updated.
+
+```json
+{
+  "eventId": "evt_19571355a56577a5c4",
+  "eventCategory": "ACCOUNT",
+  "eventType": "ACCOUNT.OFFRAMP.UPDATE",
+  "eventAction": "UPDATE",
+  "data": {
+    "iban": null,
+    "rail": {
+      "currency": "usd",
+      "railType": "offramp",
+      "paymentRail": "ach"
+    },
+    "userId": "42c784f4-eb84-4e87-b0de-8c2183aed67c",
+    "bankName": "Chase",
+    "currency": "usd",
+    "accountId": "baffe8d3-9097-47a1-8db3-74061d6fccfc",
+    "createdAt": "2025-03-07T15:24:35.662881+00:00",
+    "accountType": "us",
+    "bankCountry": null,
+    "accountNumber": "9942123499",
+    "routingNumber": "011103093",
+    "beneficiaryCity": "Hoboken",
+    "accountOwnerName": "Henry Wu",
+    "accountOwnerType": "individual",
+    "beneficiaryState": "NJ",
+    "beneficiaryCountry": "USA",
+    "beneficiaryPostalCode": "07030",
+    "beneficiaryStreetLine1": "Example St 1.",
+    "beneficiaryStreetLine2": null,
+    "businessIdentifierCode": null,
+    "updatedAt": "2025-03-07T15:30:00.123+00:00",
+    "status": "ACTIVE"
+  },
+  "createdAt": "2025-03-07T15:24:37.009Z",
+  "timestamp": "2025-03-07T15:30:05.194Z",
+  "version": "v2"
+}
+```
+
+</Accordion>
+
+<Accordion title="ACCOUNT.VIRTUAL_ACCOUNT.CREATE">
+
+Triggered upon creation of virtual accounts.
+
+```json
+{
+  "eventId": "evt_19571425bd51a7e6c3",
+  "eventCategory": "ACCOUNT",
+  "eventType": "ACCOUNT.VIRTUAL_ACCOUNT.CREATE",
+  "eventAction": "CREATE",
+  "data": {
+    "userId": "42c784f4-eb84-4e87-b0de-8c2183aed67c",
+    "railStatus": "activated",
+    "paymentRails": ["ach_push", "wire"],
+    "microDeposits": {
+      "data": [],
+      "count": 0
+    },
+    "sourceCurrency": "usd",
+    "destinationChain": "POLYGON_AMOY",
+    "virtualAccountId": "05201b33-6304-47e1-8b51-d3e7acd14043",
+    "depositInstructions": {
+      "bankName": "Bank of Nowhere",
+      "bankAddress": "1800 North Pole St., Orlando, FL 32801",
+      "beneficiary": {
+        "name": "Henry Wu",
+        "address": "Example St 1., Hoboken, NJ 07030"
+      },
+      "accountNumber": "900205189018",
+      "routingNumber": "101019644"
+    },
+    "destinationCurrency": "usdc",
+    "destinationWalletAddress": "0x4f0e843Da9f5A74A86ce23D0DC4F7C9EE9F01D57"
+  },
+  "createdAt": "2025-03-07T15:38:49.251Z",
+  "timestamp": "2025-03-07T15:39:00.186Z",
+  "version": "v2"
+}
+```
+
+</Accordion>
+
+<Accordion title="ACCOUNT.VIRTUAL_ACCOUNT.UPDATE">
+
+Triggered when virtual accounts are updated.
+
+```json
+{
+  "eventId": "evt_19571425bd51a7e6c3",
+  "eventCategory": "ACCOUNT",
+  "eventType": "ACCOUNT.VIRTUAL_ACCOUNT.UPDATE",
+  "eventAction": "UPDATE",
+  "data": {
+    "userId": "42c784f4-eb84-4e87-b0de-8c2183aed67c",
+    "railStatus": "activated",
+    "paymentRails": ["ach_push", "wire"],
+    "microDeposits": {
+      "data": [
+        {
+          "amount": "0.01",
+          "status": "VERIFIED",
+          "createdAt": "2025-03-07T15:40:00.000Z"
+        }
+      ],
+      "count": 1
+    },
+    "sourceCurrency": "usd",
+    "destinationChain": "POLYGON_AMOY",
+    "virtualAccountId": "05201b33-6304-47e1-8b51-d3e7acd14043",
+    "depositInstructions": {
+      "bankName": "Bank of Nowhere",
+      "bankAddress": "1800 North Pole St., Orlando, FL 32801",
+      "beneficiary": {
+        "name": "Henry Wu",
+        "address": "Example St 1., Hoboken, NJ 07030"
+      },
+      "accountNumber": "900205189018",
+      "routingNumber": "101019644"
+    },
+    "destinationCurrency": "usdc",
+    "destinationWalletAddress": "0x4f0e843Da9f5A74A86ce23D0DC4F7C9EE9F01D57",
+    "updatedAt": "2025-03-07T15:40:00.123+00:00"
+  },
+  "createdAt": "2025-03-07T15:38:49.251Z",
+  "timestamp": "2025-03-07T15:40:05.186Z",
+  "version": "v2"
+}
+```
+
+</Accordion>
+</AccordionGroup>
+
+## Wallet Events
+
+<AccordionGroup>
+<Accordion title="WALLET.TOKEN.BALANCE.UPDATE">
+
+Triggered when there is an update to the wallet token balance.
+
+```json
+{
+  "eventId": "evt_195714a3de340webca",
+  "eventCategory": "WALLET",
+  "eventType": "WALLET.TOKEN.BALANCE.UPDATE",
+  "eventAction": "UPDATE",
+  "data": {
+    "id": "2e084846-00d6-5e4c-806f-eac45e197108",
+    "userId": "f4c99c2f-ce05-4f61-8ed6-9064a5689197",
+    "wallet": {
+      "id": "24b4917d-694e-4d81-ace8-9ba5261b6f4e",
+      "chain": "POLYGON",
+      "address": "0x0B95D270400BE4319EAFbfDD82F6C38B59ab54Ef",
+      "walletType": "INDIVIDUAL"
+    },
+    "transaction": {
+      "type": "DEPOSIT",
+      "chain": "POLYGON_AMOY",
+      "amount": "19",
+      "status": "COMPLETED",
+      "currency": "usdc",
+      "rawAmount": "19000000",
+      "unitAmount": "19000000",
+      "sourceAddress": "0x0B95D270400BE4319EAFbfDD82F6C38B59ab54Ef",
+      "contractAddress": "0x41e94eb019c0762f9bfcf9fb1e58725bfb0e7582",
+      "transactionHash": "0xe5284c4cb35ae9b5eb0ae23b840032f320b87b63f8967ee9b67ee09dfe6a194a",
+      "destinationAddress": "0x0B95D270400BE4319EAFbfDD82F6C38B59ab54Ef"
+    }
+  },
+  "createdAt": "2025-03-07T15:47:25.819Z",
+  "timestamp": "2025-03-07T15:47:40.186Z",
+  "version": "v2"
+}
+```
+
+</Accordion>
+
+<Accordion title="WALLET.TRANSFER.CREATE">
+
+Triggered upon creation of a wallet transfer.
+
+```json
+{
+  "eventId": "evt_195714a3de340e5bca",
+  "eventCategory": "WALLET",
+  "eventType": "WALLET.TRANSFER.CREATE",
+  "eventAction": "CREATE",
+  "data": {
+    "transferType": "WALLET.TRANSFER",
+    "transferDetails": {
+      "id": "2d9fcb48-e759-4990-b982-7349a5ccd9bb",
+      "chain": "POLYGON_AMOY",
+      "amount": 10,
+      "source": {
+        "user": {
+          "email": "william.yang@hifibridge.com",
+          "lastName": "Yang",
+          "firstName": "William",
+          "businessName": null
+        },
+        "userId": "c5a11cdb-2696-4a2e-ac58-3e17fb230288",
+        "walletType": "INDIVIDUAL",
+        "walletAddress": "0xa8A642FBA80749318036C97344fC73aE0B64c608"
+      },
+      "status": "CREATED",
+      "receipt": {
+        "transactionHash": null,
+        "userOpHash": null
+      },
+      "currency": "usdHifi",
+      "createdAt": "2025-03-07T15:47:25.483515+00:00",
+      "requestId": "f04e5852-a575-4834-80bf-48443008c21f",
+      "updatedAt": "2025-03-07T15:47:25.652+00:00",
+      "destination": {
+        "user": {
+          "email": "william.yang@hifibridge.com",
+          "lastName": "Yang",
+          "firstName": "William",
+          "businessName": null
+        },
+        "userId": "c5a11cdb-2696-4a2e-ac58-3e17fb230288",
+        "walletAddress": "0xa8A642FBA80749318036C97344fC73aE0B64c608"
+      },
+      "developerFee": null,
+      "failedReason": null,
+      "contractAddress": "0x545F651965F3322FDa6232F010Df37Ab41969505",
+      "amountIncludeDeveloperFee": null
+    }
+  },
+  "createdAt": "2025-03-07T15:47:25.819Z",
+  "timestamp": "2025-03-07T15:47:40.186Z",
+  "version": "v2"
+}
+```
+
+</Accordion>
+
+<Accordion title="WALLET.TRANSFER.UPDATE">
+
+Triggered when a wallet transfer is updated.
+
+```json
+{
+  "eventId": "evt_195714a3de340e5bca",
+  "eventCategory": "WALLET",
+  "eventType": "WALLET.TRANSFER.UPDATE",
+  "eventAction": "UPDATE",
+  "data": {
+    "transferType": "WALLET.TRANSFER",
+    "transferDetails": {
+      "id": "2d9fcb48-e759-4990-b982-7349a5ccd9bb",
+      "chain": "POLYGON_AMOY",
+      "amount": 10,
+      "source": {
+        "user": {
+          "email": "william.yang@hifibridge.com",
+          "lastName": "Yang",
+          "firstName": "William",
+          "businessName": null
+        },
+        "userId": "c5a11cdb-2696-4a2e-ac58-3e17fb230288",
+        "walletType": "INDIVIDUAL",
+        "walletAddress": "0xa8A642FBA80749318036C97344fC73aE0B64c608"
+      },
+      "status": "COMPLETED",
+      "receipt": {
+        "transactionHash": "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
+        "userOpHash": "0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890"
+      },
+      "currency": "usdHifi",
+      "createdAt": "2025-03-07T15:47:25.483515+00:00",
+      "requestId": "f04e5852-a575-4834-80bf-48443008c21f",
+      "updatedAt": "2025-03-07T15:48:30.123+00:00",
+      "destination": {
+        "user": {
+          "email": "william.yang@hifibridge.com",
+          "lastName": "Yang",
+          "firstName": "William",
+          "businessName": null
+        },
+        "userId": "c5a11cdb-2696-4a2e-ac58-3e17fb230288",
+        "walletAddress": "0xa8A642FBA80749318036C97344fC73aE0B64c608"
+      },
+      "developerFee": null,
+      "failedReason": null,
+      "contractAddress": "0x545F651965F3322FDa6232F010Df37Ab41969505",
+      "amountIncludeDeveloperFee": null
+    }
+  },
+  "createdAt": "2025-03-07T15:47:25.819Z",
+  "timestamp": "2025-03-07T15:48:35.186Z",
+  "version": "v2"
+}
+```
+
+</Accordion>
+
+<Accordion title="WALLET.BRIDGE.CREATE">
+
+Triggered upon creation of a wallet bridging operation.
+
+```json
+{
+  "eventId": "evt_195714a3de340e5bca",
+  "eventCategory": "WALLET",
+  "eventType": "WALLET.BRIDGE.CREATE",
+  "eventAction": "CREATE",
+  "data": {
+    "transferType": "WALLET.BRIDGE",
+    "transferDetails": {
+      "id": "a93b33b8-f431-4651-9392-7ddaf1b38de2",
+      "fee": null,
+      "amount": 1,
+      "source": {
+        "chain": "POLYGON_AMOY",
+        "userId": "edb8da48-577d-45af-b3a3-57434acf552e",
+        "currency": "usdc",
+        "walletAddress": "0x9ebE31A99c06704Ca55A1bbC0849733f94A07a75"
+      },
+      "status": "OPEN_QUOTE",
+      "createdAt": "2025-02-26T05:11:53.293447+00:00",
+      "requestId": "bc9a8654-577e-4f6f-9d5a-e3130ae83d7d",
+      "updatedAt": "2025-02-26T05:11:53.293447+00:00",
+      "destination": {
+        "chain": "ETHEREUM_TESTNET",
+        "userId": "edb8da48-577d-45af-b3a3-57434acf552e",
+        "currency": "usdc",
+        "walletAddress": "0x8f9cdD3c613dcDba5A2646Fa9193a62a3F938aaf"
+      },
+      "failedReason": null,
+      "quoteInformation": {
+        "rate": "1",
+        "railFee": {
+          "amount": "0",
+          "currency": "usdc"
+        },
+        "sendNet": {
+          "amount": "1.00",
+          "currency": "usdc"
+        },
+        "expiresAt": "2025-02-27T05:11:53.293Z",
+        "sendGross": {
+          "amount": "1.00",
+          "currency": "usdc"
+        },
+        "receiveNet": {
+          "amount": "1.00",
+          "currency": "usdc"
+        },
+        "receiveGross": {
+          "amount": "1.00",
+          "currency": "usdc"
+        }
+      }
+    }
+  },
+  "createdAt": "2025-03-07T15:47:25.819Z",
+  "timestamp": "2025-03-07T15:47:40.186Z",
+  "version": "v2"
+}
+```
+
+</Accordion>
+
+<Accordion title="WALLET.BRIDGE.UPDATE">
+
+Triggered when a wallet bridging operation is updated.
+
+```json
+{
+  "eventId": "evt_195714a3de340e5bca",
+  "eventCategory": "WALLET",
+  "eventType": "WALLET.BRIDGE.UPDATE",
+  "eventAction": "UPDATE",
+  "data": {
+    "transferType": "WALLET.BRIDGE",
+    "transferDetails": {
+      "id": "a93b33b8-f431-4651-9392-7ddaf1b38de2",
+      "fee": {
+        "amount": "0.1",
+        "currency": "usdc"
+      },
+      "amount": 1,
+      "source": {
+        "chain": "POLYGON_AMOY",
+        "userId": "edb8da48-577d-45af-b3a3-57434acf552e",
+        "currency": "usdc",
+        "walletAddress": "0x9ebE31A99c06704Ca55A1bbC0849733f94A07a75"
+      },
+      "status": "COMPLETED",
+      "createdAt": "2025-02-26T05:11:53.293447+00:00",
+      "requestId": "bc9a8654-577e-4f6f-9d5a-e3130ae83d7d",
+      "updatedAt": "2025-02-26T05:12:15.123+00:00",
+      "destination": {
+        "chain": "ETHEREUM_TESTNET",
+        "userId": "edb8da48-577d-45af-b3a3-57434acf552e",
+        "currency": "usdc",
+        "walletAddress": "0x8f9cdD3c613dcDba5A2646Fa9193a62a3F938aaf"
+      },
+      "failedReason": null,
+      "quoteInformation": {
+        "rate": "1",
+        "railFee": {
+          "amount": "0.1",
+          "currency": "usdc"
+        },
+        "sendNet": {
+          "amount": "0.90",
+          "currency": "usdc"
+        },
+        "expiresAt": "2025-02-27T05:11:53.293Z",
+        "sendGross": {
+          "amount": "1.00",
+          "currency": "usdc"
+        },
+        "receiveNet": {
+          "amount": "0.90",
+          "currency": "usdc"
+        },
+        "receiveGross": {
+          "amount": "1.00",
+          "currency": "usdc"
+        }
+      }
+    }
+  },
+  "createdAt": "2025-03-07T15:47:25.819Z",
+  "timestamp": "2025-03-07T15:48:40.186Z",
+  "version": "v2"
+}
+```
+
+</Accordion>
+</AccordionGroup>
+
+## Transfer Events
+
+<AccordionGroup>
+
+<Accordion title="ONRAMP.CREATE">
+
+Triggered upon creation of an onramp transaction.
+
+```json
+{
+  "eventId": "evt_1957139631552d0e38",
+  "eventCategory": "ONRAMP",
+  "eventType": "ONRAMP.CREATE",
+  "eventAction": "CREATE",
+  "data": {
+    "transferType": "ONRAMP",
+    "transferDetails": {
+      "id": "d938f457-5f8f-43d8-9828-134f6112b429",
+      "source": {
+        "user": {
+          "email": "william.yang@hifibridge.com",
+          "lastName": "Yang",
+          "firstName": "William",
+          "businessName": null
+        },
+        "amount": 1000,
+        "userId": "c5a11cdb-2696-4a2e-ac58-3e17fb230288",
+        "currency": "usd",
+        "accountId": null
+      },
+      "status": "CREATED",
+      "receipt": {
+        "transactionHash": null
+      },
+      "createdAt": "2025-03-07T15:29:00.746195+00:00",
+      "requestId": "d10d4a8a-4b06-463e-8c12-0ef12c81e961",
+      "updatedAt": "2025-03-07T15:29:00.991+00:00",
+      "destination": {
+        "user": {
+          "email": "william.yang@hifibridge.com",
+          "lastName": "Yang",
+          "firstName": "William",
+          "businessName": null
+        },
+        "chain": "POLYGON_AMOY",
+        "amount": null,
+        "userId": "c5a11cdb-2696-4a2e-ac58-3e17fb230288",
+        "currency": "usdhifi",
+        "walletAddress": null
+      },
+      "developerFee": null,
+      "failedReason": null,
+      "quoteInformation": null
+    }
+  },
+  "createdAt": "2025-03-07T15:29:01.235Z",
+  "timestamp": "2025-03-07T15:29:21.008Z",
+  "version": "v2"
+}
+```
+
+</Accordion>
+
+<Accordion title="ONRAMP.UPDATE">
+
+Triggered when an onramp transaction is updated.
+
+```json
+{
+  "eventId": "evt_1957139631552d0e38",
+  "eventCategory": "ONRAMP",
+  "eventType": "ONRAMP.UPDATE",
+  "eventAction": "UPDATE",
+  "data": {
+    "transferType": "ONRAMP",
+    "transferDetails": {
+      "id": "d938f457-5f8f-43d8-9828-134f6112b429",
+      "source": {
+        "user": {
+          "email": "william.yang@hifibridge.com",
+          "lastName": "Yang",
+          "firstName": "William",
+          "businessName": null
+        },
+        "amount": 1000,
+        "userId": "c5a11cdb-2696-4a2e-ac58-3e17fb230288",
+        "currency": "usd",
+        "accountId": "1dc854a5-0e11-492a-9adc-489a89e3602a"
+      },
+      "status": "COMPLETED",
+      "receipt": {
+        "transactionHash": "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef"
+      },
+      "createdAt": "2025-03-07T15:29:00.746195+00:00",
+      "requestId": "d10d4a8a-4b06-463e-8c12-0ef12c81e961",
+      "updatedAt": "2025-03-07T15:35:00.123+00:00",
+      "destination": {
+        "user": {
+          "email": "william.yang@hifibridge.com",
+          "lastName": "Yang",
+          "firstName": "William",
+          "businessName": null
+        },
+        "chain": "POLYGON_AMOY",
+        "amount": 1000,
+        "userId": "c5a11cdb-2696-4a2e-ac58-3e17fb230288",
+        "currency": "usdhifi",
+        "walletAddress": "0xa8A642FBA80749318036C97344fC73aE0B64c608"
+      },
+      "developerFee": null,
+      "failedReason": null,
+      "quoteInformation": {
+        "rate": "1.0",
+        "railFee": {
+          "amount": "0.00",
+          "currency": "usd"
+        },
+        "sendNet": {
+          "amount": "1000.00",
+          "currency": "usd"
+        },
+        "receiveNet": {
+          "amount": "1000.00",
+          "currency": "usdhifi"
+        }
+      }
+    }
+  },
+  "createdAt": "2025-03-07T15:29:01.235Z",
+  "timestamp": "2025-03-07T15:35:21.008Z",
+  "version": "v2"
+}
+```
+
+</Accordion>
+
+<Accordion title="OFFRAMP.CREATE">
+
+Triggered upon creation of an offramp transaction.
+
+```json
+{
+  "eventId": "evt_195713eb5185a84f7d",
+  "eventCategory": "OFFRAMP",
+  "eventType": "OFFRAMP.CREATE",
+  "eventAction": "CREATE",
+  "data": {
+    "transferType": "OFFRAMP",
+    "transferDetails": {
+      "id": "07f217dc-f196-4835-ba31-21e1360652d3",
+      "source": {
+        "user": {
+          "email": "william.yang@hifibridge.com",
+          "lastName": "Yang",
+          "firstName": "William",
+          "businessName": null
+        },
+        "chain": "POLYGON_AMOY",
+        "amount": 100,
+        "userId": "c5a11cdb-2696-4a2e-ac58-3e17fb230288",
+        "currency": "usdHifi",
+        "walletAddress": "0xa8A642FBA80749318036C97344fC73aE0B64c608"
+      },
+      "status": "CREATED",
+      "receipt": {
+        "transactionHash": null
+      },
+      "createdAt": "2025-03-07T15:34:49.454729+00:00",
+      "requestId": "45eac735-e4cb-422d-8b5d-fd40af31fbec",
+      "updatedAt": "2025-03-07T15:34:49.454729+00:00",
+      "destination": {
+        "user": {
+          "email": "william.yang@hifibridge.com",
+          "lastName": "Yang",
+          "firstName": "William",
+          "businessName": null
+        },
+        "amount": 0,
+        "userId": "c5a11cdb-2696-4a2e-ac58-3e17fb230288",
+        "currency": "brl",
+        "accountId": "d45ac419-c460-438e-ba63-6ffb706c9683"
+      },
+      "developerFee": null,
+      "failedReason": null,
+      "transactionHash": null,
+      "quoteInformation": null
+    }
+  },
+  "createdAt": "2025-03-07T15:34:49.913Z",
+  "timestamp": "2025-03-07T15:35:00.318Z",
+  "version": "v2"
+}
+```
+
+</Accordion>
+
+<Accordion title="OFFRAMP.UPDATE">
+
+Triggered when an offramp transaction is updated.
+
+```json
+{
+  "eventId": "evt_195713eb5185a84f7d",
+  "eventCategory": "OFFRAMP",
+  "eventType": "OFFRAMP.UPDATE",
+  "eventAction": "UPDATE",
+  "data": {
+    "transferType": "OFFRAMP",
+    "transferDetails": {
+      "id": "07f217dc-f196-4835-ba31-21e1360652d3",
+      "source": {
+        "user": {
+          "email": "william.yang@hifibridge.com",
+          "lastName": "Yang",
+          "firstName": "William",
+          "businessName": null
+        },
+        "chain": "POLYGON_AMOY",
+        "amount": 100,
+        "userId": "c5a11cdb-2696-4a2e-ac58-3e17fb230288",
+        "currency": "usdHifi",
+        "walletAddress": "0xa8A642FBA80749318036C97344fC73aE0B64c608"
+      },
+      "status": "COMPLETED",
+      "receipt": {
+        "transactionHash": "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef"
+      },
+      "createdAt": "2025-03-07T15:34:49.454729+00:00",
+      "requestId": "45eac735-e4cb-422d-8b5d-fd40af31fbec",
+      "updatedAt": "2025-03-07T15:40:00.123+00:00",
+      "destination": {
+        "user": {
+          "email": "william.yang@hifibridge.com",
+          "lastName": "Yang",
+          "firstName": "William",
+          "businessName": null
+        },
+        "amount": 100,
+        "userId": "c5a11cdb-2696-4a2e-ac58-3e17fb230288",
+        "currency": "brl",
+        "accountId": "d45ac419-c460-438e-ba63-6ffb706c9683"
+      },
+      "developerFee": null,
+      "failedReason": null,
+      "transactionHash": "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
+      "quoteInformation": {
+        "rate": "5.2",
+        "railFee": {
+          "amount": "2.00",
+          "currency": "brl"
+        },
+        "sendNet": {
+          "amount": "100.00",
+          "currency": "usdHifi"
+        },
+        "receiveNet": {
+          "amount": "520.00",
+          "currency": "brl"
+        }
+      }
+    }
+  },
+  "createdAt": "2025-03-07T15:34:49.913Z",
+  "timestamp": "2025-03-07T15:40:00.318Z",
+  "version": "v2"
+}
+```
+
+</Accordion>
+</AccordionGroup>
