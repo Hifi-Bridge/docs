@@ -50,25 +50,6 @@
           "docs/regions",
           "docs/industries",
           {
-            "group": "Integration",
-            "pages": [
-              {
-                "group": "API",
-                "pages": [
-                  "guides/integration/authentication",
-                  "guides/integration/responses",
-                  "guides/integration/errors"
-                ]
-              },
-              {
-                "group": "Dashboard",
-                "pages": ["docs/dashboard/index", "docs/dashboard/roles"]
-              },
-              "docs/webhooks",
-              "docs/sandbox"
-            ]
-          },
-          {
             "group": "Models",
             "pages": [
               {
@@ -107,6 +88,25 @@
               "docs/transfers/features/virtual-accounts",
               "docs/transfers/features/settlement-rules",
               "docs/transfers/features/transfer-approvals"
+            ]
+          },
+          {
+            "group": "Integration",
+            "pages": [
+              {
+                "group": "API",
+                "pages": [
+                  "guides/integration/authentication",
+                  "guides/integration/responses",
+                  "guides/integration/errors"
+                ]
+              },
+              {
+                "group": "Dashboard",
+                "pages": ["docs/dashboard/index", "docs/dashboard/roles"]
+              },
+              "docs/webhooks",
+              "docs/sandbox"
             ]
           }
         ]
