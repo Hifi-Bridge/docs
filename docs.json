@@ -105,9 +105,10 @@
               {
                 "group": "API",
                 "pages": [
-                  "guides/integration/authentication",
-                  "guides/integration/responses",
-                  "guides/integration/errors"
+                  "docs/api/postman",
+                  "docs/api/authentication",
+                  "docs/api/responses",
+                  "docs/api/errors"
                 ]
               },
               {
