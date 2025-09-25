@@ -31,7 +31,9 @@ const TYPEWRITER_CONFIG = {
   pauseDuration: 5000, // milliseconds to pause after completing the text
   deleteSpeed: 50, // milliseconds between each character deletion
   deletePause: 500, // milliseconds to pause before starting deletion
-  loop: true, // whether to continuously loop the animation
+  loop: false, // whether to continuously loop the animation
+  cursorChar: "|", // cursor character
+  cursorBlinkSpeed: 500, // milliseconds for cursor blink
 };
 
 (function () {
@@ -49,12 +51,47 @@ const TYPEWRITER_CONFIG = {
   let isDeleting = false;
   let currentText = "";
   let currentIndex = 0;
+  let cursorVisible = true;
+  let cursorInterval = null;
 
   // ============================================================================
   // SECTION 3: TYPEWRITER ANIMATION FUNCTIONS
   // ============================================================================
   // Core functions that handle the typewriter effect logic
   // ============================================================================
+
+  function startCursorBlink() {
+    // Clean up any existing cursor interval first
+    if (cursorInterval) {
+      clearInterval(cursorInterval);
+      cursorInterval = null;
+    }
+    cursorInterval = setInterval(() => {
+      cursorVisible = !cursorVisible;
+      updateDisplay();
+    }, TYPEWRITER_CONFIG.cursorBlinkSpeed);
+  }
+
+  function stopCursorBlink() {
+    if (cursorInterval) {
+      clearInterval(cursorInterval);
+      cursorInterval = null;
+    }
+    cursorVisible = true; // Show cursor when stopped
+    updateDisplay();
+  }
+
+  function updateDisplay() {
+    if (!typewriterElement) return;
+    typewriterElement.textContent = currentText;
+
+    // Control the CSS cursor visibility
+    if (cursorVisible) {
+      typewriterElement.style.setProperty("--cursor-opacity", "1");
+    } else {
+      typewriterElement.style.setProperty("--cursor-opacity", "0");
+    }
+  }
 
   function startTypewriterAnimation() {
     typewriterElement = document.querySelector(".hero-title");
@@ -64,10 +101,8 @@ const TYPEWRITER_CONFIG = {
       return;
     }
 
-    // Prevent multiple animations from running simultaneously
-    if (typewriterInterval) {
-      return; // Animation already running, don't start another
-    }
+    // Clean up any existing animation first
+    stopTypewriterAnimation();
 
     // Reset state
     currentText = "";
@@ -75,11 +110,17 @@ const TYPEWRITER_CONFIG = {
     isTyping = true;
     isDeleting = false;
 
-    // Start the typing animation
-    typewriterInterval = setInterval(
-      typewriterTick,
-      TYPEWRITER_CONFIG.typeSpeed
-    );
+    // Start with blinking cursor on blank screen
+    startCursorBlink();
+    updateDisplay();
+
+    // Start the typing animation after a brief delay
+    setTimeout(() => {
+      typewriterInterval = setInterval(
+        typewriterTick,
+        TYPEWRITER_CONFIG.typeSpeed
+      );
+    }, 2000); // 2 second delay before starting to type
   }
 
   function typewriterTick() {
@@ -88,40 +129,14 @@ const TYPEWRITER_CONFIG = {
       if (currentIndex < TYPEWRITER_CONFIG.text.length) {
         currentText += TYPEWRITER_CONFIG.text[currentIndex];
         currentIndex++;
-        typewriterElement.textContent = currentText;
+        updateDisplay();
       } else {
-        // Finished typing, start pause
+        // Finished typing, stop the animation and keep cursor blinking
         isTyping = false;
         clearInterval(typewriterInterval);
         typewriterInterval = null;
-        setTimeout(() => {
-          isDeleting = true;
-          typewriterInterval = setInterval(
-            typewriterTick,
-            TYPEWRITER_CONFIG.deleteSpeed
-          );
-        }, TYPEWRITER_CONFIG.pauseDuration);
-      }
-    } else if (isDeleting) {
-      // Deleting phase
-      if (currentText.length > 0) {
-        currentText = currentText.slice(0, -1);
-        typewriterElement.textContent = currentText;
-      } else {
-        // Finished deleting, start pause before next cycle
-        isDeleting = false;
-        clearInterval(typewriterInterval);
-        typewriterInterval = null;
-        setTimeout(() => {
-          if (TYPEWRITER_CONFIG.loop) {
-            currentIndex = 0;
-            isTyping = true;
-            typewriterInterval = setInterval(
-              typewriterTick,
-              TYPEWRITER_CONFIG.typeSpeed
-            );
-          }
-        }, TYPEWRITER_CONFIG.deletePause);
+        // Keep the cursor blinking on the final text
+        // (cursor continues blinking via startCursorBlink)
       }
     }
   }
@@ -131,7 +146,8 @@ const TYPEWRITER_CONFIG = {
       clearInterval(typewriterInterval);
       typewriterInterval = null;
     }
-    // Reset to original text
+    stopCursorBlink();
+    // Reset to original text without cursor
     if (typewriterElement) {
       typewriterElement.textContent = TYPEWRITER_CONFIG.text;
     }

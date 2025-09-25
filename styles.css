@@ -190,20 +190,10 @@ table td {
 .hero-title::after {
   content: "|";
   color: #f2ff66;
-  animation: blink 1s infinite;
+  opacity: var(--cursor-opacity, 1);
   font-weight: 300;
   margin-left: 2px;
-}
-
-@keyframes blink {
-  0%,
-  50% {
-    opacity: 1;
-  }
-  51%,
-  100% {
-    opacity: 0;
-  }
+  transition: opacity 0.1s ease;
 }
 
 .hero-description {
