@@ -334,7 +334,7 @@ const TYPEWRITER_CONFIG = {
       document.readyState === "interactive"
     ) {
       startAnimation();
-      startTypewriterAnimation();
+      // startTypewriterAnimation(); // Disabled typing animation
     }
 
     // Also listen for DOMContentLoaded
@@ -343,7 +343,7 @@ const TYPEWRITER_CONFIG = {
         "DOMContentLoaded",
         () => {
           startAnimation();
-          startTypewriterAnimation();
+          // startTypewriterAnimation(); // Disabled typing animation
         },
         {
           once: true,
@@ -354,13 +354,13 @@ const TYPEWRITER_CONFIG = {
     // Fallback: try after a short delay regardless of ready state
     setTimeout(() => {
       startAnimation();
-      startTypewriterAnimation();
+      // startTypewriterAnimation(); // Disabled typing animation
     }, 100);
 
     // Additional fallback for slow-loading content
     setTimeout(() => {
       startAnimation();
-      startTypewriterAnimation();
+      // startTypewriterAnimation(); // Disabled typing animation
     }, 500);
   }
   boot();
@@ -385,7 +385,7 @@ const TYPEWRITER_CONFIG = {
                 node.querySelector("#flowing-light-container"))
             ) {
               startAnimation();
-              startTypewriterAnimation();
+              // startTypewriterAnimation(); // Disabled typing animation
               return;
             }
           }
@@ -407,7 +407,7 @@ const TYPEWRITER_CONFIG = {
     if (url !== lastUrl) {
       lastUrl = url;
       startAnimation();
-      startTypewriterAnimation();
+      // startTypewriterAnimation(); // Disabled typing animation
     }
   }).observe(document, { subtree: true, childList: true });
 

@@ -126,6 +126,14 @@
         "pages": [
           "guides/quickstart",
           {
+            "group": "USD Rail",
+            "pages": [
+              "guides/usd-rail/overview",
+              "guides/usd-rail/submit-kyc",
+              "guides/usd-rail/submit-kyb"
+            ]
+          },
+          {
             "group": "Use Cases",
             "pages": [
               "guides/use-cases/stablecoin-access",
