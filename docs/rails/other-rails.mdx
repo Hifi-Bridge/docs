@@ -1,0 +1,218 @@
+---
+title: "Other Rails"
+sidebarTitle: "Other Rails"
+---
+
+HIFI supports additional payment rails beyond the USD rail, each designed for specific geographic regions and compliance requirements.
+
+## Global Network
+
+<Card title="Global Network Rail" icon="globe" defaultOpen={false}>
+
+The Global Network rail provides comprehensive support for multiple currencies and regions with standardized compliance requirements.
+
+### Identity
+
+| **Individual**          | **Business**     | **Ultimate Beneficial Owner** |
+| ----------------------- | ---------------- | ----------------------------- |
+| firstName               | businessName     | firstName                     |
+| lastName                | tradeName        | lastName                      |
+| dateOfBirth             | formationDate    | dateOfBirth                   |
+| taxIdentificationNumber | businessType     | taxIdentificationNumber       |
+| nationality             | businessIndustry |                               |
+| taxIdentificationNumber |                  |                               |
+| website                 |                  |                               |
+
+### Contact Information
+
+| **Individual** | **Business** | **Ultimate Beneficial Owner** |
+| -------------- | ------------ | ----------------------------- |
+| email          | email        | email                         |
+| phone          | phone        | phone                         |
+
+### Address
+
+| **Individual**              | **Business**                | **Ultimate Beneficial Owner** |
+| --------------------------- | --------------------------- | ----------------------------- |
+| address.addressLine1        | address.addressLine1        | address.addressLine1          |
+| address.addressLine2\*      | address.addressLine2\*      | address.addressLine2\*        |
+| address.city                | address.city                | address.city                  |
+| address.stateProvinceRegion | address.stateProvinceRegion | address.stateProvinceRegion   |
+| address.postalCode          | address.postalCode          | address.postalCode            |
+| address.country             | address.country             | address.country               |
+
+### Government ID
+
+| **Individual** | **Business**             | **Ultimate Beneficial Owner** |
+| -------------- | ------------------------ | ----------------------------- |
+| govIdType      | organizationStructureUrl | govIdType\*                   |
+| govIdFrontUrl  | govIdFrontUrl\*          |                               |
+| govIdBackUrl   | govIdBackUrl\*           |                               |
+
+### Proof of Address
+
+| **Individual**     | **Business**       |
+| ------------------ | ------------------ |
+| proofOfAddressType | proofOfAddressType |
+| proofOfAddressUrl  | proofOfAddressUrl  |
+
+### Ownership/Control
+
+| **Individual**           |
+| ------------------------ |
+| ultimateBeneficialOwners |
+| shareProportion          |
+
+> All fields with a \* are optional
+
+</Card>
+
+## South America Standard
+
+<Card title="South America Standard Rail" icon="map" defaultOpen={false}>
+
+Specialized rail for South American markets with region-specific compliance requirements.
+
+### Identity
+
+| **Individual**          | **Business**        | **Ultimate Beneficial Owner** |
+| ----------------------- | ------------------- | ----------------------------- |
+| firstName               | businessName        | firstName                     |
+| lastName                | businessDescription | lastName                      |
+| dateOfBirth             | formationDate       | dateOfBirth                   |
+| taxIdentificationNumber | businessType        | taxIdentificationNumber       |
+| ipAddress               | businessIndustry    |                               |
+| taxIdentificationNumber |                     |                               |
+| website                 |                     |                               |
+| ipAddress               |                     |                               |
+
+### Contact Information
+
+| **Individual** | **Business** | **Ultimate Beneficial Owner** |
+| -------------- | ------------ | ----------------------------- |
+| email          | email        | email                         |
+| phone          | phone        |                               |
+
+### Address
+
+| **Individual**              | **Business**                | **Ultimate Beneficial Owner** |
+| --------------------------- | --------------------------- | ----------------------------- |
+| address.addressLine1        | address.addressLine1        | address.addressLine1          |
+| address.addressLine2\*      | address.addressLine2\*      | address.addressLine2\*        |
+| address.city                | address.city                | address.city                  |
+| address.stateProvinceRegion | address.stateProvinceRegion | address.stateProvinceRegion   |
+| address.postalCode          | address.postalCode          | address.postalCode            |
+| address.country             | address.country             | address.country               |
+
+### Government ID
+
+| **Individual**      | **Business**        | **Ultimate Beneficial Owner** |
+| ------------------- | ------------------- | ----------------------------- |
+| govIdType           | formationDocUrl     | govIdType                     |
+| govIdNumber         | govIdNumber         |                               |
+| govIdIssuanceDate   | govIdIssuanceDate   |                               |
+| govIdExpirationDate | govIdExpirationDate |                               |
+| govIdFrontUrl       | govIdFrontUrl       |                               |
+| govIdBackUrl        | govIdBackUrl        |                               |
+| govIdCountry        | govIdCountry        |                               |
+
+### Proof of Address
+
+| **Individual**     | **Business**       | **Ultimate Beneficial Owner** |
+| ------------------ | ------------------ | ----------------------------- |
+| proofOfAddressType | proofOfAddressType | proofOfAddressType            |
+| proofOfAddressUrl  | proofOfAddressUrl  | proofOfAddressUrl             |
+
+### Ownership/Control
+
+| **Individual**            | **Business** |
+| ------------------------- | ------------ |
+| proofOfOwnershipUrl       | hasControl   |
+| ultimateBeneficialOwners  | isSigner     |
+| hasOwnership              |              |
+| relationshipEstablishedAt |              |
+| shareProportion           |              |
+
+> All fields with a \* are optional
+
+</Card>
+
+## Africa General
+
+<Card title="Africa General Rail" icon="globe" defaultOpen={false}>
+
+General rail for African markets with continent-wide compliance standards.
+
+### Identity
+
+| **Individual** | **Business**            |
+| -------------- | ----------------------- |
+| firstName      | businessName            |
+| lastName       | taxIdentificationNumber |
+| dateOfBirth    |                         |
+| idType         |                         |
+| idNumber       |                         |
+
+### Contact Information
+
+| **Individual** |
+| -------------- |
+| email          |
+| phone          |
+
+### Address
+
+| **Individual**              |
+| --------------------------- |
+| address.addressLine1        |
+| address.addressLine2\*      |
+| address.city                |
+| address.stateProvinceRegion |
+| address.postalCode          |
+| address.country             |
+
+> All fields with a \* are optional
+
+</Card>
+
+## Africa Nigeria
+
+<Card title="Africa Nigeria Rail" icon="map" defaultOpen={false}>
+
+Specialized rail for Nigerian market with local regulatory compliance requirements.
+
+### Identity
+
+| **Individual**                                                                                |
+| --------------------------------------------------------------------------------------------- |
+| firstName                                                                                     |
+| lastName                                                                                      |
+| dateOfBirth                                                                                   |
+| idType (note: must be [NIN](https://nimc.gov.ng/about-nin/))                                  |
+| idNumber                                                                                      |
+| additionalIdType (note: must be [BVN](https://nibss-plc.com.ng/bank-verification-numberbvn/)) |
+| additionalIdNumber                                                                            |
+
+> **Note:** Business accounts are not available in Nigeria
+
+### Contact Information
+
+| **Individual** |
+| -------------- |
+| email          |
+| phone          |
+
+### Address
+
+| **Individual**              |
+| --------------------------- |
+| address.addressLine1        |
+| address.addressLine2\*      |
+| address.city                |
+| address.stateProvinceRegion |
+| address.postalCode          |
+| address.country             |
+
+> All fields with a \* are optional
+
+</Card>

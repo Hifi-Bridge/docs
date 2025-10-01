@@ -53,6 +53,15 @@
               {
                 "group": "Compliance",
                 "pages": ["docs/regions", "docs/industries"]
+              },
+              {
+                "group": "Rails",
+                "pages": [
+                  "docs/rails/overview",
+                  "docs/rails/usd-individual",
+                  "docs/rails/usd-business",
+                  "docs/rails/other-rails"
+                ]
               }
             ]
           },
@@ -72,10 +81,6 @@
                 ]
               },
               {
-                "group": "Fiat",
-                "pages": ["docs/fiat/accounts", "docs/fiat/rails"]
-              },
-              {
                 "group": "Stablecoins",
                 "pages": ["docs/stablecoins/swaps", "docs/stablecoins/bridging"]
               },
@@ -83,6 +88,7 @@
                 "group": "Transfers",
                 "pages": [
                   "docs/transfers/wallets",
+                  "docs/transfers/accounts",
                   "docs/transfers/onramps",
                   "docs/transfers/offramps"
                 ]
