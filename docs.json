@@ -218,6 +218,13 @@
       "vscode"
     ]
   },
+  "navbar": {
+    "primary": {
+      "type": "button",
+      "label": "Dashboard",
+      "href": "https://dashboard.hifibridge.com"
+    }
+  },
   "footer": {
     "socials": {
       "x": "https://x.com/hifibridge",
