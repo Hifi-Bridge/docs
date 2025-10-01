@@ -1,9 +1,8 @@
 // ============================================================================
 // HIFI DOCS HOMEPAGE ANIMATIONS
 // ============================================================================
-// This file contains two main animations:
-// 1. Flowing Light Animation - Interactive particle system with mouse tracking
-// 2. Typewriter Animation - Types out "HIFI DOCS" repeatedly with pauses
+// This file contains the flowing light animation:
+// Flowing Light Animation - Interactive particle system with mouse tracking
 // ============================================================================
 
 // ============================================================================
@@ -24,18 +23,6 @@ const FLOWING_LIGHT_CONFIG = {
   MAX_RETRIES: 20, // maximum retry attempts for element detection
 };
 
-// Typewriter Animation Configuration
-const TYPEWRITER_CONFIG = {
-  text: "HIFI DOCS",
-  typeSpeed: 150, // milliseconds between each character (2s total for 10 chars)
-  pauseDuration: 5000, // milliseconds to pause after completing the text
-  deleteSpeed: 50, // milliseconds between each character deletion
-  deletePause: 500, // milliseconds to pause before starting deletion
-  loop: false, // whether to continuously loop the animation
-  cursorChar: "|", // cursor character
-  cursorBlinkSpeed: 500, // milliseconds for cursor blink
-};
-
 (function () {
   // ============================================================================
   // SECTION 1: FLOWING LIGHT ANIMATION VARIABLES
@@ -45,116 +32,8 @@ const TYPEWRITER_CONFIG = {
 
   let retryCount = 0;
 
-  let typewriterInterval = null;
-  let typewriterElement = null;
-  let isTyping = false;
-  let isDeleting = false;
-  let currentText = "";
-  let currentIndex = 0;
-  let cursorVisible = true;
-  let cursorInterval = null;
-
   // ============================================================================
-  // SECTION 3: TYPEWRITER ANIMATION FUNCTIONS
-  // ============================================================================
-  // Core functions that handle the typewriter effect logic
-  // ============================================================================
-
-  function startCursorBlink() {
-    // Clean up any existing cursor interval first
-    if (cursorInterval) {
-      clearInterval(cursorInterval);
-      cursorInterval = null;
-    }
-    cursorInterval = setInterval(() => {
-      cursorVisible = !cursorVisible;
-      updateDisplay();
-    }, TYPEWRITER_CONFIG.cursorBlinkSpeed);
-  }
-
-  function stopCursorBlink() {
-    if (cursorInterval) {
-      clearInterval(cursorInterval);
-      cursorInterval = null;
-    }
-    cursorVisible = true; // Show cursor when stopped
-    updateDisplay();
-  }
-
-  function updateDisplay() {
-    if (!typewriterElement) return;
-    typewriterElement.textContent = currentText;
-
-    // Control the CSS cursor visibility
-    if (cursorVisible) {
-      typewriterElement.style.setProperty("--cursor-opacity", "1");
-    } else {
-      typewriterElement.style.setProperty("--cursor-opacity", "0");
-    }
-  }
-
-  function startTypewriterAnimation() {
-    typewriterElement = document.querySelector(".hero-title");
-    if (!typewriterElement) {
-      // Retry if element not found
-      setTimeout(startTypewriterAnimation, 100);
-      return;
-    }
-
-    // Clean up any existing animation first
-    stopTypewriterAnimation();
-
-    // Reset state
-    currentText = "";
-    currentIndex = 0;
-    isTyping = true;
-    isDeleting = false;
-
-    // Start with blinking cursor on blank screen
-    startCursorBlink();
-    updateDisplay();
-
-    // Start the typing animation after a brief delay
-    setTimeout(() => {
-      typewriterInterval = setInterval(
-        typewriterTick,
-        TYPEWRITER_CONFIG.typeSpeed
-      );
-    }, 2000); // 2 second delay before starting to type
-  }
-
-  function typewriterTick() {
-    if (isTyping) {
-      // Typing phase
-      if (currentIndex < TYPEWRITER_CONFIG.text.length) {
-        currentText += TYPEWRITER_CONFIG.text[currentIndex];
-        currentIndex++;
-        updateDisplay();
-      } else {
-        // Finished typing, stop the animation and keep cursor blinking
-        isTyping = false;
-        clearInterval(typewriterInterval);
-        typewriterInterval = null;
-        // Keep the cursor blinking on the final text
-        // (cursor continues blinking via startCursorBlink)
-      }
-    }
-  }
-
-  function stopTypewriterAnimation() {
-    if (typewriterInterval) {
-      clearInterval(typewriterInterval);
-      typewriterInterval = null;
-    }
-    stopCursorBlink();
-    // Reset to original text without cursor
-    if (typewriterElement) {
-      typewriterElement.textContent = TYPEWRITER_CONFIG.text;
-    }
-  }
-
-  // ============================================================================
-  // SECTION 4: FLOWING LIGHT ANIMATION FUNCTIONS
+  // SECTION 2: FLOWING LIGHT ANIMATION FUNCTIONS
   // ============================================================================
   // Core functions that handle the interactive particle system
   // ============================================================================
@@ -320,10 +199,10 @@ const TYPEWRITER_CONFIG = {
   }
 
   // ============================================================================
-  // SECTION 5: INITIALIZATION AND BOOT FUNCTIONS
+  // SECTION 3: INITIALIZATION AND BOOT FUNCTIONS
   // ============================================================================
-  // Functions that handle the initialization of both animations and ensure
-  // they start properly when the DOM is ready
+  // Functions that handle the initialization of the flowing light animation
+  // and ensure it starts properly when the DOM is ready
   // ============================================================================
 
   // Boot once DOM is ready with multiple fallbacks
@@ -334,7 +213,6 @@ const TYPEWRITER_CONFIG = {
       document.readyState === "interactive"
     ) {
       startAnimation();
-      // startTypewriterAnimation(); // Disabled typing animation
     }
 
     // Also listen for DOMContentLoaded
@@ -343,7 +221,6 @@ const TYPEWRITER_CONFIG = {
         "DOMContentLoaded",
         () => {
           startAnimation();
-          // startTypewriterAnimation(); // Disabled typing animation
         },
         {
           once: true,
@@ -354,19 +231,17 @@ const TYPEWRITER_CONFIG = {
     // Fallback: try after a short delay regardless of ready state
     setTimeout(() => {
       startAnimation();
-      // startTypewriterAnimation(); // Disabled typing animation
     }, 100);
 
     // Additional fallback for slow-loading content
     setTimeout(() => {
       startAnimation();
-      // startTypewriterAnimation(); // Disabled typing animation
     }, 500);
   }
   boot();
 
   // ============================================================================
-  // SECTION 6: MUTATION OBSERVERS AND SPA SUPPORT
+  // SECTION 4: MUTATION OBSERVERS AND SPA SUPPORT
   // ============================================================================
   // Observers that watch for DOM changes and restart animations when needed,
   // particularly useful for Single Page Applications (SPAs)
@@ -385,7 +260,6 @@ const TYPEWRITER_CONFIG = {
                 node.querySelector("#flowing-light-container"))
             ) {
               startAnimation();
-              // startTypewriterAnimation(); // Disabled typing animation
               return;
             }
           }
@@ -407,20 +281,17 @@ const TYPEWRITER_CONFIG = {
     if (url !== lastUrl) {
       lastUrl = url;
       startAnimation();
-      // startTypewriterAnimation(); // Disabled typing animation
     }
   }).observe(document, { subtree: true, childList: true });
 
   // ============================================================================
-  // SECTION 7: CLEANUP AND EXPORT
+  // SECTION 5: CLEANUP AND EXPORT
   // ============================================================================
   // Global cleanup functions and any exports needed for external control
   // ============================================================================
 
   // Global cleanup function for external use
   window.hifiAnimations = {
-    stopTypewriter: stopTypewriterAnimation,
-    startTypewriter: startTypewriterAnimation,
     stopFlowingLight: () => {
       const container = document.getElementById("flowing-light-container");
       if (container && container._flowingLightCleanup) {
