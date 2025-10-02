@@ -66,6 +66,26 @@
             ]
           },
           {
+            "group": "Integration",
+            "pages": [
+              {
+                "group": "API",
+                "pages": [
+                  "docs/api/authentication",
+                  "docs/api/postman",
+                  "docs/api/errors",
+                  "docs/api/responses"
+                ]
+              },
+              {
+                "group": "Dashboard",
+                "pages": ["docs/dashboard/index", "docs/dashboard/roles"]
+              },
+              "docs/webhooks",
+              "docs/sandbox"
+            ]
+          },
+          {
             "group": "Models",
             "pages": [
               {
@@ -103,26 +123,6 @@
               "docs/transfers/features/virtual-accounts",
               "docs/transfers/features/settlement-rules",
               "docs/transfers/features/transfer-approvals"
-            ]
-          },
-          {
-            "group": "Integration",
-            "pages": [
-              {
-                "group": "API",
-                "pages": [
-                  "docs/api/authentication",
-                  "docs/api/postman",
-                  "docs/api/errors",
-                  "docs/api/responses"
-                ]
-              },
-              {
-                "group": "Dashboard",
-                "pages": ["docs/dashboard/index", "docs/dashboard/roles"]
-              },
-              "docs/webhooks",
-              "docs/sandbox"
             ]
           }
         ]
