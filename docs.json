@@ -111,10 +111,10 @@
               {
                 "group": "API",
                 "pages": [
-                  "docs/api/postman",
                   "docs/api/authentication",
-                  "docs/api/responses",
-                  "docs/api/errors"
+                  "docs/api/postman",
+                  "docs/api/errors",
+                  "docs/api/responses"
                 ]
               },
               {
