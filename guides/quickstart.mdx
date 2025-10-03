@@ -52,12 +52,6 @@ curl --request POST \
 
 You will get a response object back containing the `url` and the `signedAgreementId`. The `url` directs you to HIFI's Terms of Service page. The `signedAgreementId` is the `idempotencyKey` you passed in, which will be valid only after you accept the Terms of Service.
 
-**HIFI's Terms of Service page:**
-
-<img
-  className="mx-auto"
-/>
-
 <Info>
   HIFI will trigger the `TOS_LINK.UPDATE` webhook event as soon as the user clicks the accept button.
 </Info>
@@ -128,7 +122,7 @@ We have successfully created a user with the user id: `32051b2f-0798-55a7-9c42-b
 
 After successfully creating a user, the user needs to decide which rails to unlock and submit KYC to enable access to those rails. In this guide, we will focus on the USD rail.
 
-To read more about the rails we support, click **<u>here</u>** 
+To read more about the rails we support, click **<u>here</u>**
 
 To unlock, the **USD** rail, follow these steps:
 
