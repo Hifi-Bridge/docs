@@ -195,10 +195,7 @@
       },
       {
         "tab": "API Reference",
-        "openapi": {
-          "source": "/api/openapi.json",
-          "directory": "api"
-        }
+        "openapi": "https://production.hifibridge.com/api/v2/openapi.json"
       }
     ]
   },
