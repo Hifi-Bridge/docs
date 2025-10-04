@@ -52,7 +52,10 @@
               "docs/currencies",
               {
                 "group": "Compliance",
-                "pages": ["docs/regions", "docs/industries"]
+                "pages": [
+                  "docs/regions",
+                  "docs/industries"
+                ]
               },
               {
                 "group": "Rails",
@@ -79,7 +82,10 @@
               },
               {
                 "group": "Dashboard",
-                "pages": ["docs/dashboard/index", "docs/dashboard/roles"]
+                "pages": [
+                  "docs/dashboard/index",
+                  "docs/dashboard/roles"
+                ]
               },
               "docs/webhooks",
               "docs/sandbox"
@@ -90,7 +96,10 @@
             "pages": [
               {
                 "group": "Users",
-                "pages": ["docs/users/index", "docs/users/kyc"]
+                "pages": [
+                  "docs/users/index",
+                  "docs/users/kyc"
+                ]
               },
               {
                 "group": "Wallets",
@@ -102,7 +111,10 @@
               },
               {
                 "group": "Stablecoins",
-                "pages": ["docs/stablecoins/swaps", "docs/stablecoins/bridging"]
+                "pages": [
+                  "docs/stablecoins/swaps",
+                  "docs/stablecoins/bridging"
+                ]
               },
               {
                 "group": "Transfers",
@@ -121,7 +133,6 @@
               "docs/users/features/kyc-link",
               "docs/transfers/features/batch-transfers",
               "docs/transfers/features/virtual-accounts",
-              "docs/transfers/features/settlement-rules",
               "docs/transfers/features/transfer-approvals"
             ]
           }
@@ -149,14 +160,19 @@
           },
           {
             "group": "Users",
-            "pages": ["guides/users/create-user", "guides/users/submit-kyc"]
+            "pages": [
+              "guides/users/create-user",
+              "guides/users/submit-kyc"
+            ]
           },
           {
             "group": "Transfers",
             "pages": [
               {
                 "group": "Wallets",
-                "pages": ["guides/transfers/wallets/send-usdc"]
+                "pages": [
+                  "guides/transfers/wallets/send-usdc"
+                ]
               },
               {
                 "group": "Onramps",
@@ -174,11 +190,15 @@
               },
               {
                 "group": "Swaps",
-                "pages": ["guides/transfers/swaps/usdc-usdt"]
+                "pages": [
+                  "guides/transfers/swaps/usdc-usdt"
+                ]
               },
               {
                 "group": "Bridges",
-                "pages": ["guides/transfers/bridges/eth-sol"]
+                "pages": [
+                  "guides/transfers/bridges/eth-sol"
+                ]
               }
             ]
           },
