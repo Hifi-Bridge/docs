@@ -220,9 +220,13 @@ table td {
 }
 
 .setup-section {
-  width: 100%;
-  min-width: 500px;
-  max-width: 600px;
+  min-width: 300px;
+}
+
+@media (min-width: 768px) {
+  .setup-section {
+    min-width: 500px;
+  }
 }
 
 /* Feature Cards */
