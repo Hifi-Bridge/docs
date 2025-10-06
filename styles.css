@@ -54,8 +54,8 @@
 /* Apply Rhithmic Sans font to the entire site */
 body,
 html {
-  font-family: "Rhithmic Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Roboto, sans-serif;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    sans-serif;
 }
 
 /* Override heading font weights to normal */

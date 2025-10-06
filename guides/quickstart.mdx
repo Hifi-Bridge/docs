@@ -2,8 +2,6 @@
 title: "Quickstart"
 ---
 
-# Introduction
-
 Welcome to the HIFI Quickstart Guide (USD)!
 
 In this guide, we will walk you through the process of creating a user, passing KYC to unlock USD rail, creating a virtual account, adding offramp accounts, simulating onramps in the sandbox, and offramps. By following along, you'll gain a clear understanding of how our endpoints work and how to integrate them into your application.
@@ -53,7 +51,8 @@ curl --request POST \
 You will get a response object back containing the `url` and the `signedAgreementId`. The `url` directs you to HIFI's Terms of Service page. The `signedAgreementId` is the `idempotencyKey` you passed in, which will be valid only after you accept the Terms of Service.
 
 <Info>
-  HIFI will trigger the `TOS_LINK.UPDATE` webhook event as soon as the user clicks the accept button.
+  HIFI will trigger the `TOS_LINK.UPDATE` webhook event as soon as the user
+  clicks the accept button.
 </Info>
 
 ## Create User
@@ -131,15 +130,19 @@ To unlock, the **USD** rail, follow these steps:
    or using the Retrieve KYC Requirements
 
    endpoint.
+
 2. Update the user's KYC information using the Update KYC Information
 
    endpoint.
+
 3. Upload documentation using the Add Documents
 
    endpoint.
+
 4. Submit the user's KYC information through the Submit KYC
 
    endpoint to unlock the rail.
+
 5. Check the user's KYC status for the USD rail via the Retrieve KYC Status
 
    endpoint.
@@ -350,7 +353,7 @@ curl --request POST \
       "subType": "FRONT_SIDE",
       "issuedCountry": "USA",
       "url": "https://pqgnrjvoqbopfaxmlhlv.supabase.co/storage/v1/object/sign/kyc_documents/32051b2f-0798-55a7-9c42-b08da4192c97/DRIVERS-FRONT_SIDE/cca55ddd-b0f9-453a-bcb4-fbad7af7a974?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9mOTU1NGU4Ni01MDE4LTRiOGEtODY1Zi03NjhmYTc2M2MxZWQiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJreWNfZG9jdW1lbnRzLzMyMDUxYjJmLTA3OTgtNTVhNy05YzQyLWIwOGRhNDE5MmM5Ny9EUklWRVJTLUZST05UX1NJREUvY2NhNTVkZGQtYjBmOS00NTNhLWJjYjQtZmJhZDdhZjdhOTc0IiwiaWF0IjoxNzU4ODM4Mjc1LCJleHAiOjE3NTg4NDE4NzV9.0EuLRGSBcpp9zAOphpRu8D44J3zEFDZ57n61WY0n0kw",
-      "fileId": "file_JzALYV2L1-4LBmaxZ6GCm",
+      "fileId": "file_JzALYV2L1-4LBmaxZ6GCm"
     },
     {
       "id": "a2190d1d-61af-416d-8fcf-20673da5eaa0",
@@ -358,7 +361,7 @@ curl --request POST \
       "subType": "BACK_SIDE",
       "issuedCountry": "USA",
       "url": "https://pqgnrjvoqbopfaxmlhlv.supabase.co/storage/v1/object/sign/kyc_documents/32051b2f-0798-55a7-9c42-b08da4192c97/DRIVERS-BACK_SIDE/77e5e45a-2cfe-4b6b-b9e1-dc14aa43897e?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9mOTU1NGU4Ni01MDE4LTRiOGEtODY1Zi03NjhmYTc2M2MxZWQiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJreWNfZG9jdW1lbnRzLzMyMDUxYjJmLTA3OTgtNTVhNy05YzQyLWIwOGRhNDE5MmM5Ny9EUklWRVJTLUJBQ0tfU0lERS83N2U1ZTQ1YS89Y2ZlLTRiNmItYjllMS1kYzE0YWE0Mzg5N2UiLCJpYXQiOjE3NTg4MzgyNzUsImV4cCI6MTc1ODg0MTg3NX0.tWNS0tmtXbZGk5PvtLhrzOOTnvi56QsbGvl9ZWvGN7Q",
-      "fileId": "file_JzALYV2L1-4LBmaxZ6GCm",
+      "fileId": "file_JzALYV2L1-4LBmaxZ6GCm"
     }
   ]
 }
@@ -496,7 +499,7 @@ We will now add both virtual account and offramp accounts for the user.
 
 A **Virtual Account** is a bank account created by our system to facilitate onramp. Users can deposit fiat money into the virtual account, and the deposited funds are automatically converted into stablecoin.
 
-The parameters you pass in will determine the rail you want this onramp virtual account to support. For example, passing the `sourceCurrency` as `usd`,  `destinationCurrency` as `usdc`, and `destinationChain` as `POLYGON`, will allow the user to deposit `usd` into the virtual bank account to onramp to `usdc` on `POLYGON`.
+The parameters you pass in will determine the rail you want this onramp virtual account to support. For example, passing the `sourceCurrency` as `usd`, `destinationCurrency` as `usdc`, and `destinationChain` as `POLYGON`, will allow the user to deposit `usd` into the virtual bank account to onramp to `usdc` on `POLYGON`.
 
 Let's make a [Create a virtual account](https://docs.hifibridge.com/v2/reference/post_v2-users-userid-virtual-accounts) call using the user id we created earlier, with the parameters we just mentioned:
 
@@ -526,11 +529,7 @@ curl --request POST \
     "id": "938e3b36-3be7-5535-ba12-8d89eb683e6b",
     "userId": "32051b2f-0798-55a7-9c42-b08da4192c97",
     "source": {
-      "paymentRail": [
-        "ach",
-        "wire",
-        "rtp"
-      ],
+      "paymentRail": ["ach", "wire", "rtp"],
       "currency": "usd"
     },
     "destination": {
@@ -627,10 +626,10 @@ curl --request POST \
 
 ```json
 {
-    "status": "ACTIVE",
-    "invalidFields": [],
-    "message": "Account created successfully",
-    "id": "583eb259-e78b-4f0c-a4b5-a8957876fa6f"
+  "status": "ACTIVE",
+  "invalidFields": [],
+  "message": "Account created successfully",
+  "id": "583eb259-e78b-4f0c-a4b5-a8957876fa6f"
 }
 ```
 
@@ -709,84 +708,84 @@ Now that we have successfully created a deposit simulation in the sandbox, the n
 In the webhook events, you should see a new onramp transaction created for the deposit we just simulated.
 
 ```json
-    {
-      "transferType": "ONRAMP",
-      "transferDetails": {
-        "id": "47f14814-cf3f-4e04-bccf-e3f8e6f5c4b9",
-        "requestId": "8e02ad32-2fdb-4757-876f-9f7183ca595b",
-        "createdAt": "2025-09-26T02:52:01.129Z",
-        "updatedAt": "2025-09-26T02:52:01.129Z",
-        "status": "FIAT_PENDING",
-        "failedReason": null,
-        "source": {
-          "userId": "32051b2f-0798-55a7-9c42-b08da4192c97",
-          "currency": "usd",
-          "amount": 2,
-          "accountId": null,
-          "user": {
-            "email": "john@hifibridge.com",
-            "lastName": "Doe",
-            "firstName": "John",
-            "businessName": null
-          },
-          "bankInfo": {
-            "bankName": "JP MORGAN CHASE",
-            "senderName": "Jack Doe",
-            "routingNumber": "021000021",
-            "accountNumber": "516843515316",
-            "imad": "20250925SIM3E6A1638944",
-            "omad": "601040282819436691228450357132228324",
-            "bankAddress": "257 Dalton Groves, Barton City, MI 48075",
-            "description": "THIS IS A TEST D",
-            "paymentRail": "wire"
-          }
-        },
-        "destination": {
-          "userId": "32051b2f-0798-55a7-9c42-b08da4192c97",
-          "currency": "usdc",
-          "chain": "POLYGON",
-          "walletAddress": "0x1b932E54e77Aeb698144550d5a493Ea99E20Daa7",
-          "externalWalletId": null,
-          "amount": null,
-          "user": {
-            "email": "john@hifibridge.com",
-            "lastName": "Doe",
-            "firstName": "John",
-            "businessName": null
-          }
-        },
-        "receipt": {
-          "transactionHash": null
-        },
-        "developerFee": null,
-        "virtualAccountId": "938e3b36-3be7-5535-ba12-8d89eb683e6b",
-        "quoteInformation": {
-          "sendGross": {
-            "amount": "2.00",
-            "currency": "usd"
-          },
-          "sendNet": {
-            "amount": "2.00",
-            "currency": "usd"
-          },
-          "railFee": {
-            "amount": "0.00",
-            "currency": "usdc"
-          },
-          "receiveGross": {
-            "amount": "2.00",
-            "currency": "usdc"
-          },
-          "receiveNet": {
-            "amount": "2.00",
-            "currency": "usdc"
-          },
-          "rate": "1.00",
-          "expiresAt": "N/A"
-        },
-        "depositInfo": null
+{
+  "transferType": "ONRAMP",
+  "transferDetails": {
+    "id": "47f14814-cf3f-4e04-bccf-e3f8e6f5c4b9",
+    "requestId": "8e02ad32-2fdb-4757-876f-9f7183ca595b",
+    "createdAt": "2025-09-26T02:52:01.129Z",
+    "updatedAt": "2025-09-26T02:52:01.129Z",
+    "status": "FIAT_PENDING",
+    "failedReason": null,
+    "source": {
+      "userId": "32051b2f-0798-55a7-9c42-b08da4192c97",
+      "currency": "usd",
+      "amount": 2,
+      "accountId": null,
+      "user": {
+        "email": "john@hifibridge.com",
+        "lastName": "Doe",
+        "firstName": "John",
+        "businessName": null
+      },
+      "bankInfo": {
+        "bankName": "JP MORGAN CHASE",
+        "senderName": "Jack Doe",
+        "routingNumber": "021000021",
+        "accountNumber": "516843515316",
+        "imad": "20250925SIM3E6A1638944",
+        "omad": "601040282819436691228450357132228324",
+        "bankAddress": "257 Dalton Groves, Barton City, MI 48075",
+        "description": "THIS IS A TEST D",
+        "paymentRail": "wire"
       }
-    }
+    },
+    "destination": {
+      "userId": "32051b2f-0798-55a7-9c42-b08da4192c97",
+      "currency": "usdc",
+      "chain": "POLYGON",
+      "walletAddress": "0x1b932E54e77Aeb698144550d5a493Ea99E20Daa7",
+      "externalWalletId": null,
+      "amount": null,
+      "user": {
+        "email": "john@hifibridge.com",
+        "lastName": "Doe",
+        "firstName": "John",
+        "businessName": null
+      }
+    },
+    "receipt": {
+      "transactionHash": null
+    },
+    "developerFee": null,
+    "virtualAccountId": "938e3b36-3be7-5535-ba12-8d89eb683e6b",
+    "quoteInformation": {
+      "sendGross": {
+        "amount": "2.00",
+        "currency": "usd"
+      },
+      "sendNet": {
+        "amount": "2.00",
+        "currency": "usd"
+      },
+      "railFee": {
+        "amount": "0.00",
+        "currency": "usdc"
+      },
+      "receiveGross": {
+        "amount": "2.00",
+        "currency": "usdc"
+      },
+      "receiveNet": {
+        "amount": "2.00",
+        "currency": "usdc"
+      },
+      "rate": "1.00",
+      "expiresAt": "N/A"
+    },
+    "depositInfo": null
+  }
+}
 ```
 
 After the onramp transaction status is updated to `COMPLETE`, you can check the balance
@@ -794,7 +793,8 @@ After the onramp transaction status is updated to `COMPLETE`, you can check the 
 of the user’s wallet to see the testnet USDC we just onramped!
 
 <Info>
-  The `bankInfo` under the `source` object contains the information of the sender and the sending bank.
+  The `bankInfo` under the `source` object contains the information of the
+  sender and the sending bank.
 </Info>
 
 ## Transfer 1 USDC Between Wallets
@@ -884,7 +884,7 @@ Let's take a look at the response object, focusing on the `transferDetails` obje
 - The `status` represents the transfer status, which initially appears as `"CREATED"`. You will want to either register a webhook or poll the [Retrieve a crypto transfer](https://docs.hifibridge.com/v2/reference/get_v2-wallets-transfers-transferid) endpoint to monitor the latest transfer status until the transfer is `"COMPLETED"`.
 - The `receipt.transactionHash` is the transaction hash on the blockchain, which you can use to check the transaction status online with a blockchain explorer.
 - The `failedReason` will show the reason if the transfer fails.
-- The `sender`  and `recipient` objects provide detailed information about the sender and recipient users.
+- The `sender` and `recipient` objects provide detailed information about the sender and recipient users.
 
 ## Offramp 1 USDC to \$ 1 USD
 
@@ -994,12 +994,13 @@ curl --request POST \
 Let's take a look at the response object, focusing on the `transferDetails` object:
 
 - The `id` is a unique identifier for this transfer, which you can save to get the most up-to-date transfer status using the [Retrieve an offramp](https://docs.hifibridge.com/v2/reference/get_v2-offramps-transferid) endpoint.
-- The `status` represents the transfer status, which initially appears as `"OPEN_QUOTE"`.  You will have to call the Accept Quote Endpoint
+- The `status` represents the transfer status, which initially appears as `"OPEN_QUOTE"`. You will have to call the Accept Quote Endpoint
 
   to kick off the offramp process
+
 - The `receipt.transactionHash` is the transaction hash on the blockchain, which you can use to check the transaction status online with a blockchain explorer.
-- The `error`  and `errorDetails` will show the reason if the transfer fails.
-- The `sourceUser`  and `destinationUser` objects provide detail information about the sender and recipient users.
+- The `error` and `errorDetails` will show the reason if the transfer fails.
+- The `sourceUser` and `destinationUser` objects provide detail information about the sender and recipient users.
 - The `quoteInformation` object provides the conversion rate information between the source and destination currencies.
 
 After confirming the quote, call the Accept Quote Endpoint
