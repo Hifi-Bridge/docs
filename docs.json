@@ -52,7 +52,29 @@
               "docs/currencies",
               {
                 "group": "Compliance",
-                "pages": ["docs/regions", "docs/industries"]
+                "pages": [
+                  "docs/compliance/regions",
+                  "docs/compliance/industries",
+                  {
+                    "group": "Documents",
+                    "pages": [
+                      "docs/compliance/documents/overview",
+                      "docs/compliance/documents/identity",
+                      "docs/compliance/documents/supported-identity-documents",
+                      "docs/compliance/documents/proof-of-address"
+                    ]
+                  },
+                  {
+                    "group": "References",
+                    "pages": [
+                      "docs/compliance/references/business-industries",
+                      "docs/compliance/references/occupations",
+                      "docs/compliance/references/account-purposes",
+                      "docs/compliance/references/export-categories",
+                      "docs/compliance/references/product-service-categories"
+                    ]
+                  }
+                ]
               },
               {
                 "group": "Rails",
