@@ -123,8 +123,8 @@
                 ]
               },
               {
-                "group": "Stablecoins",
-                "pages": ["docs/stablecoins/swaps", "docs/stablecoins/bridging"]
+                "group": "Blockchain",
+                "pages": ["docs/blockchain/swaps", "docs/blockchain/bridging"]
               },
               {
                 "group": "Transfers",
