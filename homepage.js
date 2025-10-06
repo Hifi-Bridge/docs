@@ -165,7 +165,10 @@ const FLOWING_LIGHT_CONFIG = {
 
         // Draw dot (no stroke, tiny fill)
         ctx.globalAlpha = a;
-        ctx.fillStyle = "white";
+        // Use appropriate color based on theme
+        const isLightMode =
+          document.documentElement.classList.contains("light");
+        ctx.fillStyle = isLightMode ? "#33171e" : "white";
         ctx.beginPath();
         ctx.arc(x, y, FLOWING_LIGHT_CONFIG.DOT_SIZE, 0, Math.PI * 2);
         ctx.fill();

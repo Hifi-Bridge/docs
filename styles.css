@@ -106,7 +106,11 @@ table td {
   text-align: center;
   width: 100%;
   margin: 0;
-  padding: 0;
+  padding: 0 24px;
+}
+
+.light .hero-section {
+  background: #eceae5;
 }
 
 .dots-background {
@@ -131,6 +135,14 @@ table td {
   pointer-events: none;
 }
 
+.light .dots-background {
+  background: radial-gradient(
+    circle at 20px 20px,
+    rgba(0, 0, 0, 0.15) 1px,
+    transparent 1px
+  );
+}
+
 /* Flowing Light Animation */
 .flowing-light-container {
   position: absolute;
@@ -151,6 +163,10 @@ table td {
   opacity: 0.06;
   transition: all 0.3s ease;
   box-shadow: 0 0 6px rgba(255, 255, 255, 0.08);
+}
+
+.light .flowing-dot {
+  background: #33171e;
 }
 
 .flowing-dot.active {
@@ -176,28 +192,36 @@ table td {
 }
 
 .hero-title {
-  font-family: "Space Mono", "SF Mono", "Monaco", "Inconsolata", "Roboto Mono",
-    "Source Code Pro", monospace;
+  font-family: "Rhithmic Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, sans-serif;
   font-size: 1.2rem;
   font-weight: 700;
-  margin: 0 0 0.75rem 0;
+  margin: 0 0 0.5rem 0;
   color: #f2ff66;
   position: relative;
   display: inline-block;
 }
 
+.light .hero-title {
+  color: #33171e;
+}
+
 .hero-description {
-  font-family: "Rhithmic Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Roboto, sans-serif;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    sans-serif;
   font-size: 1rem;
   line-height: 1.6;
   margin: 0 0 2rem 0;
-  opacity: 0.9;
-  max-width: 500px;
+  max-width: 350px;
+}
+
+.light .hero-description {
+  color: #33171e;
 }
 
 .setup-section {
   width: 100%;
+  min-width: 500px;
   max-width: 600px;
 }
 
