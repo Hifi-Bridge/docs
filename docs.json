@@ -161,18 +161,6 @@
             ]
           },
           {
-            "group": "Use Cases",
-            "pages": [
-              "guides/use-cases/stablecoin-access",
-              "guides/use-cases/wallet-provisioning",
-              "guides/use-cases/global-payments"
-            ]
-          },
-          {
-            "group": "Users",
-            "pages": ["guides/users/create-user", "guides/users/submit-kyc"]
-          },
-          {
             "group": "Transfers",
             "pages": [
               {
@@ -211,6 +199,14 @@
               "guides/transfers/features/settlement-rules",
               "guides/transfers/features/transfer-approvals"
             ]
+          },
+          {
+            "group": "Use Cases",
+            "pages": [
+              "guides/use-cases/stablecoin-access",
+              "guides/use-cases/wallet-provisioning",
+              "guides/use-cases/global-payments"
+            ]
           }
         ]
       },
@@ -241,6 +237,11 @@
       "type": "button",
       "label": "Dashboard",
       "href": "https://dashboard.hifibridge.com"
+    },
+    "postman": {
+      "type": "button",
+      "label": "Postman",
+      "href": "https://www.postman.com/hifi-developers/workspace/hifi-developers/collection/36482019-965415fa-8dd5-4d2c-a4ca-068478dce9d9?action=share&source=copy-link&creator=34328055"
     }
   },
   "footer": {

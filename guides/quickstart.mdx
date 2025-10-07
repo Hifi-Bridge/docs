@@ -2,17 +2,23 @@
 title: "Quickstart"
 ---
 
-Welcome to the HIFI Quickstart Guide (USD)!
+Welcome to the HIFI Quickstart Guide!
 
-In this guide, we will walk you through the process of creating a user, passing KYC to unlock USD rail, creating a virtual account, adding offramp accounts, simulating onramps in the sandbox, and offramps. By following along, you'll gain a clear understanding of how our endpoints work and how to integrate them into your application.
+In this guide, we will walk you through the process of:
 
-To get started, you'll need an API key, which you can get by [reaching out to a member of the sales team](https://www.hifibridge.com/contact).
+- Creating a user
+- Passing KYC to unlock USD rail
+- Creating a virtual account for deposits
+- Simulating onramps and offramps
 
-You'll have two different API keys for two different HIFI environments. Today we'll start in the Sandbox environment with the sandbox API key. You can follow our Sandbox [guide](https://docs.hifibridge.com/v2/docs/sandbox) to generate a sandbox API key.
+By following along, you'll gain a clear understanding of how our endpoints work and how to integrate them into your application.
 
-Let's first create a user!
+<Info>
+  To get started, you'll need a Sandbox API key, which you can get from your
+  Dashboard. Learn how to [get API keys](/docs/api/authentication).
+</Info>
 
-# User
+## User
 
 A user object can represent either an individual or a business. All the available rails, accounts, onramps, offramps, transfer, etc, are associated with a user object.
 
@@ -20,7 +26,7 @@ To create a HIFI user, you need to provide a basic set of user information. The 
 
 A successfully created user will have provisioned wallets and be granted access to our on-chain functionalities.
 
-## Get a Valid Signed Agreement ID
+### Get a Valid Signed Agreement ID
 
 To get HIFI's Terms and Service page, you can call the [Generate Terms of Service Link](https://docs.hifibridge.com/v2/reference/post_v2-tos-link) endpoint. You will need to pass in an `idempotencyKey`, which can be any [UUID](https://www.uuidgenerator.net/). This `idempotencyKey` will be used as your signed agreement ID.
 
@@ -55,7 +61,7 @@ You will get a response object back containing the `url` and the `signedAgreemen
   clicks the accept button.
 </Info>
 
-## Create User
+### Create User
 
 Now that we have the user's valid `signedAgreementId` and basic personal information, we can create a user by calling the [Create User](https://docs.hifibridge.com/v2/reference/post_v2-users) endpoint. We have provided all the basic personal information with dummy values in the curl request.
 
@@ -117,7 +123,7 @@ We have successfully created a user with the user id: `32051b2f-0798-55a7-9c42-b
 
 ---
 
-# KYC
+## KYC
 
 After successfully creating a user, the user needs to decide which rails to unlock and submit KYC to enable access to those rails. In this guide, we will focus on the USD rail.
 
@@ -149,7 +155,7 @@ To unlock, the **USD** rail, follow these steps:
 
 Let's go through each of these steps in detail to unlock the **USD** rail.
 
-## Retrieve KYC Requirements
+### Retrieve KYC Requirements
 
 The Retrieve KYC Requirements endpoint provides the required and optional KYC fields needed to unlock a specific rail, as well as any invalid or missing KYC information the user currently holds, assuming they intend to submit KYC for this rail. This information helps identify what needs to be updated via the Update KYC endpoint before submitting KYC for the rail.
 
@@ -486,7 +492,7 @@ The returned object will contain the user's latest KYC status for the **USD** ra
 
 ---
 
-# Account
+## Account
 
 After creating a user who has passed KYC, you can add virtual accounts or offramp accounts for them to enable onramp or offramp transfers. The **USD** rail supports services for both onramp and offramp.
 
@@ -495,7 +501,7 @@ After creating a user who has passed KYC, you can add virtual accounts or offram
 
 We will now add both virtual account and offramp accounts for the user.
 
-## Add Virtual Account
+### Add Virtual Account
 
 A **Virtual Account** is a bank account created by our system to facilitate onramp. Users can deposit fiat money into the virtual account, and the deposited funds are automatically converted into stablecoin.
 
@@ -579,7 +585,7 @@ Let's take a look at the response, focusing on the `accountInfo` object:
 - The `status` reflects whether this virtual account is active for onramping.
 - **IMPORTANT:** The `depositInstructions` object contains the bank account details that the user needs to deposit fiat into for onramping.
 
-## Add Offramp Account
+### Add Offramp Account
 
 To offramp, you can add a USD offramp bank account by making an [Create a USD Offramp Bank Account](https://docs.hifibridge.com/v2/reference/post_v2-users-userid-accounts) call.
 
@@ -637,7 +643,7 @@ The `id` returned in the response object is the unique identifier for the USD of
 
 ---
 
-# Transfer
+## Transfer
 
 After creating both virtual accounts and offramp accounts, the user can now perform three types of transfers/conversions:
 
@@ -655,7 +661,7 @@ In this section of the quick start guide, we will walk through the entire transf
 
 > 📘 Please note that in the sandbox environment, no real money movement occurs, so the onramping and offramping won't actually process real funds. However, all the request and response examples will provide a clear overview of how the transfer occurs.
 
-## Onramp \$2 USD to 2 USDC
+### Onramp \$2 USD to 2 USDC
 
 Onramping fiat to stablecoin via a virtual account requires your end user to send US Dollars to the virtual account we just created. For example, if the user wants to send USD via Wire, they can use their bank app or contact their bank to send \$1 USD to the following destination:
 
@@ -797,7 +803,7 @@ of the user’s wallet to see the testnet USDC we just onramped!
   sender and the sending bank.
 </Info>
 
-## Transfer 1 USDC Between Wallets
+### Transfer 1 USDC Between Wallets
 
 After the onramp transfer is completed, User A will have 1 USDC in their wallet. Now we can transfer the 1 USDC from User A's wallet to User B's wallet. To do this, we can call the [Create a crypto transfer](https://docs.hifibridge.com/v2/reference/post_v2-wallets-transfers) endpoint.
 
@@ -886,7 +892,7 @@ Let's take a look at the response object, focusing on the `transferDetails` obje
 - The `failedReason` will show the reason if the transfer fails.
 - The `sender` and `recipient` objects provide detailed information about the sender and recipient users.
 
-## Offramp 1 USDC to \$ 1 USD
+### Offramp 1 USDC to \$ 1 USD
 
 Now let's offramp the rest of the 1 USDC to userA's bank account. To do this, we can call the [Create an offramp](https://docs.hifibridge.com/v2/reference/post_v2-offramps) endpoint.
 

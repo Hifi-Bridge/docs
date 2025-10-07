@@ -83,8 +83,7 @@ pre,
 }
 
 /* Table Styles for Currency Support */
-table th,
-table td {
+.dark table th {
   color: white !important;
 }
 
