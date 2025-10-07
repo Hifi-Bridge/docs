@@ -161,14 +161,6 @@
             ]
           },
           {
-            "group": "Use Cases",
-            "pages": [
-              "guides/use-cases/stablecoin-access",
-              "guides/use-cases/wallet-provisioning",
-              "guides/use-cases/global-payments"
-            ]
-          },
-          {
             "group": "Transfers",
             "pages": [
               {
@@ -206,6 +198,14 @@
               "guides/transfers/features/virtual-accounts",
               "guides/transfers/features/settlement-rules",
               "guides/transfers/features/transfer-approvals"
+            ]
+          },
+          {
+            "group": "Use Cases",
+            "pages": [
+              "guides/use-cases/stablecoin-access",
+              "guides/use-cases/wallet-provisioning",
+              "guides/use-cases/global-payments"
             ]
           }
         ]
