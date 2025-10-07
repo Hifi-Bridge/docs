@@ -169,10 +169,6 @@
             ]
           },
           {
-            "group": "Users",
-            "pages": ["guides/users/create-user", "guides/users/submit-kyc"]
-          },
-          {
             "group": "Transfers",
             "pages": [
               {

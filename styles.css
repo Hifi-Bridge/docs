@@ -82,12 +82,6 @@ pre,
   font-weight: 400;
 }
 
-/* Table Styles for Currency Support */
-table th,
-table td {
-  color: white !important;
-}
-
 /* Ensure the main page container doesn't overflow - only for landing page */
 [data-mintlify-page="/"] {
   height: 100vh;
