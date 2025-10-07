@@ -237,6 +237,11 @@
       "type": "button",
       "label": "Dashboard",
       "href": "https://dashboard.hifibridge.com"
+    },
+    "primary": {
+      "type": "button",
+      "label": "Dashboard",
+      "href": "https://dashboard.hifibridge.com"
     }
   },
   "footer": {
