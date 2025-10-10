@@ -9,41 +9,47 @@ The USD rail for individual users requires comprehensive KYC (Know Your Customer
 
 | Fields                  | Required | Description                                                                                              |
 | ----------------------- | -------- | -------------------------------------------------------------------------------------------------------- |
-| firstName               | ✅ Yes   | User's first name                                                                                        |
-| middleName              | ❌ No    | User's middle name                                                                                       |
-| lastName                | ✅ Yes   | User's last name                                                                                         |
-| nationality             | ✅ Yes   | User's nationality                                                                                       |
-| email                   | ✅ Yes   | User's email address                                                                                     |
-| phone                   | ✅ Yes   | User's phone number                                                                                      |
-| address                 | ✅ Yes   | The address the user currently resides                                                                   |
-| dateOfBirth             | ✅ Yes   | User's date of birth                                                                                     |
-| countryOfBirth          | ❌ No    | Country where the user was born                                                                          |
-| stateOfBirth            | ❌ No    | State where the user was born                                                                            |
-| placeOfBirth            | ❌ No    | City or place where the user was born                                                                    |
-| gender                  | ❌ No    | User's gender                                                                                            |
-| taxIdentificationNumber | ✅ Yes   | For individual US customers, this has to be SSN or ITIN                                                  |
-| taxResidenceCountry     | ❌ No    | Country where the user is tax resident                                                                   |
-| sofEuQuestionnaire      | ❌ No    | Refer to the [Source of Funds and Expected Use](#source-of-funds-and-expected-use-questionnaire) section |
-| documents               | ✅ Yes   | Refer to the [Documents](#documents) section                                                             |
+| firstName               | ✅ Yes    | User's first name                                                                                        |
+| middleName              | ❌ No     | User's middle name                                                                                       |
+| lastName                | ✅ Yes    | User's last name                                                                                         |
+| nationality             | ✅ Yes    | User's nationality                                                                                       |
+| email                   | ✅ Yes    | User's email address                                                                                     |
+| phone                   | ✅ Yes    | User's phone number                                                                                      |
+| address                 | ✅ Yes    | The address the user currently resides                                                                   |
+| dateOfBirth             | ✅ Yes    | User's date of birth                                                                                     |
+| countryOfBirth          | ❌ No     | Country where the user was born                                                                          |
+| stateOfBirth            | ❌ No     | State where the user was born                                                                            |
+| placeOfBirth            | ❌ No     | City or place where the user was born                                                                    |
+| gender                  | ❌ No     | User's gender                                                                                            |
+| taxIdentificationNumber | ✅ Yes    | For individual US customers, this has to be SSN or ITIN                                                  |
+| taxResidenceCountry     | ❌ No     | Country where the user is tax resident                                                                   |
+| sofEuQuestionnaire      | ❌ No     | Refer to the [Source of Funds and Expected Use](#source-of-funds-and-expected-use-questionnaire) section |
+| documents               | ✅ Yes    | Refer to the [Documents](#documents) section                                                             |
 
 ## Source of Funds and Expected Use Questionnaire
 
 | Fields                      | Required | Description                                                                                |
 | --------------------------- | -------- | ------------------------------------------------------------------------------------------ |
-| **actAsIntermediary**       | ❌ No    | Is the customer acting as an intermediary for a third party?                               |
-| **employmentStatus**        | ❌ No    | What is the customer's current employment status?                                          |
-| **expectedMonthlyPayments** | ❌ No    | What is the expected monthly volume of payments the customer will be sending or receiving? |
-| **mostRecentOccupation**    | ❌ No    | What is the customer's most recent occupation?                                             |
-| **primaryPurpose**          | ❌ No    | What is the primary purpose of the customer's account?                                     |
-| **primaryPurposeOther**     | ❌ No    | Required if the primary purpose is 'other'                                                 |
-| **sourceOfFunds**           | ❌ No    | What is the source of funds for the customer's account?                                    |
+| **actAsIntermediary**       | ❌ No     | Is the customer acting as an intermediary for a third party?                               |
+| **employmentStatus**        | ❌ No     | What is the customer's current employment status?                                          |
+| **expectedMonthlyPayments** | ❌ No     | What is the expected monthly volume of payments the customer will be sending or receiving? |
+| **mostRecentOccupation**    | ❌ No     | What is the customer's most recent occupation?                                             |
+| **primaryPurpose**          | ❌ No     | What is the primary purpose of the customer's account?                                     |
+| **primaryPurposeOther**     | ❌ No     | Required if the primary purpose is 'other'                                                 |
+| **sourceOfFunds**           | ❌ No     | What is the source of funds for the customer's account?                                    |
 
 ## Documents
 
 | Document Group       | Required | Min Count | Document Types                               |
 | -------------------- | -------- | --------- | -------------------------------------------- |
-| **identity**         | ✅ Yes   | 1         | DRIVERS, ID_CARD, PASSPORT, RESIDENCE_PERMIT |
-| **proofOfResidence** | ❌ No    | 1         | PROOF_OF_ADDRESS                             |
+| **identity**         | ✅ Yes    | 1         | DRIVERS, ID_CARD, PASSPORT, RESIDENCE_PERMIT |
+| **proofOfResidence** | ❌ No     | 1         | PROOF_OF_ADDRESS                             |
+
+<Info>
+  Proof of Address (PoA) is required for all non-U.S. users, as well as for U.S. users who submit identity documents that do not clearly display an address. In addition, U.S. users flagged by our internal verification system may also be subject to PoA collection. \
+  \
+  **All PoA documents will be requested and obtained through a formal Request for Information (RFI) process.**
+</Info>
 
 | Document Type    | Description                  |
 | ---------------- | ---------------------------- |
