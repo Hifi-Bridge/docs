@@ -1,0 +1,181 @@
+---
+title: "Settlement Rules"
+---
+
+Settlement Rules allow you to configure automated fee calculations and distributions for Virtual Account transactions. Automatically deduct fees using fixed amounts, percentages, or tiered pricing models, and send them to specified wallet addresses.
+
+## How Settlement Rules Work
+
+1. **Create settlement rule** – Define fee calculation methods and destination wallets
+2. **Apply to virtual account** – Associate the rule with a user's virtual account
+3. **Automatic distribution** – Fees are automatically calculated and distributed on each transaction
+
+### Rule Configuration
+
+Settlement rules support two calculation models that can be combined:
+
+- **Fixed**: Apply a single rate or value to all transactions
+- **Tiered**: Apply different rates or values based on transaction amount ranges
+
+For each model, you can use either fixed values (flat fee amounts) or percentage values (percentage of transaction amount).
+
+You can also configure whether to include the HIFI platform fee in the calculation.
+
+## Create Settlement Rule
+
+```bash
+curl --request POST \
+     --url https://production.hifibridge.com/v2/virtual-accounts/settlement-rules \
+     --header 'accept: application/json' \
+     --header 'content-type: application/json' \
+     --data '{
+  "chain": "BASE",
+  "includeHIFIFee": true,
+  "rules": [
+    {
+      "type": "PERCENTAGE",
+      "calculationModel": "FIXED",
+      "value": 0.001,
+      "walletAddress": "0x15FB50680fEB2f726413416665c25f9B397b047b"
+    },
+    {
+      "type": "FIXED",
+      "calculationModel": "FIXED",
+      "value": 0.5,
+      "walletAddress": "0x15FB50680fEB2f726413416665c25f9B397b047b"
+    }
+  ]
+}'
+```
+
+<Info>
+  Multiple rules can be applied to a single settlement rule configuration. The
+  rules are processed in the order they are defined.
+</Info>
+
+## Response Structure
+
+When you create a settlement rule, the API response includes detailed information about the rule configuration:
+
+```json
+{
+  "id": "15c786fb-de7a-520c-a4b3-f312d4a122d2",
+  "chain": "BASE",
+  "includeHIFIFee": false,
+  "rules": [
+    {
+      "type": "PERCENTAGE",
+      "calculationModel": "FIXED",
+      "value": 0.001,
+      "tiers": null,
+      "walletAddress": "0x15FB50680fEB2f726413416665c25f9B397b047b"
+    },
+    {
+      "type": "FIXED",
+      "calculationModel": "FIXED",
+      "value": 0.5,
+      "tiers": null,
+      "walletAddress": "0x15FB50680fEB2f726413416665c25f9B397b047b"
+    }
+  ]
+}
+```
+
+## Rule Types
+
+Settlement rules support two calculation models that can be combined to create flexible fee structures:
+
+<AccordionGroup>
+  <Accordion title="Fixed Calculation with Fixed Value">
+    Charge a flat fee amount per transaction regardless of transaction size.
+
+    ```json
+    {
+      "type": "FIXED",
+      "calculationModel": "FIXED",
+      "value": 0.5,
+      "walletAddress": "0x15FB50680fEB2f726413416665c25f9B397b047b"
+    }
+    ```
+
+  </Accordion>
+
+  <Accordion title="Fixed Calculation with Percentage">
+    Charge a percentage of the transaction amount using a single rate.
+
+    ```json
+    {
+      "type": "PERCENTAGE",
+      "calculationModel": "FIXED",
+      "value": 0.001,
+      "walletAddress": "0x15FB50680fEB2f726413416665c25f9B397b047b"
+    }
+    ```
+
+  </Accordion>
+
+  <Accordion title="Tiered Calculation with Percentage">
+    Charge a percentage using different rates based on transaction amount ranges. Useful for volume-based pricing.
+
+    ```json
+    {
+      "type": "PERCENTAGE",
+      "calculationModel": "TIERED",
+      "tiers": [
+        {
+          "max": "1000",
+          "min": "",
+          "value": 0.0007
+        },
+        {
+          "max": "2000",
+          "min": "1000",
+          "value": 0.0005
+        },
+        {
+          "max": "",
+          "min": "2000",
+          "value": 0.0002
+        }
+      ],
+      "walletAddress": "0x15FB50680fEB2f726413416665c25f9B397b047b"
+    }
+    ```
+
+    <Info>
+      For tiered rules, leave `min` empty for the first tier and `max` empty for the
+      last tier to create open-ended ranges.
+    </Info>
+
+  </Accordion>
+</AccordionGroup>
+
+## Apply Rule to Virtual Account
+
+After creating a settlement rule, associate it with a specific user's virtual account:
+
+```bash
+curl --request POST \
+     --url https://production.hifibridge.com/v2/users/{userId}/virtual-accounts/{accountId}/settlement-rules/{ruleId} \
+     --header 'accept: application/json'
+```
+
+<Warning>
+  Settlement rules must be created on the same blockchain network as the virtual
+  account's destination chain. For example, a virtual account configured for
+  POLYGON can only use settlement rules created on POLYGON.
+</Warning>
+
+## Fee Distribution
+
+When a transaction is processed through a virtual account with settlement rules:
+
+1. The transaction amount is received through the virtual account
+2. Each rule is evaluated in order to calculate fees
+3. Fees are automatically deducted from the transaction
+4. The remaining amount is sent to the virtual account's destination wallet
+5. Fee payments are sent to the specified wallet addresses
+
+### Monitoring Fees
+
+Track settlement transactions and fee distributions by monitoring the specified wallet addresses.
