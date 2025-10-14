@@ -121,12 +121,35 @@ When you create an offramp, the API response includes detailed information about
 
 ## Transaction Status
 
-Offramp transactions progress through several statuses:
+**1. Transaction Creation**
 
-- **CREATED**: Transaction has been created and is awaiting processing
-- **PROCESSING**: Stablecoins are being converted and fiat transfer is being initiated
-- **COMPLETED**: Fiat currency has been successfully transferred to your account
-- **FAILED**: Transaction failed (check `failedReason` for details)
+* **`CREATED`** – The transaction has been created but not yet processed.
+* **`NOT_INITIATED`** – The transaction was not submitted due to a validation error.
+
+**2. Quote and Funding Phase**
+
+* **`OPEN_QUOTE`** – A quote has been generated and is awaiting user acceptance.
+* **`QUOTE_FAILED`** – The transaction failed or expired before the quote was accepted.
+* **`AWAITING_FUNDS`** – Waiting for funds to be sent to the specified liquidation address.
+
+**3. Crypto Processing**
+
+* **`CRYPTO_INITIATED`** – The transaction process has started for the crypto transfer.
+* **`CRYPTO_PENDING`** – The transaction is in progress and awaiting on-chain confirmation.
+* **`CRYPTO_PROCESSED`** – The crypto transaction was successfully processed.
+* **`CRYPTO_FAILED`** – The crypto transaction failed.
+* **`CRYPTO_RETURNED`** – The failed crypto transaction has been refunded to the user.
+
+**4. Fiat Processing**
+
+* **`FIAT_INITIATED`** – The fiat payout process has started.
+* **`FIAT_PENDING`** – The fiat transaction is awaiting settlement.
+* **`FIAT_FAILED`** – The fiat transaction encountered an error and could not be completed.
+* **`COMPLETED`** – The transaction was successfully settled in fiat.
+
+### Flow Chart
+
+![Offramp Status Flow Chart](/images/offramp-status.png)
 
 ## Quote Information
 
