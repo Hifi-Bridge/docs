@@ -142,12 +142,35 @@ When you create an onramp, the API response includes detailed information about 
 
 ## Transaction Status
 
-Onramp transactions progress through several statuses:
+**1. Transaction Creation Phase**
 
-- **AWAITING_FUNDS**: Waiting for you to deposit fiat currency to the provided bank account
-- **PROCESSING**: Funds have been received and are being converted to stablecoins
-- **COMPLETED**: Stablecoins have been successfully deposited to your wallet
-- **FAILED**: Transaction failed (check `failedReason` for details)
+* **`CREATED`**: The transaction request has been successfully created.
+* **`NOT_INITIATED`**: The transaction was not submitted due to a validation error.
+
+**2. Quote and Funding Phase**
+
+* **`OPEN_QUOTE`**: A quote has been generated and is awaiting user acceptance.
+* **`QUOTE_FAILED`**: The transaction failed or expired before the quote was accepted.
+* **`AWAITING_FUNDS`**: Waiting for funds to be sent to the provided deposit instruction.
+
+**3. Fiat Processing Phase**
+
+* **`FIAT_INITIATED`**: The fiat transaction process has started.
+* **`FIAT_PENDING`**: The fiat transaction is in progress and awaiting processing.
+* **`FIAT_PROCESSED`**: The fiat transaction has been successfully processed.
+* **`FIAT_FAILED`**: The fiat transaction failed due to an error.
+* **`FIAT_RETURNED`**: The fiat funds were returned after a failed transaction.
+
+**4. Crypto Processing Phase**
+
+* **`CRYPTO_INITIATED`**: The crypto transaction process has started.
+* **`CRYPTO_PENDING`**: The crypto transaction is in progress and awaiting on-chain confirmation.
+* **`CRYPTO_FAILED`**: The crypto transaction failed due to an error.
+* **`COMPLETED`**: The transaction has been successfully confirmed on-chain.
+
+### Flow Chart
+
+<Image align="center" border={false} src="/images/onramp-status.png" />
 
 ## Deposit Information
 
