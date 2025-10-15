@@ -50,15 +50,6 @@
             "pages": [
               "docs/overview",
               {
-                "group": "Rails",
-                "pages": [
-                  "docs/rails/overview",
-                  "docs/rails/usd-individual",
-                  "docs/rails/usd-business",
-                  "docs/rails/other-rails"
-                ]
-              },
-              {
                 "group": "Compliance",
                 "pages": [
                   "docs/compliance/currencies",
@@ -83,6 +74,15 @@
                       "docs/compliance/references/product-service-categories"
                     ]
                   }
+                ]
+              },
+              {
+                "group": "Rails",
+                "pages": [
+                  "docs/rails/overview",
+                  "docs/rails/usd-individual",
+                  "docs/rails/usd-business",
+                  "docs/rails/other-rails"
                 ]
               }
             ]
