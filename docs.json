@@ -168,12 +168,12 @@
         ]
       },
       {
-        "tab": "API Reference",
-        "openapi": "https://production.hifibridge.com/api/v2/openapi.json"
-      },
-      {
         "tab": "Postman",
         "href": "https://www.postman.com/hifi-developers/workspace/hifi-developers/collection/36482019-965415fa-8dd5-4d2c-a4ca-068478dce9d9?action=share&source=copy-link&creator=34328055"
+      },
+      {
+        "tab": "API Reference",
+        "openapi": "https://production.hifibridge.com/api/v2/openapi.json"
       }
     ]
   },
