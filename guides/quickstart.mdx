@@ -129,27 +129,15 @@ To read more about the rails we support, click **<u>here</u>**
 
 To unlock, the **USD** rail, follow these steps:
 
-1. Gather the required KYC information for the USD rail by either consulting our KYC documentation
+1. Gather the required KYC information for the USD rail by either consulting our KYC documentation or using the Retrieve KYC Requirements endpoint.
 
-   or using the Retrieve KYC Requirements
+2. Update the user's KYC information using the Update KYC Information endpoint.
 
-   endpoint.
+3. Upload documentation using the Add Documents endpoint.
 
-2. Update the user's KYC information using the Update KYC Information
+4. Submit the user's KYC information through the Submit KYC endpoint to unlock the rail.
 
-   endpoint.
-
-3. Upload documentation using the Add Documents
-
-   endpoint.
-
-4. Submit the user's KYC information through the Submit KYC
-
-   endpoint to unlock the rail.
-
-5. Check the user's KYC status for the USD rail via the Retrieve KYC Status
-
-   endpoint.
+5. Check the user's KYC status for the USD rail via the Retrieve KYC Status endpoint.
 
 Let's go through each of these steps in detail to unlock the **USD** rail.
 
@@ -157,9 +145,7 @@ Let's go through each of these steps in detail to unlock the **USD** rail.
 
 The Retrieve KYC Requirements endpoint provides the required and optional KYC fields needed to unlock a specific rail, as well as any invalid or missing KYC information the user currently holds, assuming they intend to submit KYC for this rail. This information helps identify what needs to be updated via the Update KYC endpoint before submitting KYC for the rail.
 
-Let's get the KYC requirements for **USD** rails by calling the Retrieve KYC Requirements
-
-endpoint and passing in **USD** as the rails and the userId.
+Let's get the KYC requirements for **USD** rails by calling the Retrieve KYC Requirements endpoint and passing in **USD** as the rails and the userId.
 
 **Request:**
 
@@ -286,9 +272,7 @@ The response contains the latest KYC information the user holds after the update
 
 We have successfully updated the user's KYC information now, let's also upload the documentation.
 
-Users can upload raw documentation directly via the Upload a File
-
-endpoint. HIFI will return a file ID, which can later be used to attach the document to the user.
+Users can upload raw documentation directly via the Upload a File endpoint. HIFI will return a file ID, which can later be used to attach the document to the user.
 
 **Upload Documentation Request**
 
@@ -313,11 +297,9 @@ curl --request POST \
 }
 ```
 
-After receiving the `fileId`, you can attach the documentation to the user. For the documentation required for the USD rail, please refer to Individual Documents
+After receiving the `fileId`, you can attach the documentation to the user. For the documentation required for the USD rail, please refer to Individual Documents.
 
-.
-
-In this example, we will use the previously uploaded file as the user’s driver’s license to satisfy the `identity` requirement.
+In this example, we will use the previously uploaded file as the user's driver's license to satisfy the `identity` requirement.
 
 **Add Documentation Request**
 
@@ -669,11 +651,9 @@ Onramping fiat to stablecoin via a virtual account requires your end user to sen
 - Routing Number: 021214891
 - Account Number: 344176915009
 
-In production, the entire flow is only triggered after the user makes a deposit and we confirm that the fiat has landed. In the sandbox, we provide a simulation endpoint
+In production, the entire flow is only triggered after the user makes a deposit and we confirm that the fiat has landed. In the sandbox, we provide a simulation endpoint to mimic the behavior of an incoming deposit.
 
-to mimic the behavior of an incoming deposit.
-
-Below is how we can create a simulated virtual account deposit
+Below is how we can create a simulated virtual account deposit:
 
 **Request:**
 
@@ -792,9 +772,7 @@ In the webhook events, you should see a new onramp transaction created for the d
 }
 ```
 
-After the onramp transaction status is updated to `COMPLETE`, you can check the balance
-
-of the user’s wallet to see the testnet USDC we just onramped!
+After the onramp transaction status is updated to `COMPLETE`, you can check the balance of the user's wallet to see the testnet USDC we just onramped!
 
 <Info>
   The `bankInfo` under the `source` object contains the information of the
@@ -998,18 +976,13 @@ curl --request POST \
 Let's take a look at the response object, focusing on the `transferDetails` object:
 
 - The `id` is a unique identifier for this transfer, which you can save to get the most up-to-date transfer status using the [Retrieve an offramp](https://docs.hifibridge.com/v2/reference/get_v2-offramps-transferid) endpoint.
-- The `status` represents the transfer status, which initially appears as `"OPEN_QUOTE"`. You will have to call the Accept Quote Endpoint
-
-  to kick off the offramp process
-
+- The `status` represents the transfer status, which initially appears as `"OPEN_QUOTE"`. You will have to call the Accept Quote Endpoint to kick off the offramp process.
 - The `receipt.transactionHash` is the transaction hash on the blockchain, which you can use to check the transaction status online with a blockchain explorer.
 - The `error` and `errorDetails` will show the reason if the transfer fails.
 - The `sourceUser` and `destinationUser` objects provide detail information about the sender and recipient users.
 - The `quoteInformation` object provides the conversion rate information between the source and destination currencies.
 
-After confirming the quote, call the Accept Quote Endpoint
-
-to start the rest of the offramp process before the quote expires, as indicated by the `expiresAt` field.
+After confirming the quote, call the Accept Quote Endpoint to start the rest of the offramp process before the quote expires, as indicated by the `expiresAt` field.
 
 **Request:**
 
@@ -1088,9 +1061,7 @@ curl --request POST \
 }
 ```
 
-Great! You should now see the status transition to `CRYPTO_INITIATED`. Next, you can either poll our Get Offramp Transaction
-
-endpoint to get the latest status or subscribe to the webhook to wait for the status update event.
+Great! You should now see the status transition to `CRYPTO_INITIATED`. Next, you can either poll our Get Offramp Transaction endpoint to get the latest status or subscribe to the webhook to wait for the status update event.
 
 ---
 
