@@ -3,20 +3,194 @@ title: "Wallet Transfers"
 sidebarTitle: "Wallets"
 ---
 
-Wallet transfers are the easiest way to send money on HIFI by transferring funds between wallets on the same blockchain network.
+Wallet transfers allow you to send stablecoins directly between wallets on the same blockchain network. This is the fastest way to move funds within the HIFI ecosystem.
 
 ## How Wallet Transfers Work
 
-Wallet transfers allow you to send stablecoins directly from one wallet to another on the same blockchain. This is the most straightforward way to move funds within the HIFI ecosystem.
+HIFI supports single and batch wallet transfers.
+
+### Single Transfers
+
+Send stablecoins to a single wallet address:
+
+1. **Create a transfer** – Specify source wallet, destination wallet, and amount
+2. **Transaction processing** – The transfer is executed on-chain
+3. **Confirmation** – Receive transaction hash once completed
+
+### Batch Transfers
+
+Send stablecoins to multiple recipients in a single transaction:
+
+1. **Create a batch** – Specify source wallet and up to 50 destination wallets with amounts
+2. **Transaction processing** – All transfers are executed in a single on-chain transaction
+3. **Confirmation** – Receive transaction hash for the entire batch
+
+<Info>
+  Batch transfers are more gas-efficient than sending individual transactions to
+  multiple recipients. You can send to up to 50 recipients in a single batch.
+</Info>
+
+## Batch Transfer Structure
+
+When you create a batch wallet transfer, the API response includes detailed information about the transaction:
+
+```json
+{
+  "transferType": "WALLET.TRANSFER.BATCH",
+  "transferDetails": {
+    "id": "879af7af-67bf-469f-b718-d262a39d4857",
+    "requestId": "14a84906-b72e-4847-b34d-51b9048fa6a5",
+    "createdAt": "2025-04-05T00:55:50.609Z",
+    "updatedAt": "2025-04-05T00:56:33.236Z",
+    "chain": "POLYGON",
+    "currency": "usdc",
+    "contractAddress": "0x41e94eb019c0762f9bfcf9fb1e58725bfb0e7582",
+    "status": "COMPLETED",
+    "source": {
+      /* Source */
+    },
+    "destination": {
+      /* Destination */
+    },
+    "receipt": {
+      /* Receipt */
+    }
+  }
+}
+```
+
+<AccordionGroup>
+  <Accordion title="Source">
+    ```json
+    {
+      "userId": "6a13bd30-b3a3-4d44-af33-0b32e58261be",
+      "walletAddress": "0x99a8c5ED386d217BC6ff0AA1b3585606D475432B",
+      "walletType": "INDIVIDUAL"
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="Destination">
+    ```json
+    {
+      "batch": [
+        {
+          "amount": "0.04",
+          "userId": "6a13bd30-b3a3-4d44-af33-0b32e58261be",
+          "walletAddress": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e"
+        },
+        {
+          "amount": "0.05",
+          "userId": "a1f70737-3844-4782-a321-ad481108a8ec",
+          "walletAddress": "0x848732f6c834E05b17C56fa01E83EE095f72C3c3"
+        }
+      ]
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="Receipt">
+    ```json
+    {
+      "transactionHash": "0x57f0cd3429ea425d982882243428ef4a1eda5f1be2157c1b34ea48b49b24fe7f",
+      "userOpHash": "0xef7bdb071b1fcfb5df629bd4d27ffa6dc32d0a5df676f26fb8c25311df1185ac"
+    }
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Transaction Status
+
+Wallet transfers progress through several statuses:
+
+- **`NOT_INITIATED`**: The transfer was not submitted due to a validation error
+- **`CREATED`**: Transfer request has been created and is awaiting processing
+- **`INITIATED`**: Transfer has been submitted to the blockchain
+- **`PENDING`**: Transaction is awaiting on-chain confirmation
+- **`COMPLETED`**: Transfer has been successfully confirmed on-chain
+- **`FAILED`**: Transfer failed (check error details for more information)
+- **`UNKNOWN`**: Transfer status could not be determined
+
+## Approval Workflow
+
+Batch transfers can optionally require approval before processing. This is useful for organizations that need multi-party authorization for large or sensitive transfers.
+
+### How Approvals Work
+
+When creating a batch transfer with `requireApproval: true`:
+
+1. The transfer enters a `PENDING_APPROVAL` state
+2. Designated approvers can review and vote on the transfer
+3. Once approval threshold is met, the transfer proceeds
+4. If rejected, the transfer is cancelled
+
+### Approval Response
+
+When approval is required, the receipt includes approval details:
+
+```json
+{
+  "receipt": {
+    "approval": {
+      "id": "006737ca-42d5-4780-b3c2-aeb63279c591",
+      "status": "PENDING",
+      "createdAt": "2025-02-03T16:11:36.654998+00:00",
+      "updatedAt": "2025-02-03T16:12:41.503+00:00",
+      "transferId": "006737ca-42d5-4780-b3c2-aeb63279c591",
+      "transferType": "WALLET.TRANSFER.BATCH",
+      "fromDashboard": true,
+      "initiatorProfileId": "aec66b02-4f3f-471c-839a-94820b36abb2",
+      "votes": [
+        {
+          "approverId": "aec66b02-4f3f-471c-839a-94820b36abb2",
+          "vote": "APPROVE",
+          "comment": "Approved for processing",
+          "createdAt": "2025-02-03T16:12:41.503+00:00"
+        }
+      ]
+    }
+  }
+}
+```
 
 <Card
-  icon="arrow-right"
-  title="Send USDC on Ethereum"
-  href="/guides/transfers/wallets/send-usdc"
+  icon="shield-check"
+  title="Transfer Approvals"
+  href="/docs/transfers/features/transfer-approvals"
 >
-  Learn how to transfer USDC between wallets
+  Learn how to configure approval workflows for transfers
 </Card>
 
-<Card icon="globe" title="Supported Currencies" href="/docs/currencies">
-  Learn about supported regions, payment methods, and currencies
-</Card>
+## Batch Transfer Limits
+
+- **Maximum recipients**: 50 per batch
+- **Supported chains**: POLYGON
+- **Supported currencies**: USDC
+
+## Receipt Information
+
+The `receipt` object contains transaction details once completed:
+
+- **transactionHash**: Blockchain transaction hash for the transfer
+- **userOpHash**: User operation hash for account abstraction wallets
+- **approval**: Approval workflow details (if applicable)
+
+## Related Features
+
+<CardGroup cols={2}>
+  <Card
+    icon="layer-group"
+    title="Batch Transfers"
+    href="/docs/transfers/features/batch-transfers"
+  >
+    Learn more about batch transfer capabilities
+  </Card>
+
+  <Card
+    icon="shield-check"
+    title="Transfer Approvals"
+    href="/docs/transfers/features/transfer-approvals"
+  >
+    Configure approval workflows for transfers
+  </Card>
+</CardGroup>
