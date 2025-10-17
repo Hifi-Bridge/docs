@@ -108,6 +108,7 @@
                   "docs/transfers/wallets",
                   "docs/transfers/onramps",
                   "docs/transfers/offramps",
+                  "docs/transfers/swaps",
                   "docs/transfers/bridging"
                 ]
               }
