@@ -49,10 +49,10 @@
             "group": "Platform",
             "pages": [
               "docs/overview",
-              "docs/currencies",
               {
                 "group": "Compliance",
                 "pages": [
+                  "docs/compliance/currencies",
                   "docs/compliance/regions",
                   "docs/compliance/industries",
                   {
@@ -88,6 +88,49 @@
             ]
           },
           {
+            "group": "Models",
+            "pages": [
+              {
+                "group": "Users",
+                "pages": ["docs/users/index", "docs/users/kyc"]
+              },
+              {
+                "group": "Wallets",
+                "pages": [
+                  "docs/wallets/index",
+                  "docs/wallets/balances",
+                  "docs/wallets/deposits"
+                ]
+              },
+              {
+                "group": "Transfers",
+                "pages": [
+                  "docs/transfers/wallets",
+                  "docs/transfers/onramps",
+                  "docs/transfers/offramps",
+                  "docs/transfers/swaps",
+                  "docs/transfers/bridging"
+                ]
+              }
+            ]
+          },
+          {
+            "group": "Features",
+            "pages": [
+              "docs/users/features/kyc-link",
+              "docs/transfers/features/batch-transfers",
+              "docs/transfers/features/virtual-accounts",
+              "docs/transfers/features/transfer-approvals",
+              "docs/transfers/features/settlement-rules"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Guides",
+        "pages": [
+          "guides/quickstart",
+          {
             "group": "Integration",
             "pages": [
               {
@@ -108,96 +151,11 @@
             ]
           },
           {
-            "group": "Models",
-            "pages": [
-              {
-                "group": "Users",
-                "pages": ["docs/users/index", "docs/users/kyc"]
-              },
-              {
-                "group": "Wallets",
-                "pages": [
-                  "docs/wallets/index",
-                  "docs/wallets/balances",
-                  "docs/wallets/deposits"
-                ]
-              },
-              {
-                "group": "Stablecoins",
-                "pages": ["docs/stablecoins/swaps", "docs/stablecoins/bridging"]
-              },
-              {
-                "group": "Transfers",
-                "pages": [
-                  "docs/transfers/wallets",
-                  "docs/transfers/accounts",
-                  "docs/transfers/onramps",
-                  "docs/transfers/offramps"
-                ]
-              }
-            ]
-          },
-          {
-            "group": "Features",
-            "pages": [
-              "docs/users/features/kyc-link",
-              "docs/transfers/features/batch-transfers",
-              "docs/transfers/features/virtual-accounts",
-              "docs/transfers/features/transfer-approvals"
-            ]
-          }
-        ]
-      },
-      {
-        "tab": "Guides",
-        "pages": [
-          "guides/quickstart",
-          {
             "group": "USD Rail",
             "pages": [
               "guides/usd-rail/overview",
               "guides/usd-rail/submit-kyc",
               "guides/usd-rail/submit-kyb"
-            ]
-          },
-          {
-            "group": "Transfers",
-            "pages": [
-              {
-                "group": "Wallets",
-                "pages": ["guides/transfers/wallets/send-usdc"]
-              },
-              {
-                "group": "Onramps",
-                "pages": [
-                  "guides/transfers/onramps/usd-usdc",
-                  "guides/transfers/onramps/ngn-usdc"
-                ]
-              },
-              {
-                "group": "Offramps",
-                "pages": [
-                  "guides/transfers/offramps/usdc-usd",
-                  "guides/transfers/offramps/usdc-mxn"
-                ]
-              },
-              {
-                "group": "Swaps",
-                "pages": ["guides/transfers/swaps/usdc-usdt"]
-              },
-              {
-                "group": "Bridges",
-                "pages": ["guides/transfers/bridges/eth-sol"]
-              }
-            ]
-          },
-          {
-            "group": "Features",
-            "pages": [
-              "guides/transfers/features/batch-transfers",
-              "guides/transfers/features/virtual-accounts",
-              "guides/transfers/features/settlement-rules",
-              "guides/transfers/features/transfer-approvals"
             ]
           },
           {
@@ -211,12 +169,12 @@
         ]
       },
       {
-        "tab": "API Reference",
-        "openapi": "https://production.hifibridge.com/api/v2/openapi.json"
+        "tab": "Postman",
+        "href": "https://www.postman.com/hifi-developers/workspace/hifi-developers/collection/36482019-965415fa-8dd5-4d2c-a4ca-068478dce9d9?action=share&source=copy-link&creator=34328055"
       },
       {
-        "tab": "Postman Collection",
-        "href": "https://www.postman.com/hifi-developers/workspace/hifi-developers/collection/36482019-965415fa-8dd5-4d2c-a4ca-068478dce9d9?action=share&source=copy-link&creator=34328055"
+        "tab": "API Reference",
+        "openapi": "https://production.hifibridge.com/api/v2/openapi.json"
       }
     ]
   },
