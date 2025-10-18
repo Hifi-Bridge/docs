@@ -49,8 +49,7 @@ curl --request POST \
 ```
 
 <Info>
-  Multiple rules can be applied to a single settlement rule configuration. The
-  rules are processed in the order they are defined.
+  Multiple rules can be applied to a single settlement rule configuration. The rules are processed in the order they are defined.
 </Info>
 
 ## Response Structure
@@ -97,9 +96,7 @@ Settlement rules support two calculation models that can be combined to create f
       "walletAddress": "0x15FB50680fEB2f726413416665c25f9B397b047b"
     }
     ```
-
   </Accordion>
-
   <Accordion title="Fixed Calculation with Percentage">
     Charge a percentage of the transaction amount using a single rate.
 
@@ -111,9 +108,7 @@ Settlement rules support two calculation models that can be combined to create f
       "walletAddress": "0x15FB50680fEB2f726413416665c25f9B397b047b"
     }
     ```
-
   </Accordion>
-
   <Accordion title="Tiered Calculation with Percentage">
     Charge a percentage using different rates based on transaction amount ranges. Useful for volume-based pricing.
 
@@ -143,10 +138,8 @@ Settlement rules support two calculation models that can be combined to create f
     ```
 
     <Info>
-      For tiered rules, leave `min` empty for the first tier and `max` empty for the
-      last tier to create open-ended ranges.
+      For tiered rules, leave `min` empty for the first tier and `max` empty for the last tier to create open-ended ranges.
     </Info>
-
   </Accordion>
 </AccordionGroup>
 
@@ -161,9 +154,7 @@ curl --request POST \
 ```
 
 <Warning>
-  Settlement rules must be created on the same blockchain network as the virtual
-  account's destination chain. For example, a virtual account configured for
-  POLYGON can only use settlement rules created on POLYGON.
+  Settlement rules must be created on the same blockchain network as the virtual account's destination chain. For example, a virtual account configured for POLYGON can only use settlement rules created on POLYGON.
 </Warning>
 
 ## Fee Distribution
@@ -171,7 +162,6 @@ curl --request POST \
 When a transaction is processed through a virtual account with settlement rules:
 
 1. The transaction amount is received through the virtual account
-2. Each rule is evaluated in order to calculate fees
 3. Fees are automatically deducted from the transaction
 4. The remaining amount is sent to the virtual account's destination wallet
 5. Fee payments are sent to the specified wallet addresses
