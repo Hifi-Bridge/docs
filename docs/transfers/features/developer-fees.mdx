@@ -1,0 +1,172 @@
+---
+title: "Developer Fees"
+---
+
+Developer fees enable automated calculation and distribution of fees for offramp transactions. Two fee models are supported: **percentage fees** and **flat fees**. Fees can be configured to be distributed to up to **10 different beneficiary wallets**.
+
+<Info>
+  Looking to charge fees for virtual accounts? Visit [Settlement Rules](/docs/transfers/features/settlement-rules) for more details.
+</Info>
+
+## How Developer Fees Work
+
+1. **Define fees and beneficiary** – Specify the fee calculation method and destination wallets by including the developer fee when creating offramp transactions.
+3. **Automatic distribution** – Fees are automatically calculated and distributed during the offramp process
+
+## Supported Rail
+
+- USD
+
+<Info>
+  We are actively working to apply developer fees across all of our rails — stay tuned!
+</Info>
+
+## Fee Calculation and Logic
+
+**HIFI currently supports two types of fee models:**
+
+- **Percentage:** The fee is calculated based on the amount being converted into fiat.
+- **Flat:** The fee is charged as a fixed amount, regardless of the amount being converted into fiat.
+
+**All fees are added on top of the offramp amount and credited to the beneficiary wallet in stablecoin.**
+
+**Example:**
+
+An offramp transaction with an amount of **100 USDC** and two developer fees:
+
+- **20 bps (0.002)** as a percentage, credited to **Beneficiary Wallet A**
+- **5 USDC** as a flat fee, credited to **Beneficiary Wallet B**
+
+When the offramp transaction is initiated, a total of **105.2 USDC** (100 + 100 × 0.002 + 5) will be debited from the sender’s wallet. After settlement:
+
+- **100 USDC** will be converted into fiat and sent to the recipient’s bank account
+- **0.2 USDC** will be delivered to **Wallet A**
+- **5 USDC** will be delivered to **Wallet B**
+
+<Warning>
+  Once the fee is delivered to the beneficiary wallet, it cannot be traced back, even if the transaction fails for any reason. Please ensure that fees are held in escrow until it is safe to release them.
+</Warning>
+
+## Create Offramp Transaction with Fee
+
+```bash
+curl --request POST \
+  --url https://production.hifibridge.com/v2/offramps \
+  --header 'accept: application/json' \
+  --header 'content-type: application/json' \
+  --data '{
+    "requestId": "{{uuid}}",
+    "source": {
+		"userId": "{{user_id}}"
+        "amount": "100",
+        "currency": "usdc",
+        "chain": "SOLANA"
+    },
+    "destination": {
+        "currency": "usd",
+        "userId": "{{user_id}}",
+        "accountId": "{{offramp_account_id}}"
+    },
+    "developerFee": {
+        "fees": [
+            {
+                "type": "PERCENTAGE",
+                "value": "0.002",
+                "walletAddress": "9eyUwauqs8YgU9Hg9cdGW3WmuG2Uud2y9TruZbokeVD8"
+            },
+            {
+                "type": "FLAT",
+                "value": "5",
+                "walletAddress": "pumpCmXqMfrsAkQ5r49WcJnRayYRqmXz6ae8H7H9Dfn"
+            }
+        ]
+    }
+}'
+```
+
+## Settled Offramp Transaction Response
+
+```json
+{
+  "transferType": "OFFRAMP",
+  "transferDetails": {
+    "id": "fa3c7411-8288-4247-98b2-2f90a7053f83",
+    "requestId": "75e278f5-4a61-4a99-80ba-0583c66faa51",
+    "createdAt": "2025-10-17T19:56:20.863Z",
+    "updatedAt": "2025-10-17T19:57:35.371Z",
+    "status": "COMPLETED",
+    "failedReason": null,
+    "error": null,
+    "errorDetails": null,
+    "source": {
+      "userId": "201b905e-59b4-54de-a7cc-b985244ede5d",
+      "chain": "SOLANA",
+      "currency": "usdc",
+      "amount": 100,
+      "amountIncludeDeveloperFee": 105.2,
+      "walletAddress": "9eyUwauqs8YgU9Hg9cdGW3WmuG3Uud2y9TruZbokeVDo",
+      "user": {
+        "email": "john@hifibridge.com",
+        "lastName": "DOe",
+        "firstName": "John",
+        "businessName": null
+      }
+    },
+    "destination": {
+      "userId": "201b905e-59b4-54de-a7cc-b985244ede5d",
+      "amount": 100,
+      "currency": "usd",
+      "user": {
+        "email": "john@hifibridge.com",
+        "lastName": "DOe",
+        "firstName": "John",
+        "businessName": null
+      },
+      "accountId": "c48ff7ea-a826-4804-87ee-118826e4f6cf"
+    },
+    "receipt": {
+      "transactionHash": "hmCYCwP29EmHvVftDVfpKUiub8bCaJY4yH4kSYCmJxnBjz1xEruyQQMTmWmP6GtJaC7VvW85FJALGpQZ3cAU5rw",
+      "paymentTracking": null
+    },
+    "quoteInformation": {
+      "rate": "1",
+      "sendNet": {
+        "amount": "100",
+        "currency": "usdc"
+      },
+      "expiresAt": "2025-10-18T19:56:21.813Z",
+      "sendGross": {
+        "amount": "100",
+        "currency": "usdc"
+      },
+      "receiveNet": {
+        "amount": "100",
+        "currency": "usd"
+      },
+      "receiveGross": {
+        "amount": "100",
+        "currency": "usd"
+      }
+    },
+    "depositInformation": [],
+    "developerFee": {
+      "id": "b9551a87-6d9a-5963-b198-efaaf9061668",
+      "transactionHash": "hmCYCwP29EoHvVftDVfNKUiub8bCaJY4yH4kSYCmJxnBjz1xEruyQQMTmWmP6GtJaC7VvW85FJALGpQZ3cAU5rw",
+      "fees": [
+        {
+          "type": "PERCENTAGE",
+          "value": "0.0005",
+          "amount": "0.000535",
+          "walletAddress": "9eyUwauqs8YgU9Hg9cdGW3WmuG2Uud2y9TruZbokeVD8"
+        },
+        {
+          "type": "FLAT",
+          "value": "0.01",
+          "amount": "0.010000",
+          "walletAddress": "pumpCmXqMfrsAkQ5r49WcJnRayYRqmXz6ae8H7H9Dfn"
+        }
+      ]
+    }
+  }
+}
+```
