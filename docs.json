@@ -121,6 +121,7 @@
               "docs/transfers/features/batch-transfers",
               "docs/transfers/features/virtual-accounts",
               "docs/transfers/features/transfer-approvals",
+              "docs/transfers/features/developer-fees",
               "docs/transfers/features/settlement-rules"
             ]
           }
