@@ -68,7 +68,7 @@ curl --request POST \
             {
                 "type": "PERCENTAGE",
                 "value": "0.002",
-                "walletAddress": "9eyUwauqs8YgU9Hg9cdGW3WmuG2Uud2y9TruZbokeVDo"
+                "walletAddress": "9eyUwauqs8YgU9Hg9cdGW3WmuG2Uud2y9TruZbokeVD8"
             },
             {
                 "type": "FLAT",
@@ -78,4 +78,91 @@ curl --request POST \
         ]
     }
 }'
+```
+
+## Settled Offramp Transaction Response
+
+```json
+{
+  "transferType": "OFFRAMP",
+  "transferDetails": {
+    "id": "fa3c7411-8288-4247-98b2-2f90a7053f83",
+    "requestId": "75e278f5-4a61-4a99-80ba-0583c66faa51",
+    "createdAt": "2025-10-17T19:56:20.863Z",
+    "updatedAt": "2025-10-17T19:57:35.371Z",
+    "status": "COMPLETED",
+    "failedReason": null,
+    "error": null,
+    "errorDetails": null,
+    "source": {
+      "userId": "201b905e-59b4-54de-a7cc-b985244ede5d",
+      "chain": "SOLANA",
+      "currency": "usdc",
+      "amount": 100,
+      "amountIncludeDeveloperFee": 105.2,
+      "walletAddress": "9eyUwauqs8YgU9Hg9cdGW3WmuG3Uud2y9TruZbokeVDo",
+      "user": {
+        "email": "john@hifibridge.com",
+        "lastName": "DOe",
+        "firstName": "John",
+        "businessName": null
+      }
+    },
+    "destination": {
+      "userId": "201b905e-59b4-54de-a7cc-b985244ede5d",
+      "amount": 100,
+      "currency": "usd",
+      "user": {
+        "email": "john@hifibridge.com",
+        "lastName": "DOe",
+        "firstName": "John",
+        "businessName": null
+      },
+      "accountId": "c48ff7ea-a826-4804-87ee-118826e4f6cf"
+    },
+    "receipt": {
+      "transactionHash": "hmCYCwP29EmHvVftDVfpKUiub8bCaJY4yH4kSYCmJxnBjz1xEruyQQMTmWmP6GtJaC7VvW85FJALGpQZ3cAU5rw",
+      "paymentTracking": null
+    },
+    "quoteInformation": {
+      "rate": "1",
+      "sendNet": {
+        "amount": "100",
+        "currency": "usdc"
+      },
+      "expiresAt": "2025-10-18T19:56:21.813Z",
+      "sendGross": {
+        "amount": "100",
+        "currency": "usdc"
+      },
+      "receiveNet": {
+        "amount": "100",
+        "currency": "usd"
+      },
+      "receiveGross": {
+        "amount": "100",
+        "currency": "usd"
+      }
+    },
+    "depositInformation": [],
+    "developerFee": {
+      "id": "b9551a87-6d9a-5963-b198-efaaf9061668",
+      "transactionHash": "hmCYCwP29EoHvVftDVfNKUiub8bCaJY4yH4kSYCmJxnBjz1xEruyQQMTmWmP6GtJaC7VvW85FJALGpQZ3cAU5rw",
+      "fees": [
+        {
+          "type": "PERCENTAGE",
+          "value": "0.0005",
+          "amount": "0.000535",
+          "walletAddress": "9eyUwauqs8YgU9Hg9cdGW3WmuG2Uud2y9TruZbokeVD8"
+        },
+        {
+          "type": "FLAT",
+          "value": "0.01",
+          "amount": "0.010000",
+          "walletAddress": "pumpCmXqMfrsAkQ5r49WcJnRayYRqmXz6ae8H7H9Dfn"
+        }
+      ]
+    }
+  }
+}
 ```
