@@ -16,11 +16,15 @@ Offramps follow a simple three-step process:
 
 Quotes are time-sensitive and typically expire within 10 minutes. This ensures you get current market rates and prevents stale pricing. If a quote expires before you accept it, you'll need to create a new offramp request to get updated pricing.
 
+<Info>
+  All USDT-related onramps incur an additional **0.1% exchange fee**, which will be reflected on your monthly invoice.
+</Info>
+
 ## Supported Regions
 
 The available offramp methods vary by region due to local payment infrastructure and regulatory requirements.
 
-<Card icon="globe" title="Currencies" href="/docs/currencies">
+<Card title="Currencies" icon="globe" href="/docs/currencies">
   Learn about supported regions, payment methods, and currencies
 </Card>
 
@@ -67,7 +71,6 @@ When you create an offramp, the API response includes detailed information about
     }
     ```
   </Accordion>
-
   <Accordion title="Destination">
     ```json
     {
@@ -78,7 +81,6 @@ When you create an offramp, the API response includes detailed information about
     }
     ```
   </Accordion>
-
   <Accordion title="Quote">
     ```json
     {
@@ -103,7 +105,6 @@ When you create an offramp, the API response includes detailed information about
     }
     ```
   </Accordion>
-
   <Accordion title="Developer Fee">
     ```json
     {
@@ -123,29 +124,29 @@ When you create an offramp, the API response includes detailed information about
 
 **1. Transaction Creation**
 
-* **`CREATED`** – The transaction has been created but not yet processed.
-* **`NOT_INITIATED`** – The transaction was not submitted due to a validation error.
+- **`CREATED`** – The transaction has been created but not yet processed.
+- **`NOT_INITIATED`** – The transaction was not submitted due to a validation error.
 
 **2. Quote and Funding Phase**
 
-* **`OPEN_QUOTE`** – A quote has been generated and is awaiting user acceptance.
-* **`QUOTE_FAILED`** – The transaction failed or expired before the quote was accepted.
-* **`AWAITING_FUNDS`** – Waiting for funds to be sent to the specified liquidation address.
+- **`OPEN_QUOTE`** – A quote has been generated and is awaiting user acceptance.
+- **`QUOTE_FAILED`** – The transaction failed or expired before the quote was accepted.
+- **`AWAITING_FUNDS`** – Waiting for funds to be sent to the specified liquidation address.
 
 **3. Crypto Processing**
 
-* **`CRYPTO_INITIATED`** – The transaction process has started for the crypto transfer.
-* **`CRYPTO_PENDING`** – The transaction is in progress and awaiting on-chain confirmation.
-* **`CRYPTO_PROCESSED`** – The crypto transaction was successfully processed.
-* **`CRYPTO_FAILED`** – The crypto transaction failed.
-* **`CRYPTO_RETURNED`** – The failed crypto transaction has been refunded to the user.
+- **`CRYPTO_INITIATED`** – The transaction process has started for the crypto transfer.
+- **`CRYPTO_PENDING`** – The transaction is in progress and awaiting on-chain confirmation.
+- **`CRYPTO_PROCESSED`** – The crypto transaction was successfully processed.
+- **`CRYPTO_FAILED`** – The crypto transaction failed.
+- **`CRYPTO_RETURNED`** – The failed crypto transaction has been refunded to the user.
 
 **4. Fiat Processing**
 
-* **`FIAT_INITIATED`** – The fiat payout process has started.
-* **`FIAT_PENDING`** – The fiat transaction is awaiting settlement.
-* **`FIAT_FAILED`** – The fiat transaction encountered an error and could not be completed.
-* **`COMPLETED`** – The transaction was successfully settled in fiat.
+- **`FIAT_INITIATED`** – The fiat payout process has started.
+- **`FIAT_PENDING`** – The fiat transaction is awaiting settlement.
+- **`FIAT_FAILED`** – The fiat transaction encountered an error and could not be completed.
+- **`COMPLETED`** – The transaction was successfully settled in fiat.
 
 ### Flow Chart
 
@@ -178,6 +179,6 @@ The `receipt` object contains transaction details once completed:
 
 ## Try it out
 
-<Card icon="code" title="Convert USDC to USD" href="/guides/convert/usdc-usd">
+<Card title="Convert USDC to USD" icon="code" href="/guides/convert/usdc-usd">
   Learn how to convert stablecoins to fiat
 </Card>
