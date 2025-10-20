@@ -30,9 +30,7 @@ curl --request POST \
 ```
 
 <Info>
-  Either `destinationChain` or `externalWalletId` must be provided. If
-  `externalWalletId` is specified, the system will use the associated wallet's
-  chain and address. USDT is only supported on Ethereum.
+  Either `destinationChain` or `externalWalletId` must be provided. If `externalWalletId` is specified, the system will use the associated wallet's chain and address. USDT is only supported on Ethereum.
 </Info>
 
 ## Response Structure
@@ -84,8 +82,7 @@ When you create a Virtual Account, the API response includes detailed informatio
 ## Account Features
 
 <Warning>
-  We only support 🇺🇸 USD Virtual Accounts for automatic onramps. For other
-  currencies, use our [Onramp API](/docs/transfers/onramps/).
+  We only support 🇺🇸 USD Virtual Accounts for automatic onramps. For other currencies, use our [Onramp API](/docs/transfers/onramps/).
 </Warning>
 
 ### Payment Rail Support
@@ -104,11 +101,11 @@ Configure where converted stablecoins are sent:
 - **Supported Currencies**: USDC, USDT, and other supported stablecoins
 - **Chain Support**: Ethereum, Polygon, Base, and other supported networks
 
-<Card
-  title="Settlement Rules"
-  icon="calculator"
-  href="/docs/transfers/features/settlement-rules"
->
+<Info>
+  All USDT-related onramps incur an additional **0.1% exchange fee**, which will be reflected on your monthly invoice.
+</Info>
+
+<Card title="Settlement Rules" icon="calculator" href="/docs/transfers/features/settlement-rules">
   Configure fee calculations and distribution
 </Card>
 
@@ -120,26 +117,18 @@ You can change the destination or status of a Virtual Account.
 - **Deactivated**: Account temporarily disabled, preventing new deposits
 
 <CardGroup cols={2}>
-  <Card
-    title="Update Account"
-    icon="pen-to-square"
-    href="api/virtual-account/update-a-virtual-account"
-  ></Card>
-  <Card
-    title="Deactivate Account"
-    icon="circle-stop"
-    href="/api/virtual-account/deactivate-a-virtual-account"
-  ></Card>
+  <Card title="Update Account" icon="pen-to-square" href="api/virtual-account/update-a-virtual-account">
+    
+  </Card>
+  <Card title="Deactivate Account" icon="circle-stop" href="/api/virtual-account/deactivate-a-virtual-account">
+    
+  </Card>
 </CardGroup>
 
 ## Sandbox Testing
 
 In sandbox mode, you can simulate deposits to test your integration:
 
-<Card
-  title="Simulate Deposit"
-  icon="code"
-  href="/api/virtual-account/simulate-a-deposit-to-a-virtual-account"
->
+<Card title="Simulate Deposit" icon="code" href="/api/virtual-account/simulate-a-deposit-to-a-virtual-account">
   Learn how to simulate Virtual Account deposits
 </Card>

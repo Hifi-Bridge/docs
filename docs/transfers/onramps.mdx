@@ -18,6 +18,10 @@ Quotes are time-sensitive and typically expire within 24 hours. This ensures you
 
 If a quote expires before you deposit funds, you'll need to create a new onramp request to get updated pricing.
 
+<Info>
+  All USDT-related onramps incur an additional **0.1% exchange fee**, which will be reflected on your monthly invoice.
+</Info>
+
 ## Transaction Structure
 
 When you create an onramp, the API response includes detailed information about the transaction:
@@ -69,7 +73,6 @@ When you create an onramp, the API response includes detailed information about 
     }
     ```
   </Accordion>
-
   <Accordion title="Destination">
     ```json
     {
@@ -88,7 +91,6 @@ When you create an onramp, the API response includes detailed information about 
     }
     ```
   </Accordion>
-
   <Accordion title="Quote">
     ```json
     {
@@ -117,7 +119,6 @@ When you create an onramp, the API response includes detailed information about 
     }
     ```
   </Accordion>
-
   <Accordion title="Deposit Info">
     ```json
     {
@@ -144,29 +145,29 @@ When you create an onramp, the API response includes detailed information about 
 
 **1. Transaction Creation Phase**
 
-* **`CREATED`**: The transaction request has been successfully created.
-* **`NOT_INITIATED`**: The transaction was not submitted due to a validation error.
+- **`CREATED`**: The transaction request has been successfully created.
+- **`NOT_INITIATED`**: The transaction was not submitted due to a validation error.
 
 **2. Quote and Funding Phase**
 
-* **`OPEN_QUOTE`**: A quote has been generated and is awaiting user acceptance.
-* **`QUOTE_FAILED`**: The transaction failed or expired before the quote was accepted.
-* **`AWAITING_FUNDS`**: Waiting for funds to be sent to the provided deposit instruction.
+- **`OPEN_QUOTE`**: A quote has been generated and is awaiting user acceptance.
+- **`QUOTE_FAILED`**: The transaction failed or expired before the quote was accepted.
+- **`AWAITING_FUNDS`**: Waiting for funds to be sent to the provided deposit instruction.
 
 **3. Fiat Processing Phase**
 
-* **`FIAT_INITIATED`**: The fiat transaction process has started.
-* **`FIAT_PENDING`**: The fiat transaction is in progress and awaiting processing.
-* **`FIAT_PROCESSED`**: The fiat transaction has been successfully processed.
-* **`FIAT_FAILED`**: The fiat transaction failed due to an error.
-* **`FIAT_RETURNED`**: The fiat funds were returned after a failed transaction.
+- **`FIAT_INITIATED`**: The fiat transaction process has started.
+- **`FIAT_PENDING`**: The fiat transaction is in progress and awaiting processing.
+- **`FIAT_PROCESSED`**: The fiat transaction has been successfully processed.
+- **`FIAT_FAILED`**: The fiat transaction failed due to an error.
+- **`FIAT_RETURNED`**: The fiat funds were returned after a failed transaction.
 
 **4. Crypto Processing Phase**
 
-* **`CRYPTO_INITIATED`**: The crypto transaction process has started.
-* **`CRYPTO_PENDING`**: The crypto transaction is in progress and awaiting on-chain confirmation.
-* **`CRYPTO_FAILED`**: The crypto transaction failed due to an error.
-* **`COMPLETED`**: The transaction has been successfully confirmed on-chain.
+- **`CRYPTO_INITIATED`**: The crypto transaction process has started.
+- **`CRYPTO_PENDING`**: The crypto transaction is in progress and awaiting on-chain confirmation.
+- **`CRYPTO_FAILED`**: The crypto transaction failed due to an error.
+- **`COMPLETED`**: The transaction has been successfully confirmed on-chain.
 
 ### Flow Chart
 
@@ -183,9 +184,7 @@ The `depositInfo` object contains all the details you need to complete your fiat
 - **Instructions**: Specific guidance for completing the deposit
 
 <Info>
-  Always use the exact reference ID provided in the deposit information when
-  making your fiat transfer. This ensures your funds are properly credited to
-  your onramp transaction.
+  Always use the exact reference ID provided in the deposit information when making your fiat transfer. This ensures your funds are properly credited to your onramp transaction.
 </Info>
 
 ## Quote Information
@@ -208,16 +207,12 @@ You can configure settlement rules to automatically calculate and distribute fee
 - Fee distribution to multiple wallet addresses
 - Network-specific configurations
 
-<Card
-  icon="gear"
-  title="Settlement Rules"
-  href="/docs/transfers/virtual-accounts/settlement-rules"
->
+<Card title="Settlement Rules" icon="gear" href="/docs/transfers/virtual-accounts/settlement-rules">
   Learn how to configure fee calculations and distribution
 </Card>
 
 ## Try it out
 
-<Card icon="code" title="Convert USD to USDC" href="/guides/convert/usd-usdc">
+<Card title="Convert USD to USDC" icon="code" href="/guides/convert/usd-usdc">
   Learn how to pay in to a Wallet
 </Card>
