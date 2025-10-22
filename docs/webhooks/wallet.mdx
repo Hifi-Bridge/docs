@@ -1,0 +1,175 @@
+---
+title: "Wallet"
+---
+
+Wallet webhooks provide real-time notifications for wallet-related events including transfers, bridging, and token balance updates.
+
+## Types
+
+- **WALLET.TRANSFER.CREATE**: Creation for wallet transfer
+- **WALLET.TRANSFER.UPDATE**: Updates for wallet transfer
+- **WALLET.BRIDGE.CREATE**: Creation for wallet bridging
+- **WALLET.BRIDGE.UPDATE**: Updates for wallet bridging
+- **WALLET.TOKEN.BALANCE.UPDATE**: Updates for wallet token deposit
+
+## WALLET.TRANSFER
+
+The data object is expected to have the same structure as the response from the [Retrieve a crypto transfer endpoint](/api-reference/wallet/retrieve-a-crypto-transfer)
+
+```json
+{
+  "eventId": "evt_195714a3de340e5bca",
+  "eventCategory": "WALLET",
+  "eventType": "WALLET.TRANSFER.CREATE",
+  "eventAction": "CREATE",
+  "data": {
+    "transferType": "WALLET.TRANSFER",
+    "transferDetails": {
+      "id": "2d9fcb48-e759-4990-b982-7349a5ccd9bb",
+      "chain": "POLYGON_AMOY",
+      "amount": 10,
+      "source": {
+        "user": {
+          "email": "william.yang@hifibridge.com",
+          "lastName": "Yang",
+          "firstName": "William",
+          "businessName": null
+        },
+        "userId": "c5a11cdb-2696-4a2e-ac58-3e17fb230288",
+        "walletType": "INDIVIDUAL",
+        "walletAddress": "0xa8A642FBA80749318036C97344fC73aE0B64c608"
+      },
+      "status": "CREATED",
+      "receipt": {
+        "transactionHash": null,
+        "userOpHash": null
+      },
+      "currency": "usdHifi",
+      "createdAt": "2025-03-07T15:47:25.483515+00:00",
+      "requestId": "f04e5852-a575-4834-80bf-48443008c21f",
+      "updatedAt": "2025-03-07T15:47:25.652+00:00",
+      "destination": {
+        "user": {
+          "email": "william.yang@hifibridge.com",
+          "lastName": "Yang",
+          "firstName": "William",
+          "businessName": null
+        },
+        "userId": "c5a11cdb-2696-4a2e-ac58-3e17fb230288",
+        "walletAddress": "0xa8A642FBA80749318036C97344fC73aE0B64c608"
+      },
+      "developerFee": null,
+      "failedReason": null,
+      "contractAddress": "0x545F651965F3322FDa6232F010Df37Ab41969505",
+      "amountIncludeDeveloperFee": null
+    }
+  },
+  "createdAt": "2025-03-07T15:47:25.819Z",
+  "timestamp": "2025-03-07T15:47:40.186Z",
+  "version": "v2"
+}
+```
+
+## WALLET.BRIDGE
+
+The data object is expected to have the same structure as the response from the [Retrieve a bridging request endpoint](/api-reference/wallet/retrieve-a-bridging-request)
+
+```json
+{
+  "eventId": "evt_195714a3de340e5bca",
+  "eventCategory": "WALLET",
+  "eventType": "WALLET.BRIDGE.CREATE",
+  "eventAction": "CREATE",
+  "data": {
+    "transferType": "WALLET.BRIDGE",
+    "transferDetails": {
+      "id": "a93b33b8-f431-4651-9392-7ddaf1b38de2",
+      "fee": null,
+      "amount": 1,
+      "source": {
+        "chain": "POLYGON_AMOY",
+        "userId": "edb8da48-577d-45af-b3a3-57434acf552e",
+        "currency": "usdc",
+        "walletAddress": "0x9ebE31A99c06704Ca55A1bbC0849733f94A07a75"
+      },
+      "status": "OPEN_QUOTE",
+      "createdAt": "2025-02-26T05:11:53.293447+00:00",
+      "requestId": "bc9a8654-577e-4f6f-9d5a-e3130ae83d7d",
+      "updatedAt": "2025-02-26T05:11:53.293447+00:00",
+      "destination": {
+        "chain": "ETHEREUM_TESTNET",
+        "userId": "edb8da48-577d-45af-b3a3-57434acf552e",
+        "currency": "usdc",
+        "walletAddress": "0x8f9cdD3c613dcDba5A2646Fa9193a62a3F938aaf"
+      },
+      "failedReason": null,
+      "quoteInformation": {
+        "rate": "1",
+        "railFee": {
+          "amount": "0",
+          "currency": "usdc"
+        },
+        "sendNet": {
+          "amount": "1.00",
+          "currency": "usdc"
+        },
+        "expiresAt": "2025-02-27T05:11:53.293Z",
+        "sendGross": {
+          "amount": "1.00",
+          "currency": "usdc"
+        },
+        "receiveNet": {
+          "amount": "1.00",
+          "currency": "usdc"
+        },
+        "receiveGross": {
+          "amount": "1.00",
+          "currency": "usdc"
+        }
+      }
+    }
+  },
+  "createdAt": "2025-03-07T15:47:25.819Z",
+  "timestamp": "2025-03-07T15:47:40.186Z",
+  "version": "v2"
+}
+```
+
+## WALLET.TOKEN.BALANCE.UPDATE
+
+<Note>Currently only USDC/USDT are supported</Note>
+
+```json
+{
+  "eventId": "evt_195714a3de340webca",
+  "eventCategory": "WALLET",
+  "eventType": "WALLET.TOKEN.BALANCE.UPDATE",
+  "eventAction": "UPDATE",
+  "data": {
+    "id": "2e084846-00d6-5e4c-806f-eac45e197108",
+    "userId": "f4c99c2f-ce05-4f61-8ed6-9064a5689197",
+    "wallet": {
+      "id": "24b4917d-694e-4d81-ace8-9ba5261b6f4e",
+      "chain": "POLYGON",
+      "address": "0x0B95D270400BE4319EAFbfDD82F6C38B59ab54Ef",
+      "walletType": "INDIVIDUAL"
+    },
+    "transaction": {
+      "type": "DEPOSIT",
+      "chain": "POLYGON_AMOY",
+      "amount": "19",
+      "status": "COMPLETED",
+      "currency": "usdc",
+      "rawAmount": "19000000",
+      "unitAmount": "19000000",
+      "sourceAddress": "0x0B95D270400BE4319EAFbfDD82F6C38B59ab54Ef",
+      "contractAddress": "0x41e94eb019c0762f9bfcf9fb1e58725bfb0e7582",
+      "transactionHash": "0xe5284c4cb35ae9b5eb0ae23b840032f320b87b63f8967ee9b67ee09dfe6a194a",
+      "destinationAddress": "0x0B95D270400BE4319EAFbfDD82F6C38B59ab54Ef"
+    }
+  },
+  "createdAt": "2025-03-07T15:47:25.819Z",
+  "timestamp": "2025-03-07T15:47:40.186Z",
+  "version": "v2"
+}
+```

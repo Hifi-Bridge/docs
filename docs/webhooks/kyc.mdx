@@ -1,0 +1,195 @@
+---
+title: "KYC"
+---
+
+You can expect to receive KYC webhook events whenever you update a user's KYC data, submit KYC to unlock a rail, or receive KYC status updates for any rail you've submitted.
+
+## Types
+
+- **KYC.DATA.UPDATE**: Updates to the user's KYC data.
+- **KYC.STATUS.CREATE**: Submission of the user's KYC status for any rail.
+- **KYC.STATUS.UPDATE**: Update of the user's KYC status for any rail.
+- **KYC_LINK.CREATE**: Creation of a KYC Link.
+- **KYC_LINK.UPDATE**: Submission of a KYC Link.
+
+## KYC.DATA
+
+The data object is expected to have the same structure as the response from the [Get KYC Data endpoint](/api-reference/kyc/get-kyc-data).
+
+```json
+{
+  "eventId": "evt_19571191645da9be1",
+  "eventCategory": "KYC",
+  "eventType": "KYC.DATA.UPDATE",
+  "eventAction": "UPDATE",
+  "data": {
+    "userId": "c5a11cdb-2696-4a2e-ac58-3e17fb230288",
+    "kycInfo": {
+      "type": "individual",
+      "email": "william.yang@hifibridge.com",
+      "phone": null,
+      "idType": null,
+      "address": {
+        "city": "New York",
+        "country": "USA",
+        "postalCode": "12345",
+        "addressLine1": "123 Main St.",
+        "stateProvinceRegion": "NY"
+      },
+      "purpose": null,
+      "idNumber": null,
+      "lastName": "Yang",
+      "firstName": "William",
+      "govIdType": null,
+      "ipAddress": null,
+      "middleName": null,
+      "dateOfBirth": "2000-01-16T00:00:00+00:00",
+      "govIdNumber": null,
+      "nationality": null,
+      "govIdBackUrl": null,
+      "govIdCountry": null,
+      "govIdFrontUrl": null,
+      "lastNameLocal": null,
+      "countryOfBirth": null,
+      "firstNameLocal": null,
+      "middleNameLocal": null,
+      "additionalIdType": null,
+      "govIdHandHoldUrl": null,
+      "supplementaryUrl": null,
+      "govIdIssuanceDate": null,
+      "proofOfAddressUrl": null,
+      "supplementaryInfo": null,
+      "additionalIdNumber": null,
+      "proofOfAddressType": null,
+      "sofEuQuestionnaire": null,
+      "govIdExpirationDate": null,
+      "govIdIssuanceAuthority": null,
+      "productServiceCategory": null,
+      "taxIdentificationNumber": null
+    }
+  },
+  "createdAt": "2025-03-07T14:53:44.443Z",
+  "timestamp": "2025-03-07T14:54:00.326Z",
+  "version": "v2"
+}
+```
+
+## KYC.STATUS
+
+The data object is expected to have the same structure as the response from the [Get KYC Status endpoint](/api-reference/kyc/get-kyc-status).
+
+```json
+{
+  "eventId": "evt_195711af0545510a78",
+  "eventCategory": "KYC",
+  "eventType": "KYC.STATUS.CREATE",
+  "eventAction": "CREATE",
+  "data": {
+    "userId": "c5a11cdb-2696-4a2e-ac58-3e17fb230288",
+    "SOUTH_AMERICA_LIGHT": {
+      "limit": {},
+      "onRamp": {
+        "brl": {
+          "pix": {
+            "status": "PENDING",
+            "message": "",
+            "warnings": []
+          }
+        }
+      },
+      "status": "PENDING",
+      "message": "",
+      "offRamp": {
+        "ars": {
+          "transfers": {
+            "status": "PENDING",
+            "message": "",
+            "warnings": []
+          }
+        },
+        "brl": {
+          "pix": {
+            "status": "PENDING",
+            "message": "",
+            "warnings": []
+          }
+        },
+        "cop": {
+          "achCop": {
+            "status": "PENDING",
+            "message": "",
+            "warnings": []
+          }
+        },
+        "mxn": {
+          "spei": {
+            "status": "PENDING",
+            "message": "",
+            "warnings": []
+          }
+        }
+      },
+      "warnings": []
+    }
+  },
+  "createdAt": "2025-03-07T14:55:45.780Z",
+  "timestamp": "2025-03-07T14:56:00.355Z",
+  "version": "v2"
+}
+```
+
+## KYC_LINK.CREATE
+
+This webhook event will be emitted upon KYC Link creation by the developer.
+
+```json
+{
+  "data": {
+    "id": "ec3da5dc-d498-4034-aefc-5f51e589f15f",
+    "rails": ["ON_CHAIN"],
+    "valid": true,
+    "userId": null,
+    "userType": "individual",
+    "createdAt": "2025-04-29T01:58:35.56784+00:00",
+    "expiredAt": "2025-05-04T01:58:35.528+00:00",
+    "templateId": "2fb2da24-472a-4e5b-b160-038d9dc82a40",
+    "redirectUrl": null,
+    "sessionToken": "ec9d38de822864bb34d4e68f8466487afb31bf0d015e9c4d2d1bf80f4f67f4764316e8f5f05a30c7a312b11b36d5"
+  },
+  "eventId": "evt_1967f4477811e8fa82",
+  "version": "v2",
+  "createdAt": "2025-04-29T01:58:35.689Z",
+  "eventType": "KYC_LINK.CREATE",
+  "timestamp": "2025-04-29T01:58:40.235Z",
+  "eventAction": "CREATE",
+  "eventCategory": "KYC_LINK"
+}
+```
+
+## KYC_LINK.UPDATE
+
+This webhook event will be emitted upon KYC Link Submission via the hosted page by the end-user.
+
+```json
+{
+  "data": {
+    "id": "ec3da56c-d498-4034-aefc-5f51e589f15f",
+    "rails": ["ON_CHAIN"],
+    "valid": false,
+    "userId": "857e9b69-a629-4e86-9cf3-ec4bcf2e38b4",
+    "userType": "individual",
+    "createdAt": "2025-04-29T01:58:35.56784+00:00",
+    "expiredAt": "2025-05-04T01:58:35.528+00:00",
+    "templateId": "2fb2da24-472a-4e5b-b160-038d9dc82a40",
+    "redirectUrl": null,
+    "sessionToken": "ec9d38de822864bb34d48466487afb31bf0d015e9c4d2d1bf80f4f67f4764316e8f5f05a30c7a312b11b36d5"
+  },
+  "eventId": "evt_1967f45caef15027c0",
+  "version": "v2",
+  "createdAt": "2025-04-29T02:00:02.586Z",
+  "eventType": "KYC_LINK.UPDATE",
+  "timestamp": "2025-04-29T02:00:20.440Z",
+  "eventAction": "UPDATE",
+  "eventCategory": "KYC_LINK"
+}
+```

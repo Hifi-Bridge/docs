@@ -1,0 +1,74 @@
+---
+title: "Onramp"
+---
+
+You can expect to receive webhook events whenever an onramp transfer is created or its status is updated.
+
+## Types
+
+- **ONRAMP.CREATE**: Creation for onramps.
+- **ONRAMP.UPDATE**: Updates for onramps.
+
+## Sandbox
+
+<Note>
+  In the Sandbox environment, we simulate the transaction status update process
+  by sending a series of webhook events.
+</Note>
+
+## Data
+
+The data object is expected to have the same structure as the response from the [Retrieve an onramp endpoint](/api-reference/onramp/retrieve-an-onramp)
+
+```json
+{
+  "eventId": "evt_1957139631552d0e38",
+  "eventCategory": "ONRAMP",
+  "eventType": "ONRAMP.CREATE",
+  "eventAction": "CREATE",
+  "data": {
+    "transferType": "ONRAMP",
+    "transferDetails": {
+      "id": "d938f457-5f8f-43d8-9828-134f6112b429",
+      "source": {
+        "user": {
+          "email": "william.yang@hifibridge.com",
+          "lastName": "Yang",
+          "firstName": "William",
+          "businessName": null
+        },
+        "amount": 1000,
+        "userId": "c5a11cdb-2696-4a2e-ac58-3e17fb230288",
+        "currency": "usd",
+        "accountId": null
+      },
+      "status": "CREATED",
+      "receipt": {
+        "transactionHash": null
+      },
+      "createdAt": "2025-03-07T15:29:00.746195+00:00",
+      "requestId": "d10d4a8a-4b06-463e-8c12-0ef12c81e961",
+      "updatedAt": "2025-03-07T15:29:00.991+00:00",
+      "destination": {
+        "user": {
+          "email": "william.yang@hifibridge.com",
+          "lastName": "Yang",
+          "firstName": "William",
+          "businessName": null
+        },
+        "chain": "POLYGON_AMOY",
+        "amount": null,
+        "userId": "c5a11cdb-2696-4a2e-ac58-3e17fb230288",
+        "currency": "usdhifi",
+        "walletAddress": null
+      },
+      "developerFee": null,
+      "failedReason": null,
+      "quoteInformation": null
+    }
+  },
+  "createdAt": "2025-03-07T15:29:01.235Z",
+  "timestamp": "2025-03-07T15:29:21.008Z",
+  "version": "v2"
+}
+```

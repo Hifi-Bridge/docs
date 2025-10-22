@@ -1,0 +1,75 @@
+---
+title: "Offramp"
+---
+
+You can expect to receive webhook events whenever an offramp transfer is created or its status is updated.
+
+## Types
+
+- **OFFRAMP.CREATE**: Creation for offramps.
+- **OFFRAMP.UPDATE**: Updates for offramps.
+
+## Sandbox
+
+<Note>
+  In the Sandbox environment, we simulate the transaction status update process
+  by sending a series of webhook events.
+</Note>
+
+## Data
+
+The data object is expected to have the same structure as the response from the [Retrieve an offramp endpoint](/api-reference/offramp/retrieve-an-offramp).
+
+```json
+{
+  "eventId": "evt_195713eb5185a84f7d",
+  "eventCategory": "OFFRAMP",
+  "eventType": "OFFRAMP.CREATE",
+  "eventAction": "CREATE",
+  "data": {
+    "transferType": "OFFRAMP",
+    "transferDetails": {
+      "id": "07f217dc-f196-4835-ba31-21e1360652d3",
+      "source": {
+        "user": {
+          "email": "william.yang@hifibridge.com",
+          "lastName": "Yang",
+          "firstName": "William",
+          "businessName": null
+        },
+        "chain": "POLYGON_AMOY",
+        "amount": 100,
+        "userId": "c5a11cdb-2696-4a2e-ac58-3e17fb230288",
+        "currency": "usdHifi",
+        "walletAddress": "0xa8A642FBA80749318036C97344fC73aE0B64c608"
+      },
+      "status": "CREATED",
+      "receipt": {
+        "transactionHash": null
+      },
+      "createdAt": "2025-03-07T15:34:49.454729+00:00",
+      "requestId": "45eac735-e4cb-422d-8b5d-fd40af31fbec",
+      "updatedAt": "2025-03-07T15:34:49.454729+00:00",
+      "destination": {
+        "user": {
+          "email": "william.yang@hifibridge.com",
+          "lastName": "Yang",
+          "firstName": "William",
+          "businessName": null
+        },
+        "amount": 0,
+        "userId": "c5a11cdb-2696-4a2e-ac58-3e17fb230288",
+        "currency": "brl",
+        "accountId": "d45ac419-c460-438e-ba63-6ffb706c9683"
+      },
+      "developerFee": null,
+      "failedReason": null,
+      "transactionHash": null,
+      "quoteInformation": null
+    }
+  },
+  "createdAt": "2025-03-07T15:34:49.913Z",
+  "timestamp": "2025-03-07T15:35:00.318Z",
+  "version": "v2"
+}
+```

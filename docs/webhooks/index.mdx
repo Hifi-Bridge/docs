@@ -1,0 +1,144 @@
+---
+title: "Webhooks"
+sidebarTitle: "Overview"
+---
+
+## Why Use Webhooks
+
+When integrating with HIFI's stablecoin infrastructure, it is essential for your application to respond to events in real time. By doing so, your backend systems can promptly take appropriate actions based on events occurring within your HIFI accounts.
+
+To start receiving webhook events, register a webhook endpoint. Once registered, HIFI will push real-time event data to your application's webhook endpoint whenever an event occurs in your HIFI account. Webhook events are delivered via HTTPS as a JSON payload containing an Event object.
+
+Receiving webhook events is particularly valuable for monitoring asynchronous events such as when a transaction is confirmed or a user's KYC status for a rail is updated.
+
+## Event Overview
+
+By registering webhook endpoints, you enable HIFI to automatically send Event objects as part of POST requests to the registered webhook endpoint hosted by your application. Once your webhook endpoint receives an Event, your application can execute backend actions, such as updating transaction records or notifying users about the event.
+
+Below is an example of an event you will receive after successfully creating a HIFI user:
+
+```json
+{
+  "eventId": "evt_1957117404034e3ade",
+  "eventCategory": "USER",
+  "eventType": "USER.STATUS.CREATE",
+  "eventAction": "CREATE",
+  "data": {
+    "id": "c5a11cdb-2696-4a2e-ac58-3e17fb230288",
+    "name": "William Yang",
+    "type": "individual",
+    "email": "william.yang@hifibridge.com",
+    "wallets": {
+      "INDIVIDUAL": {
+        "POLYGON_AMOY": {
+          "address": "0xa8A642FBA80749318036C97344fC73aE0B64c608"
+        },
+        "ETHEREUM_TESTNET": {
+          "address": "0x5743Af611b44F0934A7eF0cCE6877879375824D9"
+        }
+      }
+    }
+  },
+  "createdAt": "2025-03-07T14:51:44.099Z",
+  "timestamp": "2025-03-07T14:52:00.375Z",
+  "version": "v2"
+}
+```
+
+## Retry Behavior
+
+HIFI will attempt to re-deliver a given event to your webhook endpoint for up to 24 hours using exponential backoff if it does not receive a 2xx status from the webhook endpoint.
+
+<Info>Retry interval: 60 seconds - 1 hour</Info>
+
+If your endpoint is disabled or deleted when HIFI attempts a retry, future retries of that event will be prevented. However, if you disable and then re-enable the webhook endpoint before HIFI retries, you can still expect future retry attempts.
+
+## Data Integrity
+
+After activating your webhook, you will receive a webhook secret. This secret is used to sign the payload using JWT, and the signature is included in the Authorization header of the request. You must verify this signature to ensure the authenticity of the event. By validating the JWT signature with your webhook secret, you can confirm that the event was sent by HIFI and that the data has not been tampered with during transmission. This verification step is essential for maintaining the security and integrity of your webhook integration.
+
+```bash
+# Replace \n if needed
+WEBHOOK_PUBLIC_KEY="-----BEGIN PUBLIC KEY-----\n...........\n-----END PUBLIC KEY-----\n"
+```
+
+<Tabs>
+  <Tab title="Python">
+    ```python
+    from flask import Flask, request, jsonify
+    import jwt
+
+    app = Flask(__name__)
+    port = 3000  # Replace with your desired port number
+    webhook_public_key = '''your_webhook_public_key'''  # Replace with your actual webhook public key
+
+    @app.route('/webhook', methods=['POST'])
+    def webhook():
+        auth_header = request.headers.get('Authorization')
+        if not auth_header:
+            return 'Authorization header is missing', 401
+
+        jwt_token = auth_header.split(' ')[1]
+
+        try:
+            decoded = jwt.decode(jwt_token, webhook_public_key, algorithms=['RS256'])
+            print('Token is valid. Decoded payload:', decoded)
+            # Process the decoded payload as needed
+            return '', 200
+        except jwt.ExpiredSignatureError:
+            print('Token has expired')
+            return 'Token has expired', 401
+        except jwt.InvalidTokenError as e:
+            print('Failed to verify token:', str(e))
+            return 'Token verification failed', 401
+
+    if __name__ == '__main__':
+        app.run(port=port)
+    ```
+
+  </Tab>
+
+  <Tab title="Node.js">
+    ```javascript
+    const express = require("express");
+    const jwt = require("jsonwebtoken");
+
+    const app = express();
+    const port = 3000; // Replace with your desired port number
+    const webhookPublicKey = `your_webhook_public_key`; // Replace with your actual webhook public key
+
+    app.use(express.json());
+
+    app.post("/webhook", (req, res) => {
+      const authHeader = req.headers.authorization;
+      if (!authHeader) {
+        return res.status(401).send("Authorization header is missing");
+      }
+
+      const jwtToken = authHeader.split(" ")[1];
+
+      try {
+        const decoded = jwt.verify(jwtToken, webhookPublicKey, {
+          algorithms: ["RS256"],
+        });
+        console.log("Token is valid. Decoded payload:", decoded);
+        // Process the decoded payload as needed
+        res.status(200).send("");
+      } catch (error) {
+        if (error.name === "TokenExpiredError") {
+          console.log("Token has expired");
+          return res.status(401).send("Token has expired");
+        } else {
+          console.log("Failed to verify token:", error.message);
+          return res.status(401).send("Token verification failed");
+        }
+      }
+    });
+
+    app.listen(port, () => {
+      console.log(`Server running on port ${port}`);
+    });
+    ```
+
+  </Tab>
+</Tabs>

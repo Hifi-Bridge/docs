@@ -147,7 +147,18 @@
                 "group": "Dashboard",
                 "pages": ["docs/dashboard/index", "docs/dashboard/roles"]
               },
-              "docs/webhooks",
+              {
+                "group": "Webhooks",
+                "pages": [
+                  "docs/webhooks/index",
+                  "docs/webhooks/user",
+                  "docs/webhooks/kyc",
+                  "docs/webhooks/account",
+                  "docs/webhooks/onramp",
+                  "docs/webhooks/offramp",
+                  "docs/webhooks/wallet"
+                ]
+              },
               "docs/sandbox"
             ]
           },
