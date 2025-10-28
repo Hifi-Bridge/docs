@@ -29,30 +29,43 @@ The USD rail for business users requires comprehensive KYB (Know Your Business) 
 
 ## Source of Funds and Expected Use Questionnaire
 
-| Fields                      | Required | Description                                                                                |
-| --------------------------- | -------- | ------------------------------------------------------------------------------------------ |
-| **actAsIntermediary**       | ❌ No    | Is the customer acting as an intermediary for a third party?                               |
-| **employmentStatus**        | ❌ No    | What is the customer's current employment status?                                          |
-| **expectedMonthlyPayments** | ❌ No    | What is the expected monthly volume of payments the customer will be sending or receiving? |
-| **mostRecentOccupation**    | ❌ No    | What is the customer's most recent occupation?                                             |
-| **primaryPurpose**          | ❌ No    | What is the primary purpose of the customer's account?                                     |
-| **primaryPurposeOther**     | ❌ No    | Required if the primary purpose is 'other'                                                 |
-| **sourceOfFunds**           | ❌ No    | What is the source of funds for the customer's account?                                    |
+| Fields                                | Required | Description                                              |
+| ------------------------------------- | -------- | -------------------------------------------------------- |
+| **estimatedAnnualRevenueUsd**         | ❌ No    | Estimated annual revenue in USD                          |
+| **expectedMonthlyPaymentsUsd**        | ❌ No    | Expected monthly volume of payments in USD               |
+| **operatesInProhibitedCountries**     | ❌ No    | Does the business operate in prohibited countries?       |
+| **primaryPurpose**                    | ❌ No    | What is the primary purpose of the customer's account?   |
+| **primaryPurposeOther**               | ❌ No    | Required if the primary purpose is 'other'               |
+| **highRiskActivities**                | ❌ No    | List of high-risk activities the business is involved in |
+| **sourceOfFunds**                     | ❌ No    | What is the source of funds for the customer's account?  |
+| **sourceOfFundsDescription**          | ❌ No    | Additional description of the source of funds            |
+| **transmitsCustomerFunds**            | ❌ No    | Does the business transmit customer funds?               |
+| **transmitsCustomerFundsDescription** | ❌ No    | Description of how customer funds are transmitted        |
+| **conductsMoneyServices**             | ❌ No    | Does the business conduct money services?                |
+| **customerFundsDescription**          | ❌ No    | Description of how customer funds are handled            |
 
 ## Documents
 
-| Document Group       | Required | Min Count | Document Types                               |
-| -------------------- | -------- | --------- | -------------------------------------------- |
-| **identity**         | ✅ Yes   | 1         | DRIVERS, ID_CARD, PASSPORT, RESIDENCE_PERMIT |
-| **proofOfResidence** | ❌ No    | 1         | PROOF_OF_ADDRESS                             |
+| Document Group         | Required | Min Count | Document Types                                                               |
+| ---------------------- | -------- | --------- | ---------------------------------------------------------------------------- |
+| **legalPresence**      | ✅ Yes   | 1         | CERTIFICATE_OF_INCORPORATION, ARTICLES_OF_ASSOCIATION, BUSINESS_REGISTRATION |
+| **ownershipStructure** | ✅ Yes   | 1         | SHARE_STRUCTURE, UBO_DECLARATION, PROOF_OF_OWNERSHIP                         |
+| **companyDetails**     | ❌ No    | 1         | CERTIFICATE_OF_REGISTRATION, FORMATION_DOCUMENT                              |
+| **controlStructure**   | ❌ No    | 1         | PARTNERSHIP_DEED, PARTNERSHIP_MINUTES, CERTIFICATE_OF_INCUMBENCY             |
 
-| Document Type    | Description                  |
-| ---------------- | ---------------------------- |
-| DRIVERS          | Driving license              |
-| ID_CARD          | ID card                      |
-| PASSPORT         | Passport                     |
-| RESIDENCE_PERMIT | Residence permit or document |
-| PROOF_OF_ADDRESS | Proof of address document    |
+| Document Type                | Description                             |
+| ---------------------------- | --------------------------------------- |
+| CERTIFICATE_OF_INCORPORATION | Certificate of incorporation document   |
+| ARTICLES_OF_ASSOCIATION      | Articles of association document        |
+| BUSINESS_REGISTRATION        | Business registration document          |
+| SHARE_STRUCTURE              | Share structure document                |
+| UBO_DECLARATION              | Ultimate beneficial owner declaration   |
+| PROOF_OF_OWNERSHIP           | Proof of ownership document             |
+| CERTIFICATE_OF_REGISTRATION  | Certificate of registration document    |
+| FORMATION_DOCUMENT           | Formation document                      |
+| PARTNERSHIP_DEED             | Partnership deed document               |
+| PARTNERSHIP_MINUTES          | Partnership minutes of meeting document |
+| CERTIFICATE_OF_INCUMBENCY    | Certificate of incumbency document      |
 
 ## Ultimate Beneficial Owners (UBOs)
 
