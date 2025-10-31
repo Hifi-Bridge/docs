@@ -1,7 +1,7 @@
 /* Font Face Declaration for Rhithmic Sans */
 @font-face {
   font-family: "Rhithmic Sans";
-  src: url("http://dashboard.hifibridge.com/fonts/rhithmic/RhithmicSans-Regular.woff2")
+  src: url("http://dashboard.hifi.com/fonts/rhithmic/RhithmicSans-Regular.woff2")
     format("woff2");
   font-weight: normal;
   font-style: normal;
@@ -11,7 +11,7 @@
 /* Font Face Declaration for Space Mono */
 @font-face {
   font-family: "Space Mono";
-  src: url("http://dashboard.hifibridge.com/fonts/rhithmic/SpaceMono-Regular.woff2")
+  src: url("http://dashboard.hifi.com/fonts/rhithmic/SpaceMono-Regular.woff2")
     format("woff2");
   font-weight: normal;
   font-style: normal;

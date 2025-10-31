@@ -10,24 +10,24 @@
   },
   "fonts": {
     "family": "Rhithmic Sans",
-    "source": "http://dashboard.hifibridge.com/fonts/rhithmic/RhithmicSans-Regular.woff2",
+    "source": "http://dashboard.hifi.com/fonts/rhithmic/RhithmicSans-Regular.woff2",
     "format": "woff2",
     "weight": 400,
     "heading": {
       "family": "Rhithmic Sans",
-      "source": "http://dashboard.hifibridge.com/fonts/rhithmic/RhithmicSans-Regular.woff2",
+      "source": "http://dashboard.hifi.com/fonts/rhithmic/RhithmicSans-Regular.woff2",
       "format": "woff2",
       "weight": 400
     },
     "body": {
       "family": "Inter",
-      "source": "http://dashboard.hifibridge.com/fonts/inter/Inter-Regular.woff2",
+      "source": "http://dashboard.hifi.com/fonts/inter/Inter-Regular.woff2",
       "format": "woff2",
       "weight": 400
     },
     "code": {
       "family": "Space Mono",
-      "source": "http://dashboard.hifibridge.com/fonts/rhithmic/SpaceMono-Regular.woff2",
+      "source": "http://dashboard.hifi.com/fonts/rhithmic/SpaceMono-Regular.woff2",
       "format": "woff2",
       "weight": 400
     }
@@ -46,106 +46,29 @@
         "tab": "Docs",
         "pages": [
           {
-            "group": "Platform",
+            "group": "Get started",
             "pages": [
               "docs/overview",
-              {
-                "group": "Compliance",
-                "pages": [
-                  "docs/compliance/currencies",
-                  "docs/compliance/regions",
-                  "docs/compliance/industries",
-                  {
-                    "group": "Documents",
-                    "pages": [
-                      "docs/compliance/documents/overview",
-                      "docs/compliance/documents/identity",
-                      "docs/compliance/documents/supported-identity-documents",
-                      "docs/compliance/documents/proof-of-address"
-                    ]
-                  },
-                  {
-                    "group": "References",
-                    "pages": [
-                      "docs/compliance/references/business-industries",
-                      "docs/compliance/references/occupations",
-                      "docs/compliance/references/account-purposes",
-                      "docs/compliance/references/export-categories",
-                      "docs/compliance/references/product-service-categories"
-                    ]
-                  }
-                ]
-              },
-              {
-                "group": "Rails",
-                "pages": [
-                  "docs/rails/overview",
-                  "docs/rails/usd-individual",
-                  "docs/rails/usd-business",
-                  "docs/rails/other-rails"
-                ]
-              }
+              "docs/quickstart",
+              "docs/authentication",
+              "docs/sandbox",
+              "docs/postman"
             ]
           },
           {
-            "group": "Models",
+            "group": "Core concepts",
             "pages": [
+              "docs/users/index",
+              "docs/wallets/index",
+              "docs/transfers/onramps",
+              "docs/transfers/offramps",
               {
-                "group": "Users",
-                "pages": ["docs/users/index", "docs/users/kyc"]
-              },
-              {
-                "group": "Wallets",
+                "group": "Onchain",
                 "pages": [
-                  "docs/wallets/index",
-                  "docs/wallets/balances",
-                  "docs/wallets/deposits"
-                ]
-              },
-              {
-                "group": "Transfers",
-                "pages": [
-                  "docs/transfers/wallets",
-                  "docs/transfers/onramps",
-                  "docs/transfers/offramps",
+                  "docs/transfers/wallet-transfers",
                   "docs/transfers/swaps",
                   "docs/transfers/bridging"
                 ]
-              }
-            ]
-          },
-          {
-            "group": "Features",
-            "pages": [
-              "docs/users/features/kyc-link",
-              "docs/transfers/features/batch-transfers",
-              "docs/transfers/features/virtual-accounts",
-              "docs/transfers/features/transfer-approvals",
-              "docs/transfers/features/developer-fees",
-              "docs/transfers/features/settlement-rules"
-            ]
-          }
-        ]
-      },
-      {
-        "tab": "Guides",
-        "pages": [
-          "guides/quickstart",
-          {
-            "group": "Integration",
-            "pages": [
-              {
-                "group": "API",
-                "pages": [
-                  "docs/api/authentication",
-                  "docs/api/postman",
-                  "docs/api/errors",
-                  "docs/api/responses"
-                ]
-              },
-              {
-                "group": "Dashboard",
-                "pages": ["docs/dashboard/index", "docs/dashboard/roles"]
               },
               {
                 "group": "Webhooks",
@@ -158,24 +81,46 @@
                   "docs/webhooks/offramp",
                   "docs/webhooks/wallet"
                 ]
+              }
+            ]
+          },
+          {
+            "group": "Features",
+            "pages": [
+              "docs/features/kyc-link",
+              "docs/features/virtual-accounts",
+              "docs/features/batch-transfers",
+              "docs/features/transfer-approvals",
+              "docs/features/developer-fees",
+              "docs/features/settlement-rules"
+            ]
+          },
+          {
+            "group": "Compliance",
+            "pages": [
+              "docs/compliance/currencies",
+              "docs/compliance/rails",
+              "docs/compliance/regions",
+              "docs/compliance/industries",
+              {
+                "group": "Documents",
+                "pages": [
+                  "docs/compliance/documents/overview",
+                  "docs/compliance/documents/identity",
+                  "docs/compliance/documents/supported-identity-documents",
+                  "docs/compliance/documents/proof-of-address"
+                ]
               },
-              "docs/sandbox"
-            ]
-          },
-          {
-            "group": "USD Rail",
-            "pages": [
-              "guides/usd-rail/overview",
-              "guides/usd-rail/submit-kyc",
-              "guides/usd-rail/submit-kyb"
-            ]
-          },
-          {
-            "group": "Use Cases",
-            "pages": [
-              "guides/use-cases/stablecoin-access",
-              "guides/use-cases/wallet-provisioning",
-              "guides/use-cases/global-payments"
+              {
+                "group": "References",
+                "pages": [
+                  "docs/compliance/references/business-industries",
+                  "docs/compliance/references/occupations",
+                  "docs/compliance/references/account-purposes",
+                  "docs/compliance/references/export-categories",
+                  "docs/compliance/references/product-service-categories"
+                ]
+              }
             ]
           }
         ]
@@ -210,7 +155,7 @@
     "primary": {
       "type": "button",
       "label": "Dashboard",
-      "href": "https://dashboard.hifibridge.com"
+      "href": "https://dashboard.hifi.com"
     }
   },
   "footer": {

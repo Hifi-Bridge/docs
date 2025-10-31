@@ -2,31 +2,35 @@
 title: "Quickstart"
 ---
 
-In this guide, we'll walk you through the process of:
+In this guide, we'll show you how to use our **Sandbox API** to simulate money movement. You'll gain a clear understanding of how our endpoints work and how to integrate them into your application.
 
-- Creating a user
-- Submitting KYC to unlock a rail
-- Creating a virtual account for deposits
-- Simulating onramps and offramps
-
-By following along, you'll gain a clear understanding of how our endpoints work and how to integrate them into your application.
-
-<Info>
-  To get started, you'll need a Sandbox API key, which you can get from your
-  Dashboard. Learn how to [get API keys](/docs/api/authentication).
-</Info>
+<Note>
+  Before you start, get your API keys from the Dashboard to authenticate
+  requests. Learn how to [get API keys](/docs/authentication).
+</Note>
 
 ## User
 
-A user object can represent either an individual or a business. All the available rails, accounts, onramps, offramps, transfer, etc, are associated with a user object.
+The **User** object represents an individual or business on HIFI. All transaction activity is associated with a user object.
 
-To create a HIFI user, you need to provide a basic set of user information. The user must also review and accept HIFI's Terms and Service to obtain a valid signed agreement ID, which signifies a legally binding agreement to use our service.
+Creating a user is a two-step process.
+
+<Steps>
+  <Step title="Accept Terms of Service">
+    Generate a Terms of Service link and have the user sign it. You will receive
+    a signed agreement ID upon acceptance.
+  </Step>
+  <Step title="Create User">
+    Use the signed agreement ID along with the user's basic information to
+    create the user on HIFI.
+  </Step>
+</Steps>
 
 A successfully created user will have provisioned wallets and be granted access to our on-chain functionalities.
 
-### Get a Valid Signed Agreement ID
+### Agree to Terms of Service
 
-To get HIFI's Terms and Service page, you can call the [Generate Terms of Service Link](https://docs.hifibridge.com/v2/reference/post_v2-tos-link) endpoint. You will need to pass in an `idempotencyKey`, which can be any [UUID](https://www.uuidgenerator.net/). This `idempotencyKey` will be used as your signed agreement ID.
+To get HIFI's Terms of Service, you can call the [Generate Terms of Service Link](https://docs.hifibridge.com/v2/reference/post_v2-tos-link) endpoint. You'll need to pass in an `idempotencyKey`, which can be any [UUID](https://www.uuidgenerator.net/). This `idempotencyKey` will be used as your signed agreement ID.
 
 **Request:**
 
@@ -47,21 +51,31 @@ curl --request POST \
 
 ```curl JSON
 {
-  "url": "https://dashboard.hifibridge.com/accept-terms-of-service?sessionToken=536bb03a-8ac9-4ba7-b928-461007ecf6eb&templateId=2fb2da24-472a-4e5b-b160-038d9dc82a40&sandbox=true",
+  "url": "https://dashboard.hifi.com/accept-terms-of-service?sessionToken=536bb03a-8ac9-4ba7-b928-461007ecf6eb&templateId=2fb2da24-472a-4e5b-b160-038d9dc82a40&sandbox=true",
   "signedAgreementId": "8cb49537-bcf9-41b1-8d8c-c9c200d7341b"
 }
 ```
 
-You will get a response object back containing the `url` and the `signedAgreementId`. The `url` directs you to HIFI's Terms of Service page. The `signedAgreementId` is the `idempotencyKey` you passed in, which will be valid only after you accept the Terms of Service.
+You'll get a response object containing the following fields:
 
-<Info>
+<ResponseField name="url" type="string">
+  The URL directing you to HIFI's Terms of Service page. You can customize this
+  page with your logo and text using a templateId.
+</ResponseField>
+
+<ResponseField name="signedAgreementId" type="string">
+  The signed agreement ID, which is the same as the `idempotencyKey` you passed
+  in. This will be valid only after the user accepts the Terms of Service.
+</ResponseField>
+
+<Note>
   HIFI will trigger the `TOS_LINK.UPDATE` webhook event as soon as the user
   clicks the accept button.
-</Info>
+</Note>
 
 ### Create User
 
-Now that we have the user's valid `signedAgreementId` and basic personal information, we can create a user by calling the [Create User](https://docs.hifibridge.com/v2/reference/post_v2-users) endpoint. We have provided all the basic personal information with dummy values in the curl request.
+Now that we have a valid `signedAgreementId`, we can create a user by calling the [Create User](/api-reference/user/create-a-user) endpoint. We've provided all the basic personal information with dummy values in the curl request below.
 
 **Request:**
 
@@ -112,40 +126,56 @@ curl --request POST \
 }
 ```
 
-Let's take a moment to understand the response:
+Congrats! We've successfully created a user with the id: `32051b2f-0798-55a7-9c42-b08da4192c97`. Let's take a look at the response.
 
-- The `id` is the user ID, which should be saved for future API calls for this particular user.
-- The `wallets` object contains all the wallet types and addresses provisioned for the user.
+<ResponseField name="id" type="string" required>
+  The user ID, which should be saved for future API calls for this particular
+  user.
+</ResponseField>
 
-We have successfully created a user with the user id: `32051b2f-0798-55a7-9c42-b08da4192c97`.
+<ResponseField name="wallets" type="object" required>
+  Contains all the wallet types and addresses provisioned for the user.
+</ResponseField>
 
----
+<Info>
+  Once a user is created, HIFI automatically assigns them wallet addresses so
+  you can start moving money onchain.
+</Info>
 
 ## KYC
 
-After successfully creating a user, the user needs to decide which rails to unlock and submit KYC to enable access to those rails. In this guide, we will focus on the USD rail.
+To move money between stablecoins and fiat, you need to provide KYC for the user and unlock a **Rail**. Each rail enables a different set of currencies. In this quickstart, we'll focus on USD.
 
-To read more about the rails we support, click **<u>here</u>**
+<Note>
+  The KYC information requested depends on the rail. Visit our{" "}
+  <a href="/rails">Rails page</a> to learn more about available options.
+</Note>
 
-To unlock, the **USD** rail, follow these steps:
+<Steps>
+  <Step title="Gather KYC Requirements">
+    Consult the documentation or use the Retrieve KYC Requirements endpoint to
+    identify the required information.
+  </Step>
+  <Step title="Update KYC Information">
+    Provide required fields using the Update KYC endpoint.
+  </Step>
+  <Step title="Upload KYC Documents">
+    Upload necessary documents using the Add Documents endpoint.
+  </Step>
+  <Step title="Submit KYC">
+    Once all requirements have been fulfilled, call the Submit KYC endpoint to
+    unlock the rail.
+  </Step>
+  <Step title="Check KYC Status">
+    Use the Retrieve KYC Status endpoint to check for updates.
+  </Step>
+</Steps>
 
-1. Gather the required KYC information for the USD rail by either consulting our KYC documentation or using the Retrieve KYC Requirements endpoint.
-
-2. Update the user's KYC information using the Update KYC Information endpoint.
-
-3. Upload documentation using the Add Documents endpoint.
-
-4. Submit the user's KYC information through the Submit KYC endpoint to unlock the rail.
-
-5. Check the user's KYC status for the USD rail via the Retrieve KYC Status endpoint.
-
-Let's go through each of these steps in detail to unlock the **USD** rail.
+Let's go through each of these steps in detail.
 
 ### Retrieve KYC Requirements
 
-The Retrieve KYC Requirements endpoint provides the required and optional KYC fields needed to unlock a specific rail, as well as any invalid or missing KYC information the user currently holds, assuming they intend to submit KYC for this rail. This information helps identify what needs to be updated via the Update KYC endpoint before submitting KYC for the rail.
-
-Let's get the KYC requirements for **USD** rails by calling the Retrieve KYC Requirements endpoint and passing in **USD** as the rails and the userId.
+First, we need to get the KYC requirements for our user by calling the Retrieve KYC Requirements endpoint with the `userId`.
 
 **Request:**
 
@@ -211,13 +241,20 @@ curl --request GET \
 
 Let's take a moment to understand the response:
 
-- The `required` fields represents all the mandatory KYC information needed for the **USD** rails KYC application.
-- The `optional` fields represents all the additional KYC information that is not mandatory but may be provided for the **USD_EURO** rails KYC application.
-- The `invalid` represent any fields that must be corrected before the KYC application can proceed for the **USD** rail. From the response, we can see that the user still have multiple missing KYC fields that needs to be provided before they can submit their KYC application for the rail.
+<ResponseField
+  name="required"
+  description="Lists all the mandatory KYC information required for the **USD** rail KYC application."
+/>
+<ResponseField
+  name="optional"
+  description="Contains any additional KYC information that is not mandatory but may be supplied, for example, fields that might be needed for other rails such as **USD_EURO**."
+/>
+<ResponseField
+  name="invalid"
+  description="Shows any KYC fields or document groups that are missing or invalid and must be corrected before the user’s KYC application for the **USD** rail can proceed."
+/>
 
 Now that we know the missing KYC fields the user needs to provide for the rail, we can proceed with updating the user's KYC information to address these gaps.
-
-## Update KYC
 
 ### Update KYC Information
 
@@ -355,7 +392,7 @@ curl --request POST \
 
 Great! Now that we have updated all the required KYC information for the user, we can move on to submitting the KYC application.
 
-## Submit KYC
+### Submit KYC
 
 To submit the KYC information the user currently holds for the **USD** rails, we can use the [Submit KYC](https://docs.hifibridge.com/v2/reference/post_v2-users-userid-kyc-submissions) endpoint.
 
@@ -387,7 +424,7 @@ curl --request POST \
 
 After submission, the KYC status will initially be set to `"CREATED"`. The user can either call the [Retrieve KYC Status](https://docs.hifibridge.com/v2/reference/get_v2-users-userid-kyc-status) endpoint or wait for [webhook](https://docs.hifibridge.com/v2/docs/webhooks) events to receive updates on the user's latest KYC status for that rail.
 
-## Retrieve KYC Status
+### Retrieve KYC Status
 
 To get the KYC status for a specific rails, the user can call the [Retrieve KYC Status](https://docs.hifibridge.com/v2/reference/get_v2-users-userid-kyc-status) endpoint.
 
