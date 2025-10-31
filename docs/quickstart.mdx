@@ -239,26 +239,26 @@ curl --request GET \
 }
 ```
 
-Let's take a moment to understand the response:
+Let's take a look at the response.
 
-<ResponseField
-  name="required"
-  description="Lists all the mandatory KYC information required for the **USD** rail KYC application."
-/>
-<ResponseField
-  name="optional"
-  description="Contains any additional KYC information that is not mandatory but may be supplied, for example, fields that might be needed for other rails such as **USD_EURO**."
-/>
-<ResponseField
-  name="invalid"
-  description="Shows any KYC fields or document groups that are missing or invalid and must be corrected before the user’s KYC application for the **USD** rail can proceed."
-/>
+<ResponseField name="required" type="object" required>
+  All the mandatory KYC fields needed for the USD rail KYC application.
+</ResponseField>
 
-Now that we know the missing KYC fields the user needs to provide for the rail, we can proceed with updating the user's KYC information to address these gaps.
+<ResponseField name="optional" type="object" required>
+  Additional KYC fields that are not mandatory but may be provided.
+</ResponseField>
+
+<ResponseField name="invalid" type="object" required>
+  Any fields that must be corrected before the KYC application can proceed. From
+  the response, we can see that the user still has multiple missing KYC fields.
+</ResponseField>
+
+Now that we know the missing KYC fields, let's update the user's KYC information.
 
 ### Update KYC Information
 
-To update the user's KYC information, you can use the [Update KYC](https://docs.hifibridge.com/v2/reference/post_v2-users-userid-kyc) endpoint. Let's update the user's KYC information. We have provided all the needed KYC fields with dummy values in the curl request.
+To submit required KYC information, you can use the [Update KYC](https://docs.hifibridge.com/v2/reference/post_v2-users-userid-kyc) endpoint. We've provided dummy values in the curl request.
 
 **Request:**
 
@@ -303,9 +303,7 @@ curl --request POST \
 }
 ```
 
-The response contains the latest KYC information the user holds after the update. This same set of information can also be retrieved using the [Retrieve KYC information](https://docs.hifibridge.com/v2/reference/get_v2-users-userid-kyc) endpoint.
-
-### Upload KYC Documentation
+### Upload KYC Documents
 
 We have successfully updated the user's KYC information now, let's also upload the documentation.
 
@@ -334,9 +332,23 @@ curl --request POST \
 }
 ```
 
-After receiving the `fileId`, you can attach the documentation to the user. For the documentation required for the USD rail, please refer to Individual Documents.
+<ResponseField name="id" type="string" required>
+  The file ID, which will be used to attach the document to the user.
+</ResponseField>
 
-In this example, we will use the previously uploaded file as the user's driver's license to satisfy the `identity` requirement.
+<ResponseField name="fileName" type="string" required>
+  The name of the uploaded file.
+</ResponseField>
+
+<ResponseField name="size" type="number" required>
+  The size of the file in bytes.
+</ResponseField>
+
+<ResponseField name="mimeType" type="string" required>
+  The MIME type of the uploaded file.
+</ResponseField>
+
+Now that we have the `fileId`, we can attach the documentation to the user. In this example, we will use the previously uploaded file as the user's driver's license to satisfy the `identity` requirement.
 
 **Add Documentation Request**
 
@@ -390,6 +402,15 @@ curl --request POST \
 }
 ```
 
+<ResponseField name="count" type="number" required>
+  The number of documents added.
+</ResponseField>
+
+<ResponseField name="data" type="array" required>
+  An array of document objects, each containing the document details including
+  id, type, subType, issuedCountry, url, and fileId.
+</ResponseField>
+
 Great! Now that we have updated all the required KYC information for the user, we can move on to submitting the KYC application.
 
 ### Submit KYC
@@ -422,7 +443,7 @@ curl --request POST \
 }
 ```
 
-After submission, the KYC status will initially be set to `"CREATED"`. The user can either call the [Retrieve KYC Status](https://docs.hifibridge.com/v2/reference/get_v2-users-userid-kyc-status) endpoint or wait for [webhook](https://docs.hifibridge.com/v2/docs/webhooks) events to receive updates on the user's latest KYC status for that rail.
+After submission, the KYC status will initially be set to `"CREATED"`. You can either call the [Retrieve KYC Status](https://docs.hifibridge.com/v2/reference/get_v2-users-userid-kyc-status) endpoint or wait for [webhook](https://docs.hifibridge.com/v2/docs/webhooks) events to receive updates on the user's latest KYC status for that rail.
 
 ### Retrieve KYC Status
 
