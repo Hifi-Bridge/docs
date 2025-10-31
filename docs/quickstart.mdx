@@ -415,11 +415,11 @@ Great! Now that we have updated all the required KYC information for the user, w
 
 ### Submit KYC
 
-To submit the KYC information the user currently holds for the **USD** rails, we can use the [Submit KYC](https://docs.hifibridge.com/v2/reference/post_v2-users-userid-kyc-submissions) endpoint.
+To submit the KYC information the user currently holds for the **USD** rails, we can use the [Submit KYC](/api-reference/kyc/submit-kyc) endpoint.
 
-> 📘 The Submit KYC endpoint submits the existing KYC information stored for the user to the specified rail. If you want to submit any new KYC data that the user doesn't currently hold, you must first update the user's KYC information using the [Update KYC](https://docs.hifibridge.com/v2/reference/post_v2-users-userid-kyc) endpoint before calling [Submit KYC](https://docs.hifibridge.com/v2/reference/post_v2-users-userid-kyc-submissions).
+> 📘 The Submit KYC endpoint submits the existing KYC information stored for the user to the specified rail. If you want to submit any new KYC data that the user doesn't currently hold, you must first update the user's KYC information using the [Update KYC](/api-reference/kyc/update-kyc-information) endpoint before calling [Submit KYC](/api-reference/kyc/submit-kyc).
 
-Let's submit the user's KYC information to unlock the **USD_EURO** rails. This can be done by calling the [Submit KYC](https://docs.hifibridge.com/v2/reference/post_v2-users-userid-kyc-submissions) endpoint and providing the `userId` and the `rails`.
+Let's submit the user's KYC information to unlock the **USD** rails. This can be done by calling the [Submit KYC](/api-reference/kyc/submit-kyc) endpoint and providing the `userId` and the `rails`.
 
 **Request:**
 
@@ -447,7 +447,7 @@ After submission, the KYC status will initially be set to `"CREATED"`. You can e
 
 ### Retrieve KYC Status
 
-To get the KYC status for a specific rails, the user can call the [Retrieve KYC Status](https://docs.hifibridge.com/v2/reference/get_v2-users-userid-kyc-status) endpoint.
+To get the KYC status for a specific rails, the user can call the [Retrieve KYC Status](/api-reference/kyc/retrieve-kyc-status) endpoint.
 
 Let's Get the KYC status for the user's **USD** rail by passing in the `userId` and the `rails` in the query param.
 
@@ -545,7 +545,7 @@ A **Virtual Account** is a bank account created by our system to facilitate onra
 
 The parameters you pass in will determine the rail you want this onramp virtual account to support. For example, passing the `sourceCurrency` as `usd`, `destinationCurrency` as `usdc`, and `destinationChain` as `POLYGON`, will allow the user to deposit `usd` into the virtual bank account to onramp to `usdc` on `POLYGON`.
 
-Let's make a [Create a virtual account](https://docs.hifibridge.com/v2/reference/post_v2-users-userid-virtual-accounts) call using the user id we created earlier, with the parameters we just mentioned:
+Let's make a [Create a virtual account](/api-reference/virtual-account/create-a-virtual-account) call using the user id we created earlier, with the parameters we just mentioned:
 
 **Request**
 
@@ -625,9 +625,9 @@ Let's take a look at the response, focusing on the `accountInfo` object:
 
 ### Add Offramp Account
 
-To offramp, you can add a USD offramp bank account by making an [Create a USD Offramp Bank Account](https://docs.hifibridge.com/v2/reference/post_v2-users-userid-accounts) call.
+To offramp, you can add a USD offramp bank account by making an [Create a USD Offramp Bank Account](/api-reference/account/create-an-account) call.
 
-Let's add a USD offramp bank account for Wire. To do this, you'll need to provide your bank account details. However, for the purpose of this guide, we've pre-configured the bank account details for you, so all you need to do is call the [Create a USD Offramp Bank Account](https://docs.hifibridge.com/v2/reference/post_v2-users-userid-accounts) endpoint:
+Let's add a USD offramp bank account for Wire. To do this, you'll need to provide your bank account details. However, for the purpose of this guide, we've pre-configured the bank account details for you, so all you need to do is call the [Create a USD Offramp Bank Account](/api-reference/account/create-an-account) endpoint:
 
 **Request:**
 
@@ -839,7 +839,7 @@ After the onramp transaction status is updated to `COMPLETE`, you can check the 
 
 ### Transfer 1 USDC Between Wallets
 
-After the onramp transfer is completed, User A will have 1 USDC in their wallet. Now we can transfer the 1 USDC from User A's wallet to User B's wallet. To do this, we can call the [Create a crypto transfer](https://docs.hifibridge.com/v2/reference/post_v2-wallets-transfers) endpoint.
+After the onramp transfer is completed, User A will have 1 USDC in their wallet. Now we can transfer the 1 USDC from User A's wallet to User B's wallet. To do this, we can call the [Create a crypto transfer](/api-reference/crypto-transfer/create-a-crypto-transfer) endpoint.
 
 Let's take a look at the request fields:
 
@@ -920,15 +920,15 @@ curl --request POST \
 
 Let's take a look at the response object, focusing on the `transferDetails` object:
 
-- The `id` is a unique identifier for this transfer, which you can save to get the most up-to-date transfer status using the [Retrieve a crypto transfer](https://docs.hifibridge.com/v2/reference/get_v2-wallets-transfers-transferid) endpoint.
-- The `status` represents the transfer status, which initially appears as `"CREATED"`. You will want to either register a webhook or poll the [Retrieve a crypto transfer](https://docs.hifibridge.com/v2/reference/get_v2-wallets-transfers-transferid) endpoint to monitor the latest transfer status until the transfer is `"COMPLETED"`.
+- The `id` is a unique identifier for this transfer, which you can save to get the most up-to-date transfer status using the [Retrieve a crypto transfer](/api-reference/crypto-transfer/retrieve-a-crypto-transfer) endpoint.
+- The `status` represents the transfer status, which initially appears as `"CREATED"`. You will want to either register a webhook or poll the [Retrieve a crypto transfer](/api-reference/crypto-transfer/retrieve-a-crypto-transfer) endpoint to monitor the latest transfer status until the transfer is `"COMPLETED"`.
 - The `receipt.transactionHash` is the transaction hash on the blockchain, which you can use to check the transaction status online with a blockchain explorer.
 - The `failedReason` will show the reason if the transfer fails.
 - The `sender` and `recipient` objects provide detailed information about the sender and recipient users.
 
 ### Offramp 1 USDC to \$ 1 USD
 
-Now let's offramp the rest of the 1 USDC to userA's bank account. To do this, we can call the [Create an offramp](https://docs.hifibridge.com/v2/reference/post_v2-offramps) endpoint.
+Now let's offramp the rest of the 1 USDC to userA's bank account. To do this, we can call the [Create an offramp](/api-reference/offramp/create-an-offramp) endpoint.
 
 Let's take a look at the request fields:
 
@@ -1033,7 +1033,7 @@ curl --request POST \
 
 Let's take a look at the response object, focusing on the `transferDetails` object:
 
-- The `id` is a unique identifier for this transfer, which you can save to get the most up-to-date transfer status using the [Retrieve an offramp](https://docs.hifibridge.com/v2/reference/get_v2-offramps-transferid) endpoint.
+- The `id` is a unique identifier for this transfer, which you can save to get the most up-to-date transfer status using the [Retrieve an offramp](/api-reference/offramp/retrieve-an-offramp) endpoint.
 - The `status` represents the transfer status, which initially appears as `"OPEN_QUOTE"`. You will have to call the Accept Quote Endpoint to kick off the offramp process.
 - The `receipt.transactionHash` is the transaction hash on the blockchain, which you can use to check the transaction status online with a blockchain explorer.
 - The `error` and `errorDetails` will show the reason if the transfer fails.
