@@ -2,17 +2,15 @@
 title: "Sandbox"
 ---
 
-HIFI's sandbox environment provides a safe testing space for developers to integrate and test our APIs without incurring real charges or affecting production systems. All tokens and balances in the sandbox are simulated and hold no real-world value.
+HIFI's sandbox environment provides a safe testing space to integrate and test our APIs without real charges or affecting production systems. All transactions, tokens, and balances in the sandbox are simulated and hold no real-world value.
 
 ## Getting Started
 
 ### Generate a Sandbox API Key
 
-To access the sandbox environment, you'll need to create a sandbox API key:
-
-1. **Request Access**: Visit [dashboard.hifi.com/request-access](https://dashboard.hifi.com/request-access) to create an account
-2. **Navigate to API Keys**: Once approved, go to the Developer Dashboard
-3. **Create New Key**: Click the "New API Key" button under Sandbox
+1. **Request Access** - Visit [dashboard.hifi.com/request-access](https://dashboard.hifi.com/request-access) to schedule a call with our team and get onboarded.
+2. **Navigate to API Keys** - Once approved, go to the Developer Dashboard
+3. **Create New Key** - Click the "New API Key" button under Sandbox
 
 <Warning>
   Keep your sandbox API key secure and never commit it to version control. Use
@@ -24,40 +22,81 @@ To access the sandbox environment, you'll need to create a sandbox API key:
 All sandbox API requests should be made to:
 
 ```
-https://sandbox.hifibridge.com/v2/
+https://sandbox.hifi.com/v2/
 ```
+
+**Example request:**
+
+```bash
+curl -X GET "https://sandbox.hifi.com/v2/ping" \
+  -H "Authorization: Bearer YOUR_SANDBOX_API_KEY"
+```
+
+---
 
 ## Sandbox vs Production
 
 The sandbox environment is designed to simulate production behavior while providing a safe testing environment:
 
+| Feature            | Sandbox                    | Production                        |
+| :----------------- | :------------------------- | :-------------------------------- |
+| **API Base URL**   | `https://sandbox.hifi.com` | `https://production.hifi.com`     |
+| **Money Movement** | Simulated                  | Real                              |
+| **KYC Processing** | Auto-approved              | Manual review (1-3 business days) |
+| **Blockchain**     | Testnet                    | Mainnet                           |
+| **Tokens**         | No real value              | Real cryptocurrency               |
+
 ### Automated KYC Approval
 
-- **User KYC**: Automatically approved upon submitting dummy personal information
-- **No Real Verification**: No actual KYC/KYB verification process occurs
-- **Instant Processing**: KYC submissions are processed immediately for testing purposes
+In sandbox, the KYC process is streamlined for testing:
 
-### Testnet Integration
+- **Instant Approval** - KYC submissions are approved within a minute
+- **No Real Verification** - No actual identity verification occurs
+- **Dummy Data** - Use any test personal information and documents
 
-- **Testnet Wallets**: All wallet addresses are created for testnets, not mainnet
-- **Simulated Transactions**: Token movements are simulated and don't involve real blockchain transactions
-- **No Real Value**: All balances and transfers are purely for testing purposes
+<Info>
+  In production, KYC applications undergo real compliance review and typically
+  take 1-3 business days to process.
+</Info>
 
-### Currency and Network Support
+### Simulated Transactions
 
-- **Testnet Tokens**: Most currency pairs support testnet token movements
-- **Network Compatibility**: Full support for all supported blockchain networks in testnet mode
-- **Cross-Chain Testing**: Test bridging functionality between different testnet networks
+All money movement in sandbox is simulated:
 
-### Getting Help
+- **Virtual Deposits** - Use an endpoint to mimic bank deposits
+- **Instant Processing** - Transfers complete immediately for testing
+- **No Real Funds** - No actual money or cryptocurrency moves
+- **Testnet Wallets** - All wallet addresses are on blockchain testnets
+
+---
+
+## Transitioning to Production
+
+When you're ready to move from sandbox to production:
+
+1. **Generate production API keys** in the dashboard
+2. **Update your base URL** from `sandbox.hifi.com` to `production.hifi.com`
+3. **Update API keys** in your environment variables
+4. **Remove simulation calls** - Delete any simulate-deposit endpoint usage
+5. **Enable real KYC** - Provide real user information and documents
+6. **Test thoroughly** - Start with small transactions before scaling
+
+<Warning>
+  Never use sandbox API keys in production or production keys in sandbox. They
+  are environment-specific and won't work cross-environment.
+</Warning>
+
+---
+
+## Getting Help
 
 If you encounter issues or have suggestions for improving the sandbox experience:
 
-- **Email Support**: Reach out to us at [support@hifibridge.com](mailto:support@hifibridge.com)
-- **Documentation**: Check our [API Reference](/api/reference) for detailed endpoint documentation
+- 📧 **Email:** support@hifi.com
+- 💬 **Slack:** Message us in our shared Slack channel
 
 <Info>
   The sandbox environment is continuously updated to reflect production changes.
   If you notice discrepancies between sandbox and production behavior, please
-  report them to our support team.
+  let us know.
 </Info>
