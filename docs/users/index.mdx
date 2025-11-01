@@ -2,25 +2,314 @@
 title: "Users"
 ---
 
-A **User** represents an individual or a business entity interacting with the HIFI platform.
-Users are the foundation of most HIFI operations.
+A **User** represents an individual or business on the HIFI platform. Users are the foundation of all transaction activity - every onramp, offramp, and transfer is associated with a user.
 
-HIFI supports two types of Users:
+## User Types
 
-- **Individual** – a natural person (e.g., a customer, freelancer, or employee).
-- **Business** – a legal entity (e.g., a company, NGO, or partnership).
+HIFI supports two types of users:
 
-## Creating Users
+| Type           | Description      | Use Cases                                 |
+| :------------- | :--------------- | :---------------------------------------- |
+| **Individual** | A natural person | Personal accounts, freelancers, employees |
+| **Business**   | A legal entity   | Companies, NGOs, partnerships             |
 
-There are two steps to creating a User.
+## User Capabilities
 
-<Steps>
-  <Step title="Accept Terms of Service">
-    Generate a Terms of Service link to obtain user consent for data handling
-    and compliance screening.
-  </Step>
-  <Step title="Create User">
-    Create a new User record with the signed Terms of Service agreement ID and
-    basic user information.
-  </Step>
-</Steps>
+What users can do depends on their verification status:
+
+<AccordionGroup>
+  <Accordion title="Unverified Users">
+    **Available immediately after creation:**
+    - ✅ Receive cryptocurrency to their wallet addresses
+    - ✅ Send cryptocurrency to other HIFI users
+    - ✅ Transfer crypto to external wallets
+    
+    **Not available:**
+    - ❌ Fiat onramp (deposit USD to receive stablecoins)
+    - ❌ Fiat offramp (send stablecoins to receive USD)
+  </Accordion>
+
+  <Accordion title="KYC-Verified Users">
+    **All unverified capabilities, plus:**
+    - ✅ Onramp fiat to stablecoins via virtual accounts
+    - ✅ Offramp stablecoins to fiat bank accounts
+    - ✅ Access to regulated fiat rails (USD, EUR, etc.)
+    
+    **Requirements:**
+    - Complete KYC verification for desired rails
+    - Maintain active compliance status
+  </Accordion>
+</AccordionGroup>
+
+## User Lifecycle
+
+### Creation
+
+Users are created in two steps:
+
+1. **Generate Terms of Service link** - User must review and accept HIFI's Terms of Service
+2. **Create user record** - Once terms are accepted, create the user with basic information
+
+Upon creation, users are automatically provisioned with cryptocurrency wallet addresses on supported blockchains (Polygon, Ethereum, etc.). These wallets are immediately functional for sending and receiving digital assets.
+
+**Create a user:**
+
+```bash
+curl -X POST "https://sandbox.hifi.com/v2/users" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "type": "individual",
+    "firstName": "Jane",
+    "lastName": "Smith",
+    "email": "jane@example.com",
+    "dateOfBirth": "1990-05-15",
+    "address": {
+      "addressLine1": "456 Market St",
+      "city": "San Francisco",
+      "stateProvinceRegion": "CA",
+      "postalCode": "94102",
+      "country": "USA"
+    },
+    "signedAgreementId": "8cb49537-bcf9-41b1-8d8c-c9c200d7341b",
+    "requestId": "705f1f8b-a080-467c-b683-174eca409928"
+  }'
+```
+
+**Response:**
+
+```json
+{
+  "id": "usr_abc123",
+  "type": "individual",
+  "email": "jane@example.com",
+  "name": "Jane Smith",
+  "wallets": {
+    "INDIVIDUAL": {
+      "POLYGON": {
+        "address": "0x1b932E54e77Aeb698144550d5a493Ea99E20Daa7"
+      },
+      "ETHEREUM": {
+        "address": "0xC1c767eaB34b3Cc2C33a354f6Ff2c20fCB98D3C9"
+      }
+    }
+  }
+}
+```
+
+### Verification
+
+To unlock fiat rails, users must complete KYC (Know Your Customer) verification. KYC requirements vary by rail (USD, EUR, etc.) and include:
+
+- Personal information (name, date of birth, address, tax ID)
+- Identity documents (passport, driver's license, or ID card)
+- Proof of address (in some cases)
+
+The KYC process typically takes:
+
+- **Sandbox:** Auto-approved within minutes for testing
+- **Production:** 1-3 business days for manual review
+
+Once approved, the user can access fiat onramp and offramp capabilities for that specific rail.
+
+**Check KYC status:**
+
+```bash
+curl -X GET "https://sandbox.hifi.com/v2/users/usr_abc123/kyc/status?rails=USD" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+### Management
+
+Users can be updated throughout their lifecycle to:
+
+- Update contact information
+- Add or modify KYC data
+- Link additional bank accounts
+- Add virtual accounts for different currencies
+
+**Retrieve user details:**
+
+```bash
+curl -X GET "https://sandbox.hifi.com/v2/users/usr_abc123" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+## User Wallets
+
+Every user receives wallet addresses on supported blockchains automatically at creation. These wallets are:
+
+- **Custodial** - Managed by HIFI for security and compliance
+- **Multi-chain** - Available on Polygon, Ethereum, Base, Solana, Flow and other supported networks
+- **Immediately active** - Ready to send and receive crypto without additional setup
+
+Wallet addresses never change and can be shared with other users or external parties for receiving cryptocurrency.
+
+## User Accounts
+
+Users can have multiple account types for different purposes:
+
+| Account Type        | Purpose               | Direction               |
+| :------------------ | :-------------------- | :---------------------- |
+| **Virtual Account** | Receive fiat deposits | Fiat → Crypto (onramp)  |
+| **Offramp Account** | Send fiat withdrawals | Crypto → Fiat (offramp) |
+
+These accounts are created separately after user creation and require KYC verification to be functional.
+
+## Key Concepts
+
+<AccordionGroup>
+  <Accordion title="Terms of Service">
+    Before creating a user, they must accept HIFI's Terms of Service. This ensures compliance with data handling and regulatory requirements. The `signedAgreementId` from the ToS acceptance is required when creating the user.
+  </Accordion>
+
+{" "}
+
+<Accordion title="Request IDs">
+  All user creation requests require a `requestId` (UUID). This ensures
+  idempotency - retrying the same request won't create duplicate users.
+</Accordion>
+
+{" "}
+
+<Accordion title="Rails">
+  A "rail" is a payment corridor enabling conversions between specific fiat
+  currencies and stablecoins. For example, the USD rail allows conversion
+  between USD and USDC. Each rail has its own KYC requirements.
+</Accordion>
+
+  <Accordion title="User Types and Business Logic">
+    **Individual users** represent natural persons and have simpler KYC requirements. **Business users** represent legal entities and require additional documentation like articles of incorporation, beneficial ownership information, and authorized signer verification.
+  </Accordion>
+</AccordionGroup>
+
+## Common Patterns
+
+### Create and verify a user
+
+<AccordionGroup>
+  <Accordion title="1. Generate ToS link">
+    ```bash
+    curl -X POST "https://sandbox.hifi.com/v2/tos-link" \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{"idempotencyKey": "8cb49537-bcf9-41b1-8d8c-c9c200d7341b"}'
+    ```
+  </Accordion>
+
+  <Accordion title="2. Create user (after ToS accepted)">
+    ```bash
+    curl -X POST "https://sandbox.hifi.com/v2/users" \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "type": "individual",
+        "firstName": "Jane",
+        "lastName": "Smith",
+        "email": "jane@example.com",
+        "signedAgreementId": "8cb49537-bcf9-41b1-8d8c-c9c200d7341b",
+        "requestId": "705f1f8b-a080-467c-b683-174eca409928"
+      }'
+    ```
+  </Accordion>
+
+  <Accordion title="3. Complete KYC for USD rail">
+    <Steps>
+      <Step title="Update KYC information">
+        Provide required personal information:
+        ```bash
+        curl -X POST "https://sandbox.hifi.com/v2/users/usr_abc123/kyc" \
+          -H "Authorization: Bearer YOUR_API_KEY" \
+          -H "Content-Type: application/json" \
+          -d '{
+            "phone": "+14155551234",
+            "taxIdentificationNumber": "123456789",
+            "nationality": "USA"
+          }'
+        ```
+      </Step>
+
+      <Step title="Upload identity documents">
+        First, upload the document files:
+        ```bash
+        # Upload front side
+        curl -X POST "https://sandbox.hifi.com/v2/files" \
+          -H "Authorization: Bearer YOUR_API_KEY" \
+          -H "Content-Type: multipart/form-data" \
+          -F "file=@drivers_license_front.png"
+
+        # Upload back side
+        curl -X POST "https://sandbox.hifi.com/v2/files" \
+          -H "Authorization: Bearer YOUR_API_KEY" \
+          -H "Content-Type: multipart/form-data" \
+          -F "file=@drivers_license_back.png"
+        ```
+
+        Then attach the documents to the user's KYC:
+        ```bash
+        curl -X POST "https://sandbox.hifi.com/v2/users/usr_abc123/kyc/documents" \
+          -H "Authorization: Bearer YOUR_API_KEY" \
+          -H "Content-Type: application/json" \
+          -d '[
+            {
+              "type": "DRIVERS",
+              "subType": "FRONT_SIDE",
+              "issuedCountry": "USA",
+              "fileId": "file_JzALYV2L1-4LBmaxZ6GCm"
+            },
+            {
+              "type": "DRIVERS",
+              "subType": "BACK_SIDE",
+              "issuedCountry": "USA",
+              "fileId": "file_KpBMZW3M2-5MCnbyA7HDn"
+            }
+          ]'
+        ```
+      </Step>
+
+      <Step title="Submit KYC application">
+        Submit for review once all information and documents are provided:
+        ```bash
+        curl -X POST "https://sandbox.hifi.com/v2/users/usr_abc123/kyc/submissions" \
+          -H "Authorization: Bearer YOUR_API_KEY" \
+          -H "Content-Type: application/json" \
+          -d '{"rails": "USD"}'
+        ```
+      </Step>
+    </Steps>
+
+  </Accordion>
+</AccordionGroup>
+
+### Check user capabilities
+
+Determine what a user can do based on their KYC status:
+
+<AccordionGroup>
+  <Accordion title="Get user details including wallet addresses">
+    ```bash
+    curl -X GET "https://sandbox.hifi.com/v2/users/usr_abc123" \
+      -H "Authorization: Bearer YOUR_API_KEY"
+    ```
+  </Accordion>
+
+  <Accordion title="Check KYC status for specific rail">
+    ```bash
+    curl -X GET "https://sandbox.hifi.com/v2/users/usr_abc123/kyc/status?rails=USD" \
+      -H "Authorization: Bearer YOUR_API_KEY"
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Getting Help
+
+- 📧 **Email:** support@hifi.com
+- 💬 **Slack:** Message us in our shared Slack channel
+
+## Related Resources
+
+- [Quickstart Guide](/docs/quickstart) - Step-by-step tutorial for creating and verifying users
+- [KYC Documentation](/docs/kyc) - Detailed KYC requirements and process
+- [Virtual Accounts](/docs/virtual-accounts) - Set up fiat deposit accounts
+- [Offramp Accounts](/docs/offramp-accounts) - Configure withdrawal bank accounts
+- [API Reference: Users](/api-reference/user/create-a-user) - Complete endpoint documentation
