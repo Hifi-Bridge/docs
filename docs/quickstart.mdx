@@ -1146,7 +1146,7 @@ Your user can now perform three types of money movement:
 We'll demonstrate the entire flow between two users:
 
 - **User A** (John Doe) - The user we just created (`32051b2f-0798-55a7-9c42-b08da4192c97`)
-- **User B** (Jack Doe) - A pre-existing test user in sandbox (`30669fcc-b15e-4137-b4fc-9e8f7f659a87`)
+- **User B** (Jane Doe) - A pre-existing test user in sandbox (`30669fcc-b15e-4137-b4fc-9e8f7f659a87`)
 
 **The flow:**
 
@@ -1155,15 +1155,9 @@ We'll demonstrate the entire flow between two users:
 3. User A offramps 1 USDC → $1 USD to their bank account
 
 <Note>
-  **User B in Sandbox:** User B is a pre-configured test user that exists in the
-  sandbox environment for demonstration purposes. In production, you would
-  create User B following the same steps as User A.
-</Note>
-
-<Info>
   **Sandbox Simulation:** No real money moves in sandbox. All transfers are
   simulated, but the API requests and responses are identical to production.
-</Info>
+</Note>
 
 <AccordionGroup>
   <Accordion title="Onramp $2 USD to 2 USDC">
@@ -1201,7 +1195,7 @@ curl --request POST \
   "source": {
     "routingNumber": "021000021",
     "accountNumber": "516843515316",
-    "name": "Jack Doe",
+    "name": "Jane Doe",
     "bankName": "JP Morgan Chase"
   },
   "amount": "2",
@@ -1284,7 +1278,7 @@ HIFI will now process the deposit and create an onramp transaction. You'll recei
       },
       "bankInfo": {
         "bankName": "JP MORGAN CHASE",
-        "senderName": "Jack Doe",
+        "senderName": "Jane Doe",
         "routingNumber": "021000021",
         "accountNumber": "516843515316",
         "imad": "20250925SIM3E6A1638944",
@@ -1585,9 +1579,9 @@ curl --request POST \
       "userId": "30669fcc-b15e-4137-b4fc-9e8f7f659a87",
       "walletAddress": "0x1b932E54e77Aeb688144550d5a493Ea99E20Daa7",
       "user": {
-        "email": "jack@hifi.com",
+        "email": "Jane@hifi.com",
         "lastName": "Doe",
-        "firstName": "Jack",
+        "firstName": "Jane",
         "businessName": null
       }
     },
@@ -2078,19 +2072,19 @@ In the sandbox, the offramp will complete automatically. In production, it may t
 
 ## 🎉 Congratulations!
 
-You've successfully completed the HIFI API quickstart! You now know how to:
+You've successfully completed the HIFI API quickstart! By following the steps above, you can now:
 
-✅ Create users and handle Terms of Service acceptance  
-✅ Complete the KYC process to unlock fiat rails  
-✅ Set up virtual accounts for onramping  
-✅ Add offramp bank accounts for withdrawals  
-✅ Execute the complete transfer flow: onramp → transfer → offramp
+- ✅ Create users and handle Terms of Service acceptance
+- ✅ Complete the KYC process to unlock fiat rails
+- ✅ Set up virtual accounts for onramping
+- ✅ Add offramp bank accounts for withdrawals
+- ✅ Execute the complete transfer flow: onramp → transfer → offramp
 
 ### Next Steps
 
 Ready to build your integration? Here's what to explore next:
 
 - **[Webhooks](/docs/webhooks)** - Set up real-time event notifications for transaction updates
-- **[Rails Overview](/docs/compliance/rails)** - Learn about additional currency rails and their requirements
-- **[Error Handling](/docs/api/errors)** - Understand error codes and how to handle failures gracefully
+- **[Rails Overview](/docs/compliance/rails)** - Learn about additional currency rails
+- **[Error Handling](/docs/api/errors)** - Understand error codes and how to handle failures
 - **[API Reference](/api-reference)** - Explore all available endpoints and parameters
