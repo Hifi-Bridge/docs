@@ -261,6 +261,175 @@ curl -X POST "https://sandbox.hifi.com/v2/wallets/transfers" \
   }'
 ```
 
+<Note>
+  **No Registration Required:** You can send to any external wallet address
+  directly without registering it first. Simply provide the address in the
+  `destination.address` field.
+</Note>
+
+## Tracking Transfers
+
+List all crypto transfers associated with users under your organization using the [List All Crypto Transfers](/api-reference/wallet/list-all-crypto-transfers) endpoint. Transfers are returned sorted by creation date, with the most recent appearing first.
+
+**Request:**
+
+```bash
+curl -X GET "https://sandbox.hifi.com/v2/wallets/transfers?userId=usr_abc123&limit=10" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+**Query Parameters:**
+
+| Parameter       | Type   | Required | Description                                                 | Example Values    |
+| :-------------- | :----- | :------- | :---------------------------------------------------------- | :---------------- |
+| `userId`        | string | ❌       | Filter transfers by user ID                                 | `usr_abc123`      |
+| `limit`         | string | ❌       | Number of records to return (default: 10, max: 100)         | `10`, `50`, `100` |
+| `createdBefore` | string | ❌       | Filter transfers created before this date (ISO: YYYY-MM-DD) | `2025-02-03`      |
+| `createdAfter`  | string | ❌       | Filter transfers created after this date (ISO: YYYY-MM-DD)  | `2025-01-01`      |
+
+**Response:**
+
+```json
+{
+  "count": 1,
+  "records": [
+    {
+      "transferType": "WALLET.TRANSFER",
+      "transferDetails": {
+        "id": "006737ca-42d5-4780-b3c2-aeb63279c591",
+        "requestId": "d0d62bec-2623-4f61-afda-148d6a8e1009",
+        "createdAt": "2025-02-03T16:11:36.654+00:00",
+        "updatedAt": "2025-02-03T16:12:41.503+00:00",
+        "chain": "POLYGON_MAINNET",
+        "currency": "usdc",
+        "contractAddress": "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359",
+        "status": "COMPLETED",
+        "failedReason": "",
+        "source": {
+          "userId": "usr_abc123",
+          "walletAddress": "0xA25641cB6056C371CB65F28aC02450c9206e0fAA",
+          "walletType": "INDIVIDUAL",
+          "user": {
+            "email": "user@example.com",
+            "firstName": "John",
+            "lastName": "Doe",
+            "businessName": null
+          }
+        },
+        "destination": {
+          "userId": "usr_xyz789",
+          "walletType": "INDIVIDUAL",
+          "walletAddress": "0xB36742cB6056C371CB65F28aC02450c9206e0fBB",
+          "user": {
+            "email": "recipient@example.com",
+            "firstName": "Jane",
+            "lastName": "Smith",
+            "businessName": null
+          }
+        },
+        "amount": 0.01,
+        "amountIncludeDeveloperFee": 0.01,
+        "receipt": {
+          "transactionHash": "0x5784890f9efd0160e9401439a5cf2aa5350580ecf48f9ca2af617338ae089e53",
+          "userOpHash": "0xef7bdb071b1fcfb5df629bd4d27ffa6dc32d0a5df676f26fb8c25311df1185ac"
+        },
+        "developerFee": {
+          "feeId": "9b354c37-d20d-4d94-bcd8-c852353ca406",
+          "feeType": "FIX",
+          "feeAmount": 0.5,
+          "feePercent": 0,
+          "status": "CREATED",
+          "transactionHash": null,
+          "failedReason": null
+        }
+      }
+    }
+  ],
+  "nextCursor": "2025-02-03T16:11:36.654+00:00"
+}
+```
+
+**Response Fields:**
+
+<ResponseField name="count" type="integer">
+  Total number of transfer records in the current page
+</ResponseField>
+
+<ResponseField name="records" type="array">
+  Array of transfer records. Each record contains:
+  <Expandable title="transferDetails properties">
+    <ResponseField name="id" type="string">
+      Unique transfer ID
+    </ResponseField>
+    <ResponseField name="requestId" type="string">
+      Request ID used when creating the transfer
+    </ResponseField>
+    <ResponseField name="status" type="string">
+      Transfer status: `CREATED`, `INITIATED`, `PENDING`, `COMPLETED`, `FAILED`
+    </ResponseField>
+    <ResponseField name="chain" type="string">
+      Blockchain network (e.g., `POLYGON_MAINNET`, `ETHEREUM_MAINNET`)
+    </ResponseField>
+    <ResponseField name="currency" type="string">
+      Stablecoin currency (e.g., `usdc`, `usdt`)
+    </ResponseField>
+    <ResponseField name="amount" type="number">
+      Transfer amount in standard units
+    </ResponseField>
+    <ResponseField name="amountIncludeDeveloperFee" type="number">
+      Total amount including developer fee
+    </ResponseField>
+    <ResponseField name="source" type="object">
+      Source wallet information including user details
+    </ResponseField>
+    <ResponseField name="destination" type="object">
+      Destination wallet information including user details
+    </ResponseField>
+    <ResponseField name="receipt.transactionHash" type="string">
+      Blockchain transaction hash (available when status is COMPLETED)
+    </ResponseField>
+    <ResponseField name="approval" type="object">
+      Approval workflow details (present if transfer requires approval)
+      <Expandable title="approval properties">
+        <ResponseField name="status" type="string">
+          Approval status: `PENDING`, `APPROVED`, `REJECTED`
+        </ResponseField>
+        <ResponseField name="votes" type="array">
+          Array of approval votes when status is `PENDING_APPROVAL` or
+          `REJECTED`
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+    <ResponseField name="developerFee" type="object">
+      Developer fee information (if applicable)
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="nextCursor" type="string">
+  Pagination cursor. Pass this as `createdBefore` in the next request to
+  retrieve the next page of results. This is the `createdAt` timestamp of the
+  last record in the current page.
+</ResponseField>
+
+**Pagination Example:**
+
+```bash
+# First page
+curl -X GET "https://sandbox.hifi.com/v2/wallets/transfers?limit=10" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+
+# Next page (using nextCursor from previous response)
+curl -X GET "https://sandbox.hifi.com/v2/wallets/transfers?limit=10&createdBefore=2025-02-03T16:11:36.654+00:00" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+<Note>
+  **Real-Time Updates:** Subscribe to `WALLET.TRANSFER` webhook events to
+  receive immediate notifications when transfers are created or updated, instead
+  of polling the API.
+</Note>
+
 ### Fiat Offramps
 
 Convert stablecoins to fiat currency and send to a bank account. This requires:
@@ -269,6 +438,115 @@ Convert stablecoins to fiat currency and send to a bank account. This requires:
 2. **Offramp account setup** with bank account details
 
 See [Offramp](/docs/offramp) for detailed instructions.
+
+## External Wallets
+
+An **External Wallet** is a wallet address that belongs to the user but is not managed by HIFI.
+
+<Note>
+  **Registration vs Direct Transfer:** - **Wallet transfers** can send directly
+  to any external wallet address without registration (see [Crypto
+  Transfers](#crypto-transfers) above) - **Virtual accounts and onramps**
+  require registration if you want to use the `externalWalletId` parameter to
+  route funds directly to an external wallet
+</Note>
+
+### Register External Wallet
+
+Register an external wallet address for use with virtual accounts and onramps using the [Create External Wallet](/api-reference/external-wallet/create-external-wallet) endpoint.
+
+**Request:**
+
+```bash
+curl -X POST "https://sandbox.hifi.com/v2/users/usr_abc123/external-wallets" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "chain": "ETHEREUM",
+    "address": "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb",
+    "label": "My Ledger Wallet"
+  }'
+```
+
+**Request Fields:**
+
+<ResponseField name="chain" type="string" required>
+  Blockchain network for this wallet address. Options: `POLYGON`, `ETHEREUM`,
+  `SOLANA`, `BASE`
+</ResponseField>
+
+<ResponseField name="address" type="string" required>
+  The wallet address on the specified chain. Must be a valid address format for
+  the chain.
+</ResponseField>
+
+<ResponseField name="label" type="string">
+  Optional human-readable label to identify this wallet (e.g., "My Ledger
+  Wallet", "Exchange Account")
+</ResponseField>
+
+**Response:**
+
+```json
+{
+  "id": "ew_abc123",
+  "userId": "usr_abc123",
+  "chain": "ETHEREUM",
+  "address": "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb",
+  "label": "My Ledger Wallet",
+  "createdAt": "2025-01-15T10:30:00Z"
+}
+```
+
+**Response Fields:**
+
+<ResponseField name="id" type="string">
+  Unique external wallet ID. **Save this** to reference the wallet in other API
+  calls (e.g., when creating virtual accounts).
+</ResponseField>
+
+<ResponseField name="userId" type="string">
+  The user ID this external wallet belongs to
+</ResponseField>
+
+<ResponseField name="chain" type="string">
+  Blockchain network for this wallet
+</ResponseField>
+
+<ResponseField name="address" type="string">
+  The wallet address
+</ResponseField>
+
+<ResponseField name="label" type="string">
+  Human-readable label for the wallet
+</ResponseField>
+
+### Using External Wallets
+
+Once registered, you can use the `externalWalletId` in:
+
+- **Virtual Accounts**: Send stablecoins directly to external wallets when deposits are converted (see [Virtual Accounts](/docs/accounts/virtual-accounts))
+- **Onramps**: Route converted funds to external wallets instead of HIFI wallets
+
+<Info>
+  **Regular wallet transfers** don't require registration - you can send
+  directly to any external wallet address using the `destination.address` field
+  in the [Create Crypto
+  Transfer](/api-reference/crypto-transfer/create-a-crypto-transfer) endpoint.
+</Info>
+
+<Warning>
+  **Address Validation:** Ensure the wallet address is valid for the specified
+  chain. Invalid addresses will cause registration to fail.
+  Ethereum/Polygon/Base addresses use 0x format, while Solana uses Base58
+  encoding.
+</Warning>
+
+<Note>
+  **Reusability:** External wallets can be reused across multiple virtual
+  accounts and operations. Register once and reference the `externalWalletId`
+  wherever needed.
+</Note>
 
 ## Key Concepts
 
