@@ -13,38 +13,41 @@ Wallets can receive funds through:
 
 To track incoming transfers into a Wallet, use the Deposits API. This API provides updates on all incoming activity, including transaction hashes, amounts, and confirmation status.
 
+### Get inbound deposits
+
+Get a list of inbound deposits for a user's wallet.
+
 **GET** `/v2/users/{userId}/wallets/deposits`
 
 ```bash
-curl -X GET "https://sandbox.hifibridge.com/v2/users/{userId}/wallets/deposits" \
+curl -X GET "https://sandbox.hifibridge.com/v2/users/usr_abc123/wallets/deposits?chain=POLYGON&currency=usdc" \
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
-## Query Parameters
+**Path Parameters:**
 
-The deposits API supports several query parameters for filtering and pagination:
+| Parameter | Type   | Required | Description    | Example      |
+| :-------- | :----- | :------- | :------------- | :----------- |
+| `userId`  | string | ✅       | ID of the user | `usr_abc123` |
 
-<Accordion title="View all query parameters">
-  | Parameter | Type | Required | Description | Example | | --------------- |
-  ------ | -------- | --------------------------- |
-  --------------------------------------- | | `chain` | string | ✅ | Blockchain
-  network | `POLYGON`, `ETHEREUM`, `SOLANA`, `BASE` | | `currency` | string | ✅
-  | Currency type | `usdc`, `usdt`, `usdHifi` | | `status` | string | ❌ |
-  Deposit status | `CONFIRMED`, `COMPLETED` | | `createdAfter` | date | ❌ |
-  Filter deposits after date | `2024-01-01` | | `createdBefore` | date | ❌ |
-  Filter deposits before date | `2024-12-31` | | `limit` | string | ❌ | Number
-  of results (1-100) | `10` (default), `50` | | `minAmount` | number | ❌ |
-  Minimum deposit amount | `0.01` |
-</Accordion>
+**Query Parameters:**
 
-### Response Format
+| Parameter       | Type           | Required | Description                                                                                                                                                  | Example Values                          |
+| :-------------- | :------------- | :------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------------------------------- |
+| `chain`         | enum\<string\> | ✅       | The blockchain network to retrieve the wallet balance from.                                                                                                  | `POLYGON`, `ETHEREUM`, `SOLANA`, `BASE` |
+| `currency`      | enum\<string\> | ✅       | The type of currency to check the balance for. Currently, only usdc is supported.                                                                            | `usdc`, `usdt`, `usdHifi`               |
+| `status`        | enum\<string\> | ❌       | Status of the deposit, CONFIRMED indicates the deposit is found in the blockchain, COMPLETED indicates the deposit is completed and unlikely to be reverted. | `CONFIRMED`, `COMPLETED`                |
+| `createdAfter`  | string (date)  | ❌       | ISO format: YYYY-MM-DD                                                                                                                                       | `2024-01-01`                            |
+| `createdBefore` | string (date)  | ❌       | ISO format: YYYY-MM-DD                                                                                                                                       | `2024-12-31`                            |
+| `limit`         | string         | ❌       | Number of results, default to 10, maximum to 100                                                                                                             | `10`, `50`                              |
+| `minAmount`     | number         | ❌       | Minimum amount of the deposit, default is 0.01                                                                                                               | `0.01`                                  |
 
-The API returns a paginated list of deposit records:
+**Response:**
 
 ```json
 {
   "count": 1,
-  "records": [
+  "deposits": [
     {
       "userId": "f4c99c2f-ce05-4f61-8ed6-9064a5689197",
       "id": "2e084846-00d6-5e4c-806f-eac45e197108",
@@ -73,39 +76,145 @@ The API returns a paginated list of deposit records:
 }
 ```
 
-## Deposit Record Fields
+**Response Fields:**
 
-### Record Information
+<ResponseField name="count" type="integer">
+  Total number of deposits in the current page
+</ResponseField>
 
-- **userId**: ID of the user who owns the wallet
-- **id**: Unique identifier for this deposit record
-- **createdAt**: Timestamp when the deposit was first detected
-- **updatedAt**: Timestamp when the deposit record was last updated
+<ResponseField name="deposits" type="array">
+  Array of deposit records
+</ResponseField>
 
-### Wallet Information
+<ResponseField name="nextCursor" type="string">
+  The `createdAt` timestamp of the last record in the current page. Pass this as
+  `createdBefore` in the next request to retrieve the next page of results.
+</ResponseField>
 
-- **wallet.id**: Unique identifier for the wallet
-- **wallet.address**: Blockchain address of the wallet
-- **wallet.chain**: Blockchain network (POLYGON, ETHEREUM, etc.)
-- **wallet.walletType**: Type of wallet (INDIVIDUAL, BUSINESS)
+### Get an inbound deposit
 
-### Transaction Details
+Get a specific inbound deposit for a user's wallet by deposit ID.
 
-- **transactionHash**: Blockchain transaction hash
-- **chain**: Blockchain network where the transaction occurred
-- **currency**: Token symbol (usdc, usdt, etc.)
-- **status**: Transaction status (COMPLETED, PENDING, FAILED)
-- **sourceAddress**: Address that sent the funds
-- **destinationAddress**: Address that received the funds
-- **contractAddress**: Smart contract address of the token
-- **amount**: Human-readable amount (e.g., "19" for 19 USDC)
-- **unitAmount**: Raw amount in smallest token unit (e.g., "19000000" for 19 USDC with 6 decimals)
+**GET** `/v2/users/{userId}/wallets/deposits/{depositId}`
 
-<Accordion title="Understanding Amount Fields">
-  The `amount` field shows the human-readable value (19 USDC), while
-  `unitAmount` shows the raw blockchain value (19000000). For USDC with 6
+```bash
+curl -X GET "https://sandbox.hifibridge.com/v2/users/usr_abc123/wallets/deposits/dep_xyz789" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+**Path Parameters:**
+
+| Parameter   | Type   | Required | Description       | Example      |
+| :---------- | :----- | :------- | :---------------- | :----------- |
+| `userId`    | string | ✅       | ID of the user    | `usr_abc123` |
+| `depositId` | string | ✅       | ID of the deposit | `dep_xyz789` |
+
+**Response:**
+
+```json
+{
+  "userId": "f4c99c2f-ce05-4f61-8ed6-9064a5689197",
+  "id": "2e084846-00d6-5e4c-806f-eac45e197108",
+  "createdAt": "2025-06-25T15:47:16.983978+00:00",
+  "updatedAt": "2025-06-25T15:47:16.983978+00:00",
+  "wallet": {
+    "id": "24b4917d-694e-4d81-ace8-9ba5261b6f4e",
+    "address": "0x0B95D270400BE4319EAFbfDD82F6C38B59ab54Ef",
+    "chain": "POLYGON",
+    "walletType": "INDIVIDUAL"
+  },
+  "transaction": {
+    "transactionHash": "0xe5284c4cb35ae9b5eb0ae23b840032f320b87b63f8967ee9b67ee09dfe6a194a",
+    "chain": "POLYGON",
+    "currency": "usdc",
+    "status": "COMPLETED",
+    "sourceAddress": "0x0B95D270400BE4319EAFbfDD82F6C38B59ab54Ef",
+    "destinationAddress": "0x0B95D270400BE4319EAFbfDD82F6C38B59ab54Ef",
+    "contractAddress": "0x41E94Eb019C0762f9Bfcf9Fb1E58725BfB0e7582",
+    "amount": "19",
+    "unitAmount": "19000000"
+  }
+}
+```
+
+**Response Fields:**
+
+<ResponseField name="id" type="string">
+  Unique identifier for this deposit record
+</ResponseField>
+
+<ResponseField name="userId" type="string">
+  ID of the user who owns the wallet
+</ResponseField>
+
+<ResponseField name="createdAt" type="string">
+  Timestamp when the deposit was first detected (ISO 8601 format)
+</ResponseField>
+
+<ResponseField name="updatedAt" type="string">
+  Timestamp when the deposit record was last updated (ISO 8601 format)
+</ResponseField>
+
+<ResponseField name="wallet.id" type="string">
+  Unique identifier for the wallet
+</ResponseField>
+
+<ResponseField name="wallet.address" type="string">
+  Blockchain address of the wallet
+</ResponseField>
+
+<ResponseField name="wallet.chain" type="string">
+  Blockchain network where the wallet is located
+</ResponseField>
+
+<ResponseField name="wallet.walletType" type="string">
+  Type of wallet (INDIVIDUAL, BUSINESS)
+</ResponseField>
+
+<ResponseField name="transaction.transactionHash" type="string">
+  Blockchain transaction hash (view on block explorer)
+</ResponseField>
+
+<ResponseField name="transaction.chain" type="string">
+  Blockchain network where the transaction occurred
+</ResponseField>
+
+<ResponseField name="transaction.currency" type="string">
+  Token symbol (usdc, usdt, etc.)
+</ResponseField>
+
+<ResponseField name="transaction.status" type="string">
+  Transaction status: CONFIRMED indicates the deposit is found in the
+  blockchain, COMPLETED indicates the deposit is completed and unlikely to be
+  reverted
+</ResponseField>
+
+<ResponseField name="transaction.sourceAddress" type="string">
+  Address that sent the funds
+</ResponseField>
+
+<ResponseField name="transaction.destinationAddress" type="string">
+  Address that received the funds
+</ResponseField>
+
+<ResponseField name="transaction.contractAddress" type="string">
+  Smart contract address of the token
+</ResponseField>
+
+<ResponseField name="transaction.amount" type="string">
+  Human-readable amount (e.g., "19" for 19 USDC)
+</ResponseField>
+
+<ResponseField name="transaction.unitAmount" type="string">
+  Raw amount in smallest token unit (e.g., "19000000" for 19 USDC with 6
+  decimals)
+</ResponseField>
+
+<Note>
+  **Amount Units:** The `amount` field shows the human-readable value (19 USDC),
+  while `unitAmount` shows the raw blockchain value (19000000). For USDC with 6
   decimals: 19 USDC = 19,000,000 units.
-</Accordion>
+</Note>
 
 ## Fiat onramps
 

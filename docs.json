@@ -6,7 +6,7 @@
   "colors": {
     "primary": "#33171E",
     "light": "#F2FF66",
-    "dark": "#191314"
+    "dark": "#222222"
   },
   "fonts": {
     "family": "Rhithmic Sans",
@@ -60,12 +60,19 @@
             "pages": [
               "docs/users/index",
               "docs/wallets/index",
-              "docs/transfers/onramps",
-              "docs/transfers/offramps",
               {
-                "group": "Onchain",
+                "group": "Accounts",
                 "pages": [
-                  "docs/transfers/wallet-transfers",
+                  "docs/accounts/virtual-accounts",
+                  "docs/accounts/offramp-accounts"
+                ]
+              },
+              {
+                "group": "Transfers",
+                "pages": [
+                  "docs/transfers/onchain",
+                  "docs/transfers/onramps",
+                  "docs/transfers/offramps",
                   "docs/transfers/swaps",
                   "docs/transfers/bridging"
                 ]
@@ -88,7 +95,6 @@
             "group": "Features",
             "pages": [
               "docs/features/kyc-link",
-              "docs/features/virtual-accounts",
               "docs/features/batch-transfers",
               "docs/features/transfer-approvals",
               "docs/features/developer-fees",
