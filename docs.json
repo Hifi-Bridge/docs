@@ -48,11 +48,12 @@
           {
             "group": "Get started",
             "pages": [
-              "docs/overview",
+              "docs/index",
               "docs/quickstart",
               "docs/authentication",
               "docs/sandbox",
-              "docs/postman"
+              "docs/postman",
+              "docs/currencies"
             ]
           },
           {
@@ -60,6 +61,15 @@
             "pages": [
               "docs/users/index",
               "docs/wallets/index",
+              {
+                "group": "Rails",
+                "pages": [
+                  "docs/rails/index",
+                  "docs/rails/usd",
+                  "docs/rails/africa",
+                  "docs/rails/global-network"
+                ]
+              },
               {
                 "group": "Accounts",
                 "pages": [
@@ -104,10 +114,8 @@
           {
             "group": "Compliance",
             "pages": [
-              "docs/compliance/currencies",
-              "docs/compliance/rails",
-              "docs/compliance/regions",
               "docs/compliance/industries",
+              "docs/compliance/regions",
               {
                 "group": "Documents",
                 "pages": [
