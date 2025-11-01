@@ -1,0 +1,135 @@
+---
+title: USD Rail
+---
+
+The USD Rail enables USD pay-ins and pay-outs through multiple payment rails. It also supports virtual accounts for onramps.
+
+## Individual
+
+The USD rail for individual users requires comprehensive KYC (Know Your Customer) verification to comply with US financial regulations.
+
+### KYC Fields
+
+| Field                       | Description                                                                                                                                               | `Required` |
+| :-------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------- |
+| **firstName**               | User's first name                                                                                                                                         | `Required` |
+| **lastName**                | User's last name                                                                                                                                          | `Required` |
+| **email**                   | User's email address                                                                                                                                      | `Required` |
+| **phone**                   | User's phone number                                                                                                                                       | `Required` |
+| **address**                 | The address the user currently resides. Required fields: `addressLine1`, `city`, `stateProvinceRegion`, `postalCode`, `country`. Optional: `addressLine2` | `Required` |
+| **nationality**             | User's nationality                                                                                                                                        | `Required` |
+| **dateOfBirth**             | User's date of birth                                                                                                                                      | `Required` |
+| **taxIdentificationNumber** | For individual US customers, this has to be SSN or ITIN                                                                                                   | `Required` |
+| **documents**               | Refer to the [Documents](#documents) section                                                                                                              | `Required` |
+
+### Documents
+
+| Document Group | Min Count | Document Types                               | `Required` |
+| :------------- | :-------- | :------------------------------------------- | ---------- |
+| **identity**   | 1         | DRIVERS, ID_CARD, PASSPORT, RESIDENCE_PERMIT | `Required` |
+
+<Accordion title="Document types">
+
+| Document Type    | Description                  |
+| :--------------- | :--------------------------- |
+| DRIVERS          | Drivers license              |
+| ID_CARD          | Identification card          |
+| PASSPORT         | National passport            |
+| RESIDENCE_PERMIT | Residence permit or document |
+
+</Accordion>
+
+## Business
+
+The USD rail for business users requires comprehensive KYB (Know Your Business) verification to comply with US financial regulations.
+
+### KYB Fields
+
+| Fields                       | Description                                                                                                                                                                                                                                           | `Required` |
+| :--------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------- |
+| **businessName**             | The full legal name of the business                                                                                                                                                                                                                   | `Required` |
+| **businessIndustry**         | The industry in which this business operates. Click [here](/docs/compliance/references/business-industries) for the complete list of valid industries and codes                                                                                       | `Required` |
+| **businessType**             | The type of business structure                                                                                                                                                                                                                        | `Required` |
+| **registrationNumber**       | Business Registration Number                                                                                                                                                                                                                          | `Required` |
+| **address**                  | Business address. Required fields: `addressLine1`, `city`, `stateProvinceRegion`, `postalCode`, `country`. Optional: `addressLine2`                                                                                                                   | `Required` |
+| **registeredAddress**        | The official registered office address of the business as filed with the government authority in its jurisdiction of incorporation. Required fields: `addressLine1`, `city`, `stateProvinceRegion`, `postalCode`, `country`. Optional: `addressLine2` | `Required` |
+| **incorporationDate**        | Date when the business was incorporated                                                                                                                                                                                                               | `Required` |
+| **email**                    | Business email address                                                                                                                                                                                                                                | `Required` |
+| **phone**                    | Business phone number                                                                                                                                                                                                                                 | `Required` |
+| **taxIdentificationNumber**  | Company tax number. For US business, EIN has to be provided                                                                                                                                                                                           | `Required` |
+| **website**                  | Business website URL                                                                                                                                                                                                                                  | `Required` |
+| **incorporationCountry**     | Country where the business was incorporated                                                                                                                                                                                                           |            |
+| **incorporationState**       | State where the business was incorporated                                                                                                                                                                                                             |            |
+| **sofEuQuestionnaire**       | Refer to the [Source of Funds and Expected Use](#source-of-funds-and-expected-use-questionnaire-1) section                                                                                                                                            | `Required` |
+| **documents**                | Refer to the [Documents](#documents-1) section                                                                                                                                                                                                        | `Required` |
+| **ultimateBeneficialOwners** | Refer to the [Ultimate Beneficial Owners](#ultimate-beneficial-owners-ubos) section                                                                                                                                                                   | `Required` |
+
+### Questionnaire
+
+| Fields                                | Description                                                      | `Required` |
+| :------------------------------------ | :--------------------------------------------------------------- | :--------- |
+| **primaryPurpose**                    | What is the primary purpose of the customer's account?           | `Required` |
+| **primaryPurposeOther**               | Required if the primary purpose is 'other'                       |            |
+| **sourceOfFunds**                     | What is the source of funds for the customer's account?          | `Required` |
+| **sourceOfFundsDescription**          | Additional description of the source of funds                    |            |
+| **transmitsCustomerFunds**            | Does the business transmit customer funds? (boolean)             | `Required` |
+| **transmitsCustomerFundsDescription** | Description of how customer funds are transmitted                |            |
+| **conductsMoneyServices**             | Does the business conduct money services? (boolean)              | `Required` |
+| **highRiskActivities**                | List of high-risk activities the business is involved in (array) | `Required` |
+| **estimatedAnnualRevenueUsd**         | Estimated annual revenue in USD                                  | `Required` |
+| **expectedMonthlyPaymentsUsd**        | Expected monthly volume of payments in USD                       | `Required` |
+| **customerFundsDescription**          | Description of how customer funds are handled                    | `Required` |
+| **operatesInProhibitedCountries**     | Does the business operate in prohibited countries?               |            |
+
+### Documents
+
+| Document Group         | Min Count | Document Types                                                               | `Required` |
+| :--------------------- | :-------- | :--------------------------------------------------------------------------- | :--------- |
+| **legalPresence**      | 1         | INCORPORATION_ARTICLES, INCORPORATION_CERT, STATE_REGISTRY                   | `Required` |
+| **ownershipStructure** | 1         | SHAREHOLDER_REGISTRY, TRUST_AGREEMENT, INFORMATION_STATEMENT, STATE_REGISTRY | `Required` |
+| **companyDetails**     | 1         | PROOF_OF_ADDRESS                                                             | `Required` |
+| **controlStructure**   | 1         | DIRECTORS_REGISTRY, TRUST_AGREEMENT, INFORMATION_STATEMENT, STATE_REGISTRY   | `Required` |
+
+<Accordion title="Document types">
+
+| Document Type          | Description                        |
+| :--------------------- | :--------------------------------- |
+| INCORPORATION_ARTICLES | Incorporation articles document    |
+| INCORPORATION_CERT     | Incorporation certificate document |
+| STATE_REGISTRY         | State registry document            |
+| SHAREHOLDER_REGISTRY   | Shareholder registry document      |
+| TRUST_AGREEMENT        | Trust agreement document           |
+| INFORMATION_STATEMENT  | Information statement document     |
+| PROOF_OF_ADDRESS       | Proof of address document          |
+| DIRECTORS_REGISTRY     | Directors registry document        |
+
+</Accordion>
+
+### Ultimate Beneficial Owners (UBOs)
+
+<Info>
+  **Role Requirements:** The combined `roles` across all provided UBOs must
+  include at least one `DIRECTOR` and one `UBO`.
+</Info>
+
+<Info>
+  **Share Threshold:** Only UBOs with a share proportion greater than 25% need
+  to be provided.
+</Info>
+
+| Fields                        | Description                                                                                                                                                    | `Required` |
+| :---------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------- |
+| **roles**                     | Array of roles (e.g., DIRECTOR, UBO). Combined roles across all UBOs must include at least one DIRECTOR and one UBO                                            | `Required` |
+| **businessTitle**             | UBO's business title                                                                                                                                           | `Required` |
+| **firstName**                 | UBO's first name                                                                                                                                               | `Required` |
+| **middleName**                | UBO's middle name                                                                                                                                              |            |
+| **lastName**                  | UBO's last name                                                                                                                                                | `Required` |
+| **nationality**               | UBO's nationality                                                                                                                                              | `Required` |
+| **email**                     | UBO's email address                                                                                                                                            | `Required` |
+| **phone**                     | UBO's phone number                                                                                                                                             | `Required` |
+| **address**                   | The address where the UBO currently resides. Required fields: `addressLine1`, `city`, `stateProvinceRegion`, `postalCode`, `country`. Optional: `addressLine2` | `Required` |
+| **dateOfBirth**               | UBO's date of birth                                                                                                                                            | `Required` |
+| **taxIdentificationNumber**   | UBO's tax identification number                                                                                                                                | `Required` |
+| **shareProportion**           | UBO's share proportion in the business                                                                                                                         | `Required` |
+| **relationshipEstablishedAt** | Date when the relationship was established                                                                                                                     | `Required` |
+| **documents**                 | Identity documents. Required: minimum 1 document. Accepted types: DRIVERS, ID_CARD, PASSPORT, RESIDENCE_PERMIT                                                 | `Required` |
