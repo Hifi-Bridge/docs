@@ -169,10 +169,6 @@ For detailed field documentation, see the [Create Batch Transfer](/api-reference
 }
 ```
 
-<Info>
-**Gas Efficiency:** Batch transfers are significantly more gas-efficient than sending individual transactions. All recipients receive their funds in a single on-chain transaction, reducing costs and processing time.
-</Info>
-
 ## Transaction Status
 
 Wallet transfers progress through several statuses:
@@ -187,13 +183,13 @@ Wallet transfers progress through several statuses:
 | **FAILED**          | Transfer failed (check `failedReason` for details)                |
 | **UNKNOWN**         | Transfer status could not be determined                           |
 
+## Tracking Transfers
+
 <Note>
 **Status Updates:** Subscribe to `WALLET.TRANSFER.UPDATE` webhook events to receive real-time status notifications. See [Webhooks](/docs/webhooks/wallet) for setup instructions.
 </Note>
 
-## Tracking Transfers
-
-Monitor transfer status using the [Retrieve Crypto Transfer](/api-reference/crypto-transfer/retrieve-a-crypto-transfer) endpoint.
+Monitor transfer status using the [Retrieve Crypto Transfer](/api-reference/crypto-transfer/retrieve-a-crypto-transfer) endpoint. The response structure matches the create endpoint shown above.
 
 **Request:**
 
@@ -202,22 +198,7 @@ curl -X GET "https://sandbox.hifi.com/v2/wallets/transfers/xfr_abc123" \
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
-**Response:**
-
-```json
-{
-  "transferType": "WALLET.TRANSFER",
-  "transferDetails": {
-    "id": "xfr_abc123",
-    "status": "COMPLETED",
-    "receipt": {
-      "transactionHash": "0x57f0cd3429ea425d982882243428ef4a1eda5f1be2157c1b34ea48b49b24fe7f"
-    }
-  }
-}
-```
-
-Use the `transactionHash` to view the transaction on a blockchain explorer like [Polygonscan](https://polygonscan.com/) or [Etherscan](https://etherscan.io/).
+Use the `transactionHash` in the response to view the transaction on a blockchain explorer like [Polygonscan](https://polygonscan.com/) or [Etherscan](https://etherscan.io/).
 
 ## Transfer Approvals
 
@@ -308,75 +289,6 @@ curl -X POST "https://sandbox.hifi.com/v2/wallets/transfers/batch" \
     - **userOpHash:** For account abstraction wallets, this is the user operation hash
     
     Both values are `null` until the transfer is confirmed on-chain (status becomes COMPLETED).
-  </Accordion>
-</AccordionGroup>
-
-## Common Patterns
-
-### Send with balance check
-
-<AccordionGroup>
-  <Accordion title="Check balance first">
-    ```bash
-    curl -X GET "https://sandbox.hifi.com/v2/users/usr_abc123/wallets/balance?chain=POLYGON&currency=usdc" \
-      -H "Authorization: Bearer YOUR_API_KEY"
-    ```
-    
-    Verify that `displayBalance` is greater than or equal to the amount you want to send.
-  </Accordion>
-
-  <Accordion title="Create transfer">
-    ```bash
-    curl -X POST "https://sandbox.hifi.com/v2/wallets/transfers" \
-      -H "Authorization: Bearer YOUR_API_KEY" \
-      -H "Content-Type: application/json" \
-      -d '{
-        "source": {"userId": "usr_abc123"},
-        "destination": {"userId": "usr_xyz789"},
-        "amount": 10,
-        "currency": "usdc",
-        "chain": "POLYGON",
-        "requestId": "a40ea2aa-7937-4be9-bb1f-b75f1489bcc6"
-      }'
-    ```
-  </Accordion>
-
-  <Accordion title="Track status">
-    Poll the retrieve endpoint or subscribe to `WALLET.TRANSFER.UPDATE` webhooks to monitor progress until status is COMPLETED.
-  </Accordion>
-</AccordionGroup>
-
-### Bulk payout with batch
-
-<AccordionGroup>
-  <Accordion title="Prepare recipient list">
-    Compile your list of recipients with amounts. Maximum 50 per batch:
-    ```json
-    [
-      {"userId": "usr_001", "amount": 100},
-      {"userId": "usr_002", "amount": 150},
-      {"walletAddress": "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb", "amount": 75}
-    ]
-    ```
-  </Accordion>
-
-  <Accordion title="Create batch transfer">
-    ```bash
-    curl -X POST "https://sandbox.hifi.com/v2/wallets/transfers/batch" \
-      -H "Authorization: Bearer YOUR_API_KEY" \
-      -H "Content-Type: application/json" \
-      -d '{
-        "source": {"userId": "usr_treasury"},
-        "destinations": [...recipient list...],
-        "currency": "usdc",
-        "chain": "POLYGON",
-        "requestId": "c62gc4cc-9b59-6dgb-dd3h-d97h3690dee8"
-      }'
-    ```
-  </Accordion>
-
-  <Accordion title="Verify transaction">
-    Once COMPLETED, use the `transactionHash` to verify all recipients received their funds on the blockchain explorer.
   </Accordion>
 </AccordionGroup>
 

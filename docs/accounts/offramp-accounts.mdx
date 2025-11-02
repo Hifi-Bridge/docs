@@ -491,8 +491,8 @@ After creating an offramp account, HIFI validates the account details:
 
 ### Create and validate account
 
-<AccordionGroup>
-  <Accordion title="Create the account">
+<Steps>
+  <Step title="Create the account">
     ```bash
     curl -X POST "https://sandbox.hifi.com/v2/users/usr_abc123/accounts" \
       -H "Authorization: Bearer YOUR_API_KEY" \
@@ -523,9 +523,9 @@ After creating an offramp account, HIFI validates the account details:
         }
       }'
     ```
-  </Accordion>
+  </Step>
 
-  <Accordion title="Check validation status">
+  <Step title="Check validation status">
     The response includes the status. If `ACTIVE`, the account is ready immediately. If `PENDING`, wait for validation to complete or subscribe to account webhooks.
     
     ```json
@@ -536,9 +536,9 @@ After creating an offramp account, HIFI validates the account details:
     ```
     
     For `REJECTED` status, check the `invalidFields` array to see which fields need correction.
-  </Accordion>
+  </Step>
 
-  <Accordion title="Use for offramps">
+  <Step title="Use for offramps">
     Once active, use the account ID when creating offramp transfers:
     ```bash
     curl -X POST "https://sandbox.hifi.com/v2/offramps" \
@@ -559,8 +559,8 @@ After creating an offramp account, HIFI validates the account details:
         "requestId": "b08e27be-c086-4b84-a321-307ed9f265e1"
       }'
     ```
-  </Accordion>
-</AccordionGroup>
+  </Step>
+</Steps>
 
 ### Support multiple regions
 

@@ -1,12 +1,11 @@
 ---
-title: "Webhooks"
+title: "Webhooks & Events"
 sidebarTitle: "Overview"
 ---
 
-## Why Use Webhooks
-
 When integrating with HIFI's stablecoin infrastructure, it is essential for your application to respond to events in real time. By doing so, your backend systems can promptly take appropriate actions based on events occurring within your HIFI accounts.
 
+## Register wehbook endpoint
 To start receiving webhook events, register a webhook endpoint. Once registered, HIFI will push real-time event data to your application's webhook endpoint whenever an event occurs in your HIFI account. Webhook events are delivered via HTTPS as a JSON payload containing an Event object.
 
 Receiving webhook events is particularly valuable for monitoring asynchronous events such as when a transaction is confirmed or a user's KYC status for a rail is updated.

@@ -412,8 +412,8 @@ The sandbox will process this deposit as if real money arrived, triggering the f
 
 ### Get deposit instructions
 
-<AccordionGroup>
-  <Accordion title="Create virtual account">
+<Steps>
+  <Step title="Create virtual account">
     ```bash
     curl -X POST "https://sandbox.hifi.com/v2/users/usr_abc123/virtual-accounts" \
       -H "Authorization: Bearer YOUR_API_KEY" \
@@ -424,31 +424,28 @@ The sandbox will process this deposit as if real money arrived, triggering the f
         "destinationChain": "POLYGON"
       }'
     ```
-  </Accordion>
+  </Step>
 
-{" "}
+  <Step title="Extract and display instructions">
+    Extract the `depositInstructions` object from the response and present the relevant bank details to your user. Example:
 
-<Accordion title="Extract and display instructions">
-  Extract the `depositInstructions` object from the response and present the relevant bank details to your user. Example:
+    **ACH Deposit Instructions**
 
-**ACH Deposit Instructions**
+    **Bank Name:** Cross River Bank
+    **Routing Number:** 021214891
+    **Account Number:** 344176915009
+    **Beneficiary:** John Doe
 
-**Bank Name:** Cross River Bank
-**Routing Number:** 021214891
-**Account Number:** 344176915009
-**Beneficiary:** John Doe
+    **Wire Deposit Instructions**
 
-**Wire Deposit Instructions**
+    **Bank Name:** Cross River Bank
+    **Routing Number:** 021214891
+    **Account Number:** 344176915009
+    **Beneficiary:** John Doe
+    **Bank Address:** 885 Teaneck Road, Teaneck, NJ 07666
+  </Step>
 
-**Bank Name:** Cross River Bank
-**Routing Number:** 021214891
-**Account Number:** 344176915009
-**Beneficiary:** John Doe
-**Bank Address:** 885 Teaneck Road, Teaneck, NJ 07666
-
-  </Accordion>
-
-  <Accordion title="Track onramp transactions">
+  <Step title="Track onramp transactions">
     List onramps to see which virtual account was used and track conversion status:
     ```bash
     curl -X GET "https://sandbox.hifi.com/v2/onramps?userId=usr_abc123" \
@@ -456,30 +453,33 @@ The sandbox will process this deposit as if real money arrived, triggering the f
     ```
     
     Or subscribe to `ONRAMP.CREATE` and `ONRAMP.UPDATE` webhooks for real-time notifications.
-  </Accordion>
-</AccordionGroup>
+  </Step>
+</Steps>
 
 ### Send to external wallet
 
-<AccordionGroup>
-  <Accordion title="Direct to external wallet">
-    Use an `externalWalletId` instead of `destinationChain` when creating a virtual account. Funds will be deposited directly into the specified wallet address.
-    ```bash
-    curl -X POST "https://sandbox.hifi.com/v2/users/usr_abc123/virtual-accounts" \
-      -H "Authorization: Bearer YOUR_API_KEY" \
-      -H "Content-Type: application/json" \
-      -d '{
-        "sourceCurrency": "usd",
-        "destinationCurrency": "usdc",
-        "externalWalletId": "ew_abc123"
-      }'
-    ```
-    Deposits to this virtual account will be converted to USDC and sent directly to the external wallet address.
-  </Accordion>
-   <Accordion title="Route through HIFI wallet">
-    Create a standard virtual account without `externalWalletId`. Funds will arrive in the user's HIFI wallet first, then send them to any external address using the [Wallet Transfer API](/docs/transfers/onchain).
-    
-    **Step 1: Create virtual account:**
+**Option 1: Direct to external wallet**
+
+Use an `externalWalletId` instead of `destinationChain` when creating a virtual account. Funds will be deposited directly into the specified wallet address.
+
+```bash
+curl -X POST "https://sandbox.hifi.com/v2/users/usr_abc123/virtual-accounts" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "sourceCurrency": "usd",
+    "destinationCurrency": "usdc",
+    "externalWalletId": "ew_abc123"
+  }'
+```
+
+Deposits to this virtual account will be converted to USDC and sent directly to the external wallet address.
+
+**Option 2: Route through HIFI wallet**
+
+<Steps>
+  <Step title="Create virtual account">
+    Create a standard virtual account without `externalWalletId`. Funds will arrive in the user's HIFI wallet first.
     ```bash
     curl -X POST "https://sandbox.hifi.com/v2/users/usr_abc123/virtual-accounts" \
       -H "Authorization: Bearer YOUR_API_KEY" \
@@ -490,8 +490,10 @@ The sandbox will process this deposit as if real money arrived, triggering the f
         "destinationChain": "POLYGON"
       }'
     ```
-    
-    **Step 2: Send to external wallet:**
+  </Step>
+
+  <Step title="Send to external wallet">
+    Send funds to any external address using the [Wallet Transfer API](/docs/transfers/onchain):
     ```bash
     curl -X POST "https://sandbox.hifi.com/v2/wallets/transfers" \
       -H "Authorization: Bearer YOUR_API_KEY" \
@@ -509,8 +511,8 @@ The sandbox will process this deposit as if real money arrived, triggering the f
         "requestId": "b51fb3bb-8a48-5cfa-cc2g-c86g2589cdd7"
       }'
     ```
-  </Accordion>
-</AccordionGroup>
+  </Step>
+</Steps>
 
 ## Getting Help
 

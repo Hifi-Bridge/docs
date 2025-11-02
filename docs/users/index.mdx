@@ -187,17 +187,17 @@ These accounts are created separately after user creation and require KYC verifi
 
 ### Create and verify a user
 
-<AccordionGroup>
-  <Accordion title="1. Generate ToS link">
+<Steps>
+  <Step title="Generate ToS link">
     ```bash
     curl -X POST "https://sandbox.hifi.com/v2/tos-link" \
       -H "Authorization: Bearer YOUR_API_KEY" \
       -H "Content-Type: application/json" \
       -d '{"idempotencyKey": "8cb49537-bcf9-41b1-8d8c-c9c200d7341b"}'
     ```
-  </Accordion>
+  </Step>
 
-  <Accordion title="2. Create user (after ToS accepted)">
+  <Step title="Create user (after ToS accepted)">
     ```bash
     curl -X POST "https://sandbox.hifi.com/v2/users" \
       -H "Authorization: Bearer YOUR_API_KEY" \
@@ -211,75 +211,70 @@ These accounts are created separately after user creation and require KYC verifi
         "requestId": "705f1f8b-a080-467c-b683-174eca409928"
       }'
     ```
-  </Accordion>
+  </Step>
 
-  <Accordion title="3. Complete KYC for USD rail">
-    <Steps>
-      <Step title="Update KYC information">
-        Provide required personal information:
-        ```bash
-        curl -X POST "https://sandbox.hifi.com/v2/users/usr_abc123/kyc" \
-          -H "Authorization: Bearer YOUR_API_KEY" \
-          -H "Content-Type: application/json" \
-          -d '{
-            "phone": "+14155551234",
-            "taxIdentificationNumber": "123456789",
-            "nationality": "USA"
-          }'
-        ```
-      </Step>
+  <Step title="Update KYC information">
+    Provide required personal information:
+    ```bash
+    curl -X POST "https://sandbox.hifi.com/v2/users/usr_abc123/kyc" \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "phone": "+14155551234",
+        "taxIdentificationNumber": "123456789",
+        "nationality": "USA"
+      }'
+    ```
+  </Step>
 
-      <Step title="Upload identity documents">
-        First, upload the document files:
-        ```bash
-        # Upload front side
-        curl -X POST "https://sandbox.hifi.com/v2/files" \
-          -H "Authorization: Bearer YOUR_API_KEY" \
-          -H "Content-Type: multipart/form-data" \
-          -F "file=@drivers_license_front.png"
+  <Step title="Upload identity documents">
+    First, upload the document files:
+    ```bash
+    # Upload front side
+    curl -X POST "https://sandbox.hifi.com/v2/files" \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: multipart/form-data" \
+      -F "file=@drivers_license_front.png"
 
-        # Upload back side
-        curl -X POST "https://sandbox.hifi.com/v2/files" \
-          -H "Authorization: Bearer YOUR_API_KEY" \
-          -H "Content-Type: multipart/form-data" \
-          -F "file=@drivers_license_back.png"
-        ```
+    # Upload back side
+    curl -X POST "https://sandbox.hifi.com/v2/files" \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: multipart/form-data" \
+      -F "file=@drivers_license_back.png"
+    ```
 
-        Then attach the documents to the user's KYC:
-        ```bash
-        curl -X POST "https://sandbox.hifi.com/v2/users/usr_abc123/kyc/documents" \
-          -H "Authorization: Bearer YOUR_API_KEY" \
-          -H "Content-Type: application/json" \
-          -d '[
-            {
-              "type": "DRIVERS",
-              "subType": "FRONT_SIDE",
-              "issuedCountry": "USA",
-              "fileId": "file_JzALYV2L1-4LBmaxZ6GCm"
-            },
-            {
-              "type": "DRIVERS",
-              "subType": "BACK_SIDE",
-              "issuedCountry": "USA",
-              "fileId": "file_KpBMZW3M2-5MCnbyA7HDn"
-            }
-          ]'
-        ```
-      </Step>
+    Then attach the documents to the user's KYC:
+    ```bash
+    curl -X POST "https://sandbox.hifi.com/v2/users/usr_abc123/kyc/documents" \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '[
+        {
+          "type": "DRIVERS",
+          "subType": "FRONT_SIDE",
+          "issuedCountry": "USA",
+          "fileId": "file_JzALYV2L1-4LBmaxZ6GCm"
+        },
+        {
+          "type": "DRIVERS",
+          "subType": "BACK_SIDE",
+          "issuedCountry": "USA",
+          "fileId": "file_KpBMZW3M2-5MCnbyA7HDn"
+        }
+      ]'
+    ```
+  </Step>
 
-      <Step title="Submit KYC application">
-        Submit for review once all information and documents are provided:
-        ```bash
-        curl -X POST "https://sandbox.hifi.com/v2/users/usr_abc123/kyc/submissions" \
-          -H "Authorization: Bearer YOUR_API_KEY" \
-          -H "Content-Type: application/json" \
-          -d '{"rails": "USD"}'
-        ```
-      </Step>
-    </Steps>
-
-  </Accordion>
-</AccordionGroup>
+  <Step title="Submit KYC application">
+    Submit for review once all information and documents are provided:
+    ```bash
+    curl -X POST "https://sandbox.hifi.com/v2/users/usr_abc123/kyc/submissions" \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{"rails": "USD"}'
+    ```
+  </Step>
+</Steps>
 
 ### Check user capabilities
 

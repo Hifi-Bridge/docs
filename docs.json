@@ -82,20 +82,20 @@
                   "docs/transfers/onchain",
                   "docs/transfers/onramps",
                   "docs/transfers/offramps",
-                  "docs/transfers/swaps",
-                  "docs/transfers/bridging"
+                  "docs/transfers/bridging",
+                  "docs/transfers/swaps"
                 ]
               },
               {
                 "group": "Webhooks",
                 "pages": [
                   "docs/webhooks/index",
-                  "docs/webhooks/user",
-                  "docs/webhooks/kyc",
-                  "docs/webhooks/account",
-                  "docs/webhooks/onramp",
-                  "docs/webhooks/offramp",
-                  "docs/webhooks/wallet"
+                  "docs/webhooks/user-events",
+                  "docs/webhooks/kyc-events",
+                  "docs/webhooks/account-events",
+                  "docs/webhooks/onramp-events",
+                  "docs/webhooks/offramp-events",
+                  "docs/webhooks/wallet-events"
                 ]
               }
             ]
