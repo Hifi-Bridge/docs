@@ -2,46 +2,497 @@
 title: "Offramp Accounts"
 ---
 
-An **Offramp Account** is your user's external bank account where they receive fiat money after converting stablecoins. When users offramp, their stablecoins are converted to fiat and sent directly to this registered account.
+An **Offramp Account** is a user's external bank account where they receive fiat money from stablecoin conversions. When users offramp, their stablecoins are converted to fiat and sent directly to this registered account.
 
 ## How Offramp Accounts Work
 
 <Steps>
-  <Step title="Create the account">
-    Register the user's external bank account with HIFI by providing account
-    details and account holder information.
+  <Step title="Register bank account">
+    Add the user's external bank account to HIFI by providing account details and account holder information.
   </Step>
   <Step title="Create offramp">
-    Initiate an offramp transfer request to get a conversion quote with current
-    exchange rates and fees.
+    Initiate an offramp transfer to get a conversion quote with current exchange rates and fees.
   </Step>
   <Step title="Accept quote">
-    Review and accept the quote to execute the conversion. Stablecoins are
-    converted to fiat and delivered to the registered bank account.
+    Accept the quote to execute the conversion. Stablecoins are converted to fiat and delivered to the registered bank account.
   </Step>
 </Steps>
 
 Each offramp account is configured for a specific currency and region (e.g., USD in the US, BRL in Brazil). You can create multiple offramp accounts per user for different currencies and regions.
 
-## Creating Offramp Accounts
+## Prerequisites
 
 <Warning>
-  **Rail Requirement:** Before you can create an offramp account, you must
-  unlock the corresponding rail for the user. For example, to create a USD
-  offramp account, the user must have an active USD rail. Complete KYC
-  verification for the rail first using the [KYC process](/docs/users/kyc).
+**KYC Required:** Users must complete KYC verification for the relevant rail before creating offramp accounts. For example, to create a USD offramp account, the user must have an active USD rail.
 </Warning>
 
-Create an offramp account using the [Create Account](/api-reference/account/create-an-account) endpoint.
+## Creating Offramp Accounts
 
-### Supported Account Types
+Create an offramp account using the [Create Account](/api-reference/account/create-an-account) endpoint. The required fields vary by region and currency.
 
-Offramp accounts support multiple rails and regions. Accounts are organized by rail:
+### USD Accounts
+
+For USD offramps to US bank accounts:
+
+```bash
+curl -X POST "https://sandbox.hifi.com/v2/users/usr_abc123/accounts" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "rail": "offramp",
+    "type": "us",
+    "accountHolder": {
+      "type": "individual",
+      "name": "John Doe",
+      "phone": "+18573491112",
+      "email": "john@hifi.com",
+      "address": {
+        "addressLine1": "123 Main St",
+        "city": "New York",
+        "stateProvinceRegion": "NY",
+        "postalCode": "10010",
+        "country": "USA"
+      }
+    },
+    "us": {
+      "transferType": "wire",
+      "accountType": "checking",
+      "accountNumber": "99485843",
+      "routingNumber": "011002877",
+      "bankName": "HIFI Bank",
+      "currency": "usd"
+    }
+  }'
+```
+
+**Request Fields:**
+
+<ResponseField name="rail" type="string" required>
+  Always `offramp` for offramp accounts.
+</ResponseField>
+
+<ResponseField name="type" type="string" required>
+  Account region. For US accounts, use `us`.
+</ResponseField>
+
+<ResponseField name="accountHolder" type="object" required>
+  Account holder information. Must match user's KYC data for compliance.
+  
+  <Expandable title="properties">
+    <ResponseField name="type" type="string" required>
+      Account holder type: `individual` or `business`
+    </ResponseField>
+    <ResponseField name="name" type="string" required>
+      Account holder's full name
+    </ResponseField>
+    <ResponseField name="phone" type="string" required>
+      Contact phone number
+    </ResponseField>
+    <ResponseField name="email" type="string" required>
+      Contact email address
+    </ResponseField>
+    <ResponseField name="address" type="object" required>
+      Account holder's address
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="us" type="object" required>
+  US-specific bank account details.
+  
+  <Expandable title="properties">
+    <ResponseField name="transferType" type="string" required>
+      Payment method: `wire` or `ach`
+    </ResponseField>
+    <ResponseField name="accountType" type="string" required>
+      Bank account type: `checking` or `savings`
+    </ResponseField>
+    <ResponseField name="accountNumber" type="string" required>
+      Bank account number
+    </ResponseField>
+    <ResponseField name="routingNumber" type="string" required>
+      Bank routing number
+    </ResponseField>
+    <ResponseField name="bankName" type="string" required>
+      Name of the bank
+    </ResponseField>
+    <ResponseField name="currency" type="string" required>
+      Currency code: `usd`
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+**Response:**
+
+```json
+{
+  "status": "ACTIVE",
+  "invalidFields": [],
+  "message": "Account created successfully",
+  "id": "acc_abc123"
+}
+```
+
+**Response Fields:**
+
+<ResponseField name="id" type="string">
+  Unique account ID. **Save this** for creating offramp transfers to this account.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  Account status: `ACTIVE` (ready to use), `PENDING` (being validated), or `REJECTED` (validation failed)
+</ResponseField>
+
+<ResponseField name="invalidFields" type="array">
+  List of validation errors. Empty array means all fields are valid.
+</ResponseField>
+
+### Global Network Accounts
+
+Global Network accounts support multiple countries including China, Hong Kong, Brazil, Mexico, and Nigeria. These accounts require additional verification fields.
 
 <AccordionGroup>
-  <Accordion title="USD Rail">
-    For USD offramps to US bank accounts:
+  <Accordion title="China (CNY)">
+    ```bash
+    curl -X POST "https://sandbox.hifi.com/v2/users/usr_abc123/accounts" \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "rail": "offramp",
+        "type": "chinaGlobalNetwork",
+        "accountHolder": {
+          "type": "individual",
+          "name": "John Doe",
+          "dateOfBirth": "1990-01-01",
+          "idNumber": "110101199001011234",
+          "nationality": "CHN",
+          "address": {
+            "addressLine1": "123 Main Street",
+            "city": "Beijing",
+            "stateProvinceRegion": "BJ",
+            "postalCode": "100000",
+            "country": "CHN"
+          }
+        },
+        "chinaGlobalNetwork": {
+          "bankName": "Industrial and Commercial Bank of China",
+          "accountNumber": "6222021234567890123",
+          "swiftCode": "ICBKCNBJ",
+          "currency": "cny"
+        }
+      }'
+    ```
+    
+    **Additional Fields Required:**
+    - `dateOfBirth` - Account holder's date of birth
+    - `idNumber` - Chinese national ID number
+    - `nationality` - Must be `CHN`
+    - `swiftCode` - Bank's SWIFT code
+  </Accordion>
 
+  <Accordion title="Hong Kong (HKD)">
+    ```bash
+    curl -X POST "https://sandbox.hifi.com/v2/users/usr_abc123/accounts" \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "rail": "offramp",
+        "type": "hongKongGlobalNetwork",
+        "accountHolder": {
+          "type": "individual",
+          "name": "John Doe",
+          "dateOfBirth": "1990-01-01",
+          "idNumber": "A123456(7)",
+          "nationality": "HKG",
+          "address": {
+            "addressLine1": "123 Main Street",
+            "city": "Hong Kong",
+            "stateProvinceRegion": "HK",
+            "postalCode": "000000",
+            "country": "HKG"
+          }
+        },
+        "hongKongGlobalNetwork": {
+          "bankName": "HSBC",
+          "accountNumber": "123456789",
+          "swiftCode": "HSBCHKHHHKH",
+          "currency": "hkd"
+        }
+      }'
+    ```
+    
+    **Additional Fields Required:**
+    - `dateOfBirth` - Account holder's date of birth
+    - `idNumber` - Hong Kong ID number
+    - `nationality` - Must be `HKG`
+    - `swiftCode` - Bank's SWIFT code
+  </Accordion>
+
+  <Accordion title="Brazil (BRL) - PIX">
+    ```bash
+    curl -X POST "https://sandbox.hifi.com/v2/users/usr_abc123/accounts" \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "rail": "offramp",
+        "type": "brazilGlobalNetwork",
+        "accountHolder": {
+          "type": "individual",
+          "name": "John Doe",
+          "dateOfBirth": "1990-01-01",
+          "idNumber": "12345678901",
+          "nationality": "BRA",
+          "address": {
+            "addressLine1": "Rua 123",
+            "city": "São Paulo",
+            "stateProvinceRegion": "SP",
+            "postalCode": "01000-000",
+            "country": "BRA"
+          }
+        },
+        "brazilGlobalNetwork": {
+          "pix": "user@example.com",
+          "currency": "brl"
+        }
+      }'
+    ```
+    
+    **Additional Fields Required:**
+    - `dateOfBirth` - Account holder's date of birth
+    - `idNumber` - CPF (Brazilian tax ID)
+    - `nationality` - Must be `BRA`
+    - `pix` - PIX key (email, phone, or CPF)
+  </Accordion>
+
+  <Accordion title="Mexico (MXN) - SPEI">
+    ```bash
+    curl -X POST "https://sandbox.hifi.com/v2/users/usr_abc123/accounts" \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "rail": "offramp",
+        "type": "mexicoGlobalNetwork",
+        "accountHolder": {
+          "type": "individual",
+          "name": "John Doe",
+          "dateOfBirth": "1990-01-01",
+          "idNumber": "ABCD123456EFGH7890",
+          "nationality": "MEX",
+          "address": {
+            "addressLine1": "Calle 123",
+            "city": "Ciudad de México",
+            "stateProvinceRegion": "CMX",
+            "postalCode": "01000",
+            "country": "MEX"
+          }
+        },
+        "mexicoGlobalNetwork": {
+          "speiClabe": "012345678901234567",
+          "currency": "mxn"
+        }
+      }'
+    ```
+    
+    **Additional Fields Required:**
+    - `dateOfBirth` - Account holder's date of birth
+    - `idNumber` - CURP (Mexican national ID)
+    - `nationality` - Must be `MEX`
+    - `speiClabe` - 18-digit CLABE number for SPEI transfers
+  </Accordion>
+
+  <Accordion title="Nigeria (NGN)">
+    ```bash
+    curl -X POST "https://sandbox.hifi.com/v2/users/usr_abc123/accounts" \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "rail": "offramp",
+        "type": "nigeriaGlobalNetwork",
+        "accountHolder": {
+          "type": "individual",
+          "name": "John Doe",
+          "dateOfBirth": "1990-01-01",
+          "idNumber": "12345678901",
+          "nationality": "NGA",
+          "address": {
+            "addressLine1": "Street 123",
+            "city": "Lagos",
+            "stateProvinceRegion": "LA",
+            "postalCode": "100001",
+            "country": "NGA"
+          }
+        },
+        "nigeriaGlobalNetwork": {
+          "bankName": "Access Bank",
+          "accountNumber": "1234567890",
+          "currency": "ngn"
+        }
+      }'
+    ```
+    
+    **Additional Fields Required:**
+    - `dateOfBirth` - Account holder's date of birth
+    - `idNumber` - Nigerian national ID or BVN
+    - `nationality` - Must be `NGA`
+  </Accordion>
+</AccordionGroup>
+
+### Africa Rail Accounts
+
+Africa Rail supports multiple countries with bank accounts and mobile money (momo) payments.
+
+```bash
+curl -X POST "https://sandbox.hifi.com/v2/users/usr_abc123/accounts" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "rail": "offramp",
+    "type": "africa",
+    "accountHolder": {
+      "type": "individual",
+      "name": "John Doe",
+      "email": "john@example.com",
+      "phone": "+256123456789",
+      "address": {
+        "addressLine1": "Street 123",
+        "city": "Kampala",
+        "stateProvinceRegion": "C",
+        "postalCode": "256",
+        "country": "UGA"
+      }
+    },
+    "africa": {
+      "financialInstitute": "MTN",
+      "accountType": "momo",
+      "accountNumber": "1234567890",
+      "currency": "ugx",
+      "country": "uga"
+    }
+  }'
+```
+
+**Africa-Specific Fields:**
+
+<ResponseField name="africa.financialInstitute" type="string" required>
+  Financial institution name (e.g., `MTN`, `Vodafone`, specific bank names)
+</ResponseField>
+
+<ResponseField name="africa.accountType" type="string" required>
+  Account type: `momo` (mobile money) or `bank`
+</ResponseField>
+
+<ResponseField name="africa.accountNumber" type="string" required>
+  Account or mobile money number
+</ResponseField>
+
+<ResponseField name="africa.currency" type="string" required>
+  Currency code (e.g., `ugx`, `kes`, `ghs`)
+</ResponseField>
+
+<ResponseField name="africa.country" type="string" required>
+  Country code (e.g., `uga`, `ken`, `gha`)
+</ResponseField>
+
+<Note>
+Check the [Africa Rail documentation](/docs/compliance/rails/africa) for supported combinations of country, currency, and financial institution.
+</Note>
+
+## Using Offramp Accounts
+
+Once created and active, reference the account when creating offramp transfers using the [Create Offramp](/api-reference/offramp/create-an-offramp) endpoint.
+
+**Request:**
+
+```bash
+curl -X POST "https://sandbox.hifi.com/v2/offramps" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "source": {
+      "currency": "usdc",
+      "chain": "POLYGON",
+      "userId": "usr_abc123",
+      "amount": 100
+    },
+    "destination": {
+      "currency": "usd",
+      "accountId": "acc_abc123",
+      "userId": "usr_abc123"
+    },
+    "requestId": "b08e27be-c086-4b84-a321-307ed9f265e1"
+  }'
+```
+
+The `accountId` from the account creation response tells HIFI which bank account should receive the fiat funds.
+
+<Info>
+**Complete Offramp Flow:** See the [Offramps documentation](/docs/transfers/offramps) for the full process including quote acceptance, status tracking, and settlement timing.
+</Info>
+
+## Account Validation
+
+After creating an offramp account, HIFI validates the account details:
+
+| Status       | Description                                                    |
+| :----------- | :------------------------------------------------------------- |
+| **ACTIVE**   | Account validated and ready to receive funds                   |
+| **PENDING**  | Account being validated (typically resolves within minutes)    |
+| **REJECTED** | Validation failed - check `invalidFields` for specific issues  |
+
+## Key Concepts
+
+<AccordionGroup>
+  <Accordion title="Multiple Accounts Per User">
+    Users can have multiple offramp accounts for different currencies, regions, or payment methods. Each account has a unique ID referenced when creating offramps.
+    
+    **Example scenarios:**
+    - One USD account for wire transfers
+    - One BRL account for PIX transfers
+    - One MXN account for SPEI transfers
+    - Multiple accounts in the same currency for different banks
+  </Accordion>
+
+  <Accordion title="Account Types vs Transfer Types">
+    Don't confuse these two concepts:
+    
+    - **Account Type** (`type` field): The region or country (e.g., `us`, `brazil`, `mexico`)
+    - **Transfer Type** (within account-specific fields): The payment method (e.g., `wire`, `ach`, `pix`, `spei`)
+    
+    Not all transfer types are available in all regions. Check the API reference for supported combinations.
+  </Accordion>
+
+  <Accordion title="First Party vs Third Party Payments">
+    Offramp accounts support two payment scenarios:
+    
+    **First Party Payments:** Funds sent to the account holder (the user who completed KYC). This is the standard case where users receive money in their own bank account.
+    
+    **Third Party Payments:** Funds sent to someone other than the account holder. This enables use cases like:
+    - Sending money to family members
+    - Paying business partners or vendors
+    - Disbursing funds to beneficiaries
+    
+    Both are supported, but third party payments may require additional compliance verification.
+  </Accordion>
+
+  <Accordion title="Regional Payment Methods">
+    Different regions support different payment methods:
+    
+    - **US**: Wire, ACH
+    - **Brazil**: PIX (instant payments)
+    - **Mexico**: SPEI (electronic transfers)
+    - **Africa**: Mobile money (momo) or bank transfers depending on country
+    - **China/Hong Kong**: Bank transfers with SWIFT codes
+    
+    Choose the payment method that best fits your users' needs and local banking infrastructure.
+  </Accordion>
+</AccordionGroup>
+
+## Common Patterns
+
+### Create and validate account
+
+<AccordionGroup>
+  <Accordion title="Create the account">
     ```bash
     curl -X POST "https://sandbox.hifi.com/v2/users/usr_abc123/accounts" \
       -H "Authorization: Bearer YOUR_API_KEY" \
@@ -72,293 +523,66 @@ Offramp accounts support multiple rails and regions. Accounts are organized by r
         }
       }'
     ```
-
   </Accordion>
 
-  <Accordion title="Global Network Rail">
-    Global Network accounts support multiple regions. Global Network accounts require additional account holder information like `dateOfBirth` or `formationDate` (for business accounts), `idNumber`, and `nationality`.
-
-    <CodeGroup>
-      ```bash China
-      curl -X POST "https://sandbox.hifi.com/v2/users/usr_abc123/accounts" \
-        -H "Authorization: Bearer YOUR_API_KEY" \
-        -H "Content-Type: application/json" \
-        -d '{
-          "rail": "offramp",
-          "type": "chinaGlobalNetwork",
-          "accountHolder": {
-            "type": "individual",
-            "name": "John Doe",
-            "dateOfBirth": "1990-01-01",
-            "idNumber": "110101199001011234",
-            "nationality": "CHN",
-            "address": {
-              "addressLine1": "123 Main Street",
-              "city": "Beijing",
-              "stateProvinceRegion": "BJ",
-              "postalCode": "100000",
-              "country": "CHN"
-            }
-          },
-          "chinaGlobalNetwork": {
-            "bankName": "Industrial and Commercial Bank of China",
-            "accountNumber": "6222021234567890123",
-            "swiftCode": "ICBKCNBJ",
-            "currency": "cny"
-          }
-        }'
-      ```
-
-      ```bash Hong Kong
-      curl -X POST "https://sandbox.hifi.com/v2/users/usr_abc123/accounts" \
-        -H "Authorization: Bearer YOUR_API_KEY" \
-        -H "Content-Type: application/json" \
-        -d '{
-          "rail": "offramp",
-          "type": "hongKongGlobalNetwork",
-          "accountHolder": {
-            "type": "individual",
-            "name": "John Doe",
-            "dateOfBirth": "1990-01-01",
-            "idNumber": "A123456(7)",
-            "nationality": "HKG",
-            "address": {
-              "addressLine1": "123 Main Street",
-              "city": "Hong Kong",
-              "stateProvinceRegion": "HK",
-              "postalCode": "000000",
-              "country": "HKG"
-            }
-          },
-          "hongKongGlobalNetwork": {
-            "bankName": "HSBC",
-            "accountNumber": "123456789",
-            "swiftCode": "HSBCHKHHHKH",
-            "currency": "hkd"
-          }
-        }'
-      ```
-
-      ```bash Brazil
-      curl -X POST "https://sandbox.hifi.com/v2/users/usr_abc123/accounts" \
-        -H "Authorization: Bearer YOUR_API_KEY" \
-        -H "Content-Type: application/json" \
-        -d '{
-          "rail": "offramp",
-          "type": "brazilGlobalNetwork",
-          "accountHolder": {
-            "type": "individual",
-            "name": "John Doe",
-            "dateOfBirth": "1990-01-01",
-            "idNumber": "12345678901",
-            "nationality": "BRA",
-            "address": {
-              "addressLine1": "Rua 123",
-              "city": "São Paulo",
-              "stateProvinceRegion": "SP",
-              "postalCode": "01000-000",
-              "country": "BRA"
-            }
-          },
-          "brazilGlobalNetwork": {
-            "pix": "user@example.com",
-            "currency": "brl"
-          }
-        }'
-      ```
-
-      ```bash Mexico
-      curl -X POST "https://sandbox.hifi.com/v2/users/usr_abc123/accounts" \
-        -H "Authorization: Bearer YOUR_API_KEY" \
-        -H "Content-Type: application/json" \
-        -d '{
-          "rail": "offramp",
-          "type": "mexicoGlobalNetwork",
-          "accountHolder": {
-            "type": "individual",
-            "name": "John Doe",
-            "dateOfBirth": "1990-01-01",
-            "idNumber": "ABCD123456EFGH7890",
-            "nationality": "MEX",
-            "address": {
-              "addressLine1": "Calle 123",
-              "city": "Ciudad de México",
-              "stateProvinceRegion": "CMX",
-              "postalCode": "01000",
-              "country": "MEX"
-            }
-          },
-          "mexicoGlobalNetwork": {
-            "speiClabe": "012345678901234567",
-            "currency": "mxn"
-          }
-        }'
-      ```
-
-      ```bash Nigeria
-      curl -X POST "https://sandbox.hifi.com/v2/users/usr_abc123/accounts" \
-        -H "Authorization: Bearer YOUR_API_KEY" \
-        -H "Content-Type: application/json" \
-        -d '{
-          "rail": "offramp",
-          "type": "nigeriaGlobalNetwork",
-          "accountHolder": {
-            "type": "individual",
-            "name": "John Doe",
-            "dateOfBirth": "1990-01-01",
-            "idNumber": "12345678901",
-            "nationality": "NGA",
-            "address": {
-              "addressLine1": "Street 123",
-              "city": "Lagos",
-              "stateProvinceRegion": "LA",
-              "postalCode": "100001",
-              "country": "NGA"
-            }
-          },
-          "nigeriaGlobalNetwork": {
-            "bankName": "Access Bank",
-            "accountNumber": "1234567890",
-            "currency": "ngn"
-          }
-        }'
-      ```
-    </CodeGroup>
-
+  <Accordion title="Check validation status">
+    The response includes the status. If `ACTIVE`, the account is ready immediately. If `PENDING`, wait for validation to complete or subscribe to account webhooks.
+    
+    ```json
+    {
+      "status": "ACTIVE",
+      "id": "acc_abc123"
+    }
+    ```
+    
+    For `REJECTED` status, check the `invalidFields` array to see which fields need correction.
   </Accordion>
 
-  <Accordion title="Africa Rail">
-    Africa accounts support multiple countries with mobile money (momo) and bank account types. The supported combinations of `country`, `currency`, and `financialInstitute` vary by region.
-
-    <Note>
-      Check the [supported combinations list](/docs/compliance/africa) for your
-      specific country, currency, and financial institute combination.
-    </Note>
-
+  <Accordion title="Use for offramps">
+    Once active, use the account ID when creating offramp transfers:
     ```bash
-    curl -X POST "https://sandbox.hifi.com/v2/users/usr_abc123/accounts" \
+    curl -X POST "https://sandbox.hifi.com/v2/offramps" \
       -H "Authorization: Bearer YOUR_API_KEY" \
       -H "Content-Type: application/json" \
       -d '{
-        "rail": "offramp",
-        "type": "africa",
-        "accountHolder": {
-          "type": "individual",
-          "name": "John Doe",
-          "email": "john@example.com",
-          "phone": "+256123456789",
-          "address": {
-            "addressLine1": "Street 123",
-            "city": "Kampala",
-            "stateProvinceRegion": "C",
-            "postalCode": "256",
-            "country": "UGA"
-          }
+        "source": {
+          "currency": "usdc",
+          "chain": "POLYGON",
+          "userId": "usr_abc123",
+          "amount": 100
         },
-        "africa": {
-          "financialInstitute": "MTN",
-          "accountType": "momo",
-          "accountNumber": "1234567890",
-          "currency": "ugx",
-          "country": "uga"
-        }
+        "destination": {
+          "currency": "usd",
+          "accountId": "acc_abc123",
+          "userId": "usr_abc123"
+        },
+        "requestId": "b08e27be-c086-4b84-a321-307ed9f265e1"
       }'
     ```
-
   </Accordion>
 </AccordionGroup>
 
-## Using Offramp Accounts
-
-Once an offramp account is created and active, users can initiate offramp transfers using the [Create Offramp](/api-reference/offramp/create-an-offramp) endpoint. The `accountId` from the account creation response is used as the destination.
-
-**Example offramp request:**
-
-```bash
-curl -X POST "https://sandbox.hifi.com/v2/offramps" \
-  -H "Authorization: Bearer YOUR_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "source": {
-      "currency": "usdc",
-      "chain": "POLYGON",
-      "userId": "usr_abc123",
-      "amount": 100
-    },
-    "destination": {
-      "currency": "usd",
-      "accountId": "583eb259-e78b-4f0c-a4b5-a8957876fa6f",
-      "userId": "usr_abc123"
-    },
-    "requestId": "b08e27be-c086-4b84-a321-307ed9f265e1"
-  }'
-```
-
-When the offramp completes, fiat funds are automatically sent to the registered bank account.
-
-<Info>
-  **Offramp Flow:** Learn more about the complete offramp process, including
-  quote acceptance and status tracking, in the [Offramps
-  documentation](/docs/transfers/offramps).
-</Info>
-
-## Account Validation
-
-After creating an offramp account, HIFI validates the account details. The account status indicates whether validation passed:
-
-- **`ACTIVE`** - Account is validated and ready to receive funds
-- **`PENDING`** - Account is being validated
-- **`REJECTED`** - Account validation failed (check `invalidFields` for details)
-
-<Warning>
-  **Account Holder Matching:** The account holder information must match the
-  user's KYC information. Mismatches may cause the account to be rejected or
-  offramp transfers to fail for compliance reasons.
-</Warning>
-
-## Key Concepts
+### Support multiple regions
 
 <AccordionGroup>
-  <Accordion title="Multiple Accounts Per User">
-    You can create multiple offramp accounts per user for different currencies, regions, or payment methods. Each account has a unique ID that you reference when creating offramp transfers.
+  <Accordion title="Create accounts for each region">
+    ```bash
+    # USD account for US users
+    curl -X POST "https://sandbox.hifi.com/v2/users/usr_abc123/accounts" \
+      -d '{"rail": "offramp", "type": "us", ...}'
     
-    Example: A user might have:
-    - One USD account for US wire transfers
-    - One BRL account for Brazil PIX transfers
-    - One MXN account for Mexico SPEI transfers
+    # BRL account for Brazilian users
+    curl -X POST "https://sandbox.hifi.com/v2/users/usr_xyz789/accounts" \
+      -d '{"rail": "offramp", "type": "brazilGlobalNetwork", ...}'
+    
+    # MXN account for Mexican users
+    curl -X POST "https://sandbox.hifi.com/v2/users/usr_def456/accounts" \
+      -d '{"rail": "offramp", "type": "mexicoGlobalNetwork", ...}'
+    ```
   </Accordion>
 
-{" "}
-
-{" "}
-
-<Accordion title="Account Holder Information">
-  Account holder information must match the user's KYC details. This includes: -
-  Name (must match exactly) - Address (should match or be consistent) - ID
-  information (for regions that require it) Discrepancies can cause validation
-  failures or offramp rejections.
-</Accordion>
-
-{" "}
-
-{" "}
-
-<Accordion title="Account Types vs Transfer Types">
-  - **Account Type** (`type` field): The region/country (e.g., `us`, `brazil`,
-  `mexico`) - **Transfer Type** (`transferType` in account-specific fields): The
-  payment method (e.g., `wire`, `ach`, `pix`, `spei`) Not all transfer types are
-  available in all regions. Check the API reference for supported combinations.
-</Accordion>
-
-{" "}
-
-  <Accordion title="Business vs Individual Accounts">
-    Account holder `type` can be `individual` or `business`. Business accounts may require additional information like:
-    - Formation date (for Global Network accounts)
-    - Business registration number
-    - Additional compliance documentation
-    
-    Ensure you provide all required fields based on the account holder type.
+  <Accordion title="Let users choose destination">
+    If a user has multiple accounts, let them select which account to use when creating an offramp. Pass the appropriate `accountId` based on their selection.
   </Accordion>
 </AccordionGroup>
 
@@ -369,8 +593,8 @@ After creating an offramp account, HIFI validates the account details. The accou
 
 ## Related Resources
 
-- [Quickstart Guide](/docs/quickstart) - Step-by-step tutorial including offramp account setup
-- [Offramps](/docs/transfers/offramps) - Complete guide to offramp transfers
-- [Users](/docs/users) - Understand user creation and KYC requirements
-- [Virtual Accounts](/docs/accounts/virtual-accounts) - For fiat-to-crypto onramps
+- [Quickstart Guide](/docs/quickstart) - Step-by-step tutorial
+- [Rails](/docs/rails) - Understand KYC requirements for different rails
+- [Offramps](/docs/transfers/offramps) - Complete guide to executing offramp transfers
+- [Webhooks](/docs/webhooks) - Real-time account validation notifications
 - [API Reference](/api-reference/account/create-an-account) - Complete endpoint documentation

@@ -3,43 +3,140 @@ title: "Wallet Transfers"
 sidebarTitle: "Onchain"
 ---
 
-Wallet transfers allow you to send stablecoins directly between wallets on the same blockchain network.
+**Wallet transfers** allow you to send stablecoins between wallets on blockchain networks. Transfers can be sent to other HIFI users or external wallet addresses.
 
-## How Wallet Transfers Work
+## Transfer Types
 
-HIFI supports single and batch wallet transfers.
+HIFI supports two types of wallet transfers:
 
-### Single Transfers
+| Type                | Description                                              | Best For                                    |
+| :------------------ | :------------------------------------------------------- | :------------------------------------------ |
+| **Single Transfer** | Send to one recipient                                    | Individual payments, one-time transactions  |
+| **Batch Transfer**  | Send to up to 50 recipients in a single transaction      | Payroll, airdrops, bulk distributions       |
 
-Send stablecoins to a single wallet address:
+## Creating Single Transfers
 
-1. **Create a transfer** – Specify source wallet, destination wallet, and amount
-2. **Transaction processing** – The transfer is executed on-chain
-3. **Confirmation** – Receive transaction hash once completed
+Send stablecoins to a single recipient on the same blockchain.
 
-### Batch Transfers
+**Request:**
 
-Send stablecoins to multiple recipients in a single transaction:
+<CodeGroup>
+```bash Transfer to HIFI User
+curl -X POST "https://sandbox.hifi.com/v2/wallets/transfers" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "source": {
+      "userId": "usr_abc123"
+    },
+    "destination": {
+      "userId": "usr_xyz789"
+    },
+    "amount": 10,
+    "currency": "usdc",
+    "chain": "POLYGON",
+    "requestId": "a40ea2aa-7937-4be9-bb1f-b75f1489bcc6"
+  }'
+```
 
-1. **Create a batch** – Specify source wallet and up to 50 destination wallets with amounts
-2. **Transaction processing** – All transfers are executed in a single on-chain transaction
-3. **Confirmation** – Receive transaction hash for the entire batch
+```bash Transfer to External Wallet
+curl -X POST "https://sandbox.hifi.com/v2/wallets/transfers" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "source": {
+      "userId": "usr_abc123"
+    },
+    "destination": {
+      "walletAddress": "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb"
+    },
+    "amount": 10,
+    "currency": "usdc",
+    "chain": "POLYGON",
+    "requestId": "b51fb3bb-8a48-5cfa-cc2g-c86g2589cdd7"
+  }'
+```
+</CodeGroup>
+
+**Response:**
+
+```json
+{
+  "transferType": "WALLET.TRANSFER",
+  "transferDetails": {
+    "id": "xfr_abc123",
+    "requestId": "a40ea2aa-7937-4be9-bb1f-b75f1489bcc6",
+    "createdAt": "2025-09-26T03:04:11.092Z",
+    "updatedAt": "2025-09-26T03:04:11.092Z",
+    "chain": "POLYGON",
+    "currency": "usdc",
+    "contractAddress": "0x41E94Eb019C0762f9Bfcf9Fb1E58725BfB0e7582",
+    "status": "CREATED",
+    "failedReason": null,
+    "source": {
+      "userId": "usr_abc123",
+      "walletAddress": "0x1b932E54e77Aeb698144550d5a493Ea99E20Daa7",
+      "walletType": "INDIVIDUAL"
+    },
+    "destination": {
+      "userId": "usr_xyz789",
+      "walletAddress": "0x1b932E54e77Aeb688144550d5a493Ea99E20Daa7"
+    },
+    "amount": 10,
+    "receipt": {
+      "transactionHash": null,
+      "userOpHash": null
+    }
+  }
+}
+```
 
 <Info>
-  Batch transfers are more gas-efficient than sending individual transactions to
-  multiple recipients. You can send to up to 50 recipients in a single batch.
+For detailed response field documentation, see the [Create Crypto Transfer](/api-reference/crypto-transfer/create-a-crypto-transfer) API reference.
 </Info>
 
-## Batch Transfer Structure
+## Creating Batch Transfers
 
-When you create a batch wallet transfer, the API response includes detailed information about the transaction:
+Send stablecoins to up to 50 recipients on the same blockchain.
+
+**Request:**
+
+```bash
+curl -X POST "https://sandbox.hifi.com/v2/wallets/transfers/batch" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "source": {
+      "userId": "usr_abc123"
+    },
+    "destinations": [
+      {
+        "userId": "usr_xyz789",
+        "amount": 10
+      },
+      {
+        "walletAddress": "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb",
+        "amount": 5
+      }
+    ],
+    "currency": "usdc",
+    "chain": "POLYGON",
+    "requestId": "c62gc4cc-9b59-6dgb-dd3h-d97h3690dee8"
+  }'
+```
+
+<Info>
+For detailed field documentation, see the [Create Batch Transfer](/api-reference/crypto-transfer/create-a-batch-transfer) API reference.
+</Info>
+
+**Response:**
 
 ```json
 {
   "transferType": "WALLET.TRANSFER.BATCH",
   "transferDetails": {
-    "id": "879af7af-67bf-469f-b718-d262a39d4857",
-    "requestId": "14a84906-b72e-4847-b34d-51b9048fa6a5",
+    "id": "bat_abc123",
+    "requestId": "c62gc4cc-9b59-6dgb-dd3h-d97h3690dee8",
     "createdAt": "2025-04-05T00:55:50.609Z",
     "updatedAt": "2025-04-05T00:56:33.236Z",
     "chain": "POLYGON",
@@ -47,150 +144,250 @@ When you create a batch wallet transfer, the API response includes detailed info
     "contractAddress": "0x41e94eb019c0762f9bfcf9fb1e58725bfb0e7582",
     "status": "COMPLETED",
     "source": {
-      /* Source */
+      "userId": "usr_abc123",
+      "walletAddress": "0x99a8c5ED386d217BC6ff0AA1b3585606D475432B",
+      "walletType": "INDIVIDUAL"
     },
     "destination": {
-      /* Destination */
+      "batch": [
+        {
+          "amount": "10",
+          "userId": "usr_xyz789",
+          "walletAddress": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e"
+        },
+        {
+          "amount": "5",
+          "walletAddress": "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb"
+        }
+      ]
     },
     "receipt": {
-      /* Receipt */
+      "transactionHash": "0x57f0cd3429ea425d982882243428ef4a1eda5f1be2157c1b34ea48b49b24fe7f",
+      "userOpHash": "0xef7bdb071b1fcfb5df629bd4d27ffa6dc32d0a5df676f26fb8c25311df1185ac"
     }
   }
 }
 ```
 
-<AccordionGroup>
-  <Accordion title="Source">
-    ```json
-    {
-      "userId": "6a13bd30-b3a3-4d44-af33-0b32e58261be",
-      "walletAddress": "0x99a8c5ED386d217BC6ff0AA1b3585606D475432B",
-      "walletType": "INDIVIDUAL"
-    }
-    ```
-  </Accordion>
-
-  <Accordion title="Destination">
-    ```json
-    {
-      "batch": [
-        {
-          "amount": "0.04",
-          "userId": "6a13bd30-b3a3-4d44-af33-0b32e58261be",
-          "walletAddress": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e"
-        },
-        {
-          "amount": "0.05",
-          "userId": "a1f70737-3844-4782-a321-ad481108a8ec",
-          "walletAddress": "0x848732f6c834E05b17C56fa01E83EE095f72C3c3"
-        }
-      ]
-    }
-    ```
-  </Accordion>
-
-  <Accordion title="Receipt">
-    ```json
-    {
-      "transactionHash": "0x57f0cd3429ea425d982882243428ef4a1eda5f1be2157c1b34ea48b49b24fe7f",
-      "userOpHash": "0xef7bdb071b1fcfb5df629bd4d27ffa6dc32d0a5df676f26fb8c25311df1185ac"
-    }
-    ```
-  </Accordion>
-</AccordionGroup>
+<Info>
+**Gas Efficiency:** Batch transfers are significantly more gas-efficient than sending individual transactions. All recipients receive their funds in a single on-chain transaction, reducing costs and processing time.
+</Info>
 
 ## Transaction Status
 
 Wallet transfers progress through several statuses:
 
-- **`NOT_INITIATED`**: The transfer was not submitted due to a validation error
-- **`CREATED`**: Transfer request has been created and is awaiting processing
-- **`INITIATED`**: Transfer has been submitted to the blockchain
-- **`PENDING`**: Transaction is awaiting on-chain confirmation
-- **`COMPLETED`**: Transfer has been successfully confirmed on-chain
-- **`FAILED`**: Transfer failed (check error details for more information)
-- **`UNKNOWN`**: Transfer status could not be determined
+| Status              | Description                                                       |
+| :------------------ | :---------------------------------------------------------------- |
+| **NOT_INITIATED**   | Transfer not submitted due to validation error                    |
+| **CREATED**         | Transfer request created and awaiting processing                  |
+| **INITIATED**       | Transfer submitted to blockchain                                  |
+| **PENDING**         | Transaction awaiting on-chain confirmation                        |
+| **COMPLETED**       | Transfer successfully confirmed on-chain                          |
+| **FAILED**          | Transfer failed (check `failedReason` for details)                |
+| **UNKNOWN**         | Transfer status could not be determined                           |
 
-## Approval Workflow
+<Note>
+**Status Updates:** Subscribe to `WALLET.TRANSFER.UPDATE` webhook events to receive real-time status notifications. See [Webhooks](/docs/webhooks/wallet) for setup instructions.
+</Note>
 
-Batch transfers can optionally require approval before processing. This is useful for organizations that need multi-party authorization for large or sensitive transfers.
+## Tracking Transfers
 
-### How Approvals Work
+Monitor transfer status using the [Retrieve Crypto Transfer](/api-reference/crypto-transfer/retrieve-a-crypto-transfer) endpoint.
 
-When creating a batch transfer with `requireApproval: true`:
+**Request:**
 
-1. The transfer enters a `PENDING_APPROVAL` state
-2. Designated approvers can review and vote on the transfer
-3. Once approval threshold is met, the transfer proceeds
-4. If rejected, the transfer is cancelled
+```bash
+curl -X GET "https://sandbox.hifi.com/v2/wallets/transfers/xfr_abc123" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
 
-### Approval Response
-
-When approval is required, the receipt includes approval details:
+**Response:**
 
 ```json
 {
-  "receipt": {
-    "approval": {
-      "id": "006737ca-42d5-4780-b3c2-aeb63279c591",
-      "status": "PENDING",
-      "createdAt": "2025-02-03T16:11:36.654998+00:00",
-      "updatedAt": "2025-02-03T16:12:41.503+00:00",
-      "transferId": "006737ca-42d5-4780-b3c2-aeb63279c591",
-      "transferType": "WALLET.TRANSFER.BATCH",
-      "fromDashboard": true,
-      "initiatorProfileId": "aec66b02-4f3f-471c-839a-94820b36abb2",
-      "votes": [
-        {
-          "approverId": "aec66b02-4f3f-471c-839a-94820b36abb2",
-          "vote": "APPROVE",
-          "comment": "Approved for processing",
-          "createdAt": "2025-02-03T16:12:41.503+00:00"
-        }
-      ]
+  "transferType": "WALLET.TRANSFER",
+  "transferDetails": {
+    "id": "xfr_abc123",
+    "status": "COMPLETED",
+    "receipt": {
+      "transactionHash": "0x57f0cd3429ea425d982882243428ef4a1eda5f1be2157c1b34ea48b49b24fe7f"
     }
   }
 }
 ```
 
-<Card
-  icon="shield-check"
-  title="Transfer Approvals"
-  href="/docs/transfers/features/transfer-approvals"
->
-  Learn how to configure approval workflows for transfers
-</Card>
+Use the `transactionHash` to view the transaction on a blockchain explorer like [Polygonscan](https://polygonscan.com/) or [Etherscan](https://etherscan.io/).
 
-## Batch Transfer Limits
+## Transfer Approvals
 
-- **Maximum recipients**: 50 per batch
-- **Supported chains**: POLYGON
-- **Supported currencies**: USDC
+For organizations requiring multi-party authorization, all transfers support an optional approval workflow.
 
-## Receipt Information
+### How Approvals Work
 
-The `receipt` object contains transaction details once completed:
+<Steps>
+  <Step title="Enable approval requirement">
+    Set `requireApproval: true` when creating a transfer.
+  </Step>
+  <Step title="Review pending transfer">
+    The transfer enters `PENDING_APPROVAL` status. Dashboard admins are notified via email and webhook to approve or reject the transfer. Any admin can make the decision.
+  </Step>
+  <Step title="Execution or rejection">
+    If approved, the transfer is executed. If rejected, it's cancelled.
+  </Step>
+</Steps>
 
-- **transactionHash**: Blockchain transaction hash for the transfer
-- **userOpHash**: User operation hash for account abstraction wallets
-- **approval**: Approval workflow details (if applicable)
+**Request with approval:**
 
-## Related Features
+```bash
+curl -X POST "https://sandbox.hifi.com/v2/wallets/transfers/batch" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "source": {
+      "userId": "usr_abc123"
+    },
+    "destinations": [...],
+    "currency": "usdc",
+    "chain": "POLYGON",
+    "requireApproval": true,
+    "requestId": "c62gc4cc-9b59-6dgb-dd3h-d97h3690dee8"
+  }'
+```
 
-<CardGroup cols={2}>
-  <Card
-    icon="layer-group"
-    title="Batch Transfers"
-    href="/docs/transfers/features/batch-transfers"
-  >
-    Learn more about batch transfer capabilities
-  </Card>
+**Response with approval details:**
 
-  <Card
-    icon="shield-check"
-    title="Transfer Approvals"
-    href="/docs/transfers/features/transfer-approvals"
-  >
-    Configure approval workflows for transfers
-  </Card>
-</CardGroup>
+```json
+{
+  "transferDetails": {
+    "id": "bat_abc123",
+    "status": "PENDING_APPROVAL",
+    "receipt": {
+      "approval": {
+        "id": "apv_xyz789",
+        "status": "PENDING",
+        "transferId": "bat_abc123",
+        "transferType": "WALLET.TRANSFER.BATCH",
+        "votes": [
+          {
+            "approverId": "profile_abc123",
+            "vote": "APPROVE",
+            "comment": "Approved for processing",
+            "createdAt": "2025-02-03T16:12:41.503+00:00"
+          }
+        ]
+      }
+    }
+  }
+}
+```
+
+<Note>
+**Configuring Approvers:** Manage your team roles in the HIFI Dashboard. Members can create transfers, but only admins can approve.
+</Note>
+
+## Key Concepts
+
+<AccordionGroup>
+  <Accordion title="HIFI vs External Transfers">
+    **HIFI transfers** use `userId` as the destination while **external transfers** use a `walletAddress` as the destination.
+  </Accordion>
+
+  <Accordion title="Batch Transfer Limits">
+    Batch transfers have the following constraints:
+    - **Maximum recipients:** 50 per batch
+    - **Supported chains:** Currently POLYGON only
+    - **Supported currencies:** USDC, USDT
+    
+    If you need to send to more than 50 recipients, create multiple batches.
+  </Accordion>
+
+  <Accordion title="Transaction Receipts">
+    The `receipt` object provides blockchain verification:
+    - **transactionHash:** Unique identifier for the blockchain transaction. Use this to view the transaction on block explorers.
+    - **userOpHash:** For account abstraction wallets, this is the user operation hash
+    
+    Both values are `null` until the transfer is confirmed on-chain (status becomes COMPLETED).
+  </Accordion>
+</AccordionGroup>
+
+## Common Patterns
+
+### Send with balance check
+
+<AccordionGroup>
+  <Accordion title="Check balance first">
+    ```bash
+    curl -X GET "https://sandbox.hifi.com/v2/users/usr_abc123/wallets/balance?chain=POLYGON&currency=usdc" \
+      -H "Authorization: Bearer YOUR_API_KEY"
+    ```
+    
+    Verify that `displayBalance` is greater than or equal to the amount you want to send.
+  </Accordion>
+
+  <Accordion title="Create transfer">
+    ```bash
+    curl -X POST "https://sandbox.hifi.com/v2/wallets/transfers" \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "source": {"userId": "usr_abc123"},
+        "destination": {"userId": "usr_xyz789"},
+        "amount": 10,
+        "currency": "usdc",
+        "chain": "POLYGON",
+        "requestId": "a40ea2aa-7937-4be9-bb1f-b75f1489bcc6"
+      }'
+    ```
+  </Accordion>
+
+  <Accordion title="Track status">
+    Poll the retrieve endpoint or subscribe to `WALLET.TRANSFER.UPDATE` webhooks to monitor progress until status is COMPLETED.
+  </Accordion>
+</AccordionGroup>
+
+### Bulk payout with batch
+
+<AccordionGroup>
+  <Accordion title="Prepare recipient list">
+    Compile your list of recipients with amounts. Maximum 50 per batch:
+    ```json
+    [
+      {"userId": "usr_001", "amount": 100},
+      {"userId": "usr_002", "amount": 150},
+      {"walletAddress": "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb", "amount": 75}
+    ]
+    ```
+  </Accordion>
+
+  <Accordion title="Create batch transfer">
+    ```bash
+    curl -X POST "https://sandbox.hifi.com/v2/wallets/transfers/batch" \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "source": {"userId": "usr_treasury"},
+        "destinations": [...recipient list...],
+        "currency": "usdc",
+        "chain": "POLYGON",
+        "requestId": "c62gc4cc-9b59-6dgb-dd3h-d97h3690dee8"
+      }'
+    ```
+  </Accordion>
+
+  <Accordion title="Verify transaction">
+    Once COMPLETED, use the `transactionHash` to verify all recipients received their funds on the blockchain explorer.
+  </Accordion>
+</AccordionGroup>
+
+## Getting Help
+
+- 📧 **Email:** support@hifi.com
+- 💬 **Slack:** Message us in our shared Slack channel
+
+## Related Resources
+
+- [Wallets](/docs/wallets) - Understand wallet addresses and balances
+- [Webhooks](/docs/webhooks) - Real-time transfer status notifications
+- [API: Single Transfer](/api-reference/crypto-transfer/create-a-crypto-transfer) - Complete single transfer documentation
+- [API: Batch Transfer](/api-reference/crypto-transfer/create-a-batch-crypto-transfer) - Complete batch transfer documentation
