@@ -47,48 +47,9 @@ curl -X POST "https://sandbox.hifi.com/v2/onramps" \
   }'
 ```
 
-**Request Fields:**
+The response contains the onramp quote and deposit information:
 
-<ResponseField name="source" type="object" required>
-  Source of the onramp (fiat side).
-  
-  <Expandable title="properties">
-    <ResponseField name="userId" type="string" required>
-      User initiating the onramp
-    </ResponseField>
-    <ResponseField name="currency" type="string" required>
-      Fiat currency to convert from (e.g., `usd`, `eur`, `brl`)
-    </ResponseField>
-    <ResponseField name="amount" type="number" required>
-      Amount of fiat to convert
-    </ResponseField>
-    <ResponseField name="transferType" type="string" required>
-      Payment method: `ach`, `wire`, `pix`, `spei`, etc.
-    </ResponseField>
-  </Expandable>
-</ResponseField>
-
-<ResponseField name="destination" type="object" required>
-  Destination of the onramp (crypto side).
-  
-  <Expandable title="properties">
-    <ResponseField name="userId" type="string" required>
-      User receiving the stablecoins
-    </ResponseField>
-    <ResponseField name="currency" type="string" required>
-      Stablecoin to receive (e.g., `usdc`, `usdt`)
-    </ResponseField>
-    <ResponseField name="chain" type="string" required>
-      Blockchain network: `POLYGON`, `ETHEREUM`, `BASE`
-    </ResponseField>
-  </Expandable>
-</ResponseField>
-
-<ResponseField name="requestId" type="string" required>
-  Unique identifier (UUID) for idempotency
-</ResponseField>
-
-**Response:**
+<Accordion title="Response">
 
 ```json
 {
@@ -144,7 +105,7 @@ curl -X POST "https://sandbox.hifi.com/v2/onramps" \
 }
 ```
 
-**Response Fields:**
+</Accordion>
 
 <ResponseField name="transferDetails.id" type="string">
   Unique onramp ID. **Save this** for tracking the transaction status.
@@ -197,7 +158,9 @@ curl -X POST "https://sandbox.hifi.com/v2/onramps" \
 
 ### Send Payment
 
-After receiving the quote, send the exact amount specified in `depositInfo` to the provided bank account. **Critical requirements:**
+After receiving the quote, send the exact amount specified in `depositInfo` to the provided bank account. 
+
+**Critical requirements:**
 
 - **Use the reference ID** - Include the `referenceId` in your bank transfer memo/reference field
 - **Send exact amount** - The amount must match `depositInfo.amount` exactly
@@ -273,7 +236,7 @@ Use the `transactionHash` in the response to view the stablecoin delivery on a b
 
 ## Quote Validity
 
-Quotes typically expire within **24 hours** of creation. This ensures:
+Quote expiration times vary by currency. This ensures:
 - Current market rates
 - Prevention of stale pricing
 - Timely transaction processing
@@ -284,7 +247,7 @@ If your quote expires (status becomes `QUOTE_FAILED`):
 3. Complete the deposit with the new reference ID
 
 <Info>
-**Quote Expiration:** The `expiresAt` timestamp in `quoteInformation` shows exactly when the quote expires. Plan to send your deposit with enough time for bank processing before this deadline.
+**Quote Expiration:** The `expiresAt` timestamp in `quoteInformation` shows exactly when the quote expires for your specific currency. Always check this timestamp and plan to send your deposit with enough time for bank processing before this deadline.
 </Info>
 
 ## Key Concepts

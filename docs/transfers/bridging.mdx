@@ -46,7 +46,9 @@ curl -X POST "https://sandbox.hifi.com/v2/wallets/bridges" \
   }'
 ```
 
-**Response:**
+The response contains the bridge request details:
+
+<Accordion title="Response">
 
 ```json
 {
@@ -106,6 +108,36 @@ curl -X POST "https://sandbox.hifi.com/v2/wallets/bridges" \
 }
 ```
 
+</Accordion>
+
+<ResponseField name="transferDetails.id" type="string">
+  Unique bridge ID. Use this to check status using the [Retrieve Bridge](/api-reference/cross-chain-bridge/retrieve-a-bridging-request) endpoint.
+</ResponseField>
+
+<ResponseField name="transferDetails.status" type="string">
+  Bridge status. Progression: `CREATED` → `SOURCE_INITIATED` → `SOURCE_PROCESSED` → `DESTINATION_INITIATED` → `COMPLETED`. See [Transaction Status](#transaction-status) for details.
+</ResponseField>
+
+<ResponseField name="transferDetails.source" type="object">
+  Source chain details including wallet address, chain, and currency.
+</ResponseField>
+
+<ResponseField name="transferDetails.destination" type="object">
+  Destination chain details including wallet address, chain, and currency.
+</ResponseField>
+
+<ResponseField name="transferDetails.amount" type="number">
+  Amount being bridged in the specified currency.
+</ResponseField>
+
+<ResponseField name="transferDetails.quoteInformation" type="object">
+  Bridge quote details including amounts and rate. For same-asset bridges, the rate is always "1".
+</ResponseField>
+
+<ResponseField name="transferDetails.receipt" type="object">
+  Transaction receipt. Contains `transactionHash` and `operations` (approve, burn, mint) once bridge operations are executed on-chain.
+</ResponseField>
+
 <Info>
 For detailed field documentation, see the [Create Bridge](/api-reference/bridge/create-a-bridge) API reference.
 </Info>
@@ -156,7 +188,9 @@ curl -X GET "https://sandbox.hifi.com/v2/wallets/bridges/brg_abc123" \
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
-**Response (when completed):**
+When the bridge is completed, the response includes all operation hashes:
+
+<Accordion title="Response">
 
 ```json
 {
@@ -187,6 +221,16 @@ curl -X GET "https://sandbox.hifi.com/v2/wallets/bridges/brg_abc123" \
   }
 }
 ```
+
+</Accordion>
+
+<ResponseField name="transferDetails.status" type="string">
+  Bridge status. `COMPLETED` means tokens have been successfully minted on the destination chain.
+</ResponseField>
+
+<ResponseField name="transferDetails.receipt.operations" type="object">
+  Blockchain operations that were executed during the bridge. Each operation (approve, burn, mint) contains `transactionHash`, `userOpHash`, and `chain` for verification on block explorers.
+</ResponseField>
 
 ## Bridge Operations
 
@@ -256,22 +300,14 @@ Currently supported bridging routes:
     
     Use bridges when you need assets on a different chain. Use transfers for same-chain movements.
   </Accordion>
-
-  <Accordion title="Failed Bridge Recovery">
-    If a bridge fails:
-    - **Source phase failures**: Tokens remain in source wallet or are returned
-    - **Destination phase failures**: Tokens were burned but not minted - contact support immediately for recovery
-    
-    Always check `failedReason` for specific error details and contact support if tokens are stuck.
-  </Accordion>
 </AccordionGroup>
 
 ## Common Patterns
 
 ### Complete bridge flow
 
-<AccordionGroup>
-  <Accordion title="Create bridge request">
+<Steps>
+  <Step title="Create bridge request">
     ```bash
     curl -X POST "https://sandbox.hifi.com/v2/wallets/bridges" \
       -H "Authorization: Bearer YOUR_API_KEY" \
@@ -291,25 +327,25 @@ Currently supported bridging routes:
         }
       }'
     ```
-  </Accordion>
+  </Step>
 
-  <Accordion title="Monitor progress">
+  <Step title="Monitor progress">
     Poll the retrieve endpoint or subscribe to `WALLET.BRIDGE.UPDATE` webhooks. Track through statuses:
     1. SOURCE_INITIATED → SOURCE_PENDING → SOURCE_PROCESSED
     2. DESTINATION_INITIATED → DESTINATION_PENDING → COMPLETED
-  </Accordion>
+  </Step>
 
-  <Accordion title="Verify on block explorers">
+  <Step title="Verify on block explorers">
     Once COMPLETED, use transaction hashes from `receipt.operations` to verify:
     - Check burn transaction on source chain explorer (Polygonscan)
     - Check mint transaction on destination chain explorer (Etherscan)
-  </Accordion>
-</AccordionGroup>
+  </Step>
+</Steps>
 
-### Bridge with approval requirement
+### Bridge with approval
 
-<AccordionGroup>
-  <Accordion title="Create bridge with approval">
+<Steps>
+  <Step title="Create bridge with approval">
     Set `requireApproval: true` for multi-party authorization:
     ```bash
     curl -X POST "https://sandbox.hifi.com/v2/wallets/bridges" \
@@ -331,12 +367,16 @@ Currently supported bridging routes:
         "requireApproval": true
       }'
     ```
-  </Accordion>
+  </Step>
 
-  <Accordion title="Approval workflow">
-    The bridge enters `PENDING_APPROVAL` status. Dashboard admins are notified to approve or reject via email and webhook. Once approved, the bridge proceeds through normal processing.
-  </Accordion>
-</AccordionGroup>
+  <Step title="Review pending bridge">
+    The bridge enters `PENDING_APPROVAL` status. Dashboard admins are notified to approve or reject via email and webhook.
+  </Step>
+
+  <Step title="Execution or rejection">
+    If approved, the bridge proceeds through normal processing. If rejected, it's cancelled.
+  </Step>
+</Steps>
 
 ## Getting Help
 

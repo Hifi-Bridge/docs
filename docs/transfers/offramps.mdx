@@ -56,7 +56,9 @@ curl -X POST "https://sandbox.hifi.com/v2/offramps" \
   }'
 ```
 
-**Response:**
+The response contains the offramp quote information:
+
+<Accordion title="Response">
 
 ```json
 {
@@ -141,6 +143,57 @@ curl -X POST "https://sandbox.hifi.com/v2/offramps" \
 }
 ```
 
+</Accordion>
+
+<ResponseField name="transferDetails.id" type="string">
+  Unique offramp ID. Use this to track the transaction and accept the quote.
+</ResponseField>
+
+<ResponseField name="transferDetails.status" type="string">
+  Offramp status. `OPEN_QUOTE` means the quote is ready for review. See [Transaction Status](#transaction-status) for details.
+</ResponseField>
+
+<ResponseField name="transferDetails.quoteInformation" type="object">
+  Conversion quote details including exchange rate, amounts, and expiration time.
+
+  <Expandable title="properties">
+    <ResponseField name="sendGross" type="object">
+      Total stablecoins being converted.
+    </ResponseField>
+    <ResponseField name="sendNet" type="object">
+      Net stablecoin amount after fees.
+    </ResponseField>
+    <ResponseField name="receiveGross" type="object">
+      Total fiat amount before fees.
+    </ResponseField>
+    <ResponseField name="receiveNet" type="object">
+      Actual fiat amount you'll receive. Verify this matches your expectations before accepting.
+    </ResponseField>
+    <ResponseField name="rate" type="string">
+      Exchange rate (stablecoin to fiat).
+    </ResponseField>
+    <ResponseField name="expiresAt" type="string">
+      Quote expiration timestamp. Quotes expire 10 minutes after creation.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="transferDetails.developerFee" type="object">
+  Developer fee details if included in the request.
+</ResponseField>
+
+<ResponseField name="transferDetails.source" type="object">
+  Source wallet details including user information and stablecoin amount.
+</ResponseField>
+
+<ResponseField name="transferDetails.destination" type="object">
+  Destination bank account details including account ID and user information.
+</ResponseField>
+
+<ResponseField name="transferDetails.receipt" type="object">
+  Transaction receipt. Contains `transactionHash` once the stablecoin conversion is confirmed on-chain, and `paymentTracking` once fiat processing begins.
+</ResponseField>
+
 <Info>
 For detailed field documentation, see the [Create Offramp](/api-reference/offramp/create-an-offramp) API reference.
 </Info>
@@ -156,7 +209,9 @@ curl -X POST "https://sandbox.hifi.com/v2/offramps/173c1e89-7bbd-4352-9e5d-73807
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
-**Response:**
+When the quote is accepted, the response shows the updated status:
+
+<Accordion title="Response">
 
 ```json
 {
@@ -170,6 +225,12 @@ curl -X POST "https://sandbox.hifi.com/v2/offramps/173c1e89-7bbd-4352-9e5d-73807
   }
 }
 ```
+
+</Accordion>
+
+<ResponseField name="transferDetails.status" type="string">
+  Updated offramp status. `CRYPTO_INITIATED` means the conversion has started. See [Transaction Status](#transaction-status) for progression.
+</ResponseField>
 
 Once accepted, the offramp progresses through crypto and fiat processing phases until completion.
 

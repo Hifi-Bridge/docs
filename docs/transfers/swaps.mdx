@@ -20,1003 +20,15 @@ Swaps execute immediately upon creation:
   </Step>
 </Steps>
 
-## API
-
-# Create a swap
-
-> Create a swap request to exchange one cryptocurrency for another within the same chain.
-
-## OpenAPI
-
-````yaml https://production.hifi.com/api/v2/openapi.json post /v2/wallets/swaps
-paths:
-  path: /v2/wallets/swaps
-  method: post
-  servers:
-    - url: https://production.hifi.com
-      description: Production server
-    - url: https://sandbox.hifi.com
-      description: Sandbox server
-  request:
-    security:
-      - title: bearerAuth
-        parameters:
-          query: {}
-          header:
-            Authorization:
-              type: http
-              scheme: bearer
-          cookie: {}
-    parameters:
-      path: {}
-      query: {}
-      header: {}
-      cookie: {}
-    body:
-      application/json:
-        schemaArray:
-          - type: object
-            properties:
-              requestId:
-                allOf:
-                  - type: string
-                    format: uuid
-                    description: >-
-                      Unique identifier for the swap request (recommend using
-                      uuid v4)
-                    example: 1ab3e6e0-4839-4dbe-89c3-b06d9645ae86
-              source:
-                allOf:
-                  - type: object
-                    description: Source wallet information for the swap
-                    required:
-                      - userId
-                      - chain
-                      - currency
-                    properties:
-                      userId:
-                        type: string
-                        format: uuid
-                        description: User ID of the source wallet owner
-                        example: 05179f69-1988-4b46-a847-dd4eea0984d6
-                      chain:
-                        type: string
-                        enum:
-                          - POLYGON
-                          - ETHEREUM
-                          - SOLANA
-                        description: Blockchain network for the source wallet
-                        example: POLYGON
-                      currency:
-                        type: string
-                        enum:
-                          - usdc
-                          - usdt
-                        description: Source cryptocurrency to swap from
-                        example: usdt
-                      amount:
-                        type: string
-                        description: >-
-                          Amount to swap (either source.amount or
-                          destination.amount must be provided)
-                        example: '10000'
-              destination:
-                allOf:
-                  - type: object
-                    description: Destination wallet information for the swap
-                    required:
-                      - chain
-                      - currency
-                    properties:
-                      userId:
-                        type: string
-                        format: uuid
-                        description: User ID of the destination wallet owner
-                        example: 05179f69-1988-4b46-a847-dd4eea0984d6
-                      externalWalletId:
-                        type: string
-                        format: uuid
-                        description: External wallet ID (Exclude with userId)
-                        example: 64fc4e9d-4839-4384-b4a0-0376af2c9b2e
-                      walletAddress:
-                        type: string
-                        pattern: ^0x[a-fA-F0-9]{40}$
-                        description: Wallet address (Exclude with userId)
-                        example: '0xE9cfBf1D690565579D823264170eE357f80e9A34'
-                      chain:
-                        type: string
-                        enum:
-                          - POLYGON
-                          - ETHEREUM
-                          - SOLANA
-                        description: Blockchain network for the destination wallet
-                        example: POLYGON
-                      currency:
-                        type: string
-                        enum:
-                          - usdc
-                          - usdt
-                          - usdg
-                        description: Destination cryptocurrency to swap to
-                        example: usdc
-                      amount:
-                        type: string
-                        description: >-
-                          Amount to receive (either source.amount or
-                          destination.amount must be provided)
-                        example: '10000'
-            required: true
-            refIdentifier: '#/components/schemas/CreateWalletSwap'
-            requiredProperties:
-              - requestId
-              - source
-              - destination
-        examples:
-          example:
-            value:
-              requestId: 1ab3e6e0-4839-4dbe-89c3-b06d9645ae86
-              source:
-                userId: 05179f69-1988-4b46-a847-dd4eea0984d6
-                chain: POLYGON
-                currency: usdt
-                amount: '10000'
-              destination:
-                userId: 05179f69-1988-4b46-a847-dd4eea0984d6
-                externalWalletId: 64fc4e9d-4839-4384-b4a0-0376af2c9b2e
-                walletAddress: '0xE9cfBf1D690565579D823264170eE357f80e9A34'
-                chain: POLYGON
-                currency: usdc
-                amount: '10000'
-  response:
-    '200':
-      application/json:
-        schemaArray:
-          - type: object
-            properties:
-              transferType:
-                allOf:
-                  - type: string
-                    example: WALLET.SWAP
-              transferDetails:
-                allOf:
-                  - $ref: '#/components/schemas/WalletSwapDetailsObject'
-            refIdentifier: '#/components/schemas/WalletSwapObject'
-        examples:
-          example:
-            value:
-              transferType: WALLET.SWAP
-              transferDetails:
-                id: dc923cc1-d74b-58f6-9fe4-9e9c6eb8dc37
-                requestId: 1ab3e6e0-4839-4dbe-89c3-b06d9645ae86
-                status: COMPLETED
-                createdAt: '2025-08-20T03:55:29.437108+00:00'
-                updatedAt: '2025-08-20T04:08:10.837+00:00'
-                source:
-                  currency: usdc
-                  amount: 10
-                  chain: POLYGON
-                  userId: 05179f69-1988-4b46-a847-dd4eea0984d6
-                destination:
-                  currency: usdt
-                  userId: 05179f69-1988-4b46-a847-dd4eea0984d6
-                  externalWalletId: null
-                  amount: null
-                  chain: POLYGON
-                  walletAddress: '0xe5727a4B1d93A26D6A7Adfaae145EFa41ED7f204'
-                error: null
-                errorDetails: null
-                quoteInformation:
-                  sendGross:
-                    amount: '10'
-                    currency: usdc
-                  sendNet:
-                    amount: '10'
-                    currency: usdc
-                  receiveGross:
-                    amount: '10'
-                    currency: usdc
-                  receiveNet:
-                    amount: '10'
-                    currency: usdc
-                  rate: '1'
-                  expiresAt: '2025-08-20T03:55:59.539+00:00'
-                billingInformation:
-                  fees:
-                    - id: 2ca381ec-9498-52f5-9a27-d0e392b2626b
-                      amount: 0.01
-                      currency: USD
-                      type: EXCHANGE_FEE
-                      timing: ON_INVOICE
-        description: Success
-    '401':
-      application/json:
-        schemaArray:
-          - type: object
-            properties:
-              error:
-                allOf:
-                  - type: string
-                    example: Not authorized
-            refIdentifier: '#/components/schemas/Unauthorized'
-        examples:
-          example:
-            value:
-              error: Not authorized
-        description: Unauthorized
-    '404':
-      application/json:
-        schemaArray:
-          - type: object
-            properties:
-              error:
-                allOf:
-                  - type: string
-                    example: Not Found
-            refIdentifier: '#/components/schemas/NotFound'
-        examples:
-          example:
-            value:
-              error: Not Found
-        description: Not Found
-    '500':
-      application/json:
-        schemaArray:
-          - type: object
-            properties:
-              error:
-                allOf:
-                  - type: string
-                    example: Unexpected error happened
-            refIdentifier: '#/components/schemas/InternalServerError'
-        examples:
-          example:
-            value:
-              error: Unexpected error happened
-        description: Internal Server Error
-  deprecated: false
-  type: path
-components:
-  schemas:
-    WalletSwapDetailsObject:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          example: dc923cc1-d74b-58f6-9fe4-9e9c6eb8dc37
-        requestId:
-          type: string
-          format: uuid
-          example: 1ab3e6e0-4839-4dbe-89c3-b06d9645ae86
-        status:
-          type: string
-          enum:
-            - PENDING
-            - COMPLETED
-            - FAILED
-            - CANCELLED
-          example: COMPLETED
-        createdAt:
-          type: string
-          format: date-time
-          example: '2025-08-20T03:55:29.437108+00:00'
-        updatedAt:
-          type: string
-          format: date-time
-          example: '2025-08-20T04:08:10.837+00:00'
-        source:
-          $ref: '#/components/schemas/WalletSwapSourceObject'
-        destination:
-          $ref: '#/components/schemas/WalletSwapDestinationObject'
-        error:
-          type: string
-          nullable: true
-          example: null
-        errorDetails:
-          type: string
-          nullable: true
-          example: null
-        quoteInformation:
-          $ref: '#/components/schemas/WalletSwapQuoteInformationObject'
-        billingInformation:
-          $ref: '#/components/schemas/WalletSwapBillingInformationObject'
-    WalletSwapSourceObject:
-      type: object
-      properties:
-        currency:
-          type: string
-          example: usdc
-        amount:
-          type: number
-          example: 10
-        chain:
-          type: string
-          example: POLYGON
-        userId:
-          type: string
-          format: uuid
-          example: 05179f69-1988-4b46-a847-dd4eea0984d6
-    WalletSwapDestinationObject:
-      type: object
-      properties:
-        currency:
-          type: string
-          example: usdt
-        userId:
-          type: string
-          format: uuid
-          example: 05179f69-1988-4b46-a847-dd4eea0984d6
-        externalWalletId:
-          type: string
-          format: uuid
-          nullable: true
-          example: null
-        amount:
-          type: number
-          nullable: true
-          example: null
-        chain:
-          type: string
-          example: POLYGON
-        walletAddress:
-          type: string
-          pattern: ^0x[a-fA-F0-9]{40}$
-          example: '0xe5727a4B1d93A26D6A7Adfaae145EFa41ED7f204'
-    WalletSwapQuoteInformationObject:
-      type: object
-      properties:
-        sendGross:
-          $ref: '#/components/schemas/WalletSwapAmountObject'
-        sendNet:
-          $ref: '#/components/schemas/WalletSwapAmountObject'
-        receiveGross:
-          $ref: '#/components/schemas/WalletSwapAmountObject'
-        receiveNet:
-          $ref: '#/components/schemas/WalletSwapAmountObject'
-        rate:
-          type: string
-          example: '1'
-        expiresAt:
-          type: string
-          format: date-time
-          example: '2025-08-20T03:55:59.539+00:00'
-    WalletSwapAmountObject:
-      type: object
-      properties:
-        amount:
-          type: string
-          example: '10'
-        currency:
-          type: string
-          example: usdc
-    WalletSwapBillingInformationObject:
-      type: object
-      properties:
-        fees:
-          type: array
-          items:
-            $ref: '#/components/schemas/WalletSwapFeeObject'
-    WalletSwapFeeObject:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          example: 2ca381ec-9498-52f5-9a27-d0e392b2626b
-        amount:
-          type: number
-          example: 0.01
-        currency:
-          type: string
-          example: USD
-        type:
-          type: string
-          enum:
-            - EXCHANGE_FEE
-            - GAS_FEE
-          example: EXCHANGE_FEE
-        timing:
-          type: string
-          enum:
-            - ON_INVOICE
-            - ON_TRANSACTION
-          example: ON_INVOICE
-
-````
-
-# Retrieve a swap
-
-> Retrieve details of a specific swap by its ID.
-
-## OpenAPI
-
-````yaml https://production.hifi.com/api/v2/openapi.json get /v2/wallets/swaps/{swapId}
-paths:
-  path: /v2/wallets/swaps/{swapId}
-  method: get
-  servers:
-    - url: https://production.hifi.com
-      description: Production server
-    - url: https://sandbox.hifi.com
-      description: Sandbox server
-  request:
-    security:
-      - title: bearerAuth
-        parameters:
-          query: {}
-          header:
-            Authorization:
-              type: http
-              scheme: bearer
-          cookie: {}
-    parameters:
-      path:
-        swapId:
-          schema:
-            - type: string
-              required: true
-              description: Swap transfer record ID.
-      query: {}
-      header: {}
-      cookie: {}
-    body: {}
-  response:
-    '200':
-      application/json:
-        schemaArray:
-          - type: object
-            properties:
-              transferType:
-                allOf:
-                  - type: string
-                    example: WALLET.SWAP
-              transferDetails:
-                allOf:
-                  - $ref: '#/components/schemas/WalletSwapDetailsObject'
-            refIdentifier: '#/components/schemas/WalletSwapObject'
-        examples:
-          example:
-            value:
-              transferType: WALLET.SWAP
-              transferDetails:
-                id: dc923cc1-d74b-58f6-9fe4-9e9c6eb8dc37
-                requestId: 1ab3e6e0-4839-4dbe-89c3-b06d9645ae86
-                status: COMPLETED
-                createdAt: '2025-08-20T03:55:29.437108+00:00'
-                updatedAt: '2025-08-20T04:08:10.837+00:00'
-                source:
-                  currency: usdc
-                  amount: 10
-                  chain: POLYGON
-                  userId: 05179f69-1988-4b46-a847-dd4eea0984d6
-                destination:
-                  currency: usdt
-                  userId: 05179f69-1988-4b46-a847-dd4eea0984d6
-                  externalWalletId: null
-                  amount: null
-                  chain: POLYGON
-                  walletAddress: '0xe5727a4B1d93A26D6A7Adfaae145EFa41ED7f204'
-                error: null
-                errorDetails: null
-                quoteInformation:
-                  sendGross:
-                    amount: '10'
-                    currency: usdc
-                  sendNet:
-                    amount: '10'
-                    currency: usdc
-                  receiveGross:
-                    amount: '10'
-                    currency: usdc
-                  receiveNet:
-                    amount: '10'
-                    currency: usdc
-                  rate: '1'
-                  expiresAt: '2025-08-20T03:55:59.539+00:00'
-                billingInformation:
-                  fees:
-                    - id: 2ca381ec-9498-52f5-9a27-d0e392b2626b
-                      amount: 0.01
-                      currency: USD
-                      type: EXCHANGE_FEE
-                      timing: ON_INVOICE
-        description: Success
-    '401':
-      application/json:
-        schemaArray:
-          - type: object
-            properties:
-              error:
-                allOf:
-                  - type: string
-                    example: Not authorized
-            refIdentifier: '#/components/schemas/Unauthorized'
-        examples:
-          example:
-            value:
-              error: Not authorized
-        description: Unauthorized
-    '404':
-      application/json:
-        schemaArray:
-          - type: object
-            properties:
-              error:
-                allOf:
-                  - type: string
-                    example: Not Found
-            refIdentifier: '#/components/schemas/NotFound'
-        examples:
-          example:
-            value:
-              error: Not Found
-        description: Not Found
-    '500':
-      application/json:
-        schemaArray:
-          - type: object
-            properties:
-              error:
-                allOf:
-                  - type: string
-                    example: Unexpected error happened
-            refIdentifier: '#/components/schemas/InternalServerError'
-        examples:
-          example:
-            value:
-              error: Unexpected error happened
-        description: Internal Server Error
-  deprecated: false
-  type: path
-components:
-  schemas:
-    WalletSwapDetailsObject:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          example: dc923cc1-d74b-58f6-9fe4-9e9c6eb8dc37
-        requestId:
-          type: string
-          format: uuid
-          example: 1ab3e6e0-4839-4dbe-89c3-b06d9645ae86
-        status:
-          type: string
-          enum:
-            - PENDING
-            - COMPLETED
-            - FAILED
-            - CANCELLED
-          example: COMPLETED
-        createdAt:
-          type: string
-          format: date-time
-          example: '2025-08-20T03:55:29.437108+00:00'
-        updatedAt:
-          type: string
-          format: date-time
-          example: '2025-08-20T04:08:10.837+00:00'
-        source:
-          $ref: '#/components/schemas/WalletSwapSourceObject'
-        destination:
-          $ref: '#/components/schemas/WalletSwapDestinationObject'
-        error:
-          type: string
-          nullable: true
-          example: null
-        errorDetails:
-          type: string
-          nullable: true
-          example: null
-        quoteInformation:
-          $ref: '#/components/schemas/WalletSwapQuoteInformationObject'
-        billingInformation:
-          $ref: '#/components/schemas/WalletSwapBillingInformationObject'
-    WalletSwapSourceObject:
-      type: object
-      properties:
-        currency:
-          type: string
-          example: usdc
-        amount:
-          type: number
-          example: 10
-        chain:
-          type: string
-          example: POLYGON
-        userId:
-          type: string
-          format: uuid
-          example: 05179f69-1988-4b46-a847-dd4eea0984d6
-    WalletSwapDestinationObject:
-      type: object
-      properties:
-        currency:
-          type: string
-          example: usdt
-        userId:
-          type: string
-          format: uuid
-          example: 05179f69-1988-4b46-a847-dd4eea0984d6
-        externalWalletId:
-          type: string
-          format: uuid
-          nullable: true
-          example: null
-        amount:
-          type: number
-          nullable: true
-          example: null
-        chain:
-          type: string
-          example: POLYGON
-        walletAddress:
-          type: string
-          pattern: ^0x[a-fA-F0-9]{40}$
-          example: '0xe5727a4B1d93A26D6A7Adfaae145EFa41ED7f204'
-    WalletSwapQuoteInformationObject:
-      type: object
-      properties:
-        sendGross:
-          $ref: '#/components/schemas/WalletSwapAmountObject'
-        sendNet:
-          $ref: '#/components/schemas/WalletSwapAmountObject'
-        receiveGross:
-          $ref: '#/components/schemas/WalletSwapAmountObject'
-        receiveNet:
-          $ref: '#/components/schemas/WalletSwapAmountObject'
-        rate:
-          type: string
-          example: '1'
-        expiresAt:
-          type: string
-          format: date-time
-          example: '2025-08-20T03:55:59.539+00:00'
-    WalletSwapAmountObject:
-      type: object
-      properties:
-        amount:
-          type: string
-          example: '10'
-        currency:
-          type: string
-          example: usdc
-    WalletSwapBillingInformationObject:
-      type: object
-      properties:
-        fees:
-          type: array
-          items:
-            $ref: '#/components/schemas/WalletSwapFeeObject'
-    WalletSwapFeeObject:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          example: 2ca381ec-9498-52f5-9a27-d0e392b2626b
-        amount:
-          type: number
-          example: 0.01
-        currency:
-          type: string
-          example: USD
-        type:
-          type: string
-          enum:
-            - EXCHANGE_FEE
-            - GAS_FEE
-          example: EXCHANGE_FEE
-        timing:
-          type: string
-          enum:
-            - ON_INVOICE
-            - ON_TRANSACTION
-          example: ON_INVOICE
-
-````
-
-# Accept a swap
-
-> Accept a swap request to execute the cryptocurrency exchange.
-
-## OpenAPI
-
-````yaml https://production.hifi.com/api/v2/openapi.json post /v2/wallets/swaps/{swapId}/accept
-paths:
-  path: /v2/wallets/swaps/{swapId}/accept
-  method: post
-  servers:
-    - url: https://production.hifi.com
-      description: Production server
-    - url: https://sandbox.hifi.com
-      description: Sandbox server
-  request:
-    security:
-      - title: bearerAuth
-        parameters:
-          query: {}
-          header:
-            Authorization:
-              type: http
-              scheme: bearer
-          cookie: {}
-    parameters:
-      path:
-        swapId:
-          schema:
-            - type: string
-              required: true
-              description: Swap transfer record ID.
-      query: {}
-      header: {}
-      cookie: {}
-    body: {}
-  response:
-    '200':
-      application/json:
-        schemaArray:
-          - type: object
-            properties:
-              transferType:
-                allOf:
-                  - type: string
-                    example: WALLET.SWAP
-              transferDetails:
-                allOf:
-                  - $ref: '#/components/schemas/WalletSwapDetailsObject'
-            refIdentifier: '#/components/schemas/WalletSwapObject'
-        examples:
-          example:
-            value:
-              transferType: WALLET.SWAP
-              transferDetails:
-                id: dc923cc1-d74b-58f6-9fe4-9e9c6eb8dc37
-                requestId: 1ab3e6e0-4839-4dbe-89c3-b06d9645ae86
-                status: COMPLETED
-                createdAt: '2025-08-20T03:55:29.437108+00:00'
-                updatedAt: '2025-08-20T04:08:10.837+00:00'
-                source:
-                  currency: usdc
-                  amount: 10
-                  chain: POLYGON
-                  userId: 05179f69-1988-4b46-a847-dd4eea0984d6
-                destination:
-                  currency: usdt
-                  userId: 05179f69-1988-4b46-a847-dd4eea0984d6
-                  externalWalletId: null
-                  amount: null
-                  chain: POLYGON
-                  walletAddress: '0xe5727a4B1d93A26D6A7Adfaae145EFa41ED7f204'
-                error: null
-                errorDetails: null
-                quoteInformation:
-                  sendGross:
-                    amount: '10'
-                    currency: usdc
-                  sendNet:
-                    amount: '10'
-                    currency: usdc
-                  receiveGross:
-                    amount: '10'
-                    currency: usdc
-                  receiveNet:
-                    amount: '10'
-                    currency: usdc
-                  rate: '1'
-                  expiresAt: '2025-08-20T03:55:59.539+00:00'
-                billingInformation:
-                  fees:
-                    - id: 2ca381ec-9498-52f5-9a27-d0e392b2626b
-                      amount: 0.01
-                      currency: USD
-                      type: EXCHANGE_FEE
-                      timing: ON_INVOICE
-        description: Success
-    '401':
-      application/json:
-        schemaArray:
-          - type: object
-            properties:
-              error:
-                allOf:
-                  - type: string
-                    example: Not authorized
-            refIdentifier: '#/components/schemas/Unauthorized'
-        examples:
-          example:
-            value:
-              error: Not authorized
-        description: Unauthorized
-    '404':
-      application/json:
-        schemaArray:
-          - type: object
-            properties:
-              error:
-                allOf:
-                  - type: string
-                    example: Not Found
-            refIdentifier: '#/components/schemas/NotFound'
-        examples:
-          example:
-            value:
-              error: Not Found
-        description: Not Found
-    '500':
-      application/json:
-        schemaArray:
-          - type: object
-            properties:
-              error:
-                allOf:
-                  - type: string
-                    example: Unexpected error happened
-            refIdentifier: '#/components/schemas/InternalServerError'
-        examples:
-          example:
-            value:
-              error: Unexpected error happened
-        description: Internal Server Error
-  deprecated: false
-  type: path
-components:
-  schemas:
-    WalletSwapDetailsObject:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          example: dc923cc1-d74b-58f6-9fe4-9e9c6eb8dc37
-        requestId:
-          type: string
-          format: uuid
-          example: 1ab3e6e0-4839-4dbe-89c3-b06d9645ae86
-        status:
-          type: string
-          enum:
-            - PENDING
-            - COMPLETED
-            - FAILED
-            - CANCELLED
-          example: COMPLETED
-        createdAt:
-          type: string
-          format: date-time
-          example: '2025-08-20T03:55:29.437108+00:00'
-        updatedAt:
-          type: string
-          format: date-time
-          example: '2025-08-20T04:08:10.837+00:00'
-        source:
-          $ref: '#/components/schemas/WalletSwapSourceObject'
-        destination:
-          $ref: '#/components/schemas/WalletSwapDestinationObject'
-        error:
-          type: string
-          nullable: true
-          example: null
-        errorDetails:
-          type: string
-          nullable: true
-          example: null
-        quoteInformation:
-          $ref: '#/components/schemas/WalletSwapQuoteInformationObject'
-        billingInformation:
-          $ref: '#/components/schemas/WalletSwapBillingInformationObject'
-    WalletSwapSourceObject:
-      type: object
-      properties:
-        currency:
-          type: string
-          example: usdc
-        amount:
-          type: number
-          example: 10
-        chain:
-          type: string
-          example: POLYGON
-        userId:
-          type: string
-          format: uuid
-          example: 05179f69-1988-4b46-a847-dd4eea0984d6
-    WalletSwapDestinationObject:
-      type: object
-      properties:
-        currency:
-          type: string
-          example: usdt
-        userId:
-          type: string
-          format: uuid
-          example: 05179f69-1988-4b46-a847-dd4eea0984d6
-        externalWalletId:
-          type: string
-          format: uuid
-          nullable: true
-          example: null
-        amount:
-          type: number
-          nullable: true
-          example: null
-        chain:
-          type: string
-          example: POLYGON
-        walletAddress:
-          type: string
-          pattern: ^0x[a-fA-F0-9]{40}$
-          example: '0xe5727a4B1d93A26D6A7Adfaae145EFa41ED7f204'
-    WalletSwapQuoteInformationObject:
-      type: object
-      properties:
-        sendGross:
-          $ref: '#/components/schemas/WalletSwapAmountObject'
-        sendNet:
-          $ref: '#/components/schemas/WalletSwapAmountObject'
-        receiveGross:
-          $ref: '#/components/schemas/WalletSwapAmountObject'
-        receiveNet:
-          $ref: '#/components/schemas/WalletSwapAmountObject'
-        rate:
-          type: string
-          example: '1'
-        expiresAt:
-          type: string
-          format: date-time
-          example: '2025-08-20T03:55:59.539+00:00'
-    WalletSwapAmountObject:
-      type: object
-      properties:
-        amount:
-          type: string
-          example: '10'
-        currency:
-          type: string
-          example: usdc
-    WalletSwapBillingInformationObject:
-      type: object
-      properties:
-        fees:
-          type: array
-          items:
-            $ref: '#/components/schemas/WalletSwapFeeObject'
-    WalletSwapFeeObject:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          example: 2ca381ec-9498-52f5-9a27-d0e392b2626b
-        amount:
-          type: number
-          example: 0.01
-        currency:
-          type: string
-          example: USD
-        type:
-          type: string
-          enum:
-            - EXCHANGE_FEE
-            - GAS_FEE
-          example: EXCHANGE_FEE
-        timing:
-          type: string
-          enum:
-            - ON_INVOICE
-            - ON_TRANSACTION
-          example: ON_INVOICE
-
-````
 
 ## Creating Swaps
 
+Exchange one cryptocurrency for another on the same blockchain network.
+
 Use the [Create Swap](/api-reference/swap/create-a-swap) endpoint to exchange currencies on the same chain.
 
-**Request:**
-
-```bash
+<CodeGroup>
+```bash Swap with Source Amount
 curl -X POST "https://sandbox.hifi.com/v2/wallets/swaps" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
@@ -1036,7 +48,30 @@ curl -X POST "https://sandbox.hifi.com/v2/wallets/swaps" \
   }'
 ```
 
-**Response:**
+```bash Swap with Destination Amount
+curl -X POST "https://sandbox.hifi.com/v2/wallets/swaps" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "requestId": "1ab3e6e0-4839-4dbe-89c3-b06d9645ae86",
+    "source": {
+      "userId": "usr_abc123",
+      "chain": "POLYGON",
+      "currency": "usdc"
+    },
+    "destination": {
+      "userId": "usr_abc123",
+      "chain": "POLYGON",
+      "currency": "usdt",
+      "amount": "100"
+    }
+  }'
+```
+</CodeGroup>
+
+The response contains the swap details and execution results:
+
+<Accordion title="Response">
 
 ```json
 {
@@ -1097,6 +132,59 @@ curl -X POST "https://sandbox.hifi.com/v2/wallets/swaps" \
 }
 ```
 
+</Accordion>
+
+<ResponseField name="transferDetails.id" type="string">
+  Unique swap ID. Use this to check status using the [Retrieve Swap](/api-reference/swap/retrieve-a-swap) endpoint.
+</ResponseField>
+
+<ResponseField name="transferDetails.status" type="string">
+  Swap status. Swaps typically complete immediately. See [Transaction Status](#transaction-status) for details.
+</ResponseField>
+
+<ResponseField name="transferDetails.source" type="object">
+  Source wallet details including currency, amount, chain, and user information.
+</ResponseField>
+
+<ResponseField name="transferDetails.destination" type="object">
+  Destination wallet details including currency, amount received, chain, and user information.
+</ResponseField>
+
+<ResponseField name="transferDetails.quoteInformation" type="object">
+  Swap quote details including exchange rate, amounts sent and received.
+
+  <Expandable title="properties">
+    <ResponseField name="sendGross" type="object">
+      Total source currency amount sent.
+    </ResponseField>
+    <ResponseField name="sendNet" type="object">
+      Net source currency amount after fees (if any).
+    </ResponseField>
+    <ResponseField name="receiveGross" type="object">
+      Total destination currency amount received before fees.
+    </ResponseField>
+    <ResponseField name="receiveNet" type="object">
+      Actual destination currency amount received. This is the amount that will be in your destination wallet.
+    </ResponseField>
+    <ResponseField name="rate" type="string">
+      Exchange rate between source and destination currencies.
+    </ResponseField>
+    <ResponseField name="expiresAt" type="string">
+      Quote expiration timestamp (if applicable).
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="transferDetails.billingInformation" type="object">
+  Fee information for the swap. Contains an array of fees with their timing (ON_INVOICE or ON_TRANSACTION).
+
+  <Expandable title="properties">
+    <ResponseField name="fees" type="array">
+      Array of fee objects. Each fee contains `id`, `amount`, `currency`, `type` (EXCHANGE_FEE or GAS_FEE), and `timing`.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
 <Info>
 For detailed field documentation, see the [Create Swap](/api-reference/swap/create-a-swap) API reference.
 </Info>
@@ -1127,7 +215,9 @@ curl -X GET "https://sandbox.hifi.com/v2/wallets/swaps/swp_abc123" \
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
-**Response:**
+The retrieve response includes current swap status:
+
+<Accordion title="Response">
 
 ```json
 {
@@ -1145,6 +235,12 @@ curl -X GET "https://sandbox.hifi.com/v2/wallets/swaps/swp_abc123" \
   }
 }
 ```
+
+</Accordion>
+
+<ResponseField name="transferDetails.status" type="string">
+  Current swap status. See [Transaction Status](#transaction-status) for all possible statuses.
+</ResponseField>
 
 ## Supported Swap Pairs
 
@@ -1259,8 +355,8 @@ Currently supported swap combinations:
 
 ### Basic swap flow
 
-<AccordionGroup>
-  <Accordion title="Create swap">
+<Steps>
+  <Step title="Create swap">
     ```bash
     curl -X POST "https://sandbox.hifi.com/v2/wallets/swaps" \
       -H "Authorization: Bearer YOUR_API_KEY" \
@@ -1280,27 +376,27 @@ Currently supported swap combinations:
         }
       }'
     ```
-  </Accordion>
+  </Step>
 
-  <Accordion title="Verify completion">
+  <Step title="Verify completion">
     The response will show status `COMPLETED` for successful swaps. Check:
     - `destination.amount` - Amount received
     - `quoteInformation.rate` - Exchange rate used
     - `billingInformation.fees` - Any applicable fees
-  </Accordion>
+  </Step>
 
-  <Accordion title="Handle errors">
+  <Step title="Handle errors">
     If status is `FAILED`:
     - Check `error` field for error type
     - Review `errorDetails` for specific failure reason
     - Common issues: insufficient balance, unsupported pair, network congestion
-  </Accordion>
-</AccordionGroup>
+  </Step>
+</Steps>
 
 ### Swap with exact output amount
 
-<AccordionGroup>
-  <Accordion title="Specify destination amount">
+<Steps>
+  <Step title="Specify destination amount">
     When you need to receive an exact amount:
     ```bash
     curl -X POST "https://sandbox.hifi.com/v2/wallets/swaps" \
@@ -1321,14 +417,14 @@ Currently supported swap combinations:
         }
       }'
     ```
-  </Accordion>
+  </Step>
 
-  <Accordion title="Check source amount used">
+  <Step title="Check source amount used">
     The response shows how much source currency was needed:
     - `source.amount` - Amount deducted from source wallet
     - `quoteInformation.sendNet` - Net amount sent after fees
-  </Accordion>
-</AccordionGroup>
+  </Step>
+</Steps>
 
 ## Getting Help
 
