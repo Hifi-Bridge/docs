@@ -52,8 +52,7 @@
               "docs/quickstart",
               "docs/authentication",
               "docs/sandbox",
-              "docs/postman",
-              "docs/currencies"
+              "docs/postman"
             ]
           },
           {
@@ -66,8 +65,8 @@
                 "pages": [
                   "docs/rails/index",
                   "docs/rails/usd",
-                  "docs/rails/africa",
-                  "docs/rails/global-network"
+                  "docs/rails/global-network",
+                  "docs/rails/africa"
                 ]
               },
               {
@@ -114,6 +113,7 @@
           {
             "group": "Compliance",
             "pages": [
+              "docs/compliance/currencies",
               "docs/compliance/industries",
               "docs/compliance/regions",
               {

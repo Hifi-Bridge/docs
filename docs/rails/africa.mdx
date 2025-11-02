@@ -4,7 +4,61 @@ title: Africa Rail
 
 The Africa Rail enables local currency pay-ins and pay-outs across multiple African markets through bank transfers and mobile money. It supports both onramp and offramp flows for individual and business users.
 
-## NGN — Nigerian Naira
+## Individual
+
+The Africa Rail for individual users requires KYC (Know Your Customer) verification. The requirements vary by country.
+
+### KYC Fields
+
+| Field           | Description                                                                                                                                                     | `Required` |
+| :-------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------- |
+| **firstName**   | User's first name                                                                                                                                               | `Required` |
+| **lastName**    | User's last name                                                                                                                                                | `Required` |
+| **email**       | User's email address                                                                                                                                            | `Required` |
+| **phone**       | User's phone number                                                                                                                                             | `Required` |
+| **address**     | The address where the user currently resides. Required fields: `addressLine1`, `city`, `stateProvinceRegion`, `postalCode`, `country`. Optional: `addressLine2` | `Required` |
+| **dateOfBirth** | User's date of birth                                                                                                                                            | `Required` |
+| **idType**      | Type of identification document. Refer to the [ID Types](#id-types) section                                                                                     | `Required` |
+| **idNumber**    | Identification document number                                                                                                                                  | `Required` |
+
+<Accordion title="ID Types">
+
+| ID Type          | Description                  |
+| :--------------- | :--------------------------- |
+| DRIVERS          | Drivers license              |
+| ID_CARD          | Identification card          |
+| PASSPORT         | National passport            |
+| RESIDENCE_PERMIT | Residence permit or document |
+
+</Accordion>
+
+### Nigeria Requirements
+
+For Nigerian users, the following additional fields are required:
+
+| Field                  | Description                             | `Required` |
+| :--------------------- | :-------------------------------------- | :--------- |
+| **additionalIdType**   | Additional identification document type | `Required` |
+| **additionalIdNumber** | Additional identification number        | `Required` |
+
+## Business
+
+<Info>
+  **Note:** We only support individual accounts in Nigeria, not business.
+</Info>
+
+### KYB Fields
+
+| Field                       | Description                         | `Required` |
+| :-------------------------- | :---------------------------------- | :--------- |
+| **businessName**            | The full legal name of the business | `Required` |
+| **taxIdentificationNumber** | Company tax number                  | `Required` |
+
+## Currency Support
+
+Here's a list of financial institutions supported for each currency:
+
+### NGN — Nigerian Naira
 
 **Channels:** Bank, Momo  
 **Availability:** Onramp & Offramp
@@ -84,7 +138,7 @@ Same as onramp.
 
 ---
 
-## KES — Kenyan Shilling
+### KES — Kenyan Shilling
 
 **Channels:** Bank, Momo  
 **Availability:** Onramp & Offramp
@@ -132,7 +186,7 @@ Same as onramp.
 
 ---
 
-## TZS — Tanzanian Shilling
+### TZS — Tanzanian Shilling
 
 **Channels:** Bank, Momo  
 **Availability:** Onramp & Offramp
@@ -183,7 +237,7 @@ Same as onramp.
 
 ---
 
-## UGX — Ugandan Shilling
+### UGX — Ugandan Shilling
 
 **Channels:** Momo only  
 **Availability:** Onramp & Offramp
@@ -206,7 +260,7 @@ Same as onramp.
 
 ---
 
-## BWP — Botswana Pula
+### BWP — Botswana Pula
 
 **Channels:** Bank, Momo  
 **Availability:** Onramp & Offramp
@@ -237,7 +291,7 @@ Same as onramp.
 
 ---
 
-## XAF — Central African CFA Franc
+### XAF — Central African CFA Franc
 
 **Channels:** Momo  
 **Availability:** Onramp & Offramp
@@ -260,7 +314,7 @@ Same as onramp.
 
 ---
 
-## MWK — Malawian Kwacha
+### MWK — Malawian Kwacha
 
 **Channels:** Momo  
 **Availability:** Onramp & Offramp
@@ -284,7 +338,7 @@ Same as onramp.
 
 ---
 
-## ZMW — Zambian Kwacha
+### ZMW — Zambian Kwacha
 
 **Channels:** Momo  
 **Availability:** Onramp & Offramp
@@ -309,7 +363,7 @@ Same as onramp.
 
 ---
 
-## XOF — West African CFA Franc
+### XOF — West African CFA Franc
 
 **Channels:** Momo (multi-market)  
 **Availability:** Onramp & Offramp
@@ -342,7 +396,7 @@ Same as onramp.
 
 ---
 
-## ZAR — South African Rand
+### ZAR — South African Rand
 
 **Channels:** Bank  
 **Availability:** Onramp & Offramp
