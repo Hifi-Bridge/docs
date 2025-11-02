@@ -101,29 +101,13 @@
             ]
           },
           {
-            "group": "Screen",
+            "group": "Features",
             "pages": [
-              "docs/features/tos-link",
-              "docs/features/kyc-link"
-            ]
-          },
-          {
-            "group": "Convert",
-            "pages": [
-              "docs/currencies",
-              "docs/features/exchange-rates"
-            ]
-          },
-          {
-            "group": "Send",
-            "pages": [
+              "docs/features/templates",
+              "docs/features/kyc-link",
+              "docs/features/exchange-rates",
               "docs/features/batch-transfers",
-              "docs/features/transfer-approvals"
-            ]
-          },
-          {
-            "group": "Route",
-            "pages": [
+              "docs/features/transfer-approvals",
               "docs/features/developer-fees",
               "docs/features/settlement-rules"
             ]
@@ -141,17 +125,18 @@
                   "docs/compliance/documents/supported-identity-documents",
                   "docs/compliance/documents/proof-of-address"
                 ]
-              },
-              {
-                "group": "References",
-                "pages": [
-                  "docs/compliance/references/business-industries",
-                  "docs/compliance/references/occupations",
-                  "docs/compliance/references/account-purposes",
-                  "docs/compliance/references/export-categories",
-                  "docs/compliance/references/product-service-categories"
-                ]
               }
+            ]
+          },
+          {
+            "group": "References",
+            "pages": [
+              "docs/references/currencies",
+              "docs/references/business-industries",
+              "docs/references/occupations",
+              "docs/references/account-purposes",
+              "docs/references/export-categories",
+              "docs/references/product-service-categories"
             ]
           }
         ]

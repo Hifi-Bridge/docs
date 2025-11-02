@@ -386,7 +386,7 @@ curl -X POST "https://sandbox.hifi.com/v2/users/usr_abc123/accounts" \
 </ResponseField>
 
 <ResponseField name="africa.currency" type="string" required>
-  Currency code (e.g., `ugx`, `kes`, `ghs`)
+  Currency code (e.g., `ugx`, `kes`, `ugx`)
 </ResponseField>
 
 <ResponseField name="africa.country" type="string" required>
@@ -562,29 +562,193 @@ After creating an offramp account, HIFI validates the account details:
   </Step>
 </Steps>
 
-### Support multiple regions
+### Support multicurrency payouts
 
-<AccordionGroup>
-  <Accordion title="Create accounts for each region">
-    ```bash
-    # USD account for US users
+<Steps>
+  <Step title="Create accounts for each region">
+    Create separate accounts for each region where you need to send payouts (offramps) to the user:
+    
+    <CodeGroup>
+    ```bash USD
     curl -X POST "https://sandbox.hifi.com/v2/users/usr_abc123/accounts" \
-      -d '{"rail": "offramp", "type": "us", ...}'
-    
-    # BRL account for Brazilian users
-    curl -X POST "https://sandbox.hifi.com/v2/users/usr_xyz789/accounts" \
-      -d '{"rail": "offramp", "type": "brazilGlobalNetwork", ...}'
-    
-    # MXN account for Mexican users
-    curl -X POST "https://sandbox.hifi.com/v2/users/usr_def456/accounts" \
-      -d '{"rail": "offramp", "type": "mexicoGlobalNetwork", ...}'
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "rail": "offramp",
+        "type": "us",
+        "accountHolder": {
+          "type": "individual",
+          "name": "John Doe",
+          "address": {
+            "addressLine1": "123 Main St",
+            "city": "New York",
+            "stateProvinceRegion": "NY",
+            "postalCode": "10010",
+            "country": "USA"
+          }
+        },
+        "us": {
+          "transferType": "wire",
+          "accountType": "Checking",
+          "accountNumber": "99485843",
+          "routingNumber": "011002877",
+          "bankName": "HIFI Bank",
+          "currency": "usd"
+        }
+      }'
     ```
-  </Accordion>
+    
+    ```bash BRL
+    curl -X POST "https://sandbox.hifi.com/v2/users/usr_abc123/accounts" \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "rail": "offramp",
+        "type": "brazilGlobalNetwork",
+        "accountHolder": {
+          "type": "individual",
+          "name": "John Doe",
+          "dateOfBirth": "1990-01-01",
+          "idNumber": "12345678901",
+          "nationality": "BRA",
+          "address": {
+            "addressLine1": "Rua 123",
+            "city": "São Paulo",
+            "stateProvinceRegion": "SP",
+            "postalCode": "01000-000",
+            "country": "BRA"
+          }
+        },
+        "brazilGlobalNetwork": {
+          "pix": "user@example.com",
+          "currency": "brl"
+        }
+      }'
+    ```
+    
+    ```bash MXN
+    curl -X POST "https://sandbox.hifi.com/v2/users/usr_abc123/accounts" \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "rail": "offramp",
+        "type": "mexicoGlobalNetwork",
+        "accountHolder": {
+          "type": "individual",
+          "name": "John Doe",
+          "dateOfBirth": "1990-01-01",
+          "idNumber": "ABCD123456EFGH7890",
+          "nationality": "MEX",
+          "address": {
+            "addressLine1": "Calle 123",
+            "city": "Ciudad de México",
+            "stateProvinceRegion": "CMX",
+            "postalCode": "01000",
+            "country": "MEX"
+          }
+        },
+        "mexicoGlobalNetwork": {
+          "speiClabe": "012345678901234567",
+          "currency": "mxn"
+        }
+      }'
+    ```
+    
+    ```bash NGN
+    curl -X POST "https://sandbox.hifi.com/v2/users/usr_abc123/accounts" \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "rail": "offramp",
+        "type": "nigeriaGlobalNetwork",
+        "accountHolder": {
+          "type": "individual",
+          "name": "John Doe",
+          "dateOfBirth": "1990-01-01",
+          "idNumber": "12345678901",
+          "nationality": "NGA",
+          "address": {
+            "addressLine1": "Street 123",
+            "city": "Lagos",
+            "stateProvinceRegion": "LA",
+            "postalCode": "100001",
+            "country": "NGA"
+          }
+        },
+        "nigeriaGlobalNetwork": {
+          "bankName": "Access Bank",
+          "accountNumber": "1234567890",
+          "currency": "ngn"
+        }
+      }'
+    ```
+    
+    ```bash HKD
+    curl -X POST "https://sandbox.hifi.com/v2/users/usr_abc123/accounts" \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "rail": "offramp",
+        "type": "hongKongGlobalNetwork",
+        "accountHolder": {
+          "type": "individual",
+          "name": "John Doe",
+          "dateOfBirth": "1990-01-01",
+          "idNumber": "A123456(7)",
+          "nationality": "HKG",
+          "address": {
+            "addressLine1": "123 Main Street",
+            "city": "Hong Kong",
+            "stateProvinceRegion": "HK",
+            "postalCode": "000000",
+            "country": "HKG"
+          }
+        },
+        "hongKongGlobalNetwork": {
+          "bankName": "HSBC",
+          "accountNumber": "123456789",
+          "swiftCode": "HSBCHKHHHKH",
+          "currency": "hkd"
+        }
+      }'
+    ```
+    
+    ```bash CNY
+    curl -X POST "https://sandbox.hifi.com/v2/users/usr_abc123/accounts" \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "rail": "offramp",
+        "type": "chinaGlobalNetwork",
+        "accountHolder": {
+          "type": "individual",
+          "name": "John Doe",
+          "dateOfBirth": "1990-01-01",
+          "idNumber": "110101199001011234",
+          "nationality": "CHN",
+          "address": {
+            "addressLine1": "123 Main Street",
+            "city": "Beijing",
+            "stateProvinceRegion": "BJ",
+            "postalCode": "100000",
+            "country": "CHN"
+          }
+        },
+        "chinaGlobalNetwork": {
+          "bankName": "Industrial and Commercial Bank of China",
+          "accountNumber": "6222021234567890123",
+          "swiftCode": "ICBKCNBJ",
+          "currency": "cny"
+        }
+      }'
+    ```
+    </CodeGroup>
+  </Step>
 
-  <Accordion title="Let users choose destination">
+  <Step title="Let users choose destination">
     If a user has multiple accounts, let them select which account to use when creating an offramp. Pass the appropriate `accountId` based on their selection.
-  </Accordion>
-</AccordionGroup>
+  </Step>
+</Steps>
 
 ## Getting Help
 

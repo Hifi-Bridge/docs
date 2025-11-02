@@ -18,8 +18,6 @@ HIFI supports two types of wallet transfers:
 
 Send stablecoins to a single recipient on the same blockchain.
 
-**Request:**
-
 <CodeGroup>
 ```bash Transfer to HIFI User
 curl -X POST "https://sandbox.hifi.com/v2/wallets/transfers" \
@@ -58,7 +56,9 @@ curl -X POST "https://sandbox.hifi.com/v2/wallets/transfers" \
 ```
 </CodeGroup>
 
-**Response:**
+The response contains the transfer details:
+
+<Accordion title="Response">
 
 ```json
 {
@@ -91,6 +91,32 @@ curl -X POST "https://sandbox.hifi.com/v2/wallets/transfers" \
 }
 ```
 
+</Accordion>
+
+<ResponseField name="transferDetails.id" type="string">
+  Unique transfer ID. Use this to check status using the [Retrieve a crypto transfer](/api-reference/crypto-transfer/retrieve-a-crypto-transfer) endpoint.
+</ResponseField>
+
+<ResponseField name="transferDetails.status" type="string">
+  Transfer status. Progression: `CREATED` → `INITIATED` → `PENDING` → `COMPLETED`. See [Transaction Status](#transaction-status) for details.
+</ResponseField>
+
+<ResponseField name="transferDetails.source" type="object">
+  Details about the sender including wallet address and user information.
+</ResponseField>
+
+<ResponseField name="transferDetails.destination" type="object">
+  Details about the recipient including wallet address and user information (if HIFI user).
+</ResponseField>
+
+<ResponseField name="transferDetails.amount" type="number">
+  Transfer amount in the specified currency.
+</ResponseField>
+
+<ResponseField name="transferDetails.receipt" type="object">
+  Blockchain transaction receipt. Contains `transactionHash` and `userOpHash` once the transfer is confirmed on-chain.
+</ResponseField>
+
 <Info>
 For detailed response field documentation, see the [Create Crypto Transfer](/api-reference/crypto-transfer/create-a-crypto-transfer) API reference.
 </Info>
@@ -98,8 +124,6 @@ For detailed response field documentation, see the [Create Crypto Transfer](/api
 ## Creating Batch Transfers
 
 Send stablecoins to up to 50 recipients on the same blockchain.
-
-**Request:**
 
 ```bash
 curl -X POST "https://sandbox.hifi.com/v2/wallets/transfers/batch" \
@@ -125,11 +149,9 @@ curl -X POST "https://sandbox.hifi.com/v2/wallets/transfers/batch" \
   }'
 ```
 
-<Info>
-For detailed field documentation, see the [Create Batch Transfer](/api-reference/crypto-transfer/create-a-batch-transfer) API reference.
-</Info>
+Let's take a look at the response:
 
-**Response:**
+<Accordion title="Response">
 
 ```json
 {
@@ -169,6 +191,32 @@ For detailed field documentation, see the [Create Batch Transfer](/api-reference
 }
 ```
 
+</Accordion>
+
+<ResponseField name="transferDetails.id" type="string">
+  Unique batch transfer ID. Use this to check status using the [Retrieve a crypto transfer](/api-reference/crypto-transfer/retrieve-a-crypto-transfer) endpoint.
+</ResponseField>
+
+<ResponseField name="transferDetails.status" type="string">
+  Batch transfer status. Progression: `CREATED` → `INITIATED` → `PENDING` → `COMPLETED`. See [Transaction Status](#transaction-status) for details.
+</ResponseField>
+
+<ResponseField name="transferDetails.source" type="object">
+  Details about the sender including wallet address and user information.
+</ResponseField>
+
+<ResponseField name="transferDetails.destination.batch" type="array">
+  Array of destination recipients. Each item contains `amount`, optional `userId` (for HIFI users), and `walletAddress`.
+</ResponseField>
+
+<ResponseField name="transferDetails.receipt" type="object">
+  Blockchain transaction receipt. Contains `transactionHash` and `userOpHash` once the transfer is confirmed on-chain.
+</ResponseField>
+
+<Info>
+For detailed field documentation, see the [Create Batch Transfer](/api-reference/crypto-transfer/create-a-batch-transfer) API reference.
+</Info>
+
 ## Transaction Status
 
 Wallet transfers progress through several statuses:
@@ -190,8 +238,6 @@ Wallet transfers progress through several statuses:
 </Note>
 
 Monitor transfer status using the [Retrieve Crypto Transfer](/api-reference/crypto-transfer/retrieve-a-crypto-transfer) endpoint. The response structure matches the create endpoint shown above.
-
-**Request:**
 
 ```bash
 curl -X GET "https://sandbox.hifi.com/v2/wallets/transfers/xfr_abc123" \
@@ -236,7 +282,9 @@ curl -X POST "https://sandbox.hifi.com/v2/wallets/transfers/batch" \
   }'
 ```
 
-**Response with approval details:**
+When approval is required, the response includes approval details:
+
+<Accordion title="Response">
 
 ```json
 {
@@ -262,6 +310,30 @@ curl -X POST "https://sandbox.hifi.com/v2/wallets/transfers/batch" \
   }
 }
 ```
+
+</Accordion>
+
+<ResponseField name="transferDetails.status" type="string">
+  Transfer status. When `requireApproval: true` is set, the status will be `PENDING_APPROVAL` until approved.
+</ResponseField>
+
+<ResponseField name="transferDetails.receipt.approval" type="object">
+  Approval object containing approval details and votes when approval is required.
+
+  <Expandable title="properties">
+    <ResponseField name="id" type="string">
+      Unique approval ID.
+    </ResponseField>
+
+    <ResponseField name="status" type="string">
+      Approval status: `PENDING`, `APPROVED`, or `REJECTED`.
+    </ResponseField>
+
+    <ResponseField name="votes" type="array">
+      Array of approval votes. Each vote contains `approverId`, `vote` (APPROVE/REJECT), optional `comment`, and `createdAt`.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
 
 <Note>
 **Configuring Approvers:** Manage your team roles in the HIFI Dashboard. Members can create transfers, but only admins can approve.
