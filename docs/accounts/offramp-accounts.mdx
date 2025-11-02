@@ -35,7 +35,7 @@ Create an offramp account using the [Create Account](/api-reference/account/crea
 For USD offramps to US bank accounts:
 
 ```bash
-curl -X POST "https://sandbox.hifi.com/v2/users/usr_abc123/accounts" \
+curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/accounts" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -45,7 +45,7 @@ curl -X POST "https://sandbox.hifi.com/v2/users/usr_abc123/accounts" \
       "type": "individual",
       "name": "John Doe",
       "phone": "+18573491112",
-      "email": "john@hifi.com",
+      "email": "john@hifibridge.com",
       "address": {
         "addressLine1": "123 Main St",
         "city": "New York",
@@ -154,7 +154,7 @@ Global Network accounts support multiple countries including China, Hong Kong, B
 <AccordionGroup>
   <Accordion title="China (CNY)">
     ```bash
-    curl -X POST "https://sandbox.hifi.com/v2/users/usr_abc123/accounts" \
+    curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/accounts" \
       -H "Authorization: Bearer YOUR_API_KEY" \
       -H "Content-Type: application/json" \
       -d '{
@@ -192,7 +192,7 @@ Global Network accounts support multiple countries including China, Hong Kong, B
 
   <Accordion title="Hong Kong (HKD)">
     ```bash
-    curl -X POST "https://sandbox.hifi.com/v2/users/usr_abc123/accounts" \
+    curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/accounts" \
       -H "Authorization: Bearer YOUR_API_KEY" \
       -H "Content-Type: application/json" \
       -d '{
@@ -230,7 +230,7 @@ Global Network accounts support multiple countries including China, Hong Kong, B
 
   <Accordion title="Brazil (BRL) - PIX">
     ```bash
-    curl -X POST "https://sandbox.hifi.com/v2/users/usr_abc123/accounts" \
+    curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/accounts" \
       -H "Authorization: Bearer YOUR_API_KEY" \
       -H "Content-Type: application/json" \
       -d '{
@@ -266,7 +266,7 @@ Global Network accounts support multiple countries including China, Hong Kong, B
 
   <Accordion title="Mexico (MXN) - SPEI">
     ```bash
-    curl -X POST "https://sandbox.hifi.com/v2/users/usr_abc123/accounts" \
+    curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/accounts" \
       -H "Authorization: Bearer YOUR_API_KEY" \
       -H "Content-Type: application/json" \
       -d '{
@@ -302,7 +302,7 @@ Global Network accounts support multiple countries including China, Hong Kong, B
 
   <Accordion title="Nigeria (NGN)">
     ```bash
-    curl -X POST "https://sandbox.hifi.com/v2/users/usr_abc123/accounts" \
+    curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/accounts" \
       -H "Authorization: Bearer YOUR_API_KEY" \
       -H "Content-Type: application/json" \
       -d '{
@@ -342,7 +342,7 @@ Global Network accounts support multiple countries including China, Hong Kong, B
 Africa Rail supports multiple countries with bank accounts and mobile money (momo) payments.
 
 ```bash
-curl -X POST "https://sandbox.hifi.com/v2/users/usr_abc123/accounts" \
+curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/accounts" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -404,7 +404,7 @@ Once created and active, reference the account when creating offramp transfers u
 **Request:**
 
 ```bash
-curl -X POST "https://sandbox.hifi.com/v2/offramps" \
+curl -X POST "https://sandbox.hifibridge.com/v2/offramps" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -494,7 +494,7 @@ After creating an offramp account, HIFI validates the account details:
 <Steps>
   <Step title="Create the account">
     ```bash
-    curl -X POST "https://sandbox.hifi.com/v2/users/usr_abc123/accounts" \
+    curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/accounts" \
       -H "Authorization: Bearer YOUR_API_KEY" \
       -H "Content-Type: application/json" \
       -d '{
@@ -504,7 +504,7 @@ After creating an offramp account, HIFI validates the account details:
           "type": "individual",
           "name": "John Doe",
           "phone": "+18573491112",
-          "email": "john@hifi.com",
+          "email": "john@hifibridge.com",
           "address": {
             "addressLine1": "123 Main St",
             "city": "New York",
@@ -541,7 +541,7 @@ After creating an offramp account, HIFI validates the account details:
   <Step title="Use for offramps">
     Once active, use the account ID when creating offramp transfers:
     ```bash
-    curl -X POST "https://sandbox.hifi.com/v2/offramps" \
+    curl -X POST "https://sandbox.hifibridge.com/v2/offramps" \
       -H "Authorization: Bearer YOUR_API_KEY" \
       -H "Content-Type: application/json" \
       -d '{
@@ -570,7 +570,7 @@ After creating an offramp account, HIFI validates the account details:
     
     <CodeGroup>
     ```bash USD
-    curl -X POST "https://sandbox.hifi.com/v2/users/usr_abc123/accounts" \
+    curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/accounts" \
       -H "Authorization: Bearer YOUR_API_KEY" \
       -H "Content-Type: application/json" \
       -d '{
@@ -599,7 +599,7 @@ After creating an offramp account, HIFI validates the account details:
     ```
     
     ```bash BRL
-    curl -X POST "https://sandbox.hifi.com/v2/users/usr_abc123/accounts" \
+    curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/accounts" \
       -H "Authorization: Bearer YOUR_API_KEY" \
       -H "Content-Type: application/json" \
       -d '{
@@ -627,7 +627,7 @@ After creating an offramp account, HIFI validates the account details:
     ```
     
     ```bash MXN
-    curl -X POST "https://sandbox.hifi.com/v2/users/usr_abc123/accounts" \
+    curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/accounts" \
       -H "Authorization: Bearer YOUR_API_KEY" \
       -H "Content-Type: application/json" \
       -d '{
@@ -655,7 +655,7 @@ After creating an offramp account, HIFI validates the account details:
     ```
     
     ```bash NGN
-    curl -X POST "https://sandbox.hifi.com/v2/users/usr_abc123/accounts" \
+    curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/accounts" \
       -H "Authorization: Bearer YOUR_API_KEY" \
       -H "Content-Type: application/json" \
       -d '{
@@ -684,7 +684,7 @@ After creating an offramp account, HIFI validates the account details:
     ```
     
     ```bash HKD
-    curl -X POST "https://sandbox.hifi.com/v2/users/usr_abc123/accounts" \
+    curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/accounts" \
       -H "Authorization: Bearer YOUR_API_KEY" \
       -H "Content-Type: application/json" \
       -d '{
@@ -714,7 +714,7 @@ After creating an offramp account, HIFI validates the account details:
     ```
     
     ```bash CNY
-    curl -X POST "https://sandbox.hifi.com/v2/users/usr_abc123/accounts" \
+    curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/accounts" \
       -H "Authorization: Bearer YOUR_API_KEY" \
       -H "Content-Type: application/json" \
       -d '{
@@ -752,7 +752,7 @@ After creating an offramp account, HIFI validates the account details:
 
 ## Getting Help
 
-- 📧 **Email:** support@hifi.com
+- 📧 **Email:** support@hifibridge.com
 - 💬 **Slack:** Message us in our shared Slack channel
 
 ## Related Resources

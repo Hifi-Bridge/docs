@@ -29,7 +29,7 @@ You can also configure whether to include the HIFI platform fee in the calculati
 
 ```bash
 curl --request POST \
-     --url https://production.hifi.com/v2/virtual-accounts/settlement-rules \
+     --url https://production.hifibridge.com/v2/virtual-accounts/settlement-rules \
      --header 'accept: application/json' \
      --header 'content-type: application/json' \
      --data '{
@@ -153,7 +153,7 @@ After creating a settlement rule, associate it with a specific user's virtual ac
 
 ```bash
 curl --request POST \
-     --url https://production.hifi.com/v2/users/{userId}/virtual-accounts/{accountId}/settlement-rules/{ruleId} \
+     --url https://production.hifibridge.com/v2/users/{userId}/virtual-accounts/{accountId}/settlement-rules/{ruleId} \
      --header 'accept: application/json'
 ```
 

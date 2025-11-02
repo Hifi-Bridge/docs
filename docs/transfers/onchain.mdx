@@ -20,7 +20,7 @@ Send stablecoins to a single recipient on the same blockchain.
 
 <CodeGroup>
 ```bash Transfer to HIFI User
-curl -X POST "https://sandbox.hifi.com/v2/wallets/transfers" \
+curl -X POST "https://sandbox.hifibridge.com/v2/wallets/transfers" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -38,7 +38,7 @@ curl -X POST "https://sandbox.hifi.com/v2/wallets/transfers" \
 ```
 
 ```bash Transfer to External Wallet
-curl -X POST "https://sandbox.hifi.com/v2/wallets/transfers" \
+curl -X POST "https://sandbox.hifibridge.com/v2/wallets/transfers" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -130,7 +130,7 @@ For detailed response field documentation, see the [Create Crypto Transfer](/api
 Send stablecoins to up to 50 recipients on the same blockchain.
 
 ```bash
-curl -X POST "https://sandbox.hifi.com/v2/wallets/transfers/batch" \
+curl -X POST "https://sandbox.hifibridge.com/v2/wallets/transfers/batch" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -248,7 +248,7 @@ Wallet transfers progress through several statuses:
 Monitor transfer status using the [Retrieve Crypto Transfer](/api-reference/crypto-transfer/retrieve-a-crypto-transfer) endpoint. The response structure matches the create endpoint shown above.
 
 ```bash
-curl -X GET "https://sandbox.hifi.com/v2/wallets/transfers/xfr_abc123" \
+curl -X GET "https://sandbox.hifibridge.com/v2/wallets/transfers/xfr_abc123" \
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
@@ -275,7 +275,7 @@ For organizations requiring multi-party authorization, all transfers support an 
 **Request with approval:**
 
 ```bash
-curl -X POST "https://sandbox.hifi.com/v2/wallets/transfers/batch" \
+curl -X POST "https://sandbox.hifibridge.com/v2/wallets/transfers/batch" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -378,7 +378,7 @@ When approval is required, the response includes approval details:
 
 ## Getting Help
 
-- 📧 **Email:** support@hifi.com
+- 📧 **Email:** support@hifibridge.com
 - 💬 **Slack:** Message us in our shared Slack channel
 
 ## Related Resources

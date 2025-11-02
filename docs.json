@@ -1,5 +1,5 @@
 {
-  "$schema": "https://hifi.com/docs.json",
+  "$schema": "https://hifibridge.com/docs.json",
   "theme": "almond",
   "name": "HIFI Docs",
   "description": "Developer Documentation for HIFI",
@@ -10,24 +10,24 @@
   },
   "fonts": {
     "family": "Rhithmic Sans",
-    "source": "http://dashboard.hifi.com/fonts/rhithmic/RhithmicSans-Regular.woff2",
+    "source": "http://dashboard.hifibridge.com/fonts/rhithmic/RhithmicSans-Regular.woff2",
     "format": "woff2",
     "weight": 400,
     "heading": {
       "family": "Rhithmic Sans",
-      "source": "http://dashboard.hifi.com/fonts/rhithmic/RhithmicSans-Regular.woff2",
+      "source": "http://dashboard.hifibridge.com/fonts/rhithmic/RhithmicSans-Regular.woff2",
       "format": "woff2",
       "weight": 400
     },
     "body": {
       "family": "Inter",
-      "source": "http://dashboard.hifi.com/fonts/inter/Inter-Regular.woff2",
+      "source": "http://dashboard.hifibridge.com/fonts/inter/Inter-Regular.woff2",
       "format": "woff2",
       "weight": 400
     },
     "code": {
       "family": "Space Mono",
-      "source": "http://dashboard.hifi.com/fonts/rhithmic/SpaceMono-Regular.woff2",
+      "source": "http://dashboard.hifibridge.com/fonts/rhithmic/SpaceMono-Regular.woff2",
       "format": "woff2",
       "weight": 400
     }
@@ -147,7 +147,7 @@
       },
       {
         "tab": "API Reference",
-        "openapi": "https://production.hifi.com/api/v2/openapi.json"
+        "openapi": "https://production.hifibridge.com/api/v2/openapi.json"
       }
     ]
   },
@@ -171,7 +171,7 @@
     "primary": {
       "type": "button",
       "label": "Dashboard",
-      "href": "https://dashboard.hifi.com"
+      "href": "https://dashboard.hifibridge.com"
     }
   },
   "footer": {

@@ -55,7 +55,7 @@ Upon creation, users are automatically provisioned with cryptocurrency wallet ad
 **Create a user:**
 
 ```bash
-curl -X POST "https://sandbox.hifi.com/v2/users" \
+curl -X POST "https://sandbox.hifibridge.com/v2/users" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -115,7 +115,7 @@ Once approved, the user can access fiat onramp and offramp capabilities for that
 **Check KYC status:**
 
 ```bash
-curl -X GET "https://sandbox.hifi.com/v2/users/usr_abc123/kyc/status?rails=USD" \
+curl -X GET "https://sandbox.hifibridge.com/v2/users/usr_abc123/kyc/status?rails=USD" \
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
@@ -131,7 +131,7 @@ Users can be updated throughout their lifecycle to:
 **Retrieve user details:**
 
 ```bash
-curl -X GET "https://sandbox.hifi.com/v2/users/usr_abc123" \
+curl -X GET "https://sandbox.hifibridge.com/v2/users/usr_abc123" \
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
@@ -190,7 +190,7 @@ These accounts are created separately after user creation and require KYC verifi
 <Steps>
   <Step title="Generate ToS link">
     ```bash
-    curl -X POST "https://sandbox.hifi.com/v2/tos-link" \
+    curl -X POST "https://sandbox.hifibridge.com/v2/tos-link" \
       -H "Authorization: Bearer YOUR_API_KEY" \
       -H "Content-Type: application/json" \
       -d '{"idempotencyKey": "8cb49537-bcf9-41b1-8d8c-c9c200d7341b"}'
@@ -199,7 +199,7 @@ These accounts are created separately after user creation and require KYC verifi
 
   <Step title="Create user (after ToS accepted)">
     ```bash
-    curl -X POST "https://sandbox.hifi.com/v2/users" \
+    curl -X POST "https://sandbox.hifibridge.com/v2/users" \
       -H "Authorization: Bearer YOUR_API_KEY" \
       -H "Content-Type: application/json" \
       -d '{
@@ -216,7 +216,7 @@ These accounts are created separately after user creation and require KYC verifi
   <Step title="Update KYC information">
     Provide required personal information:
     ```bash
-    curl -X POST "https://sandbox.hifi.com/v2/users/usr_abc123/kyc" \
+    curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/kyc" \
       -H "Authorization: Bearer YOUR_API_KEY" \
       -H "Content-Type: application/json" \
       -d '{
@@ -231,13 +231,13 @@ These accounts are created separately after user creation and require KYC verifi
     First, upload the document files:
     ```bash
     # Upload front side
-    curl -X POST "https://sandbox.hifi.com/v2/files" \
+    curl -X POST "https://sandbox.hifibridge.com/v2/files" \
       -H "Authorization: Bearer YOUR_API_KEY" \
       -H "Content-Type: multipart/form-data" \
       -F "file=@drivers_license_front.png"
 
     # Upload back side
-    curl -X POST "https://sandbox.hifi.com/v2/files" \
+    curl -X POST "https://sandbox.hifibridge.com/v2/files" \
       -H "Authorization: Bearer YOUR_API_KEY" \
       -H "Content-Type: multipart/form-data" \
       -F "file=@drivers_license_back.png"
@@ -245,7 +245,7 @@ These accounts are created separately after user creation and require KYC verifi
 
     Then attach the documents to the user's KYC:
     ```bash
-    curl -X POST "https://sandbox.hifi.com/v2/users/usr_abc123/kyc/documents" \
+    curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/kyc/documents" \
       -H "Authorization: Bearer YOUR_API_KEY" \
       -H "Content-Type: application/json" \
       -d '[
@@ -268,7 +268,7 @@ These accounts are created separately after user creation and require KYC verifi
   <Step title="Submit KYC application">
     Submit for review once all information and documents are provided:
     ```bash
-    curl -X POST "https://sandbox.hifi.com/v2/users/usr_abc123/kyc/submissions" \
+    curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/kyc/submissions" \
       -H "Authorization: Bearer YOUR_API_KEY" \
       -H "Content-Type: application/json" \
       -d '{"rails": "USD"}'
@@ -283,14 +283,14 @@ Determine what a user can do based on their KYC status:
 <AccordionGroup>
   <Accordion title="Get user details including wallet addresses">
     ```bash
-    curl -X GET "https://sandbox.hifi.com/v2/users/usr_abc123" \
+    curl -X GET "https://sandbox.hifibridge.com/v2/users/usr_abc123" \
       -H "Authorization: Bearer YOUR_API_KEY"
     ```
   </Accordion>
 
   <Accordion title="Check KYC status for specific rail">
     ```bash
-    curl -X GET "https://sandbox.hifi.com/v2/users/usr_abc123/kyc/status?rails=USD" \
+    curl -X GET "https://sandbox.hifibridge.com/v2/users/usr_abc123/kyc/status?rails=USD" \
       -H "Authorization: Bearer YOUR_API_KEY"
     ```
   </Accordion>
@@ -298,7 +298,7 @@ Determine what a user can do based on their KYC status:
 
 ## Getting Help
 
-- 📧 **Email:** support@hifi.com
+- 📧 **Email:** support@hifibridge.com
 - 💬 **Slack:** Message us in our shared Slack channel
 
 ## Related Resources

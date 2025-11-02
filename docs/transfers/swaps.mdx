@@ -29,7 +29,7 @@ Use the [Create Swap](/api-reference/swap/create-a-swap) endpoint to exchange cu
 
 <CodeGroup>
 ```bash Swap with Source Amount
-curl -X POST "https://sandbox.hifi.com/v2/wallets/swaps" \
+curl -X POST "https://sandbox.hifibridge.com/v2/wallets/swaps" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -49,7 +49,7 @@ curl -X POST "https://sandbox.hifi.com/v2/wallets/swaps" \
 ```
 
 ```bash Swap with Destination Amount
-curl -X POST "https://sandbox.hifi.com/v2/wallets/swaps" \
+curl -X POST "https://sandbox.hifibridge.com/v2/wallets/swaps" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -211,7 +211,7 @@ Monitor swap status using the [Retrieve Swap](/api-reference/swap/retrieve-a-swa
 **Request:**
 
 ```bash
-curl -X GET "https://sandbox.hifi.com/v2/wallets/swaps/swp_abc123" \
+curl -X GET "https://sandbox.hifibridge.com/v2/wallets/swaps/swp_abc123" \
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
@@ -358,7 +358,7 @@ Currently supported swap combinations:
 <Steps>
   <Step title="Create swap">
     ```bash
-    curl -X POST "https://sandbox.hifi.com/v2/wallets/swaps" \
+    curl -X POST "https://sandbox.hifibridge.com/v2/wallets/swaps" \
       -H "Authorization: Bearer YOUR_API_KEY" \
       -H "Content-Type: application/json" \
       -d '{
@@ -399,7 +399,7 @@ Currently supported swap combinations:
   <Step title="Specify destination amount">
     When you need to receive an exact amount:
     ```bash
-    curl -X POST "https://sandbox.hifi.com/v2/wallets/swaps" \
+    curl -X POST "https://sandbox.hifibridge.com/v2/wallets/swaps" \
       -H "Authorization: Bearer YOUR_API_KEY" \
       -H "Content-Type: application/json" \
       -d '{
@@ -428,7 +428,7 @@ Currently supported swap combinations:
 
 ## Getting Help
 
-- 📧 **Email:** support@hifi.com
+- 📧 **Email:** support@hifibridge.com
 - 💬 **Slack:** Message us in our shared Slack channel
 
 ## Related Resources

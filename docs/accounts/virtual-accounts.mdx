@@ -28,7 +28,7 @@ Create a virtual account using the [Create Virtual Account](/api-reference/virtu
 **Request:**
 
 ```bash
-curl -X POST "https://sandbox.hifi.com/v2/users/usr_abc123/virtual-accounts" \
+curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/virtual-accounts" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -237,7 +237,7 @@ When deposits arrive at a virtual account, HIFI creates an onramp transaction to
 **List onramps for a user:**
 
 ```bash
-curl -X GET "https://sandbox.hifi.com/v2/onramps?userId=usr_abc123" \
+curl -X GET "https://sandbox.hifibridge.com/v2/onramps?userId=usr_abc123" \
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
@@ -296,7 +296,7 @@ Change the destination chain or currency for an existing virtual account using t
 **Request:**
 
 ```bash
-curl -X PATCH "https://sandbox.hifi.com/v2/users/usr_abc123/virtual-accounts/va_abc123" \
+curl -X PATCH "https://sandbox.hifibridge.com/v2/users/usr_abc123/virtual-accounts/va_abc123" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -317,7 +317,7 @@ Temporarily disable a virtual account to prevent new deposits using the [Deactiv
 **Request:**
 
 ```bash
-curl -X POST "https://sandbox.hifi.com/v2/users/usr_abc123/virtual-accounts/va_abc123/deactivate" \
+curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/virtual-accounts/va_abc123/deactivate" \
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
@@ -330,7 +330,7 @@ When deactivated:
 **Reactivate:**
 
 ```bash
-curl -X POST "https://sandbox.hifi.com/v2/users/usr_abc123/virtual-accounts/va_abc123/activate" \
+curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/virtual-accounts/va_abc123/activate" \
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
@@ -374,7 +374,7 @@ In sandbox, simulate deposits without real bank transfers using the [Simulate De
 **Request:**
 
 ```bash
-curl -X POST "https://sandbox.hifi.com/v2/users/usr_abc123/virtual-accounts/va_abc123/simulate-deposit" \
+curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/virtual-accounts/va_abc123/simulate-deposit" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -415,7 +415,7 @@ The sandbox will process this deposit as if real money arrived, triggering the f
 <Steps>
   <Step title="Create virtual account">
     ```bash
-    curl -X POST "https://sandbox.hifi.com/v2/users/usr_abc123/virtual-accounts" \
+    curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/virtual-accounts" \
       -H "Authorization: Bearer YOUR_API_KEY" \
       -H "Content-Type: application/json" \
       -d '{
@@ -448,7 +448,7 @@ The sandbox will process this deposit as if real money arrived, triggering the f
   <Step title="Track onramp transactions">
     List onramps to see which virtual account was used and track conversion status:
     ```bash
-    curl -X GET "https://sandbox.hifi.com/v2/onramps?userId=usr_abc123" \
+    curl -X GET "https://sandbox.hifibridge.com/v2/onramps?userId=usr_abc123" \
       -H "Authorization: Bearer YOUR_API_KEY"
     ```
     
@@ -463,7 +463,7 @@ The sandbox will process this deposit as if real money arrived, triggering the f
 Use an `externalWalletId` instead of `destinationChain` when creating a virtual account. Funds will be deposited directly into the specified wallet address.
 
 ```bash
-curl -X POST "https://sandbox.hifi.com/v2/users/usr_abc123/virtual-accounts" \
+curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/virtual-accounts" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -481,7 +481,7 @@ Deposits to this virtual account will be converted to USDC and sent directly to 
   <Step title="Create virtual account">
     Create a standard virtual account without `externalWalletId`. Funds will arrive in the user's HIFI wallet first.
     ```bash
-    curl -X POST "https://sandbox.hifi.com/v2/users/usr_abc123/virtual-accounts" \
+    curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/virtual-accounts" \
       -H "Authorization: Bearer YOUR_API_KEY" \
       -H "Content-Type: application/json" \
       -d '{
@@ -495,7 +495,7 @@ Deposits to this virtual account will be converted to USDC and sent directly to 
   <Step title="Send to external wallet">
     Send funds to any external address using the [Wallet Transfer API](/docs/transfers/onchain):
     ```bash
-    curl -X POST "https://sandbox.hifi.com/v2/wallets/transfers" \
+    curl -X POST "https://sandbox.hifibridge.com/v2/wallets/transfers" \
       -H "Authorization: Bearer YOUR_API_KEY" \
       -H "Content-Type: application/json" \
       -d '{
@@ -516,7 +516,7 @@ Deposits to this virtual account will be converted to USDC and sent directly to 
 
 ## Getting Help
 
-- 📧 **Email:** support@hifi.com
+- 📧 **Email:** support@hifibridge.com
 - 💬 **Slack:** Message us in our shared Slack channel
 
 ## Related Resources

@@ -27,7 +27,7 @@ Use the [Create Bridge](/api-reference/bridge/create-a-bridge) endpoint to initi
 **Request:**
 
 ```bash
-curl -X POST "https://sandbox.hifi.com/v2/wallets/bridges" \
+curl -X POST "https://sandbox.hifibridge.com/v2/wallets/bridges" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -184,7 +184,7 @@ Monitor bridge status using the [Retrieve Bridge](/api-reference/bridge/retrieve
 **Request:**
 
 ```bash
-curl -X GET "https://sandbox.hifi.com/v2/wallets/bridges/brg_abc123" \
+curl -X GET "https://sandbox.hifibridge.com/v2/wallets/bridges/brg_abc123" \
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
@@ -309,7 +309,7 @@ Currently supported bridging routes:
 <Steps>
   <Step title="Create bridge request">
     ```bash
-    curl -X POST "https://sandbox.hifi.com/v2/wallets/bridges" \
+    curl -X POST "https://sandbox.hifibridge.com/v2/wallets/bridges" \
       -H "Authorization: Bearer YOUR_API_KEY" \
       -H "Content-Type: application/json" \
       -d '{
@@ -348,7 +348,7 @@ Currently supported bridging routes:
   <Step title="Create bridge with approval">
     Set `requireApproval: true` for multi-party authorization:
     ```bash
-    curl -X POST "https://sandbox.hifi.com/v2/wallets/bridges" \
+    curl -X POST "https://sandbox.hifibridge.com/v2/wallets/bridges" \
       -H "Authorization: Bearer YOUR_API_KEY" \
       -H "Content-Type: application/json" \
       -d '{
@@ -380,7 +380,7 @@ Currently supported bridging routes:
 
 ## Getting Help
 
-- 📧 **Email:** support@hifi.com
+- 📧 **Email:** support@hifibridge.com
 - 💬 **Slack:** Message us in our shared Slack channel
 
 ## Related Resources

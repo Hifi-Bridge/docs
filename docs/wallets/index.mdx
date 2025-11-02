@@ -37,7 +37,7 @@ Get real-time balance information for a specific currency on a specific chain us
 **Request:**
 
 ```bash
-curl -X GET "https://sandbox.hifi.com/v2/users/usr_abc123/wallets/balance?chain=POLYGON&currency=usdc" \
+curl -X GET "https://sandbox.hifibridge.com/v2/users/usr_abc123/wallets/balance?chain=POLYGON&currency=usdc" \
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
@@ -107,7 +107,7 @@ To receive funds, simply share the user's wallet address for the specific blockc
 **Get wallet addresses:**
 
 ```bash
-curl -X GET "https://sandbox.hifi.com/v2/users/usr_abc123" \
+curl -X GET "https://sandbox.hifibridge.com/v2/users/usr_abc123" \
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
@@ -148,7 +148,7 @@ Track all incoming blockchain deposits via the [Get Inbound Deposits](/api-refer
 **Request:**
 
 ```bash
-curl -X GET "https://sandbox.hifi.com/v2/users/usr_abc123/wallets/deposits" \
+curl -X GET "https://sandbox.hifibridge.com/v2/users/usr_abc123/wallets/deposits" \
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
@@ -224,7 +224,7 @@ Send stablecoins to other HIFI users or external wallet addresses using the [Cre
 **Transfer to another HIFI user:**
 
 ```bash
-curl -X POST "https://sandbox.hifi.com/v2/wallets/transfers" \
+curl -X POST "https://sandbox.hifibridge.com/v2/wallets/transfers" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -244,7 +244,7 @@ curl -X POST "https://sandbox.hifi.com/v2/wallets/transfers" \
 **Transfer to external wallet:**
 
 ```bash
-curl -X POST "https://sandbox.hifi.com/v2/wallets/transfers" \
+curl -X POST "https://sandbox.hifibridge.com/v2/wallets/transfers" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -322,7 +322,7 @@ See [Offramp](/docs/offramp) for detailed instructions.
 <AccordionGroup>
   <Accordion title="Get current balance">
     ```bash
-    curl -X GET "https://sandbox.hifi.com/v2/users/usr_abc123/wallets/balance?chain=POLYGON&currency=usdc" \
+    curl -X GET "https://sandbox.hifibridge.com/v2/users/usr_abc123/wallets/balance?chain=POLYGON&currency=usdc" \
       -H "Authorization: Bearer YOUR_API_KEY"
     ```
   </Accordion>
@@ -337,7 +337,7 @@ See [Offramp](/docs/offramp) for detailed instructions.
 <AccordionGroup>
   <Accordion title="List recent deposits">
     ```bash
-    curl -X GET "https://sandbox.hifi.com/v2/users/usr_abc123/wallets/deposits" \
+    curl -X GET "https://sandbox.hifibridge.com/v2/users/usr_abc123/wallets/deposits" \
       -H "Authorization: Bearer YOUR_API_KEY"
     ```
   </Accordion>
@@ -360,7 +360,7 @@ See [Offramp](/docs/offramp) for detailed instructions.
 ```javascript
 // Example: Convert raw balance to display format
 const response = await fetch(
-  "https://sandbox.hifi.com/v2/users/usr_abc123/wallets/balance?chain=POLYGON&currency=usdc",
+  "https://sandbox.hifibridge.com/v2/users/usr_abc123/wallets/balance?chain=POLYGON&currency=usdc",
   {
     headers: { Authorization: "Bearer YOUR_API_KEY" },
   }
@@ -379,7 +379,7 @@ console.log(`Balance: ${displayAmount.toFixed(2)} USDC`);
 
 ## Getting Help
 
-- 📧 **Email:** support@hifi.com
+- 📧 **Email:** support@hifibridge.com
 - 💬 **Slack:** Message us in our shared Slack channel
 
 ## Related Resources

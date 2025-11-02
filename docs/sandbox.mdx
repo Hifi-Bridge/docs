@@ -8,7 +8,7 @@ HIFI's sandbox environment provides a safe testing space to integrate and test o
 
 ### Generate a Sandbox API Key
 
-1. **Request Access** - Visit [dashboard.hifi.com/request-access](https://dashboard.hifi.com/request-access) to schedule a call with our team and get onboarded.
+1. **Request Access** - Visit [dashboard.hifibridge.com/request-access](https://dashboard.hifibridge.com/request-access) to schedule a call with our team and get onboarded.
 2. **Navigate to API Keys** - Once approved, go to the Developer Dashboard
 3. **Create New Key** - Click the "New API Key" button under Sandbox
 
@@ -22,13 +22,13 @@ HIFI's sandbox environment provides a safe testing space to integrate and test o
 All sandbox API requests should be made to:
 
 ```
-https://sandbox.hifi.com/v2/
+https://sandbox.hifibridge.com/v2/
 ```
 
 **Example request:**
 
 ```bash
-curl -X GET "https://sandbox.hifi.com/v2/ping" \
+curl -X GET "https://sandbox.hifibridge.com/v2/ping" \
   -H "Authorization: Bearer YOUR_SANDBOX_API_KEY"
 ```
 
@@ -40,7 +40,7 @@ The sandbox environment is designed to simulate production behavior while provid
 
 | Feature            | Sandbox                    | Production                        |
 | :----------------- | :------------------------- | :-------------------------------- |
-| **API Base URL**   | `https://sandbox.hifi.com` | `https://production.hifi.com`     |
+| **API Base URL**   | `https://sandbox.hifibridge.com` | `https://production.hifibridge.com`     |
 | **Money Movement** | Simulated                  | Real                              |
 | **KYC Processing** | Auto-approved              | Manual review (1-3 business days) |
 | **Blockchain**     | Testnet                    | Mainnet                           |
@@ -75,7 +75,7 @@ All money movement in sandbox is simulated:
 When you're ready to move from sandbox to production:
 
 1. **Generate production API keys** in the dashboard
-2. **Update your base URL** from `sandbox.hifi.com` to `production.hifi.com`
+2. **Update your base URL** from `sandbox.hifibridge.com` to `production.hifibridge.com`
 3. **Update API keys** in your environment variables
 4. **Remove simulation calls** - Delete any simulate-deposit endpoint usage
 5. **Enable real KYC** - Provide real user information and documents
@@ -92,7 +92,7 @@ When you're ready to move from sandbox to production:
 
 If you encounter issues or have suggestions for improving the sandbox experience:
 
-- 📧 **Email:** support@hifi.com
+- 📧 **Email:** support@hifibridge.com
 - 💬 **Slack:** Message us in our shared Slack channel
 
 <Info>

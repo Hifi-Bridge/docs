@@ -51,7 +51,7 @@ When the offramp transaction is initiated, a total of **105.2 USDC** (100 + 100 
 
 ```bash
 curl --request POST \
-  --url https://production.hifi.com/v2/offramps \
+  --url https://production.hifibridge.com/v2/offramps \
   --header 'accept: application/json' \
   --header 'content-type: application/json' \
   --data '{
@@ -106,7 +106,7 @@ curl --request POST \
       "amountIncludeDeveloperFee": 105.2,
       "walletAddress": "9eyUwauqs8YgU9Hg9cdGW3WmuG3Uud2y9TruZbokeVDo",
       "user": {
-        "email": "john@hifi.com",
+        "email": "john@hifibridge.com",
         "lastName": "DOe",
         "firstName": "John",
         "businessName": null
@@ -117,7 +117,7 @@ curl --request POST \
       "amount": 100,
       "currency": "usd",
       "user": {
-        "email": "john@hifi.com",
+        "email": "john@hifibridge.com",
         "lastName": "DOe",
         "firstName": "John",
         "businessName": null

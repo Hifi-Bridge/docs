@@ -28,7 +28,7 @@ Before you start, make sure you have:
 - **API keys** from the Dashboard ([Get API keys](/docs/authentication))
 - **A tool for making API calls** (cURL, Postman, or similar)
 - **Basic understanding of REST APIs**
-- **Your sandbox endpoint:** `https://sandbox.hifi.com`
+- **Your sandbox endpoint:** `https://sandbox.hifibridge.com`
 
 <Note>
   All examples in this guide use the sandbox environment. When you're ready for
@@ -66,7 +66,7 @@ Once created, users are automatically provisioned with cryptocurrency wallet add
 <AccordionGroup>
   <Accordion title="Generate Terms of Service Link">
 
-Before creating a user, they must accept HIFI's Terms of Service. Generate a unique acceptance link using the [Generate Terms of Service Link](https://docs.hifi.com/v2/reference/post_v2-tos-link) endpoint.
+Before creating a user, they must accept HIFI's Terms of Service. Generate a unique acceptance link using the [Generate Terms of Service Link](https://docs.hifibridge.com/v2/reference/post_v2-tos-link) endpoint.
 
 You'll provide an `idempotencyKey` (any [UUID](https://www.uuidgenerator.net/)), which will become your `signedAgreementId` after the user accepts the terms.
 
@@ -74,7 +74,7 @@ You'll provide an `idempotencyKey` (any [UUID](https://www.uuidgenerator.net/)),
 
 ```bash
 curl --request POST \
-     --url https://sandbox.hifi.com/v2/tos-link \
+     --url https://sandbox.hifibridge.com/v2/tos-link \
      --header 'accept: application/json' \
      --header 'authorization: Bearer YOUR_API_KEY' \
      --header 'content-type: application/json' \
@@ -89,7 +89,7 @@ curl --request POST \
 
 ```json
 {
-  "url": "https://dashboard.hifi.com/accept-terms-of-service?sessionToken=536bb03a...",
+  "url": "https://dashboard.hifibridge.com/accept-terms-of-service?sessionToken=536bb03a...",
   "signedAgreementId": "8cb49537-bcf9-41b1-8d8c-c9c200d7341b"
 }
 ```
@@ -115,7 +115,7 @@ Once your user has accepted the Terms of Service (and you've received the webhoo
 
 ```bash
 curl --request POST \
-     --url https://sandbox.hifi.com/v2/users \
+     --url https://sandbox.hifibridge.com/v2/users \
      --header 'accept: application/json' \
      --header 'authorization: Bearer YOUR_API_KEY' \
      --header 'content-type: application/json' \
@@ -124,7 +124,7 @@ curl --request POST \
   "type": "individual",
   "firstName": "John",
   "lastName": "Doe",
-  "email": "john@hifi.com",
+  "email": "john@hifibridge.com",
   "dateOfBirth": "1999-01-01",
   "address": {
     "addressLine1": "123 Main St",
@@ -145,7 +145,7 @@ curl --request POST \
 {
   "id": "32051b2f-0798-55a7-9c42-b08da4192c97",
   "type": "individual",
-  "email": "john@hifi.com",
+  "email": "john@hifibridge.com",
   "name": "John Doe",
   "wallets": {
     "INDIVIDUAL": {
@@ -239,13 +239,13 @@ Let's walk through each step in detail.
 <AccordionGroup>
   <Accordion title="Retrieve KYC Requirements">
 
-First, find out what information is needed for the USD rail by calling the [Retrieve KYC Requirements](https://docs.hifi.com/v2/reference/get_v2-users-userid-kyc-requirements) endpoint.
+First, find out what information is needed for the USD rail by calling the [Retrieve KYC Requirements](https://docs.hifibridge.com/v2/reference/get_v2-users-userid-kyc-requirements) endpoint.
 
 **Request:**
 
 ```bash
 curl --request GET \
-     --url 'https://sandbox.hifi.com/v2/users/32051b2f-0798-55a7-9c42-b08da4192c97/kyc/requirements?rails=USD' \
+     --url 'https://sandbox.hifibridge.com/v2/users/32051b2f-0798-55a7-9c42-b08da4192c97/kyc/requirements?rails=USD' \
      --header 'accept: application/json' \
      --header 'authorization: Bearer YOUR_API_KEY'
 ```
@@ -388,13 +388,13 @@ Now that we know what's missing, let's provide the required information.
   </Accordion>
   <Accordion title="Update KYC Information">
 
-Provide the missing personal information using the [Update KYC](https://docs.hifi.com/v2/reference/post_v2-users-userid-kyc) endpoint.
+Provide the missing personal information using the [Update KYC](https://docs.hifibridge.com/v2/reference/post_v2-users-userid-kyc) endpoint.
 
 **Request:**
 
 ```bash
 curl --request POST \
-     --url https://sandbox.hifi.com/v2/users/32051b2f-0798-55a7-9c42-b08da4192c97/kyc \
+     --url https://sandbox.hifibridge.com/v2/users/32051b2f-0798-55a7-9c42-b08da4192c97/kyc \
      --header 'accept: application/json' \
      --header 'authorization: Bearer YOUR_API_KEY' \
      --header 'content-type: application/json' \
@@ -417,7 +417,7 @@ curl --request POST \
     "firstName": "John",
     "lastName": "Doe",
     "nationality": "USA",
-    "email": "john@hifi.com",
+    "email": "john@hifibridge.com",
     "phone": "+18573491112",
     "address": {
       "city": "New York",
@@ -446,13 +446,13 @@ Now we need to upload identity verification documents. This is a two-step proces
 
 #### Upload a File
 
-First, upload the identity document (driver's license, passport, etc.) using the [Upload a File](https://docs.hifi.com/v2/reference/post_v2-files) endpoint.
+First, upload the identity document (driver's license, passport, etc.) using the [Upload a File](https://docs.hifibridge.com/v2/reference/post_v2-files) endpoint.
 
 **Request:**
 
 ```bash
 curl --request POST \
-     --url https://sandbox.hifi.com/v2/files \
+     --url https://sandbox.hifibridge.com/v2/files \
      --header 'accept: application/json' \
      --header 'authorization: Bearer YOUR_API_KEY' \
      --header 'content-type: multipart/form-data' \
@@ -492,7 +492,7 @@ curl --request POST \
 
 #### Add Documents to KYC
 
-Now attach the uploaded file(s) to the user's KYC application using the [Add Documents](https://docs.hifi.com/v2/reference/post_v2-users-userid-kyc-documents) endpoint.
+Now attach the uploaded file(s) to the user's KYC application using the [Add Documents](https://docs.hifibridge.com/v2/reference/post_v2-users-userid-kyc-documents) endpoint.
 
 <Note>
   **Driver's License Requirements:** Most identity documents require both front
@@ -504,7 +504,7 @@ Now attach the uploaded file(s) to the user's KYC application using the [Add Doc
 
 ```bash
 curl --request POST \
-     --url https://sandbox.hifi.com/v2/users/32051b2f-0798-55a7-9c42-b08da4192c97/kyc/documents \
+     --url https://sandbox.hifibridge.com/v2/users/32051b2f-0798-55a7-9c42-b08da4192c97/kyc/documents \
      --header 'accept: application/json' \
      --header 'authorization: Bearer YOUR_API_KEY' \
      --header 'content-type: application/json' \
@@ -594,7 +594,7 @@ With all fields and documents provided, submit the KYC application to unlock the
 
 ```bash
 curl --request POST \
-     --url https://sandbox.hifi.com/v2/users/32051b2f-0798-55a7-9c42-b08da4192c97/kyc/submissions \
+     --url https://sandbox.hifibridge.com/v2/users/32051b2f-0798-55a7-9c42-b08da4192c97/kyc/submissions \
      --header 'accept: application/json' \
      --header 'authorization: Bearer YOUR_API_KEY' \
      --header 'content-type: application/json' \
@@ -641,7 +641,7 @@ Check the current KYC status for the USD rail using the [Retrieve KYC Status](/a
 
 ```bash
 curl --request GET \
-     --url 'https://sandbox.hifi.com/v2/users/32051b2f-0798-55a7-9c42-b08da4192c97/kyc/status?rails=USD' \
+     --url 'https://sandbox.hifibridge.com/v2/users/32051b2f-0798-55a7-9c42-b08da4192c97/kyc/status?rails=USD' \
      --header 'accept: application/json' \
      --header 'authorization: Bearer YOUR_API_KEY'
 ```
@@ -800,7 +800,7 @@ Let's create a virtual account that converts USD deposits into USDC on Polygon:
 
 ```bash
 curl --request POST \
-     --url https://sandbox.hifi.com/v2/users/32051b2f-0798-55a7-9c42-b08da4192c97/virtual-accounts \
+     --url https://sandbox.hifibridge.com/v2/users/32051b2f-0798-55a7-9c42-b08da4192c97/virtual-accounts \
      --header 'accept: application/json' \
      --header 'authorization: Bearer YOUR_API_KEY' \
      --header 'content-type: application/json' \
@@ -988,7 +988,7 @@ Create a USD offramp bank account for Wire transfers:
 
 ```bash
 curl --request POST \
-     --url https://sandbox.hifi.com/v2/users/32051b2f-0798-55a7-9c42-b08da4192c97/accounts \
+     --url https://sandbox.hifibridge.com/v2/users/32051b2f-0798-55a7-9c42-b08da4192c97/accounts \
      --header 'accept: application/json' \
      --header 'authorization: Bearer YOUR_API_KEY' \
      --header 'content-type: application/json' \
@@ -1000,7 +1000,7 @@ curl --request POST \
     "type": "individual",
     "name": "John Doe",
     "phone": "+18573491112",
-    "email": "john@hifi.com",
+    "email": "john@hifibridge.com",
     "address": {
       "addressLine1": "123 Main St",
       "city": "New York",
@@ -1185,7 +1185,7 @@ Since we're in sandbox, use the simulate endpoint to create a test deposit:
 
 ```bash
 curl --request POST \
-     --url https://sandbox.hifi.com/v2/users/32051b2f-0798-55a7-9c42-b08da4192c97/virtual-accounts/938e3b36-3be7-5535-ba12-8d89eb683e6b/simulate-deposit \
+     --url https://sandbox.hifibridge.com/v2/users/32051b2f-0798-55a7-9c42-b08da4192c97/virtual-accounts/938e3b36-3be7-5535-ba12-8d89eb683e6b/simulate-deposit \
      --header 'accept: application/json' \
      --header 'authorization: Bearer YOUR_API_KEY' \
      --header 'content-type: application/json' \
@@ -1271,7 +1271,7 @@ HIFI will now process the deposit and create an onramp transaction. You'll recei
       "amount": 2,
       "accountId": null,
       "user": {
-        "email": "john@hifi.com",
+        "email": "john@hifibridge.com",
         "lastName": "Doe",
         "firstName": "John",
         "businessName": null
@@ -1296,7 +1296,7 @@ HIFI will now process the deposit and create an onramp transaction. You'll recei
       "externalWalletId": null,
       "amount": null,
       "user": {
-        "email": "john@hifi.com",
+        "email": "john@hifibridge.com",
         "lastName": "Doe",
         "firstName": "John",
         "businessName": null
@@ -1490,7 +1490,7 @@ Now User A will send 1 USDC to User B using the [Create a crypto transfer](/api-
 
 ```bash
 curl --request POST \
-     --url https://sandbox.hifi.com/v2/wallets/transfers \
+     --url https://sandbox.hifibridge.com/v2/wallets/transfers \
      --header 'accept: application/json' \
      --header 'authorization: Bearer YOUR_API_KEY' \
      --header 'content-type: application/json' \
@@ -1569,7 +1569,7 @@ curl --request POST \
       "walletAddress": "0x1b932E54e77Aeb698144550d5a493Ea99E20Daa7",
       "walletType": "INDIVIDUAL",
       "user": {
-        "email": "john@hifi.com",
+        "email": "john@hifibridge.com",
         "lastName": "Doe",
         "firstName": "John",
         "businessName": null
@@ -1579,7 +1579,7 @@ curl --request POST \
       "userId": "30669fcc-b15e-4137-b4fc-9e8f7f659a87",
       "walletAddress": "0x1b932E54e77Aeb688144550d5a493Ea99E20Daa7",
       "user": {
-        "email": "Jane@hifi.com",
+        "email": "Jane@hifibridge.com",
         "lastName": "Doe",
         "firstName": "Jane",
         "businessName": null
@@ -1703,7 +1703,7 @@ Create an offramp request using the [Create an offramp](/api-reference/offramp/c
 
 ```bash
 curl --request POST \
-     --url https://sandbox.hifi.com/v2/offramps \
+     --url https://sandbox.hifibridge.com/v2/offramps \
      --header 'accept: application/json' \
      --header 'authorization: Bearer YOUR_API_KEY' \
      --header 'content-type: application/json' \
@@ -1788,7 +1788,7 @@ curl --request POST \
       "amount": 1,
       "walletAddress": "0x1b932E54e77Aeb698144550d5a493Ea99E20Daa7",
       "user": {
-        "email": "john@hifi.com",
+        "email": "john@hifibridge.com",
         "lastName": "Doe",
         "firstName": "John",
         "businessName": null
@@ -1799,7 +1799,7 @@ curl --request POST \
       "amount": 1,
       "currency": "usd",
       "user": {
-        "email": "john@hifi.com",
+        "email": "john@hifibridge.com",
         "lastName": "Doe",
         "firstName": "John",
         "businessName": null
@@ -1973,7 +1973,7 @@ After reviewing the quote, accept it to start the offramp process using the [Acc
 
 ```bash
 curl --request POST \
-     --url https://sandbox.hifi.com/v2/offramps/b838908b-95d0-4ebb-a2c6-8f0c142bcdd7/quote/accept \
+     --url https://sandbox.hifibridge.com/v2/offramps/b838908b-95d0-4ebb-a2c6-8f0c142bcdd7/quote/accept \
      --header 'accept: application/json' \
      --header 'authorization: Bearer YOUR_API_KEY'
 ```
@@ -1999,7 +1999,7 @@ curl --request POST \
       "amount": 1,
       "walletAddress": "0x1b932E54e77Aeb698144550d5a493Ea99E20Daa7",
       "user": {
-        "email": "john@hifi.com",
+        "email": "john@hifibridge.com",
         "lastName": "Doe",
         "firstName": "John",
         "businessName": null
@@ -2010,7 +2010,7 @@ curl --request POST \
       "amount": 1,
       "currency": "usd",
       "user": {
-        "email": "john@hifi.com",
+        "email": "john@hifibridge.com",
         "lastName": "Doe",
         "firstName": "John",
         "businessName": null

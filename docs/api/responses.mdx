@@ -61,7 +61,7 @@ By default, API responses include only basic object properties and IDs for relat
 When updating KYC information, you can expand related objects to get immediate access to updated data:
 
 ```bash
-curl -X POST "https://production.hifi.com/v2/users/{userId}/kyc" \
+curl -X POST "https://production.hifibridge.com/v2/users/{userId}/kyc" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -84,7 +84,7 @@ curl -X POST "https://production.hifi.com/v2/users/{userId}/kyc" \
 Retrieve KYC information with expanded related objects:
 
 ```bash
-curl -X GET "https://production.hifi.com/v2/users/{userId}/kyc?expand[]=ultimateBeneficialOwners&expand[]=documents&expand[]=ultimateBeneficialOwners.documents" \
+curl -X GET "https://production.hifibridge.com/v2/users/{userId}/kyc?expand[]=ultimateBeneficialOwners&expand[]=documents&expand[]=ultimateBeneficialOwners.documents" \
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
@@ -103,7 +103,7 @@ curl -X GET "https://production.hifi.com/v2/users/{userId}/kyc?expand[]=ultimate
 When adding a new UBO, expand documents to immediately see associated documents:
 
 ```bash
-curl -X POST "https://production.hifi.com/v2/users/{userId}/kyc/ultimateBeneficialOwners" \
+curl -X POST "https://production.hifibridge.com/v2/users/{userId}/kyc/ultimateBeneficialOwners" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -125,7 +125,7 @@ curl -X POST "https://production.hifi.com/v2/users/{userId}/kyc/ultimateBenefici
 Update UBO information with expanded document details:
 
 ```bash
-curl -X PUT "https://production.hifi.com/v2/users/{userId}/kyc/ultimateBeneficialOwners/{uboId}" \
+curl -X PUT "https://production.hifibridge.com/v2/users/{userId}/kyc/ultimateBeneficialOwners/{uboId}" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -141,7 +141,7 @@ curl -X PUT "https://production.hifi.com/v2/users/{userId}/kyc/ultimateBeneficia
 Get specific UBO details with expanded documents:
 
 ```bash
-curl -X GET "https://production.hifi.com/v2/users/{userId}/kyc/ultimateBeneficialOwners/{uboId}?expand[]=documents" \
+curl -X GET "https://production.hifibridge.com/v2/users/{userId}/kyc/ultimateBeneficialOwners/{uboId}?expand[]=documents" \
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
@@ -152,7 +152,7 @@ curl -X GET "https://production.hifi.com/v2/users/{userId}/kyc/ultimateBeneficia
 Retrieve all UBOs with their associated documents:
 
 ```bash
-curl -X GET "https://production.hifi.com/v2/users/{userId}/kyc/ultimateBeneficialOwners?expand[]=documents" \
+curl -X GET "https://production.hifibridge.com/v2/users/{userId}/kyc/ultimateBeneficialOwners?expand[]=documents" \
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
@@ -163,7 +163,7 @@ curl -X GET "https://production.hifi.com/v2/users/{userId}/kyc/ultimateBeneficia
 Expand multiple properties in a single request by adding multiple `expand[]` parameters:
 
 ```bash
-curl -X GET "https://production.hifi.com/v2/users/{userId}/kyc?expand[]=ultimateBeneficialOwners&expand[]=documents" \
+curl -X GET "https://production.hifibridge.com/v2/users/{userId}/kyc?expand[]=ultimateBeneficialOwners&expand[]=documents" \
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
@@ -172,7 +172,7 @@ curl -X GET "https://production.hifi.com/v2/users/{userId}/kyc?expand[]=ultimate
 Use dot notation to expand nested relationships across multiple levels:
 
 ```bash
-curl -X GET "https://production.hifi.com/v2/users/{userId}/kyc?expand[]=ultimateBeneficialOwners.documents" \
+curl -X GET "https://production.hifibridge.com/v2/users/{userId}/kyc?expand[]=ultimateBeneficialOwners.documents" \
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
@@ -186,7 +186,7 @@ This expands the `documents` property within each `ultimateBeneficialOwner`, giv
 You can combine single-level and multi-level expansions:
 
 ```bash
-curl -X GET "https://production.hifi.com/v2/users/{userId}/kyc?expand[]=ultimateBeneficialOwners&expand[]=documents&expand[]=ultimateBeneficialOwners.documents" \
+curl -X GET "https://production.hifibridge.com/v2/users/{userId}/kyc?expand[]=ultimateBeneficialOwners&expand[]=documents&expand[]=ultimateBeneficialOwners.documents" \
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
