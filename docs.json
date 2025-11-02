@@ -104,10 +104,7 @@
             "pages": [
               {
                 "group": "Onboarding",
-                "pages": [
-                   "docs/features/tos-link",
-                   "docs/features/kyc-link"
-                ]
+                "pages": ["docs/features/tos-link", "docs/features/kyc-link"]
               },
               "docs/features/exchange-rates",
               "docs/features/batch-transfers",
@@ -126,7 +123,6 @@
                 "pages": [
                   "docs/compliance/documents/overview",
                   "docs/compliance/documents/identity",
-                  "docs/compliance/documents/supported-identity-documents",
                   "docs/compliance/documents/proof-of-address"
                 ]
               }
@@ -136,7 +132,30 @@
             "group": "References",
             "pages": [
               "docs/references/currencies",
-              "docs/references/business-industries",
+              "docs/references/identity-documents",
+              {
+                "group": "Business Industries",
+                "pages": [
+                  "docs/references/business-industries/index",
+                  "docs/references/business-industries/agriculture-forestry",
+                  "docs/references/business-industries/mining-energy",
+                  "docs/references/business-industries/construction",
+                  "docs/references/business-industries/manufacturing",
+                  "docs/references/business-industries/wholesale-retail-trade",
+                  "docs/references/business-industries/transportation-logistics",
+                  "docs/references/business-industries/information-media",
+                  "docs/references/business-industries/finance-insurance",
+                  "docs/references/business-industries/real-estate-leasing",
+                  "docs/references/business-industries/professional-technical-services",
+                  "docs/references/business-industries/administrative-support-services",
+                  "docs/references/business-industries/education",
+                  "docs/references/business-industries/health-social-services",
+                  "docs/references/business-industries/arts-recreation-entertainment",
+                  "docs/references/business-industries/hospitality-food",
+                  "docs/references/business-industries/other-services",
+                  "docs/references/business-industries/public-administration"
+                ]
+              },
               "docs/references/occupations",
               "docs/references/account-purposes",
               "docs/references/export-categories",
@@ -167,9 +186,7 @@
             "pages": [
               {
                 "group": "Common",
-                "pages": [
-                  "GET /v2/ping"
-                ]
+                "pages": ["GET /v2/ping"]
               },
               {
                 "group": "Users",
@@ -204,9 +221,7 @@
               },
               {
                 "group": "File",
-                "pages": [
-                  "POST /v2/files"
-                ]
+                "pages": ["POST /v2/files"]
               },
               {
                 "group": "Wallets",
