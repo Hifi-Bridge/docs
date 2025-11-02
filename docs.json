@@ -92,10 +92,10 @@
                   "docs/webhooks/index",
                   "docs/webhooks/user-events",
                   "docs/webhooks/kyc-events",
+                  "docs/webhooks/wallet-events",
                   "docs/webhooks/account-events",
                   "docs/webhooks/onramp-events",
-                  "docs/webhooks/offramp-events",
-                  "docs/webhooks/wallet-events"
+                  "docs/webhooks/offramp-events"
                 ]
               }
             ]
@@ -103,17 +103,39 @@
           {
             "group": "Features",
             "pages": [
-              "docs/features/kyc-link",
-              "docs/features/batch-transfers",
-              "docs/features/transfer-approvals",
-              "docs/features/developer-fees",
-              "docs/features/settlement-rules"
+              {
+                "group": "Screen",
+                "pages": [
+                  "docs/features/tos-link",
+                  "docs/features/kyc-link"
+                ]
+              },
+              {
+                "group": "Convert",
+                "pages": [
+                  "docs/currencies",
+                  "docs/features/exchange-rates"
+                ]
+              },
+              {
+                "group": "Send",
+                "pages": [
+                  "docs/features/batch-transfers",
+                  "docs/features/transfer-approvals"
+                ]
+              },
+              {
+                "group": "Route",
+                "pages": [
+                  "docs/features/developer-fees",
+                  "docs/features/settlement-rules"
+                ]
+              }
             ]
           },
           {
             "group": "Compliance",
             "pages": [
-              "docs/compliance/currencies",
               "docs/compliance/industries",
               "docs/compliance/regions",
               {
