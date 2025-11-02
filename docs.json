@@ -101,36 +101,31 @@
             ]
           },
           {
-            "group": "Features",
+            "group": "Screen",
             "pages": [
-              {
-                "group": "Screen",
-                "pages": [
-                  "docs/features/tos-link",
-                  "docs/features/kyc-link"
-                ]
-              },
-              {
-                "group": "Convert",
-                "pages": [
-                  "docs/currencies",
-                  "docs/features/exchange-rates"
-                ]
-              },
-              {
-                "group": "Send",
-                "pages": [
-                  "docs/features/batch-transfers",
-                  "docs/features/transfer-approvals"
-                ]
-              },
-              {
-                "group": "Route",
-                "pages": [
-                  "docs/features/developer-fees",
-                  "docs/features/settlement-rules"
-                ]
-              }
+              "docs/features/tos-link",
+              "docs/features/kyc-link"
+            ]
+          },
+          {
+            "group": "Convert",
+            "pages": [
+              "docs/currencies",
+              "docs/features/exchange-rates"
+            ]
+          },
+          {
+            "group": "Send",
+            "pages": [
+              "docs/features/batch-transfers",
+              "docs/features/transfer-approvals"
+            ]
+          },
+          {
+            "group": "Route",
+            "pages": [
+              "docs/features/developer-fees",
+              "docs/features/settlement-rules"
             ]
           },
           {
