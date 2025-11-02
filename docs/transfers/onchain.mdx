@@ -57,7 +57,7 @@ curl -X POST "https://sandbox.hifibridge.com/v2/wallets/transfers" \
 </CodeGroup>
 
 <Warning>
-**External Wallet Registration:** Before sending to external wallet addresses, you must register them using the [External Wallets API](/api-reference/external-wallet/create-an-external-wallet). Unregistered addresses will cause the transfer to fail.
+**External Wallet Registration:** Before sending to external wallet addresses, you must register them using the [External Wallets API](/api-reference/wallet/add-external-wallets-to-a-user). Unregistered addresses will cause the transfer to fail.
 </Warning>
 
 The response contains the transfer details:
@@ -154,7 +154,7 @@ curl -X POST "https://sandbox.hifibridge.com/v2/wallets/transfers/batch" \
 ```
 
 <Warning>
-**External Wallet Registration:** External wallet addresses in batch transfers must be registered before use. Register them using the [External Wallets API](/api-reference/external-wallet/create-an-external-wallet).
+**External Wallet Registration:** External wallet addresses in batch transfers must be registered before use. Register them using the [External Wallets API](/api-reference/wallet/add-external-wallets-to-a-user).
 </Warning>
 
 Let's take a look at the response:
@@ -354,7 +354,7 @@ When approval is required, the response includes approval details:
     **HIFI transfers** use `userId` as the destination while **external transfers** use a `walletAddress` as the destination.
     
     <Warning>
-    **Registration Required:** External wallet addresses must be registered before use. Create an external wallet record using the [External Wallets API](/api-reference/external-wallet/create-an-external-wallet) before including the address in transfer requests.
+    **Registration Required:** External wallet addresses must be registered before use. Create an external wallet record using the [External Wallets API](/api-reference/wallet/add-external-wallets-to-a-user) before including the address in transfer requests.
     </Warning>
   </Accordion>
 

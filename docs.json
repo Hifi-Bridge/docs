@@ -103,8 +103,13 @@
           {
             "group": "Features",
             "pages": [
-              "docs/features/templates",
-              "docs/features/kyc-link",
+              {
+                "group": "Onboarding",
+                "pages": [
+                   "docs/features/tos-link",
+                   "docs/features/kyc-link"
+                ]
+              },
               "docs/features/exchange-rates",
               "docs/features/batch-transfers",
               "docs/features/transfer-approvals",
