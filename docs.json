@@ -1,5 +1,5 @@
 {
-  "$schema": "https://hifibridge.com/docs.json",
+  "$schema": "https://hifi.com/docs.json",
   "theme": "almond",
   "name": "HIFI Docs",
   "description": "Developer Documentation for HIFI",
@@ -147,7 +147,7 @@
       },
       {
         "tab": "API Reference",
-        "openapi": "https://production.hifibridge.com/api/v2/openapi.json"
+        "openapi": "https://production.hifi.com/api/v2/openapi.json"
       }
     ]
   },

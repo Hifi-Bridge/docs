@@ -74,7 +74,7 @@ You'll provide an `idempotencyKey` (any [UUID](https://www.uuidgenerator.net/)),
 
 ```bash
 curl --request POST \
-     --url https://sandbox.hifibridge.com/v2/tos-link \
+     --url https://sandbox.hifi.com/v2/tos-link \
      --header 'accept: application/json' \
      --header 'authorization: Bearer YOUR_API_KEY' \
      --header 'content-type: application/json' \
@@ -115,7 +115,7 @@ Once your user has accepted the Terms of Service (and you've received the webhoo
 
 ```bash
 curl --request POST \
-     --url https://sandbox.hifibridge.com/v2/users \
+     --url https://sandbox.hifi.com/v2/users \
      --header 'accept: application/json' \
      --header 'authorization: Bearer YOUR_API_KEY' \
      --header 'content-type: application/json' \
@@ -124,7 +124,7 @@ curl --request POST \
   "type": "individual",
   "firstName": "John",
   "lastName": "Doe",
-  "email": "john@hifibridge.com",
+  "email": "john@hifi.com",
   "dateOfBirth": "1999-01-01",
   "address": {
     "addressLine1": "123 Main St",
@@ -145,7 +145,7 @@ curl --request POST \
 {
   "id": "32051b2f-0798-55a7-9c42-b08da4192c97",
   "type": "individual",
-  "email": "john@hifibridge.com",
+  "email": "john@hifi.com",
   "name": "John Doe",
   "wallets": {
     "INDIVIDUAL": {
