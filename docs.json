@@ -37,7 +37,22 @@
   "favicon": "/favicon.svg",
   "seo": {
     "metatags": {
-      "og:image": "/og.png"
+      "description": "Build borderless financial workflows with programmable money. HIFI makes it easy to build, automate, and scale modern financial products.",
+      "keywords": "HIFI, fintech API, developer documentation, payments API, transfers, KYC, compliance, virtual accounts, crypto payments, stablecoins, blockchain, programmable money, financial infrastructure",
+      "author": "HIFI",
+      "og:title": "HIFI Developer Docs",
+      "og:type": "website",
+      "og:url": "https://docs.hifibridge.com",
+      "og:image": "https://docs.hifibridge.com/og.png",
+      "og:description": "Build borderless financial workflows with programmable money. HIFI makes it easy to build, automate, and scale modern financial products.",
+      "og:site_name": "HIFI Docs",
+      "og:locale": "en_US",
+      "twitter:card": "summary_large_image",
+      "twitter:site": "@hifibridge",
+      "twitter:title": "HIFI Developer Docs",
+      "twitter:description": "Build borderless financial workflows with programmable money. HIFI makes it easy to build, automate, and scale modern financial products.",
+      "twitter:image": "https://docs.hifibridge.com/og.png",
+      "twitter:image:alt": "HIFI Developer Docs"
     }
   },
   "redirects": [
