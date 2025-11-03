@@ -2,7 +2,7 @@
 title: "Quickstart"
 ---
 
-In this guide, you'll learn how to use the **HIFI Sandbox API** to simulate money movement between fiat and stablecoins. You'll create users, complete KYC, set up accounts, and execute a complete transfer flow from fiat onramp to crypto transfer to fiat offramp.
+In this guide, you'll learn how to use the **HIFI Sandbox API** to simulate money movement between fiat and stablecoins. You'll create users, complete KYC, set up accounts, and execute a complete transfer flow from fiat to stablecoins and back.
 
 **⏱️ Time to complete:** 20-30 minutes
 
@@ -1599,7 +1599,8 @@ curl --request POST \
 
 <ResponseField name="transferDetails.id" type="string">
   Unique transfer ID. **Save this** to check status using the [Retrieve a crypto
-  transfer](https://docs.hifibridge.com/api-reference/crypto-transfer/retrieve-a-crypto-transfer) endpoint.
+  transfer](https://docs.hifibridge.com/api-reference/crypto-transfer/retrieve-a-crypto-transfer)
+  endpoint.
 </ResponseField>
 
 <ResponseField name="transferDetails.status" type="string">
