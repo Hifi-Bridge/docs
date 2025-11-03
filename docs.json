@@ -37,12 +37,12 @@
   "favicon": "/favicon.svg",
   "seo": {
     "metatags": {
-      "title": "HIFI Developer Docs — Programmable Money & Payment Orchestration API",
+      "title": "HIFI Developer Docs — Programmable Money API",
       "description": "Compose payment workflows and automate money movement with HIFI's programmable layer. Connect KYC/KYB, virtual accounts, transfers, and webhooks into intelligent flows that orchestrate stablecoins and fiat rails.",
       "keywords": "HIFI, payments API, programmable money, payment orchestration, payment workflows, automated flows, composable payments, workflow builder, payment automation, orchestration layer, flow composition, fintech API, stablecoins, USDC, USDT, bank transfers, ACH, SWIFT, RTP, KYC, KYB, compliance, virtual accounts, payouts, webhooks, developer documentation",
       "author": "HIFI",
       "robots": "index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1",
-      "og:title": "HIFI Developer Docs — Programmable Money & Payment Orchestration API",
+      "og:title": "HIFI Developer Docs — Programmable Money API",
       "og:type": "website",
       "og:url": "https://docs.hifibridge.com/",
       "og:image": "https://docs.hifibridge.com/og.png",
