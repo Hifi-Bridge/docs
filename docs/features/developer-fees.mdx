@@ -1,12 +1,11 @@
 ---
 title: "Developer Fees"
-sidebarTitle: "Developer Fees"
 ---
 
-**Developer Fees** enable automated calculation and distribution of fees for offramp transactions. Two fee models are supported: **percentage fees** and **flat fees**. Fees can be configured to be distributed to up to **10 different beneficiary wallets**.
+**Developer Fees** enable automated calculation and distribution of fees for offramp transactions. Fees can be configured to be distributed to up to **10 different beneficiary wallets**.
 
 <Info>
-Looking to charge fees for virtual accounts? Visit [Settlement Rules](/docs/features/settlement-rules) for more details.
+Developer fees work for offramp transactions. Looking to charge fees for Virtual Accounts? Try [Settlement Rules](/docs/features/settlement-rules).
 </Info>
 
 ## How Developer Fees Work
@@ -25,11 +24,8 @@ Looking to charge fees for virtual accounts? Visit [Settlement Rules](/docs/feat
 
 ## Supported Rails
 
-Currently supported:
-- USD
-
 <Info>
-We are actively working to apply developer fees across all of our rails — stay tuned!
+Developer fees are currently supported for USD offramps only. Additional currencies and payment rails—including global fiat currencies and non-USD transfer methods—will be supported soon. Stay tuned for updates!
 </Info>
 
 ## Fee Models
@@ -54,7 +50,7 @@ When the offramp transaction is initiated, a total of **105.2 USDC** (100 + 100 
 - **0.2 USDC** will be delivered to **Wallet A**
 - **5 USDC** will be delivered to **Wallet B**
 
-## Creating Offramps with Developer Fees
+## Applying Developer Fees
 
 Include the `developerFee` field when creating an offramp transaction to automatically calculate and distribute fees.
 
@@ -94,18 +90,20 @@ curl -X POST "https://sandbox.hifibridge.com/v2/offramps" \
   }'
 ```
 
-**Request Fields:**
-
-- **developerFee.fees** (optional): Array of fee configurations. Each fee requires:
-  - **type** (required): Either `PERCENTAGE` or `FLAT`
-  - **value** (required): Fee value as a string. For percentage, use decimal format (e.g., `"0.002"` for 0.2%)
-  - **walletAddress** (required): Beneficiary wallet address to receive the fee
-
-**Request Fields (standard offramp):**
-
-- **requestId** (required): Unique identifier for the offramp request
-- **source** (required): Source wallet details including userId, amount, currency, and chain
-- **destination** (required): Destination account details including currency, userId, and accountId
+<ResponseField name="developerFee.fees" type="array" required={false}>
+  Array of fee configurations to be applied. Each fee object requires:
+  <Expandable title="Fee Object Fields">
+    <ResponseField name="type" type="string" required>
+      Fee calculation type. Must be either <code>PERCENTAGE</code> or <code>FLAT</code>.
+    </ResponseField>
+    <ResponseField name="value" type="string" required>
+      Fee amount. For percentages, use decimal format (e.g., <code>"0.002"</code> for 0.2%). For flat fees, specify as a string amount (e.g., <code>"5"</code>).
+    </ResponseField>
+    <ResponseField name="walletAddress" type="string" required>
+      Beneficiary wallet address to receive the fee.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
 
 ### Response
 
@@ -265,20 +263,6 @@ For detailed field documentation, see the [Create Offramp](/api-reference/offram
     - **fees[].amount**: Calculated fee amount that will be credited
     
     Monitor the beneficiary wallet addresses to track fee receipts. The transaction hash provides proof of distribution on-chain.
-  </Accordion>
-
-  {" "}
-
-  <Accordion title="Important Considerations">
-    <Warning>
-    Once the fee is delivered to the beneficiary wallet, it cannot be traced back, even if the transaction fails for any reason. Please ensure that fees are held in escrow until it is safe to release them.
-    </Warning>
-    
-    Best practices:
-    - Verify offramp status is `COMPLETED` before releasing fee holds
-    - Monitor the `transactionHash` to confirm fee distribution
-    - Implement escrow mechanisms for production use
-    - Test fee calculations thoroughly in sandbox before going live
   </Accordion>
 </AccordionGroup>
 

@@ -45,8 +45,9 @@ curl -X POST "https://sandbox.hifibridge.com/v2/virtual-accounts/settlement-rule
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
+    "requestId": "550e8400-e29b-41d4-a716-446655440000",
     "chain": "BASE",
-    "includeHIFIFee": true,
+    "includeHIFIFee": false,
     "rules": [
       {
         "type": "PERCENTAGE",
@@ -64,16 +65,46 @@ curl -X POST "https://sandbox.hifibridge.com/v2/virtual-accounts/settlement-rule
   }'
 ```
 
-**Request Fields:**
-
-- **chain** (required): Blockchain network for the settlement rule (e.g., `BASE`, `POLYGON`, `ETHEREUM`)
-- **includeHIFIFee** (optional): Whether to include HIFI platform fee in the calculation. Defaults to `false`.
-- **rules** (required): Array of fee rules. Each rule requires:
-  - **type** (required): Either `PERCENTAGE` or `FIXED`
-  - **calculationModel** (required): Either `FIXED` or `TIERED`
-  - **value** (required for FIXED model): Fee value (percentage as decimal or flat amount)
-  - **tiers** (required for TIERED model): Array of tier configurations
-  - **walletAddress** (required): Beneficiary wallet address to receive the fee
+<ResponseField name="requestId" type="string" required>
+  Unique identifier for the request (recommend using UUID v4).
+</ResponseField>
+<ResponseField name="chain" type="string" required>
+  Blockchain network for the settlement rule (e.g., <code>BASE</code>, <code>POLYGON</code>, <code>ETHEREUM</code>, <code>SOLANA</code>).
+</ResponseField>
+<ResponseField name="includeHIFIFee" type="boolean">
+  Whether to include HIFI platform fee in the calculation. Defaults to <code>false</code>.
+</ResponseField>
+<ResponseField name="rules" type="array" required>
+  Array of fee rule objects to apply (minimum 1 rule required). Each rule object contains:
+  <Expandable title="Rule Object Fields">
+    <ResponseField name="type" type="string" required>
+      Fee type. Must be <code>PERCENTAGE</code> or <code>FIXED</code>.
+    </ResponseField>
+    <ResponseField name="calculationModel" type="string" required>
+      Calculation model. Must be <code>FIXED</code> or <code>TIERED</code>.
+    </ResponseField>
+    <ResponseField name="value" type="number" nullable>
+      Fee value (required for <code>FIXED</code> model, omit for <code>TIERED</code>). Use decimal for percentages or a flat amount.
+    </ResponseField>
+    <ResponseField name="tiers" type="array" nullable>
+      Array of tier configurations (required for <code>TIERED</code> model, omit for <code>FIXED</code>). Each tier contains:
+      <Expandable title="Tier Object Fields">
+        <ResponseField name="min" type="string" required>
+          Minimum value for this tier (empty string required for first tier).
+        </ResponseField>
+        <ResponseField name="max" type="string" required>
+          Maximum value for this tier (empty string required for last tier).
+        </ResponseField>
+        <ResponseField name="value" type="number" required>
+          Fee value for this tier.
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+    <ResponseField name="walletAddress" type="string" required>
+      Beneficiary wallet address to receive the fee.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
 
 <Info>
 Multiple rules can be applied to a single settlement rule configuration. The rules are processed in the order they are defined.
@@ -138,6 +169,7 @@ Settlement rules support two calculation models that can be combined to create f
       "type": "FIXED",
       "calculationModel": "FIXED",
       "value": 0.5,
+      "tiers": null,
       "walletAddress": "0x15FB50680fEB2f726413416665c25f9B397b047b"
     }
     ```
@@ -150,6 +182,7 @@ Settlement rules support two calculation models that can be combined to create f
       "type": "PERCENTAGE",
       "calculationModel": "FIXED",
       "value": 0.001,
+      "tiers": null,
       "walletAddress": "0x15FB50680fEB2f726413416665c25f9B397b047b"
     }
     ```
@@ -161,20 +194,21 @@ Settlement rules support two calculation models that can be combined to create f
     {
       "type": "PERCENTAGE",
       "calculationModel": "TIERED",
+      "value": null,
       "tiers": [
         {
-          "max": "1000",
           "min": "",
+          "max": "1000",
           "value": 0.0007
         },
         {
-          "max": "2000",
           "min": "1000",
+          "max": "2000",
           "value": 0.0005
         },
         {
-          "max": "",
           "min": "2000",
+          "max": "",
           "value": 0.0002
         }
       ],
@@ -289,20 +323,21 @@ Track settlement transactions and fee distributions by monitoring the specified 
     {
       "type": "PERCENTAGE",
       "calculationModel": "TIERED",
+      "value": null,
       "tiers": [
         {
-          "max": "1000",
           "min": "",
+          "max": "1000",
           "value": 0.0007
         },
         {
-          "max": "5000",
           "min": "1000",
+          "max": "2000",
           "value": 0.0005
         },
         {
+          "min": "2000",
           "max": "",
-          "min": "5000",
           "value": 0.0002
         }
       ]
