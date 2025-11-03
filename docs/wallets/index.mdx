@@ -315,67 +315,60 @@ See [Offramp](/docs/offramp) for detailed instructions.
   </Accordion>
 </AccordionGroup>
 
-## Try it out
+## Sample Code
 
-### Check balance before transfer
+<Steps>
+  <Step title="Check balance before transfer">
+    Get the current balance using the [Get Wallet Balance](/api-reference/wallet/get-wallet-balance) endpoint.
 
-<AccordionGroup>
-  <Accordion title="Get current balance">
     ```bash
     curl -X GET "https://sandbox.hifibridge.com/v2/users/usr_abc123/wallets/balance?chain=POLYGON&currency=usdc" \
       -H "Authorization: Bearer YOUR_API_KEY"
     ```
-  </Accordion>
 
-  <Accordion title="Verify sufficient funds">
     Check that `displayBalance` is greater than or equal to the amount you want to send. If insufficient, the transfer will fail with an insufficient balance error.
-  </Accordion>
-</AccordionGroup>
+  </Step>
 
-### Monitor deposit status
+  <Step title="Monitor deposit status">
+    List recent deposits using the [Get Inbound Deposits](/api-reference/wallet/get-inbound-deposits) endpoint.
 
-<AccordionGroup>
-  <Accordion title="List recent deposits">
     ```bash
     curl -X GET "https://sandbox.hifibridge.com/v2/users/usr_abc123/wallets/deposits" \
       -H "Authorization: Bearer YOUR_API_KEY"
     ```
-  </Accordion>
 
-{" "}
+    Look for the deposit record with the matching `transactionHash`. The `status` field shows:
+    - `PENDING` - Waiting for blockchain confirmation
+    - `COMPLETED` - Funds credited to wallet
+    - `FAILED` - Transaction failed (funds not received)
 
-<Accordion title="Check specific deposit">
-  Look for the deposit record with the matching `transactionHash`. The `status`
-  field shows: - `PENDING` - Waiting for blockchain confirmation - `COMPLETED` -
-  Funds credited to wallet - `FAILED` - Transaction failed (funds not received)
-</Accordion>
+    Alternatively, set up `WALLET.DEPOSIT` webhook events for real-time notifications instead of polling the API.
+  </Step>
 
-  <Accordion title="Subscribe to webhooks">
-    Set up `WALLET.DEPOSIT` webhook events for real-time notifications instead of polling the API.
-  </Accordion>
-</AccordionGroup>
+  <Step title="Display balance to users">
+    Convert the raw balance response to a user-friendly display format.
 
-### Display balance to users
+    ```javascript
+    // Example: Convert raw balance to display format
+    const response = await fetch(
+      "https://sandbox.hifibridge.com/v2/users/usr_abc123/wallets/balance?chain=POLYGON&currency=usdc",
+      {
+        headers: { Authorization: "Bearer YOUR_API_KEY" },
+      }
+    );
 
-```javascript
-// Example: Convert raw balance to display format
-const response = await fetch(
-  "https://sandbox.hifibridge.com/v2/users/usr_abc123/wallets/balance?chain=POLYGON&currency=usdc",
-  {
-    headers: { Authorization: "Bearer YOUR_API_KEY" },
-  }
-);
+    const data = await response.json();
 
-const data = await response.json();
+    // Use displayBalance for user-facing displays
+    console.log(`Balance: ${data.displayBalance} USDC`);
 
-// Use displayBalance for user-facing displays
-console.log(`Balance: ${data.displayBalance} USDC`);
-
-// Or calculate manually from raw balance and decimals
-const displayAmount =
-  parseFloat(data.balance) / Math.pow(10, data.tokenInfo.decimals);
-console.log(`Balance: ${displayAmount.toFixed(2)} USDC`);
-```
+    // Or calculate manually from raw balance and decimals
+    const displayAmount =
+      parseFloat(data.balance) / Math.pow(10, data.tokenInfo.decimals);
+    console.log(`Balance: ${displayAmount.toFixed(2)} USDC`);
+    ```
+  </Step>
+</Steps>
 
 ## Getting Help
 
