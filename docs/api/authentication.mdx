@@ -2,68 +2,143 @@
 title: "Authentication"
 ---
 
-All requests to the HIFI API must be authenticated using API keys. This guide will walk you through the process of creating your API keys and using them to authenticate requests to our endpoints.
+All requests to the HIFI API must be authenticated using API keys. This guide covers how to create, secure, and manage your keys.
 
-## Dashboard Access
+## Prerequisites
 
-Before you can create API keys, you'll need access to the HIFI Dashboard. Schedule a call with our team to discuss your use case and get access.
+To get your API keys, you'll need access to the HIFI Dashboard. **Don't have access?** Schedule a call with our team.
 
-<Card
-  title="Request Dashboard Access"
-  icon="key"
-  href="https://dashboard.hifibridge.com/request-access"
->
-  Schedule a call with our team
+<Card title="Request access" href="https://dashboard.hifibridge.com/request-access">
+  Describe your use case and schedule an intro call
 </Card>
+
+## API Environments
+
+HIFI provides two environments for development and production:
+
+| Environment    | Base URL                      | Purpose                                             |
+| :------------- | :---------------------------- | :-------------------------------------------------- |
+| **Sandbox**    | `https://sandbox.hifibridge.com`    | Testing and development with simulated transactions |
+| **Production** | `https://production.hifibridge.com` | Live transactions with real money movement          |
 
 ## Creating API Keys
 
-After gaining Dashboard access, follow these steps to create your API keys:
-
-### Step 1: Access the API Keys Section
+### Access the API Keys Section
 
 1. Log in to the [HIFI Dashboard](https://dashboard.hifibridge.com)
-2. Navigate to **Developer** → **API Keys** or go directly to [https://dashboard.hifibridge.com/developer/apiKeys](https://dashboard.hifibridge.com/developer/apiKeys)
+2. Navigate to **Developer** → **API Keys**  
+   Or go directly to: [dashboard.hifibridge.com/developer/apiKeys](https://dashboard.hifibridge.com/developer/apiKeys)
 
-### Step 2: Create a New API Key
+### Select Your Environment
 
-1. Click **"Create API Key"** or **"New API Key"**
-2. Provide a descriptive name for your API key (e.g., "Production App", "Development Testing")
-3. Select the appropriate permissions for your use case
-4. Click **"Generate"** or **"Create"**
+Choose which environment you're creating keys for:
 
-### Step 3: Copy Your API Key
+- **Sandbox** - For testing and development
+- **Production** - For live operations
 
 <Info>
-  **Important**: API keys are only shown once during creation. Make sure to copy
-  and securely store your API key immediately.
+  **Best Practice:** Start with sandbox keys to build and test your integration
+  before moving to production.
 </Info>
 
-1. Copy the generated API key from the dashboard
-2. Store it securely in your application's environment variables or secure key management system
-3. Never commit API keys to version control or share them in public repositories
+### Generate a New API Key
 
-## Using API Keys
+1. Click the **"Create API Key"** or **"New API Key"** button
+2. Provide a descriptive name that identifies the key's purpose  
+   Examples:
 
-Include your API key in every request using the `Authorization` header:
+   - "Production Web App"
+   - "Staging Server"
+   - "Mobile App Development"
+   - "Webhook Service"
+
+3. Click **"Generate"** to create the key
+
+### Copy and Secure Your API Key
+
+<Warning>
+  API keys are shown only once at creation. If you lose your key, you'll need to
+  generate a new one and update your application.
+</Warning>
+
+**After generation:**
+
+1. ✅ **Immediately copy the API key** from the dashboard
+2. ✅ **Store it securely** in your environment variables or secrets manager
+3. ✅ **Never commit keys** to version control (Git, SVN, etc.)
+4. ✅ **Never expose keys** in client-side code or public repositories
+
+**Example of secure storage:**
 
 ```bash
-curl -X GET "https://production.hifibridge.com/v2/users" \
-  -H "Authorization: Bearer YOUR_API_KEY_HERE" \
-  -H "Content-Type: application/json"
+# .env file (add to .gitignore)
+HIFI_API_KEY=zpka_1234567890abcdef
+HIFI_ENVIRONMENT=sandbox
 ```
 
-### Getting Help
+## Managing API Keys
 
-If you encounter issues with authentication:
+### Deleting API Keys
 
-1. Verify your API key is correct and active in the dashboard
-2. Check that you're using the correct header format: `Authorization: Bearer YOUR_KEY`
-3. Ensure your API key has the necessary permissions for the endpoint
-4. Contact support if problems persist
+If a key is compromised or no longer needed:
 
-<Info>
-  Need help with a specific integration? Check out our [quickstart
-  guide](/guides/quickstart) or browse our [use case
-  examples](/guides/use-cases).
-</Info>
+1. Navigate to **Developer** → **API Keys** in the dashboard
+2. Find the key you want to delete
+3. Click **"Delete"** or the delete icon
+4. Confirm the deletion
+
+<Warning>
+  Deleted keys stop working immediately. Ensure you've updated your application
+  with a new key before deleting the old one.
+</Warning>
+
+## Testing Your API Key
+
+Verify your API key is working correctly with the ping endpoint:
+
+```bash
+curl -X GET "https://sandbox.hifibridge.com/v2/ping" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+**Successful response:**
+
+```json
+{
+  "message": "pong"
+}
+```
+
+**Authentication error:**
+
+```json
+{
+  "error": "Not authorized"
+}
+```
+
+---
+
+## Next Steps
+
+Now that you have your API keys set up:
+
+- **[Quickstart Guide](/docs/quickstart)** - Build your first integration
+- **[API Reference](https://docs.hifibridge.com/api-reference)** - Explore available endpoints
+- **[Webhooks](/docs/webhooks)** - Set up real-time event notifications
+- **[Error Handling](https://docs.hifibridge.com/docs/api/errors)** - Learn how to handle API errors gracefully
+
+---
+
+## Getting Help
+
+**Having trouble with authentication?**
+
+1. ✅ Verify your API key is active in the dashboard
+2. ✅ Check the header format: `Authorization: Bearer YOUR_KEY`
+3. ✅ Ensure you're using the correct environment endpoint
+
+**Still need help?**
+
+- 📧 **Email:** support@hifibridge.com
+- 💬 **Slack:** Message us in our shared Slack channel

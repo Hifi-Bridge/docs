@@ -1,0 +1,437 @@
+---
+title: Africa Rail
+---
+
+The Africa Rail enables local currency pay-ins and pay-outs across 15 African countries through bank transfers and mobile money. It supports both onramp and offramp flows for individual and business users.
+
+**Supported Countries:** Benin, Botswana, Burkina Faso, Cameroon, Côte d'Ivoire, Kenya, Malawi, Mali, Nigeria, Senegal, South Africa, Tanzania, Togo, Uganda, Zambia
+
+## Individual
+
+The Africa Rail for individual users requires KYC (Know Your Customer) verification. The requirements vary by country.
+
+### KYC Fields
+
+| Field           | Description                                                                                                                                                     | `Required` |
+| :-------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------- |
+| **firstName**   | User's first name                                                                                                                                               | `Required` |
+| **lastName**    | User's last name                                                                                                                                                | `Required` |
+| **email**       | User's email address                                                                                                                                            | `Required` |
+| **phone**       | User's phone number                                                                                                                                             | `Required` |
+| **address**     | The address where the user currently resides. Required fields: `addressLine1`, `city`, `stateProvinceRegion`, `postalCode`, `country`. Optional: `addressLine2` | `Required` |
+| **dateOfBirth** | User's date of birth                                                                                                                                            | `Required` |
+| **idType**      | Type of identification document. Refer to the [ID Types](#id-types) section                                                                                     | `Required` |
+| **idNumber**    | Identification document number                                                                                                                                  | `Required` |
+
+<Accordion title="ID Types">
+
+| ID Type          | Description                  |
+| :--------------- | :--------------------------- |
+| DRIVERS          | Drivers license              |
+| ID_CARD          | Identification card          |
+| PASSPORT         | National passport            |
+| RESIDENCE_PERMIT | Residence permit or document |
+
+</Accordion>
+
+### Nigeria Requirements
+
+For Nigerian users, the following additional fields are required:
+
+| Field                  | Description                             | `Required` |
+| :--------------------- | :-------------------------------------- | :--------- |
+| **additionalIdType**   | Additional identification document type | `Required` |
+| **additionalIdNumber** | Additional identification number        | `Required` |
+
+## Business
+
+<Info>
+  **Note:** We only support individual accounts in Nigeria, not business.
+</Info>
+
+### KYB Fields
+
+| Field                       | Description                         | `Required` |
+| :-------------------------- | :---------------------------------- | :--------- |
+| **businessName**            | The full legal name of the business | `Required` |
+| **taxIdentificationNumber** | Company tax number                  | `Required` |
+
+## Financial Institutions
+
+Here's a list of financial institutions supported for each country:
+
+### Nigeria
+
+**Channels:** Bank, Momo  
+**Availability:** Onramp & Offramp
+
+<AccordionGroup>
+  <Accordion title="Onramp">
+
+| Name                            | Type         |
+| ------------------------------- | ------------ |
+| Access Bank (Diamond)           | Bank         |
+| Access Bank                     | Bank         |
+| Alternative Bank                | Bank         |
+| Bellbank Microfinance           | Bank         |
+| Bowen MFB                       | Bank         |
+| Citibank Nigeria                | Bank         |
+| Ecobank Nigeria                 | Bank         |
+| Enterprise Bank                 | Bank         |
+| Fidelity Bank                   | Bank         |
+| First Bank of Nigeria           | Bank         |
+| First City Monument Bank        | Bank         |
+| Globus Bank                     | Bank         |
+| GoMoney                         | Bank         |
+| GT Bank (Guaranty Trust Bank)   | Bank         |
+| Heritage Bank                   | Bank         |
+| Jaiz Bank                       | Bank         |
+| Keystone Bank                   | Bank         |
+| Kuda Microfinance Bank          | Bank         |
+| Lotus Bank                      | Bank         |
+| Mainstreet Bank                 | Bank         |
+| Mint-Finex Microfinance Bank    | Bank         |
+| Moniepoint Microfinance Bank    | Bank         |
+| NET MFB                         | Bank         |
+| Nomba Bank                      | Bank         |
+| Nova MB                         | Bank         |
+| NowNow (Contec Global)          | Bank         |
+| Optimus Bank                    | Bank         |
+| OPay                            | Bank         |
+| Paga                            | Bank         |
+| PalmPay                         | Bank         |
+| Parallex Bank                   | Bank         |
+| Polaris Bank                    | Bank         |
+| Premium Trust Bank              | Bank         |
+| Providus Bank                   | Bank         |
+| Stanbic IBTC Bank               | Bank         |
+| Standard Chartered Bank         | Bank         |
+| Sterling Bank                   | Bank         |
+| Suntrust Bank                   | Bank         |
+| Taj Bank                        | Bank         |
+| Titan Trust Bank                | Bank         |
+| Union Bank of Nigeria           | Bank         |
+| United Bank for Africa          | Bank         |
+| Unity Bank                      | Bank         |
+| VFD Microfinance Bank           | Bank         |
+| Wema Bank                       | Bank         |
+| Zenith Bank                     | Bank         |
+| FairMoney Microfinance Bank Ltd | Mobile Money |
+| GoMoney                         | Mobile Money |
+| Jaiz Bank                       | Mobile Money |
+| Kuda Microfinance Bank          | Mobile Money |
+| MoMo PSB                        | Mobile Money |
+| Moniepoint Microfinance Bank    | Mobile Money |
+| NET MFB                         | Mobile Money |
+| NowNow (Contec Global)          | Mobile Money |
+| OPay                            | Mobile Money |
+| PalmPay                         | Mobile Money |
+| Paga                            | Mobile Money |
+| VFD Microfinance Bank           | Mobile Money |
+
+  </Accordion>
+
+  <Accordion title="Offramp">
+
+Same as onramp.
+
+  </Accordion>
+</AccordionGroup>
+
+---
+
+### Kenya
+
+**Channels:** Bank, Momo  
+**Availability:** Onramp & Offramp
+
+<AccordionGroup>
+  <Accordion title="Onramp">
+
+| Name                           | Type         |
+| ------------------------------ | ------------ |
+| Absa Bank Kenya Plc            | Bank         |
+| African Banking Corporation    | Bank         |
+| Bank of Africa Kenya Ltd       | Bank         |
+| Bank of Baroda                 | Bank         |
+| Bank of India                  | Bank         |
+| Central Bank of Kenya          | Bank         |
+| Citibank N.A.                  | Bank         |
+| Commercial Bank of Africa Ltd  | Bank         |
+| Consolidated Bank of Kenya Ltd | Bank         |
+| Co-operative Bank              | Bank         |
+| Credit Bank Ltd                | Bank         |
+| Diamond Trust Bank             | Bank         |
+| Ecobank Kenya Ltd              | Bank         |
+| Equity Bank                    | Bank         |
+| Family Bank Ltd                | Bank         |
+| First Community Bank           | Bank         |
+| Gulf African Bank Ltd          | Bank         |
+| Kenya Commercial Bank Ltd      | Bank         |
+| NCBA Bank                      | Bank         |
+| National Bank of Kenya         | Bank         |
+| Prime Bank Limited             | Bank         |
+| Stanbic Bank Kenya Limited     | Bank         |
+| Standard Chartered             | Bank         |
+| UBA Kenya Ltd                  | Bank         |
+| Victoria Commercial Bank Ltd   | Bank         |
+| M-Pesa                         | Mobile Money |
+
+  </Accordion>
+
+  <Accordion title="Offramp">
+
+Same as onramp.
+
+  </Accordion>
+</AccordionGroup>
+
+---
+
+### Tanzania
+
+**Channels:** Bank, Momo  
+**Availability:** Onramp & Offramp
+
+<AccordionGroup>
+  <Accordion title="Onramp">
+
+| Name                                   | Type         |
+| -------------------------------------- | ------------ |
+| Absa Bank Tanzania Limited             | Bank         |
+| AccessBank Tanzania                    | Bank         |
+| Akiba Commercial Bank                  | Bank         |
+| Amana Bank                             | Bank         |
+| Azania Bank                            | Bank         |
+| BancABC Tanzania                       | Bank         |
+| Bank of Africa Tanzania Limited        | Bank         |
+| Bank of Baroda Tanzania Limited        | Bank         |
+| CRDB Bank                              | Bank         |
+| DCB Commercial Bank                    | Bank         |
+| Diamond Trust Bank Tanzania            | Bank         |
+| Ecobank                                | Bank         |
+| Equity Bank (Tanzania)                 | Bank         |
+| Exim Bank (Tanzania)                   | Bank         |
+| First National Bank of Tanzania        | Bank         |
+| Guaranty Trust Bank (Tanzania) Limited | Bank         |
+| KCB Bank Tanzania Limited              | Bank         |
+| Maendeleo Bank Ltd                     | Bank         |
+| National Microfinance Bank             | Bank         |
+| NCBA Bank Tanzania                     | Bank         |
+| Stanbic Bank Tanzania Limited          | Bank         |
+| Standard Chartered Bank                | Bank         |
+| TPB Bank Plc                           | Bank         |
+| United Bank for Africa                 | Bank         |
+| Airtel Money (AIRTELMONEYTZ)           | Mobile Money |
+| AzamPesa (AZAMPESA)                    | Mobile Money |
+| HaloPesa (HALOPESA)                    | Mobile Money |
+| Tigo Pesa (TIGO)                       | Mobile Money |
+| Vodacom M-Pesa (VODACOM)               | Mobile Money |
+
+  </Accordion>
+
+  <Accordion title="Offramp">
+
+Same as onramp.
+
+  </Accordion>
+</AccordionGroup>
+
+---
+
+### Uganda
+
+**Channels:** Momo only  
+**Availability:** Onramp & Offramp
+
+<AccordionGroup>
+  <Accordion title="Onramp">
+
+| Name                             | Type         |
+| -------------------------------- | ------------ |
+| Mobile Money (operator coverage) | Mobile Money |
+
+  </Accordion>
+
+  <Accordion title="Offramp">
+
+Same as onramp.
+
+  </Accordion>
+</AccordionGroup>
+
+---
+
+### Botswana
+
+**Channels:** Bank, Momo  
+**Availability:** Onramp & Offramp
+
+<AccordionGroup>
+  <Accordion title="Onramp">
+
+| Name                                     | Type         |
+| ---------------------------------------- | ------------ |
+| ABSA Bank Botswana                       | Bank         |
+| Access Bank                              | Bank         |
+| Bank Gaborone Limited                    | Bank         |
+| Bank of Baroda Botswana                  | Bank         |
+| First Capital Bank Botswana              | Bank         |
+| First National Bank                      | Bank         |
+| Stanbic Bank                             | Bank         |
+| Standard Chartered Bank Botswana Limited | Bank         |
+| Mobile Money                             | Mobile Money |
+
+  </Accordion>
+
+  <Accordion title="Offramp">
+
+Same as onramp.
+
+  </Accordion>
+</AccordionGroup>
+
+---
+
+### Cameroon
+
+**Channels:** Momo  
+**Availability:** Onramp & Offramp
+
+<AccordionGroup>
+  <Accordion title="Onramp">
+
+| Name          | Type         |
+| ------------- | ------------ |
+| Mobile Wallet | Mobile Money |
+
+  </Accordion>
+
+  <Accordion title="Offramp">
+
+Same as onramp.
+
+  </Accordion>
+</AccordionGroup>
+
+---
+
+### Malawi
+
+**Channels:** Momo  
+**Availability:** Onramp & Offramp
+
+<AccordionGroup>
+  <Accordion title="Onramp">
+
+| Name         | Type         |
+| ------------ | ------------ |
+| Airtel Money | Mobile Money |
+| TNM          | Mobile Money |
+
+  </Accordion>
+
+  <Accordion title="Offramp">
+
+Same as onramp.
+
+  </Accordion>
+</AccordionGroup>
+
+---
+
+### Zambia
+
+**Channels:** Momo  
+**Availability:** Onramp & Offramp
+
+<AccordionGroup>
+  <Accordion title="Onramp">
+
+| Name         | Type         |
+| ------------ | ------------ |
+| MTN          | Mobile Money |
+| Zamtel       | Mobile Money |
+| Airtel Money | Mobile Money |
+
+  </Accordion>
+
+  <Accordion title="Offramp">
+
+Same as onramp.
+
+  </Accordion>
+</AccordionGroup>
+
+---
+
+### Benin, Burkina Faso, Côte d'Ivoire, Mali, Senegal, Togo
+
+**Channels:** Momo (multi-market)  
+**Availability:** Onramp & Offramp
+
+> Coverage varies by WAEMU market; operator labels below include country hints where provided in the source.
+
+<AccordionGroup>
+  <Accordion title="Onramp">
+
+| Name                  | Type         |
+| --------------------- | ------------ |
+| Moov Money            | Mobile Money |
+| Moov                  | Mobile Money |
+| Orange Money          | Mobile Money |
+| MTN Mobile Money (BJ) | Mobile Money |
+| Wave                  | Mobile Money |
+| TMoney (TG)           | Mobile Money |
+| Flooz (TG)            | Mobile Money |
+| TogoCell (TG)         | Mobile Money |
+| VISA / MasterCard     | Mobile Money |
+
+  </Accordion>
+
+  <Accordion title="Offramp">
+
+Same as onramp.
+
+  </Accordion>
+</AccordionGroup>
+
+---
+
+### South Africa
+
+**Channels:** Bank  
+**Availability:** Onramp & Offramp
+
+<AccordionGroup>
+  <Accordion title="Onramp">
+
+| Name                         | Type |
+| ---------------------------- | ---- |
+| Absa Bank                    | Bank |
+| African Bank                 | Bank |
+| Albaraka Bank                | Bank |
+| Bank of Athens               | Bank |
+| Bank of Namibia              | Bank |
+| Bidvest Bank                 | Bank |
+| Capitec Bank                 | Bank |
+| Central Bank of Lesotho      | Bank |
+| Citi Bank                    | Bank |
+| Discovery Bank Limited       | Bank |
+| First National Bank (SA)     | Bank |
+| Investec Bank                | Bank |
+| JP Morgan Chase Bank         | Bank |
+| Nedbank (South Africa)       | Bank |
+| Rand Merchant Bank           | Bank |
+| Standard Bank (South Africa) | Bank |
+| Tyme Bank                    | Bank |
+| Ubank                        | Bank |
+
+  </Accordion>
+
+  <Accordion title="Offramp">
+
+Same as onramp.
+
+  </Accordion>
+</AccordionGroup>

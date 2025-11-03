@@ -1,0 +1,389 @@
+---
+title: "Wallet Transfers"
+sidebarTitle: "Onchain"
+---
+
+**Wallet transfers** allow you to send stablecoins between wallets on blockchain networks. Transfers can be sent to other HIFI users or external wallet addresses.
+
+## Transfer Types
+
+HIFI supports two types of wallet transfers:
+
+| Type                | Description                                              | Best For                                    |
+| :------------------ | :------------------------------------------------------- | :------------------------------------------ |
+| **Single Transfer** | Send to one recipient                                    | Individual payments, one-time transactions  |
+| **Batch Transfer**  | Send to up to 50 recipients in a single transaction      | Payroll, airdrops, bulk distributions       |
+
+## Creating Single Transfers
+
+Send stablecoins to a single recipient on the same blockchain.
+
+<CodeGroup>
+```bash Transfer to HIFI User
+curl -X POST "https://sandbox.hifibridge.com/v2/wallets/transfers" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "source": {
+      "userId": "usr_abc123"
+    },
+    "destination": {
+      "userId": "usr_xyz789"
+    },
+    "amount": 10,
+    "currency": "usdc",
+    "chain": "POLYGON",
+    "requestId": "a40ea2aa-7937-4be9-bb1f-b75f1489bcc6"
+  }'
+```
+
+```bash Transfer to External Wallet
+curl -X POST "https://sandbox.hifibridge.com/v2/wallets/transfers" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "source": {
+      "userId": "usr_abc123"
+    },
+    "destination": {
+      "walletAddress": "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb"
+    },
+    "amount": 10,
+    "currency": "usdc",
+    "chain": "POLYGON",
+    "requestId": "b51fb3bb-8a48-5cfa-cc2g-c86g2589cdd7"
+  }'
+```
+</CodeGroup>
+
+<Warning>
+**External Wallet Registration:** Before sending to external wallet addresses, you must register them using the [External Wallets API](https://docs.hifibridge.com/api-reference/wallet/add-external-wallets-to-a-user). Unregistered addresses will cause the transfer to fail.
+</Warning>
+
+The response contains the transfer details:
+
+<Accordion title="Response">
+
+```json
+{
+  "transferType": "WALLET.TRANSFER",
+  "transferDetails": {
+    "id": "xfr_abc123",
+    "requestId": "a40ea2aa-7937-4be9-bb1f-b75f1489bcc6",
+    "createdAt": "2025-09-26T03:04:11.092Z",
+    "updatedAt": "2025-09-26T03:04:11.092Z",
+    "chain": "POLYGON",
+    "currency": "usdc",
+    "contractAddress": "0x41E94Eb019C0762f9Bfcf9Fb1E58725BfB0e7582",
+    "status": "CREATED",
+    "failedReason": null,
+    "source": {
+      "userId": "usr_abc123",
+      "walletAddress": "0x1b932E54e77Aeb698144550d5a493Ea99E20Daa7",
+      "walletType": "INDIVIDUAL"
+    },
+    "destination": {
+      "userId": "usr_xyz789",
+      "walletAddress": "0x1b932E54e77Aeb688144550d5a493Ea99E20Daa7"
+    },
+    "amount": 10,
+    "receipt": {
+      "transactionHash": null,
+      "userOpHash": null
+    }
+  }
+}
+```
+
+</Accordion>
+
+<ResponseField name="transferDetails.id" type="string">
+  Unique transfer ID. Use this to check status using the [Retrieve a crypto transfer](https://docs.hifibridge.com/api-reference/crypto-transfer/retrieve-a-crypto-transfer) endpoint.
+</ResponseField>
+
+<ResponseField name="transferDetails.status" type="string">
+  Transfer status. Progression: `CREATED` → `INITIATED` → `PENDING` → `COMPLETED`. See [Transaction Status](#transaction-status) for details.
+</ResponseField>
+
+<ResponseField name="transferDetails.source" type="object">
+  Details about the sender including wallet address and user information.
+</ResponseField>
+
+<ResponseField name="transferDetails.destination" type="object">
+  Details about the recipient including wallet address and user information (if HIFI user).
+</ResponseField>
+
+<ResponseField name="transferDetails.amount" type="number">
+  Transfer amount in the specified currency.
+</ResponseField>
+
+<ResponseField name="transferDetails.receipt" type="object">
+  Blockchain transaction receipt. Contains `transactionHash` and `userOpHash` once the transfer is confirmed on-chain.
+</ResponseField>
+
+<Info>
+For detailed response field documentation, see the [Create Crypto Transfer](https://docs.hifibridge.com/api-reference/crypto-transfer/create-a-crypto-transfer) API reference.
+</Info>
+
+## Creating Batch Transfers
+
+Send stablecoins to up to 50 recipients on the same blockchain.
+
+```bash
+curl -X POST "https://sandbox.hifibridge.com/v2/wallets/transfers/batch" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "source": {
+      "userId": "usr_abc123"
+    },
+    "destinations": [
+      {
+        "userId": "usr_xyz789",
+        "amount": 10
+      },
+      {
+        "walletAddress": "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb",
+        "amount": 5
+      }
+    ],
+    "currency": "usdc",
+    "chain": "POLYGON",
+    "requestId": "c62gc4cc-9b59-6dgb-dd3h-d97h3690dee8"
+  }'
+```
+
+<Warning>
+**External Wallet Registration:** External wallet addresses in batch transfers must be registered before use. Register them using the [External Wallets API](https://docs.hifibridge.com/api-reference/wallet/add-external-wallets-to-a-user).
+</Warning>
+
+Let's take a look at the response:
+
+<Accordion title="Response">
+
+```json
+{
+  "transferType": "WALLET.TRANSFER.BATCH",
+  "transferDetails": {
+    "id": "bat_abc123",
+    "requestId": "c62gc4cc-9b59-6dgb-dd3h-d97h3690dee8",
+    "createdAt": "2025-04-05T00:55:50.609Z",
+    "updatedAt": "2025-04-05T00:56:33.236Z",
+    "chain": "POLYGON",
+    "currency": "usdc",
+    "contractAddress": "0x41e94eb019c0762f9bfcf9fb1e58725bfb0e7582",
+    "status": "COMPLETED",
+    "source": {
+      "userId": "usr_abc123",
+      "walletAddress": "0x99a8c5ED386d217BC6ff0AA1b3585606D475432B",
+      "walletType": "INDIVIDUAL"
+    },
+    "destination": {
+      "batch": [
+        {
+          "amount": "10",
+          "userId": "usr_xyz789",
+          "walletAddress": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e"
+        },
+        {
+          "amount": "5",
+          "walletAddress": "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb"
+        }
+      ]
+    },
+    "receipt": {
+      "transactionHash": "0x57f0cd3429ea425d982882243428ef4a1eda5f1be2157c1b34ea48b49b24fe7f",
+      "userOpHash": "0xef7bdb071b1fcfb5df629bd4d27ffa6dc32d0a5df676f26fb8c25311df1185ac"
+    }
+  }
+}
+```
+
+</Accordion>
+
+<ResponseField name="transferDetails.id" type="string">
+  Unique batch transfer ID. Use this to check status using the [Retrieve a crypto transfer](https://docs.hifibridge.com/api-reference/crypto-transfer/retrieve-a-crypto-transfer) endpoint.
+</ResponseField>
+
+<ResponseField name="transferDetails.status" type="string">
+  Batch transfer status. Progression: `CREATED` → `INITIATED` → `PENDING` → `COMPLETED`. See [Transaction Status](#transaction-status) for details.
+</ResponseField>
+
+<ResponseField name="transferDetails.source" type="object">
+  Details about the sender including wallet address and user information.
+</ResponseField>
+
+<ResponseField name="transferDetails.destination.batch" type="array">
+  Array of destination recipients. Each item contains `amount`, optional `userId` (for HIFI users), and `walletAddress`.
+</ResponseField>
+
+<ResponseField name="transferDetails.receipt" type="object">
+  Blockchain transaction receipt. Contains `transactionHash` and `userOpHash` once the transfer is confirmed on-chain.
+</ResponseField>
+
+<Info>
+For detailed field documentation, see the [Create Batch Transfer](https://docs.hifibridge.com/api-reference/crypto-transfer/create-a-batch-transfer) API reference.
+</Info>
+
+## Transaction Status
+
+Wallet transfers progress through several statuses:
+
+| Status              | Description                                                       |
+| :------------------ | :---------------------------------------------------------------- |
+| **NOT_INITIATED**   | Transfer not submitted due to validation error                    |
+| **CREATED**         | Transfer request created and awaiting processing                  |
+| **INITIATED**       | Transfer submitted to blockchain                                  |
+| **PENDING**         | Transaction awaiting on-chain confirmation                        |
+| **COMPLETED**       | Transfer successfully confirmed on-chain                          |
+| **FAILED**          | Transfer failed (check `failedReason` for details)                |
+| **UNKNOWN**         | Transfer status could not be determined                           |
+
+## Tracking Transfers
+
+<Note>
+**Status Updates:** Subscribe to `WALLET.TRANSFER.UPDATE` webhook events to receive real-time status notifications. See [Webhooks](/docs/webhooks/wallet) for setup instructions.
+</Note>
+
+Monitor transfer status using the [Retrieve Crypto Transfer](https://docs.hifibridge.com/api-reference/crypto-transfer/retrieve-a-crypto-transfer) endpoint. The response structure matches the create endpoint shown above.
+
+```bash
+curl -X GET "https://sandbox.hifibridge.com/v2/wallets/transfers/xfr_abc123" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+Use the `transactionHash` in the response to view the transaction on a blockchain explorer like [Polygonscan](https://polygonscan.com/) or [Etherscan](https://etherscan.io/).
+
+## Transfer Approvals
+
+For organizations requiring multi-party authorization, all transfers support an optional approval workflow.
+
+### How Approvals Work
+
+<Steps>
+  <Step title="Enable approval requirement">
+    Set `requireApproval: true` when creating a transfer.
+  </Step>
+  <Step title="Review pending transfer">
+    The transfer enters `PENDING_APPROVAL` status. Dashboard admins are notified via email and webhook to approve or reject the transfer. Any admin can make the decision.
+  </Step>
+  <Step title="Execution or rejection">
+    If approved, the transfer is executed. If rejected, it's cancelled.
+  </Step>
+</Steps>
+
+**Request with approval:**
+
+```bash
+curl -X POST "https://sandbox.hifibridge.com/v2/wallets/transfers/batch" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "source": {
+      "userId": "usr_abc123"
+    },
+    "destinations": [...],
+    "currency": "usdc",
+    "chain": "POLYGON",
+    "requireApproval": true,
+    "requestId": "c62gc4cc-9b59-6dgb-dd3h-d97h3690dee8"
+  }'
+```
+
+When approval is required, the response includes approval details:
+
+<Accordion title="Response">
+
+```json
+{
+  "transferDetails": {
+    "id": "bat_abc123",
+    "status": "PENDING_APPROVAL",
+    "receipt": {
+      "approval": {
+        "id": "apv_xyz789",
+        "status": "PENDING",
+        "transferId": "bat_abc123",
+        "transferType": "WALLET.TRANSFER.BATCH",
+        "votes": [
+          {
+            "approverId": "profile_abc123",
+            "vote": "APPROVE",
+            "comment": "Approved for processing",
+            "createdAt": "2025-02-03T16:12:41.503+00:00"
+          }
+        ]
+      }
+    }
+  }
+}
+```
+
+</Accordion>
+
+<ResponseField name="transferDetails.status" type="string">
+  Transfer status. When `requireApproval: true` is set, the status will be `PENDING_APPROVAL` until approved.
+</ResponseField>
+
+<ResponseField name="transferDetails.receipt.approval" type="object">
+  Approval object containing approval details and votes when approval is required.
+
+  <Expandable title="properties">
+    <ResponseField name="id" type="string">
+      Unique approval ID.
+    </ResponseField>
+
+    <ResponseField name="status" type="string">
+      Approval status: `PENDING`, `APPROVED`, or `REJECTED`.
+    </ResponseField>
+
+    <ResponseField name="votes" type="array">
+      Array of approval votes. Each vote contains `approverId`, `vote` (APPROVE/REJECT), optional `comment`, and `createdAt`.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<Note>
+**Configuring Approvers:** Manage your team roles in the HIFI Dashboard. Members can create transfers, but only admins can approve.
+</Note>
+
+## Key Concepts
+
+<AccordionGroup>
+  <Accordion title="HIFI vs External Transfers">
+    **HIFI transfers** use `userId` as the destination while **external transfers** use a `walletAddress` as the destination.
+    
+    <Warning>
+    **Registration Required:** External wallet addresses must be registered before use. Create an external wallet record using the [External Wallets API](https://docs.hifibridge.com/api-reference/wallet/add-external-wallets-to-a-user) before including the address in transfer requests.
+    </Warning>
+  </Accordion>
+
+  <Accordion title="Batch Transfer Limits">
+    Batch transfers have the following constraints:
+    - **Maximum recipients:** 50 per batch
+    - **Supported chains:** Currently POLYGON only
+    - **Supported currencies:** USDC, USDT
+    
+    If you need to send to more than 50 recipients, create multiple batches.
+  </Accordion>
+
+  <Accordion title="Transaction Receipts">
+    The `receipt` object provides blockchain verification:
+    - **transactionHash:** Unique identifier for the blockchain transaction. Use this to view the transaction on block explorers.
+    - **userOpHash:** For account abstraction wallets, this is the user operation hash
+    
+    Both values are `null` until the transfer is confirmed on-chain (status becomes COMPLETED).
+  </Accordion>
+</AccordionGroup>
+
+## Getting Help
+
+- 📧 **Email:** support@hifibridge.com
+- 💬 **Slack:** Message us in our shared Slack channel
+
+## Related Resources
+
+- [Wallets](/docs/wallets) - Understand wallet addresses and balances
+- [Webhooks](/docs/webhooks) - Real-time transfer status notifications
+- [API: Single Transfer](https://docs.hifibridge.com/api-reference/crypto-transfer/create-a-crypto-transfer) - Complete single transfer documentation
+- [API: Batch Transfer](https://docs.hifibridge.com/api-reference/crypto-transfer/create-a-batch-crypto-transfer) - Complete batch transfer documentation

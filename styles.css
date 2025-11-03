@@ -1,13 +1,3 @@
-/* Font Face Declaration for Rhithmic Sans */
-@font-face {
-  font-family: "Rhithmic Sans";
-  src: url("http://dashboard.hifibridge.com/fonts/rhithmic/RhithmicSans-Regular.woff2")
-    format("woff2");
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-
 /* Font Face Declaration for Space Mono */
 @font-face {
   font-family: "Space Mono";
@@ -51,11 +41,10 @@
   box-sizing: border-box;
 }
 
-/* Apply Rhithmic Sans font to the entire site */
+/* Apply Inter font to the entire site */
 body,
 html {
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 /* Override heading font weights to normal */
@@ -65,8 +54,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: "Rhithmic Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-weight: 400 !important;
 }
 
@@ -191,8 +179,8 @@ pre,
 }
 
 .hero-title {
-  font-family: "Rhithmic Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Roboto, sans-serif;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    sans-serif;
   font-size: 1.2rem;
   font-weight: 700;
   margin: 0 0 0.5rem 0;
@@ -211,7 +199,7 @@ pre,
   font-size: 1rem;
   line-height: 1.6;
   margin: 0 0 2rem 0;
-  max-width: 300px;
+  max-width: 380px;
 }
 
 .light .hero-description {

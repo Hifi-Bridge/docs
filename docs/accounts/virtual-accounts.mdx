@@ -1,0 +1,528 @@
+---
+title: "Virtual Accounts"
+---
+
+A **Virtual Account** is a dedicated bank account that automatically converts fiat deposits into stablecoins. When users send money to a virtual account via bank transfer, the funds are instantly converted to stablecoins and delivered to their wallet.
+
+## How Virtual Accounts Work
+
+Virtual accounts enable fiat-to-stablecoin onramps through a simple three-step process:
+
+<Steps>
+  <Step title="Create the account">
+    Generate a unique bank account number for the user.
+  </Step>
+  <Step title="Deposits fiat">User receives funds via ACH, wire, or RTP.</Step>
+  <Step title="Automatic conversion">
+    Fiat is automatically converted to stablecoins and delivered to the user’s
+    wallet.
+  </Step>
+</Steps>
+
+Each virtual account is configured for a specific conversion pair (e.g., USD → USDC on Polygon). You can create multiple virtual accounts per user for different currencies and chains.
+
+## Creating Virtual Accounts
+
+Create a virtual account using the [Create Virtual Account](https://docs.hifibridge.com/api-reference/virtual-account/create-a-virtual-account) endpoint.
+
+**Request:**
+
+```bash
+curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/virtual-accounts" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "sourceCurrency": "usd",
+    "destinationCurrency": "usdc",
+    "destinationChain": "POLYGON"
+  }'
+```
+
+**Request Fields:**
+
+<ResponseField name="sourceCurrency" type="string" required>
+  Fiat currency to accept. Currently only `usd` is supported.
+</ResponseField>
+
+<ResponseField name="destinationCurrency" type="string" required>
+  Stablecoin to receive after conversion. Options: `usdc`, `usdt`
+</ResponseField>
+
+<ResponseField name="destinationChain" type="string" required>
+  Blockchain where stablecoins will be sent. Options: `POLYGON`, `ETHEREUM`,
+  `BASE`
+</ResponseField>
+
+<ResponseField name="externalWalletId" type="string">
+  Optional. If provided, stablecoins are sent to this external wallet instead of
+  the user's HIFI wallet.
+</ResponseField>
+
+<Warning>
+  **USD Only:** Virtual accounts currently support USD deposits only. For other
+  currencies, use the [Onramp API](https://docs.hifibridge.com/api-reference/onramp/create-an-onramp).
+</Warning>
+
+**Response:**
+
+```json
+{
+  "message": "Virtual account created successfully",
+  "accountInfo": {
+    "id": "va_abc123",
+    "userId": "usr_abc123",
+    "source": {
+      "paymentRail": ["ach", "wire", "rtp"],
+      "currency": "usd"
+    },
+    "destination": {
+      "chain": "POLYGON",
+      "currency": "usdc",
+      "walletAddress": "0xd102C4130985B7fcB95697616eaf5542c4f98d49",
+      "externalWalletId": null
+    },
+    "status": "activated",
+    "depositInstructions": {
+      "bankName": "Cross River Bank",
+      "bankAddress": "885 Teaneck Road, Teaneck, NJ 07666",
+      "beneficiary": {
+        "name": "John Doe",
+        "address": "123 Main St, New York, NY, 10010, US"
+      },
+      "ach": {
+        "routingNumber": "021214891",
+        "accountNumber": "344176915009"
+      },
+      "wire": {
+        "routingNumber": "021214891",
+        "accountNumber": "344176915009"
+      },
+      "rtp": {
+        "routingNumber": "021214891",
+        "accountNumber": "344176915009"
+      }
+    }
+  }
+}
+```
+
+**Response Fields:**
+
+<ResponseField name="accountInfo.id" type="string">
+  Unique virtual account ID. **Save this** for managing the account and
+  monitoring deposits.
+</ResponseField>
+
+<ResponseField name="accountInfo.status" type="string">
+  Account status. `activated` means ready to receive deposits.
+</ResponseField>
+
+<ResponseField name="accountInfo.source" type="object">
+  Source configuration for the virtual account.
+  <Expandable title="properties">
+    <ResponseField name="paymentRail" type="array">
+      Supported payment methods: `ach`, `wire`, `rtp`
+    </ResponseField>
+    <ResponseField name="currency" type="string">
+      Fiat currency accepted
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="accountInfo.destination" type="object">
+  Destination configuration for converted stablecoins.
+  <Expandable title="properties">
+    <ResponseField name="chain" type="string">
+      Blockchain where stablecoins will be sent
+    </ResponseField>
+    <ResponseField name="currency" type="string">
+      Stablecoin type
+    </ResponseField>
+    <ResponseField name="walletAddress" type="string">
+      Wallet address where stablecoins will be deposited
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="accountInfo.depositInstructions" type="object">
+  **Most Important:** Bank account details for users to send deposits. Share
+  these instructions with your users.
+  <Expandable title="properties">
+    <ResponseField name="bankName" type="string">
+      Bank holding the virtual account
+    </ResponseField>
+    <ResponseField name="bankAddress" type="string">
+      Physical bank address
+    </ResponseField>
+    <ResponseField name="beneficiary" type="object">
+      <Expandable title="properties">
+        <ResponseField name="name" type="string">
+          Beneficiary name (matches user's name for compliance)
+        </ResponseField>
+        <ResponseField name="address" type="string">
+          Beneficiary address
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+    <ResponseField name="ach" type="object">
+      <Expandable title="properties">
+        <ResponseField name="routingNumber" type="string">
+          ACH routing number
+        </ResponseField>
+        <ResponseField name="accountNumber" type="string">
+          Account number for ACH deposits
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+    <ResponseField name="wire" type="object">
+      <Expandable title="properties">
+        <ResponseField name="routingNumber" type="string">
+          Wire routing number
+        </ResponseField>
+        <ResponseField name="accountNumber" type="string">
+          Account number for wire deposits
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+    <ResponseField name="rtp" type="object">
+      <Expandable title="properties">
+        <ResponseField name="routingNumber" type="string">
+          RTP routing number
+        </ResponseField>
+        <ResponseField name="accountNumber" type="string">
+          Account number for RTP deposits
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+## Payment Rails
+
+Virtual accounts support multiple payment methods to accommodate different use cases:
+
+| Payment Rail | Speed             | Cost   | Use Case                          |
+| :----------- | :---------------- | :----- | :-------------------------------- |
+| **ACH**      | 1-3 business days | Low    | Domestic US bank transfers        |
+| **Wire**     | Same day          | Medium | Larger amounts, faster processing |
+| **RTP**      | Real-time         | Medium | Instant transfers                 |
+
+Users can deposit via any supported rail using the same account number. The conversion and delivery happens automatically regardless of which payment method is used.
+
+## Deposit Processing
+
+When a deposit is detected, HIFI automatically:
+
+1. **Validates the deposit** - Confirms amount and sender details
+2. **Converts to stablecoin** - Exchanges fiat for stablecoins at current rates
+3. **Sends to wallet** - Delivers stablecoins to the configured destination
+4. **Triggers webhooks** - Sends `ONRAMP.CREATE` and `ONRAMP.UPDATE` events
+
+Processing times vary by payment rail:
+
+- **ACH**: 1-3 business days for funds to clear, then instant conversion
+- **Wire**: Same-day processing, then instant conversion
+- **RTP**: Real-time processing and instant conversion
+
+<Info>
+  **Webhook Notifications:** Subscribe to `ONRAMP.CREATE` and `ONRAMP.UPDATE`
+  events to track deposits in real-time. See [Webhooks](/docs/webhooks) for
+  setup instructions.
+</Info>
+
+## Tracking Onramps
+
+When deposits arrive at a virtual account, HIFI creates an onramp transaction to handle the conversion. You can see which virtual account was used by checking the onramp's `virtualAccountId` field.
+
+**List onramps for a user:**
+
+```bash
+curl -X GET "https://sandbox.hifibridge.com/v2/onramps?userId=usr_abc123" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+**Response (excerpt):**
+
+```json
+{
+  "count": 1,
+  "records": [
+    {
+      "transferType": "ONRAMP",
+      "transferDetails": {
+        "id": "onr_xyz789",
+        "status": "COMPLETED",
+        "source": {
+          "currency": "usd",
+          "amount": 100
+        },
+        "destination": {
+          "currency": "usdc",
+          "chain": "POLYGON",
+          "amount": 100
+        },
+        "virtualAccountId": "va_abc123",
+        "receipt": {
+          "transactionHash": "0xe5284c4cb35ae9b5eb0ae23b840032f320b87b63f8967ee9b67ee09dfe6a194a"
+        }
+      }
+    }
+  ]
+}
+```
+
+**Key Fields:**
+
+<ResponseField name="transferDetails.virtualAccountId" type="string">
+  The virtual account ID that received the deposit. If `null`, this onramp was
+  created through a different method (not via virtual account).
+</ResponseField>
+
+<ResponseField name="transferDetails.status" type="string">
+  Onramp status. See [Onramps](/docs/transfers/onramps) for complete status
+  documentation.
+</ResponseField>
+
+<ResponseField name="transferDetails.receipt.transactionHash" type="string">
+  Blockchain transaction hash (available when status is COMPLETED)
+</ResponseField>
+
+## Managing Virtual Accounts
+
+### Update Configuration
+
+Change the destination chain or currency for an existing virtual account using the [Update Virtual Account](https://docs.hifibridge.com/api-reference/virtual-account/update-a-virtual-account) endpoint.
+
+**Request:**
+
+```bash
+curl -X PATCH "https://sandbox.hifibridge.com/v2/users/usr_abc123/virtual-accounts/va_abc123" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "destinationCurrency": "usdt",
+    "destinationChain": "ETHEREUM"
+  }'
+```
+
+<Note>
+  Updating the configuration only affects future deposits. Existing pending
+  deposits will complete with the original configuration.
+</Note>
+
+### Deactivate Account
+
+Temporarily disable a virtual account to prevent new deposits using the [Deactivate Virtual Account](https://docs.hifibridge.com/api-reference/virtual-account/deactivate-a-virtual-account) endpoint.
+
+**Request:**
+
+```bash
+curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/virtual-accounts/va_abc123/deactivate" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+When deactivated:
+
+- New deposits are rejected
+- Existing pending deposits continue processing
+- Account can be reactivated later
+
+**Reactivate:**
+
+```bash
+curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/virtual-accounts/va_abc123/activate" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+## Key Concepts
+
+<AccordionGroup>
+  <Accordion title="One Account Per Configuration">
+    Each virtual account is tied to a specific conversion pair (source currency + destination currency + destination chain). To support multiple conversion options, create separate virtual accounts.
+    
+    Example: If you need both USD→USDC on Polygon and USD→USDT on Ethereum, create two virtual accounts.
+  </Accordion>
+
+{" "}
+
+<Accordion title="Beneficiary Name Matching">
+  The beneficiary name on the virtual account must match the user's KYC name.
+  Deposits from accounts with mismatched names may be rejected for compliance
+  reasons.
+</Accordion>
+
+{" "}
+
+<Accordion title="USDT Fees">
+  USDT conversions incur an additional 0.1% exchange fee beyond standard
+  conversion rates. This fee appears on your monthly invoice.
+</Accordion>
+
+  <Accordion title="External Wallets">
+    By default, stablecoins are sent to the user's HIFI wallet. Use the `externalWalletId` parameter to send to an external wallet address instead. The external wallet must be pre-registered via the [External Wallets API](https://docs.hifibridge.com/api-reference/external-wallet/create-external-wallet).
+    
+    <Note>
+      **Registration Required:** Unlike regular wallet transfers (which can send directly to any address), virtual accounts require external wallets to be registered first when using the `externalWalletId` parameter. If you prefer not to register, create a standard virtual account without `externalWalletId` and then transfer funds to the external wallet using the [Wallet Transfer API](/docs/wallets).
+    </Note>
+  </Accordion>
+</AccordionGroup>
+
+## Sandbox Testing
+
+In sandbox, simulate deposits without real bank transfers using the [Simulate Deposit](https://docs.hifibridge.com/api-reference/virtual-account/simulate-a-deposit) endpoint.
+
+**Request:**
+
+```bash
+curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/virtual-accounts/va_abc123/simulate-deposit" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "paymentRail": "wire",
+    "source": {
+      "routingNumber": "021000021",
+      "accountNumber": "516843515316",
+      "name": "Jane Doe",
+      "bankName": "JP Morgan Chase"
+    },
+    "amount": "100",
+    "requestId": "32639f89-5fcc-4e31-8abe-0e710ba2e4a1",
+    "reference": "Test deposit"
+  }'
+```
+
+**Response:**
+
+```json
+{
+  "message": "Sandbox deposit triggered"
+}
+```
+
+The sandbox will process this deposit as if real money arrived, triggering the full onramp flow including webhooks.
+
+<Note>
+  **Sandbox Processing Times:** Simulated deposits in sandbox are processed
+  automatically after a delay: - **Wire**: ~5 minutes - **ACH**: ~8 minutes In
+  production, actual processing times depend on the payment rail used (ACH: 1-3
+  business days, Wire: same day, RTP: real-time).
+</Note>
+
+## Sample Code
+
+### Get deposit instructions
+
+<Steps>
+  <Step title="Create virtual account">
+    ```bash
+    curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/virtual-accounts" \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "sourceCurrency": "usd",
+        "destinationCurrency": "usdc",
+        "destinationChain": "POLYGON"
+      }'
+    ```
+  </Step>
+
+  <Step title="Extract and display instructions">
+    Extract the `depositInstructions` object from the response and present the relevant bank details to your user. Example:
+
+    **ACH Deposit Instructions**
+
+    **Bank Name:** Cross River Bank
+    **Routing Number:** 021214891
+    **Account Number:** 344176915009
+    **Beneficiary:** John Doe
+
+    **Wire Deposit Instructions**
+
+    **Bank Name:** Cross River Bank
+    **Routing Number:** 021214891
+    **Account Number:** 344176915009
+    **Beneficiary:** John Doe
+    **Bank Address:** 885 Teaneck Road, Teaneck, NJ 07666
+  </Step>
+
+  <Step title="Track onramp transactions">
+    List onramps to see which virtual account was used and track conversion status:
+    ```bash
+    curl -X GET "https://sandbox.hifibridge.com/v2/onramps?userId=usr_abc123" \
+      -H "Authorization: Bearer YOUR_API_KEY"
+    ```
+    
+    Or subscribe to `ONRAMP.CREATE` and `ONRAMP.UPDATE` webhooks for real-time notifications.
+  </Step>
+</Steps>
+
+### Send to external wallet
+
+**Option 1: Direct to external wallet**
+
+Use an `externalWalletId` instead of `destinationChain` when creating a virtual account. Funds will be deposited directly into the specified wallet address.
+
+```bash
+curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/virtual-accounts" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "sourceCurrency": "usd",
+    "destinationCurrency": "usdc",
+    "externalWalletId": "ew_abc123"
+  }'
+```
+
+Deposits to this virtual account will be converted to USDC and sent directly to the external wallet address.
+
+**Option 2: Route through HIFI wallet**
+
+<Steps>
+  <Step title="Create virtual account">
+    Create a standard virtual account without `externalWalletId`. Funds will arrive in the user's HIFI wallet first.
+    ```bash
+    curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/virtual-accounts" \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "sourceCurrency": "usd",
+        "destinationCurrency": "usdc",
+        "destinationChain": "POLYGON"
+      }'
+    ```
+  </Step>
+
+  <Step title="Send to external wallet">
+    Send funds to any external address using the [Wallet Transfer API](/docs/transfers/onchain):
+    ```bash
+    curl -X POST "https://sandbox.hifibridge.com/v2/wallets/transfers" \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "source": {
+          "userId": "usr_abc123"
+        },
+        "destination": {
+          "address": "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb"
+        },
+        "amount": 10,
+        "currency": "usdc",
+        "chain": "POLYGON",
+        "requestId": "b51fb3bb-8a48-5cfa-cc2g-c86g2589cdd7"
+      }'
+    ```
+  </Step>
+</Steps>
+
+## Getting Help
+
+- 📧 **Email:** support@hifibridge.com
+- 💬 **Slack:** Message us in our shared Slack channel
+
+## Related Resources
+
+- [Quickstart Guide](/docs/quickstart) - Step-by-step tutorial including virtual account setup
+- [Users](/docs/users) - Understand user creation and KYC requirements
+- [Onramps](/docs/transfers/onramps) - Alternative onramp methods for non-USD currencies
+- [Webhooks](/docs/webhooks) - Subscribe to account and onramp events
+- [API Reference](https://docs.hifibridge.com/api-reference/virtual-account/create-a-virtual-account) - Complete endpoint documentation

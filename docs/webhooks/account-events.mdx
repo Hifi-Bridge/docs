@@ -1,0 +1,112 @@
+---
+title: "Account Events"
+---
+
+You can expect to receive webhook events whenever an account is successfully created.
+
+## Types
+
+- **ACCOUNT.ONRAMP.CREATE**: Creation of onramp accounts.
+- **ACCOUNT.ONRAMP.UPDATE**: Updates of onramp accounts.
+- **ACCOUNT.OFFRAMP.CREATE**: Creation of offramp accounts.
+- **ACCOUNT.OFFRAMP.UPDATE**: Updates of offramp accounts.
+- **ACCOUNT.VIRTUAL_ACCOUNT.CREATE**: Creation of virtual accounts.
+- **ACCOUNT.VIRTUAL_ACCOUNT.UPDATE**: Updates of virtual accounts.
+
+## ACCOUNT.ONRAMP
+
+The data object is expected to have the same structure as the response from the [Retrieve an account endpoint](https://docs.hifibridge.com/api-reference/account/retrieve-an-account).
+
+```json
+{
+  "eventId": "evt_1957137285df23c61",
+  "eventCategory": "ACCOUNT",
+  "eventType": "ACCOUNT.ONRAMP.CREATE",
+  "eventAction": "CREATE",
+  "data": {
+    "rail": { "currency": "usd", "railType": "onramp", "paymentRail": "ach" },
+    "userId": "42c784f4-eb84-4e87-b0de-8c2183aed67c",
+    "bankName": "Bank of America",
+    "accountId": "1dc854a5-0e11-492a-9adc-489a89e3602a",
+    "createdAt": "2025-03-07T15:26:34.261503+00:00",
+    "accountType": "SAVINGS",
+    "accountNumber": "0000",
+    "routingNumber": "011401533"
+  },
+  "createdAt": "2025-03-07T15:26:35.165Z",
+  "timestamp": "2025-03-07T15:26:40.461Z",
+  "version": "v2"
+}
+```
+
+## ACCOUNT.OFFRAMP
+
+The data object is expected to have the same structure as the response from the [Retrieve an account endpoint](https://docs.hifibridge.com/api-reference/account/retrieve-an-account).
+
+```json
+{
+  "eventId": "evt_19571355a56577a5c4",
+  "eventCategory": "ACCOUNT",
+  "eventType": "ACCOUNT.OFFRAMP.CREATE",
+  "eventAction": "CREATE",
+  "data": {
+    "iban": null,
+    "rail": { "currency": "usd", "railType": "offramp", "paymentRail": "ach" },
+    "userId": "42c784f4-eb84-4e87-b0de-8c2183aed67c",
+    "bankName": "Chase",
+    "currency": "usd",
+    "accountId": "baffe8d3-9097-47a1-8db3-74061d6fccfc",
+    "createdAt": "2025-03-07T15:24:35.662881+00:00",
+    "accountType": "us",
+    "bankCountry": null,
+    "accountNumber": "9942123499",
+    "routingNumber": "011103093",
+    "beneficiaryCity": "Hoboken",
+    "accountOwnerName": "Henry Wu",
+    "accountOwnerType": "individual",
+    "beneficiaryState": "NJ",
+    "beneficiaryCountry": "USA",
+    "beneficiaryPostalCode": "07030",
+    "beneficiaryStreetLine1": "Example St 1.",
+    "beneficiaryStreetLine2": null,
+    "businessIdentifierCode": null
+  },
+  "createdAt": "2025-03-07T15:24:37.009Z",
+  "timestamp": "2025-03-07T15:24:40.194Z",
+  "version": "v2"
+}
+```
+
+## ACCOUNT.VIRTUAL_ACCOUNT
+
+The data object is expected to have the same structure as the response from the [Retrieve a virtual account endpoint](https://docs.hifibridge.com/api-reference/virtual-account/retrieve-a-virtual-account).
+
+```json
+{
+  "eventId": "evt_19571425bd51a7e6c3",
+  "eventCategory": "ACCOUNT",
+  "eventType": "ACCOUNT.VIRTUAL_ACCOUNT.CREATE",
+  "eventAction": "CREATE",
+  "data": {
+    "userId": "42c784f4-eb84-4e87-b0de-8c2183aed67c",
+    "railStatus": "activated",
+    "paymentRails": [ "ach_push", "wire" ],
+    "microDeposits": { "data": [], "count": 0 },
+    "sourceCurrency": "usd",
+    "destinationChain": "POLYGON_AMOY",
+    "virtualAccountId": "05201b33-6304-47e1-8b51-d3e7acd14043",
+    "depositInstructions": {
+      "bankName": "Bank of Nowhere",
+      "bankAddress": "1800 North Pole St., Orlando, FL 32801",
+      "beneficiary": [Object],
+      "accountNumber": "900205189018",
+      "routingNumber": "101019644"
+    },
+    "destinationCurrency": "usdc",
+    "destinationWalletAddress": "0x4f0e843Da9f5A74A86ce23D0DC4F7C9EE9F01D57"
+  },
+  "createdAt": "2025-03-07T15:38:49.251Z",
+  "timestamp": "2025-03-07T15:39:00.186Z",
+  "version": "v2"
+}
+```

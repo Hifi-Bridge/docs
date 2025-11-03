@@ -2,140 +2,437 @@
 title: "Swaps"
 ---
 
-Swaps allow you to exchange one stablecoincurrency for another within the same blockchain network. This is useful for converting between different stablecoins or other supported tokens without needing to bridge across chains.
+**Swaps** exchange one cryptocurrency for another within the same blockchain network. Convert between stablecoins like USDC and USDT without bridging across chains.
 
 ## How Swaps Work
 
-Swaps follow a simple three-step process:
+Swaps execute immediately upon creation:
 
-1. **Create a swap** – Initiate a swap request with source and destination
-2. **Review quote** – Examine the exchange rate, fees, and quote validity period
-3. **Accept swap** – Confirm the transaction to execute the swap
+<Steps>
+  <Step title="Create swap request">
+    Specify source currency, destination currency, and amount to exchange.
+  </Step>
+  <Step title="Automatic execution">
+    HIFI executes the swap at the current market rate.
+  </Step>
+  <Step title="Completion">
+    Receive the swapped currency in the destination wallet.
+  </Step>
+</Steps>
 
-### Quote Validity
 
-Quotes are time-sensitive and typically expire within 30-60 seconds. This ensures you get current market rates and prevents stale pricing. If a quote expires before you accept it, you'll need to create a new swap request to get updated pricing.
+## Creating Swaps
 
-## Transaction Structure
+Use the [Create Swap](https://docs.hifibridge.com/api-reference/swap/create-a-swap) endpoint to exchange currencies on the same chain.
 
-When you create a swap, the API response includes detailed information about the transaction:
+<CodeGroup>
+```bash Swap with Source Amount
+curl -X POST "https://sandbox.hifibridge.com/v2/wallets/swaps" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "requestId": "1ab3e6e0-4839-4dbe-89c3-b06d9645ae86",
+    "source": {
+      "userId": "usr_abc123",
+      "chain": "POLYGON",
+      "currency": "usdc",
+      "amount": "100"
+    },
+    "destination": {
+      "userId": "usr_abc123",
+      "chain": "POLYGON",
+      "currency": "usdt"
+    }
+  }'
+```
+
+```bash Swap with Destination Amount
+curl -X POST "https://sandbox.hifibridge.com/v2/wallets/swaps" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "requestId": "1ab3e6e0-4839-4dbe-89c3-b06d9645ae86",
+    "source": {
+      "userId": "usr_abc123",
+      "chain": "POLYGON",
+      "currency": "usdc"
+    },
+    "destination": {
+      "userId": "usr_abc123",
+      "chain": "POLYGON",
+      "currency": "usdt",
+      "amount": "100"
+    }
+  }'
+```
+</CodeGroup>
+
+The response contains the swap details and execution results:
+
+<Accordion title="Response">
 
 ```json
 {
   "transferType": "WALLET.SWAP",
   "transferDetails": {
-    "id": "dc923cc1-d74b-58f6-9fe4-9e9c6eb8dc37",
+    "id": "swp_abc123",
     "requestId": "1ab3e6e0-4839-4dbe-89c3-b06d9645ae86",
     "status": "COMPLETED",
     "createdAt": "2025-08-20T03:55:29.437108+00:00",
-    "updatedAt": "2025-08-20T04:08:10.837+00:00",
+    "updatedAt": "2025-08-20T03:55:31.837+00:00",
     "source": {
-      /* Source */
+      "currency": "usdc",
+      "amount": 100,
+      "chain": "POLYGON",
+      "userId": "usr_abc123"
     },
     "destination": {
-      /* Destination */
-    },
-    "error": null,
-    "errorDetails": null,
-    "quoteInformation": {
-      /* Quote */
-    },
-    "billingInformation": {
-      /* Billing */
-    }
-  }
-}
-```
-
-<AccordionGroup>
-  <Accordion title="Source">
-    ```json
-    {
-      "currency": "usdc",
-      "amount": 10,
-      "chain": "POLYGON",
-      "userId": "05179f69-1988-4b46-a847-dd4eea0984d6"
-    }
-    ```
-  </Accordion>
-
-  <Accordion title="Destination">
-    ```json
-    {
       "currency": "usdt",
-      "userId": "05179f69-1988-4b46-a847-dd4eea0984d6",
-      "externalWalletId": null,
-      "amount": null,
+      "userId": "usr_abc123",
+      "amount": 100,
       "chain": "POLYGON",
       "walletAddress": "0xe5727a4B1d93A26D6A7Adfaae145EFa41ED7f204"
-    }
-    ```
-  </Accordion>
-
-  <Accordion title="Quote">
-    ```json
-    {
+    },
+    "quoteInformation": {
       "sendGross": {
-        "amount": "10",
+        "amount": "100",
         "currency": "usdc"
       },
       "sendNet": {
-        "amount": "10",
+        "amount": "100",
         "currency": "usdc"
       },
       "receiveGross": {
-        "amount": "10",
-        "currency": "usdc"
+        "amount": "100",
+        "currency": "usdt"
       },
       "receiveNet": {
-        "amount": "10",
-        "currency": "usdc"
+        "amount": "100",
+        "currency": "usdt"
       },
       "rate": "1",
       "expiresAt": "2025-08-20T03:55:59.539+00:00"
-    }
-    ```
-  </Accordion>
-
-  <Accordion title="Billing">
-    ```json
-    {
+    },
+    "billingInformation": {
       "fees": [
         {
-          "id": "2ca381ec-9498-52f5-9a27-d0e392b2626b",
+          "id": "fee_xyz789",
           "amount": 0.01,
           "currency": "USD",
           "type": "EXCHANGE_FEE",
           "timing": "ON_INVOICE"
         }
       ]
-    }
-    ```
-  </Accordion>
-</AccordionGroup>
+    },
+    "error": null,
+    "errorDetails": null
+  }
+}
+```
+
+</Accordion>
+
+<ResponseField name="transferDetails.id" type="string">
+  Unique swap ID. Use this to check status using the [Retrieve Swap](https://docs.hifibridge.com/api-reference/swap/retrieve-a-swap) endpoint.
+</ResponseField>
+
+<ResponseField name="transferDetails.status" type="string">
+  Swap status. Swaps typically complete immediately. See [Transaction Status](#transaction-status) for details.
+</ResponseField>
+
+<ResponseField name="transferDetails.source" type="object">
+  Source wallet details including currency, amount, chain, and user information.
+</ResponseField>
+
+<ResponseField name="transferDetails.destination" type="object">
+  Destination wallet details including currency, amount received, chain, and user information.
+</ResponseField>
+
+<ResponseField name="transferDetails.quoteInformation" type="object">
+  Swap quote details including exchange rate, amounts sent and received.
+
+  <Expandable title="properties">
+    <ResponseField name="sendGross" type="object">
+      Total source currency amount sent.
+    </ResponseField>
+    <ResponseField name="sendNet" type="object">
+      Net source currency amount after fees (if any).
+    </ResponseField>
+    <ResponseField name="receiveGross" type="object">
+      Total destination currency amount received before fees.
+    </ResponseField>
+    <ResponseField name="receiveNet" type="object">
+      Actual destination currency amount received. This is the amount that will be in your destination wallet.
+    </ResponseField>
+    <ResponseField name="rate" type="string">
+      Exchange rate between source and destination currencies.
+    </ResponseField>
+    <ResponseField name="expiresAt" type="string">
+      Quote expiration timestamp (if applicable).
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="transferDetails.billingInformation" type="object">
+  Fee information for the swap. Contains an array of fees with their timing (ON_INVOICE or ON_TRANSACTION).
+
+  <Expandable title="properties">
+    <ResponseField name="fees" type="array">
+      Array of fee objects. Each fee contains `id`, `amount`, `currency`, `type` (EXCHANGE_FEE or GAS_FEE), and `timing`.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<Info>
+For detailed field documentation, see the [Create Swap](https://docs.hifibridge.com/api-reference/swap/create-a-swap) API reference.
+</Info>
 
 ## Transaction Status
 
-Swap transactions progress through several statuses:
+Swaps typically complete within seconds:
 
-- **CREATED**: Swap request has been created and is awaiting processing
-- **PROCESSING**: Currency exchange is being executed
-- **COMPLETED**: Swap has been successfully completed
-- **FAILED**: Swap failed (check `error` and `errorDetails` for details)
+| Status          | Description                                                       |
+| :-------------- | :---------------------------------------------------------------- |
+| **PENDING**     | Swap request created and processing                               |
+| **COMPLETED**   | Swap successfully executed                                        |
+| **FAILED**      | Swap failed (check `error` and `errorDetails` for specifics)      |
+| **CANCELLED**   | Swap was cancelled before execution                               |
 
-## Quote Information
+<Note>
+**Status Updates:** Subscribe to `SWAP.CREATE` and `SWAP.UPDATE` webhook events to receive real-time status notifications. See [Webhooks](/docs/webhooks) for setup instructions.
+</Note>
 
-The quote includes both gross and net amounts for both sending and receiving:
+## Tracking Swaps
 
-- **sendGross**: Total amount you're sending (including any fees)
-- **sendNet**: Net amount after fees are deducted
-- **receiveGross**: Total amount you'll receive
-- **receiveNet**: Net amount you'll actually receive
-- **rate**: Current exchange rate between the currencies
-- **expiresAt**: When the quote expires and you'll need a new one
+Monitor swap status using the [Retrieve Swap](https://docs.hifibridge.com/api-reference/swap/retrieve-a-swap) endpoint.
 
-## Try it out
+**Request:**
 
-<Card icon="code" title="Convert USDC to USDT" href="/guides/convert/usdt-usdc">
-  Learn how to swap stablecoins
-</Card>
+```bash
+curl -X GET "https://sandbox.hifibridge.com/v2/wallets/swaps/swp_abc123" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+The retrieve response includes current swap status:
+
+<Accordion title="Response">
+
+```json
+{
+  "transferType": "WALLET.SWAP",
+  "transferDetails": {
+    "id": "swp_abc123",
+    "status": "COMPLETED",
+    "quoteInformation": {
+      "rate": "1",
+      "receiveNet": {
+        "amount": "100",
+        "currency": "usdt"
+      }
+    }
+  }
+}
+```
+
+</Accordion>
+
+<ResponseField name="transferDetails.status" type="string">
+  Current swap status. See [Transaction Status](#transaction-status) for all possible statuses.
+</ResponseField>
+
+## Supported Swap Pairs
+
+Currently supported swap combinations:
+
+| Chain           | Supported Pairs                                   |
+| :-------------- | :------------------------------------------------ |
+| **Polygon**     | USDC ↔ USDT, USDC ↔ USDG, USDT ↔ USDG            |
+| **Ethereum**    | USDC ↔ USDT, USDC ↔ USDG, USDT ↔ USDG            |
+| **Solana**      | USDC ↔ USDT                                       |
+
+<Info>
+**Coming Soon:** Additional chains and token pairs will be added. Contact support if you need specific swap pairs.
+</Info>
+
+## Key Concepts
+
+<AccordionGroup>
+  <Accordion title="Amount Specification">
+    You can specify the amount in either source or destination:
+    
+    **Source amount** (you send exactly 100 USDC):
+    ```json
+    {
+      "source": {
+        "currency": "usdc",
+        "amount": "100"
+      },
+      "destination": {
+        "currency": "usdt"
+      }
+    }
+    ```
+    
+    **Destination amount** (you receive exactly 100 USDT):
+    ```json
+    {
+      "source": {
+        "currency": "usdc"
+      },
+      "destination": {
+        "currency": "usdt",
+        "amount": "100"
+      }
+    }
+    ```
+    
+    Provide amount in only one side - the system calculates the other based on the current rate.
+  </Accordion>
+
+  <Accordion title="Exchange Rates">
+    The `quoteInformation.rate` shows the exchange rate between currencies:
+    - **1:1 stablecoins** (USDC ↔ USDT): Rate is typically "1"
+    - **Market rates**: Rates may vary slightly based on liquidity
+    
+    Always verify `receiveNet` to see the exact amount you'll receive after any fees.
+  </Accordion>
+
+  <Accordion title="Billing Information">
+    The `billingInformation.fees` array shows all applicable fees:
+    
+    **EXCHANGE_FEE**: Conversion fee for the swap
+    - **timing: ON_INVOICE**: Billed on your monthly invoice (not deducted from swap)
+    - **timing: ON_TRANSACTION**: Deducted from the swap amount
+    
+    **GAS_FEE**: Blockchain transaction fees (if applicable)
+    
+    Check `timing` to understand when fees are charged.
+  </Accordion>
+
+  <Accordion title="External Wallet Swaps">
+    Swap to external wallets (not managed by HIFI) by providing `externalWalletId` or `walletAddress`:
+    
+    ```json
+    {
+      "destination": {
+        "chain": "POLYGON",
+        "currency": "usdt",
+        "walletAddress": "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb"
+      }
+    }
+    ```
+    
+    Or use a registered external wallet:
+    ```json
+    {
+      "destination": {
+        "chain": "POLYGON",
+        "currency": "usdt",
+        "externalWalletId": "ext_xyz789"
+      }
+    }
+    ```
+    
+    <Warning>
+    External wallet swaps may require gas sponsorship enrollment. Use `userId` for HIFI wallets when possible.
+    </Warning>
+  </Accordion>
+
+  <Accordion title="Swap vs Bridge vs Transfer">
+    Understanding the differences:
+    
+    **Swaps**: Exchange currencies on the same chain (USDC → USDT on Polygon)
+    
+    **Bridges**: Move same currency across chains (USDC on Polygon → USDC on Ethereum)
+    
+    **Transfers**: Move same currency to another wallet on same chain (USDC wallet A → USDC wallet B on Polygon)
+  </Accordion>
+</AccordionGroup>
+
+## Sample Code
+
+### Basic swap flow
+
+<Steps>
+  <Step title="Create swap">
+    ```bash
+    curl -X POST "https://sandbox.hifibridge.com/v2/wallets/swaps" \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "requestId": "1ab3e6e0-4839-4dbe-89c3-b06d9645ae86",
+        "source": {
+          "userId": "usr_abc123",
+          "chain": "POLYGON",
+          "currency": "usdc",
+          "amount": "100"
+        },
+        "destination": {
+          "userId": "usr_abc123",
+          "chain": "POLYGON",
+          "currency": "usdt"
+        }
+      }'
+    ```
+  </Step>
+
+  <Step title="Verify completion">
+    The response will show status `COMPLETED` for successful swaps. Check:
+    - `destination.amount` - Amount received
+    - `quoteInformation.rate` - Exchange rate used
+    - `billingInformation.fees` - Any applicable fees
+  </Step>
+
+  <Step title="Handle errors">
+    If status is `FAILED`:
+    - Check `error` field for error type
+    - Review `errorDetails` for specific failure reason
+    - Common issues: insufficient balance, unsupported pair, network congestion
+  </Step>
+</Steps>
+
+### Swap with exact output amount
+
+<Steps>
+  <Step title="Specify destination amount">
+    When you need to receive an exact amount:
+    ```bash
+    curl -X POST "https://sandbox.hifibridge.com/v2/wallets/swaps" \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "requestId": "1ab3e6e0-4839-4dbe-89c3-b06d9645ae86",
+        "source": {
+          "userId": "usr_abc123",
+          "chain": "POLYGON",
+          "currency": "usdc"
+        },
+        "destination": {
+          "userId": "usr_abc123",
+          "chain": "POLYGON",
+          "currency": "usdt",
+          "amount": "100"
+        }
+      }'
+    ```
+  </Step>
+
+  <Step title="Check source amount used">
+    The response shows how much source currency was needed:
+    - `source.amount` - Amount deducted from source wallet
+    - `quoteInformation.sendNet` - Net amount sent after fees
+  </Step>
+</Steps>
+
+## Getting Help
+
+- 📧 **Email:** support@hifibridge.com
+- 💬 **Slack:** Message us in our shared Slack channel
+
+## Related Resources
+
+- [Wallet Transfers](/docs/transfers/onchain) - Same-chain transfers without currency exchange
+- [Bridging](/docs/transfers/bridging) - Cross-chain asset movement
+- [Wallets](/docs/wallets) - Understand wallet addresses and balances
+- [Webhooks](/docs/webhooks) - Real-time swap status notifications
+- [API Reference](https://docs.hifibridge.com/api-reference/swap/create-a-swap) - Complete endpoint documentation

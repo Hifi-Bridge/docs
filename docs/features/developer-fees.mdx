@@ -1,0 +1,278 @@
+---
+title: "Developer Fees"
+---
+
+**Developer Fees** enable automated calculation and distribution of fees for offramp transactions. Fees can be configured to be distributed to up to **10 different beneficiary wallets**.
+
+<Info>
+Developer fees work for offramp transactions. Looking to charge fees for Virtual Accounts? Try [Settlement Rules](/docs/features/settlement-rules).
+</Info>
+
+## How Developer Fees Work
+
+<Steps>
+  <Step title="Define fees and beneficiary">
+    Specify the fee calculation method and destination wallets by including the developer fee when creating offramp transactions.
+  </Step>
+  <Step title="Automatic distribution">
+    Fees are automatically calculated and distributed during the offramp process. The total amount (offramp amount + fees) is debited from the source wallet.
+  </Step>
+  <Step title="Fee settlement">
+    After the offramp is processed, fees are credited to the specified beneficiary wallets in stablecoin.
+  </Step>
+</Steps>
+
+## Supported Rails
+
+<Info>
+Developer fees are currently supported for USD offramps only. Additional currencies and payment rails—including global fiat currencies and non-USD transfer methods—will be supported soon. Stay tuned for updates!
+</Info>
+
+## Fee Models
+
+HIFI currently supports two types of fee models:
+
+- **Percentage:** The fee is calculated based on the amount being converted into fiat.
+- **Flat:** The fee is charged as a fixed amount, regardless of the amount being converted into fiat.
+
+All fees are added on top of the offramp amount and credited to the beneficiary wallet in stablecoin.
+
+### Fee Calculation Example
+
+An offramp transaction with an amount of **100 USDC** and two developer fees:
+
+- **20 bps (0.002)** as a percentage, credited to **Beneficiary Wallet A**
+- **5 USDC** as a flat fee, credited to **Beneficiary Wallet B**
+
+When the offramp transaction is initiated, a total of **105.2 USDC** (100 + 100 × 0.002 + 5) will be debited from the sender's wallet. After settlement:
+
+- **100 USDC** will be converted into fiat and sent to the recipient's bank account
+- **0.2 USDC** will be delivered to **Wallet A**
+- **5 USDC** will be delivered to **Wallet B**
+
+## Applying Developer Fees
+
+Include the `developerFee` field when creating an offramp transaction to automatically calculate and distribute fees.
+
+### Request
+
+```bash
+curl -X POST "https://sandbox.hifibridge.com/v2/offramps" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "requestId": "201ca31d-700f-4c76-ac4b-961623acbb79",
+    "source": {
+      "userId": "7d54a7a7-dac3-4313-8b09-27fa4b7fd1ee",
+      "amount": "100",
+      "currency": "usdc",
+      "chain": "POLYGON"
+    },
+    "destination": {
+      "currency": "usd",
+      "userId": "7d54a7a7-dac3-4313-8b09-27fa4b7fd1ee",
+      "accountId": "12c1c496-8f57-41a1-8292-dbe6547791ce"
+    },
+    "developerFee": {
+      "fees": [
+        {
+          "type": "PERCENTAGE",
+          "value": "0.002",
+          "walletAddress": "0x366B759bAA089Fa57a08edd3F2E028E86b97f8D7"
+        },
+        {
+          "type": "FLAT",
+          "value": "5",
+          "walletAddress": "0x366B759bAA089Fa57a08edd3F2E028E86b97f8D6"
+        }
+      ]
+    }
+  }'
+```
+
+<ResponseField name="developerFee.fees" type="array" required={false}>
+  Array of fee configurations to be applied. Each fee object requires:
+  <Expandable title="Fee Object Fields">
+    <ResponseField name="type" type="string" required>
+      Fee calculation type. Must be either <code>PERCENTAGE</code> or <code>FLAT</code>.
+    </ResponseField>
+    <ResponseField name="value" type="string" required>
+      Fee amount. For percentages, use decimal format (e.g., <code>"0.002"</code> for 0.2%). For flat fees, specify as a string amount (e.g., <code>"5"</code>).
+    </ResponseField>
+    <ResponseField name="walletAddress" type="string" required>
+      Beneficiary wallet address to receive the fee.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+### Response
+
+```json
+{
+  "transferType": "OFFRAMP",
+  "transferDetails": {
+    "id": "fa3c7411-8288-4247-98b2-2f90a7053f83",
+    "requestId": "201ca31d-700f-4c76-ac4b-961623acbb79",
+    "status": "OPEN_QUOTE",
+    "source": {
+      "userId": "7d54a7a7-dac3-4313-8b09-27fa4b7fd1ee",
+      "amount": 100,
+      "amountIncludeDeveloperFee": 105.2,
+      "currency": "usdc",
+      "chain": "POLYGON"
+    },
+    "destination": {
+      "currency": "usd",
+      "accountId": "12c1c496-8f57-41a1-8292-dbe6547791ce"
+    },
+    "quoteInformation": {
+      "sendGross": {
+        "amount": "100",
+        "currency": "usdc"
+      },
+      "sendNet": {
+        "amount": "100",
+        "currency": "usdc"
+      },
+      "receiveNet": {
+        "amount": "100",
+        "currency": "usd"
+      },
+      "rate": "1"
+    },
+    "developerFee": {
+      "id": "b9551a87-6d9a-5963-b198-efaaf9061668",
+      "transactionHash": null,
+      "fees": [
+        {
+          "type": "PERCENTAGE",
+          "value": "0.002",
+          "amount": "0.200000",
+          "walletAddress": "0x366B759bAA089Fa57a08edd3F2E028E86b97f8D7"
+        },
+        {
+          "type": "FLAT",
+          "value": "5",
+          "amount": "5.000000",
+          "walletAddress": "0x366B759bAA089Fa57a08edd3F2E028E86b97f8D6"
+        }
+      ]
+    }
+  }
+}
+```
+
+<ResponseField name="transferDetails.source.amountIncludeDeveloperFee" type="number">
+  Total amount debited from the source wallet, including the offramp amount and all developer fees.
+</ResponseField>
+
+<ResponseField name="transferDetails.developerFee" type="object">
+  Developer fee details including calculated amounts for each fee.
+
+  <Expandable title="properties">
+    <ResponseField name="id" type="string">
+      Unique developer fee ID for tracking.
+    </ResponseField>
+    <ResponseField name="transactionHash" type="string">
+      Transaction hash for fee distribution. Available after fees are distributed.
+    </ResponseField>
+    <ResponseField name="fees" type="array">
+      Array of fee details. Each fee includes:
+      - **type**: `PERCENTAGE` or `FLAT`
+      - **value**: Original fee value
+      - **amount**: Calculated fee amount in stablecoin
+      - **walletAddress**: Beneficiary wallet address
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<Info>
+For detailed field documentation, see the [Create Offramp](https://docs.hifibridge.com/api-reference/offramp/create-an-offramp) API reference.
+</Info>
+
+## Key Concepts
+
+<AccordionGroup>
+  <Accordion title="Fee Models">
+    HIFI supports two fee calculation models:
+    
+    **Percentage Fees:**
+    - Calculated as a percentage of the offramp amount
+    - Specified as a decimal value (e.g., `"0.002"` for 0.2% or 20 basis points)
+    - Example: 0.2% of 100 USDC = 0.2 USDC
+    
+    **Flat Fees:**
+    - Fixed amount regardless of transaction size
+    - Specified as a string value (e.g., `"5"` for 5 USDC)
+    - Example: 5 USDC flat fee
+    
+    Both models can be combined in a single transaction with up to 10 different beneficiary wallets.
+  </Accordion>
+
+  {" "}
+
+  <Accordion title="Fee Distribution">
+    Developer fees work as follows:
+    
+    1. **Total debit**: The source wallet is debited for the offramp amount plus all fees
+    2. **Offramp processing**: The offramp amount is converted to fiat and sent to the bank account
+    3. **Fee distribution**: Each fee is credited to its specified beneficiary wallet in stablecoin
+    
+    The `amountIncludeDeveloperFee` field in the response shows the total amount debited, helping you calculate the exact amount needed in the source wallet.
+  </Accordion>
+
+  {" "}
+
+  <Accordion title="Multiple Beneficiaries">
+    You can distribute fees to up to 10 different beneficiary wallets in a single transaction:
+    
+    ```json
+    {
+      "developerFee": {
+        "fees": [
+          {
+            "type": "PERCENTAGE",
+            "value": "0.001",
+            "walletAddress": "0xWallet1..."
+          },
+          {
+            "type": "PERCENTAGE",
+            "value": "0.001",
+            "walletAddress": "0xWallet2..."
+          },
+          {
+            "type": "FLAT",
+            "value": "1",
+            "walletAddress": "0xWallet3..."
+          }
+        ]
+      }
+    }
+    ```
+    
+    Fees are distributed in the order they are specified in the array.
+  </Accordion>
+
+  {" "}
+
+  <Accordion title="Fee Tracking">
+    Each developer fee has:
+    
+    - **id**: Unique identifier for the fee instance
+    - **transactionHash**: Blockchain transaction hash for fee distribution (available after fees are sent)
+    - **fees[].amount**: Calculated fee amount that will be credited
+    
+    Monitor the beneficiary wallet addresses to track fee receipts. The transaction hash provides proof of distribution on-chain.
+  </Accordion>
+</AccordionGroup>
+
+## Getting Help
+
+- 📧 **Email:** support@hifibridge.com
+- 💬 **Slack:** Message us in our shared Slack channel
+
+## Related Resources
+
+- [Offramps](/docs/transfers/offramps) - Complete guide to creating offramp transactions
+- [Settlement Rules](/docs/features/settlement-rules) - Fee calculation for virtual accounts
+- [API Reference](https://docs.hifibridge.com/api-reference/offramp/create-an-offramp) - Complete endpoint documentation

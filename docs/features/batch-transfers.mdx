@@ -1,0 +1,334 @@
+---
+title: "Batch Transfers"
+---
+
+**Batch transfers** send stablecoins to up to 50 recipients in a single blockchain transaction. This reduces gas costs and simplifies bulk distributions like payroll, airdrops, or rewards.
+
+## How Batch Transfers Work
+
+<Steps>
+  <Step title="Create batch transfer">
+    Submit one request with multiple destination addresses and amounts.
+  </Step>
+  <Step title="Batch processing">
+    HIFI groups all transfers into a single blockchain transaction.
+  </Step>
+  <Step title="Execute on-chain">
+    All recipients receive their funds simultaneously in one transaction.
+  </Step>
+</Steps>
+
+## Benefits of Batching
+
+| Benefit                  | Description                                                       |
+| :----------------------- | :---------------------------------------------------------------- |
+| **Gas Efficiency**       | Pay gas fees once for 50 transfers instead of 50 separate fees   |
+| **Atomic Execution**     | All transfers succeed or fail together - no partial completion    |
+| **Faster Processing**    | Single transaction reduces blockchain congestion                  |
+| **Simplified Tracking**  | One transaction hash covers the entire batch                      |
+
+## Creating Batch Transfers
+
+Use the [Create Batch Transfer](https://docs.hifibridge.com/api-reference/crypto-transfer/create-a-batch-transfer) endpoint to send to multiple recipients.
+
+**Request:**
+
+```bash
+curl -X POST "https://sandbox.hifi.com/v2/wallets/transfers/batches" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "requestId": "123e4567-e89b-12d3-a456-426614174000",
+    "currency": "usdc",
+    "chain": "POLYGON",
+    "source": {
+      "userId": "usr_abc123"
+    },
+    "destination": {
+      "batch": [
+        {
+          "userId": "usr_recipient1",
+          "amount": "10"
+        },
+        {
+          "userId": "usr_recipient2",
+          "amount": "25"
+        },
+        {
+          "walletAddress": "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb",
+          "amount": "15"
+        }
+      ]
+    }
+  }'
+```
+
+**Request Fields:**
+
+- **requestId** (required): Unique UUID for idempotency
+- **currency** (required): Currently only `usdc` supported
+- **chain** (required): Currently only `POLYGON` supported
+- **source.userId** (required): User sending the funds
+- **destination.batch** (required): Array of up to 50 recipients
+
+**Each batch recipient includes:**
+- **userId** OR **walletAddress**: Destination (provide one, not both)
+- **amount** (required): Amount to send (e.g., "10" for 10 USDC)
+
+**Response:**
+
+```json
+{
+  "transferType": "WALLET.TRANSFER.BATCH",
+  "transferDetails": {
+    "id": "bat_abc123",
+    "requestId": "123e4567-e89b-12d3-a456-426614174000",
+    "createdAt": "2025-04-05T00:55:50.609Z",
+    "updatedAt": "2025-04-05T00:55:50.609Z",
+    "chain": "POLYGON",
+    "currency": "usdc",
+    "contractAddress": "0x41e94eb019c0762f9bfcf9fb1e58725bfb0e7582",
+    "status": "CREATED",
+    "source": {
+      "userId": "usr_abc123",
+      "walletAddress": "0x99a8c5ED386d217BC6ff0AA1b3585606D475432B",
+      "walletType": "INDIVIDUAL"
+    },
+    "destination": {
+      "batch": [
+        {
+          "userId": "usr_recipient1",
+          "amount": "10"
+        },
+        {
+          "userId": "usr_recipient2",
+          "amount": "25"
+        },
+        {
+          "walletAddress": "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb",
+          "amount": "15"
+        }
+      ]
+    },
+    "receipt": {
+      "transactionHash": null,
+      "userOpHash": null
+    }
+  }
+}
+```
+
+<Info>
+For detailed field documentation, see the [Create Batch Transfer](https://docs.hifibridge.com/api-reference/crypto-transfer/create-a-batch-transfer) API reference.
+</Info>
+
+## Transaction Status
+
+Batch transfers progress through several statuses:
+
+| Status              | Description                                                       |
+| :------------------ | :---------------------------------------------------------------- |
+| **NOT_INITIATED**   | Transfer not submitted due to validation error                    |
+| **CREATED**         | Batch transfer request created and awaiting processing            |
+| **INITIATED**       | Batch transfer submitted to blockchain                            |
+| **PENDING**         | Transaction awaiting on-chain confirmation                        |
+| **COMPLETED**       | All transfers in batch successfully confirmed                     |
+| **FAILED**          | Batch transfer failed (check `failedReason` for details)          |
+| **UNKNOWN**         | Transfer status could not be determined                           |
+
+<Note>
+**Atomic Execution:** If any transfer in the batch fails, the entire batch fails and no funds are moved. This ensures consistency - all recipients get paid or none do.
+</Note>
+
+## Tracking Batch Transfers
+
+Monitor batch transfer status using the [Retrieve Transfer](https://docs.hifibridge.com/api-reference/crypto-transfer/retrieve-a-crypto-transfer) endpoint.
+
+**Request:**
+
+```bash
+curl -X GET "https://sandbox.hifi.com/v2/wallets/transfers/bat_abc123" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+**Response (when completed):**
+
+```json
+{
+  "transferType": "WALLET.TRANSFER.BATCH",
+  "transferDetails": {
+    "id": "bat_abc123",
+    "status": "COMPLETED",
+    "receipt": {
+      "transactionHash": "0x57f0cd3429ea425d982882243428ef4a1eda5f1be2157c1b34ea48b49b24fe7f",
+      "userOpHash": "0xef7bdb071b1fcfb5df629bd4d27ffa6dc32d0a5df676f26fb8c25311df1185ac"
+    }
+  }
+}
+```
+
+Use the `transactionHash` to view the batch transaction on [Polygonscan](https://polygonscan.com/).
+
+<Note>
+**Status Updates:** Subscribe to `WALLET.TRANSFER.BATCH.UPDATE` webhook events to receive real-time status notifications. See [Webhooks](/docs/webhooks) for setup instructions.
+</Note>
+
+## Batch Requirements and Limits
+
+### Current Limitations
+
+| Requirement         | Value                                                        |
+| :------------------ | :----------------------------------------------------------- |
+| **Max recipients**  | 50 per batch                                                 |
+| **Supported chains**| POLYGON only                                                 |
+| **Supported tokens**| USDC only                                                    |
+| **Min amount**      | 0.000001 USDC per recipient                                  |
+
+<Info>
+**Expanding Soon:** Support for additional chains (Ethereum, Base) and tokens (USDT) is coming. Contact support if you need these features.
+</Info>
+
+### Exceeding Limits
+
+If you need to send to more than 50 recipients:
+1. Split into multiple batches of 50 or fewer
+2. Submit multiple batch transfer requests
+3. Each batch gets its own transaction hash
+
+## Approval Workflow
+
+Batch transfers support optional multi-party approval for organizations requiring authorization controls.
+
+**Create batch with approval:**
+
+```bash
+curl -X POST "https://sandbox.hifi.com/v2/wallets/transfers/batches" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "requestId": "123e4567-e89b-12d3-a456-426614174000",
+    "currency": "usdc",
+    "chain": "POLYGON",
+    "source": {
+      "userId": "usr_abc123"
+    },
+    "destination": {
+      "batch": [...]
+    },
+    "requireApproval": true
+  }'
+```
+
+When `requireApproval: true`:
+1. Batch enters `PENDING_APPROVAL` status
+2. Dashboard admins are notified via email and webhook
+3. Any admin can approve or reject the batch
+4. If approved, batch proceeds to execution
+5. If rejected, batch is cancelled
+
+**Response with approval details:**
+
+```json
+{
+  "transferDetails": {
+    "id": "bat_abc123",
+    "status": "PENDING_APPROVAL",
+    "receipt": {
+      "approval": {
+        "id": "apv_xyz789",
+        "status": "PENDING",
+        "transferId": "bat_abc123",
+        "transferType": "WALLET.TRANSFER.BATCH",
+        "votes": [
+          {
+            "approverId": "profile_abc123",
+            "vote": "APPROVE",
+            "comment": "Payroll approved for processing",
+            "createdAt": "2025-02-03T16:12:41.503+00:00"
+          }
+        ]
+      }
+    }
+  }
+}
+```
+
+<Note>
+**Configuring Approvers:** Manage team roles in the HIFI Dashboard. Members can create batch transfers, but only admins can approve.
+</Note>
+
+## Key Concepts
+
+<AccordionGroup>
+  <Accordion title="Gas Cost Savings">
+    Batch transfers dramatically reduce gas costs:
+    
+    **Individual transfers:**
+    - 50 transfers × $0.10 gas = $5.00 total
+    
+    **Batch transfer:**
+    - 1 batch × $0.30 gas = $0.30 total
+    - **94% cost reduction**
+    
+    The more recipients, the greater the savings. Gas fees are paid from the source wallet.
+  </Accordion>
+
+  <Accordion title="Mixed Recipient Types">
+    You can mix HIFI users and external wallets in the same batch:
+    
+    ```json
+    {
+      "destination": {
+        "batch": [
+          {
+            "userId": "usr_hifi_user",
+            "amount": "10"
+          },
+          {
+            "walletAddress": "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb",
+            "amount": "15"
+          }
+        ]
+      }
+    }
+    ```
+    
+    Each recipient can be specified by `userId` (HIFI users) or `walletAddress` (any wallet).
+  </Accordion>
+
+  <Accordion title="Batch vs Single Transfers">
+    **Use batch transfers when:**
+    - Sending to 2+ recipients at once
+    - Running payroll or recurring distributions
+    - Executing airdrops or rewards
+    - Cost efficiency matters
+    
+    **Use single transfers when:**
+    - Sending to one recipient
+    - Different chains per recipient
+    - Transfers need independent timing
+    - Different currencies per recipient
+  </Accordion>
+
+  <Accordion title="Failed Batch Recovery">
+    If a batch transfer fails, no funds are moved (atomic execution). Common causes:
+    
+    - **Insufficient balance:** Ensure source wallet has enough for all recipients + gas
+    - **Invalid recipient:** Check all addresses are valid
+    - **Network congestion:** Retry during lower activity
+    
+    Check `failedReason` for specific error details, fix the issue, and submit a new batch.
+  </Accordion>
+</AccordionGroup>
+
+## Getting Help
+
+- 📧 **Email:** support@hifi.com
+- 💬 **Slack:** Message us in our shared Slack channel
+
+## Related Resources
+
+- [Wallet Transfers](/docs/transfers/onchain) - Single recipient transfers
+- [Wallets](/docs/wallets) - Understanding wallet balances
+- [Webhooks](/docs/webhooks) - Real-time batch transfer notifications
+- [API Reference](https://docs.hifibridge.com/api-reference/crypto-transfer/create-a-batch-transfer) - Complete endpoint documentation

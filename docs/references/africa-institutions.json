@@ -1,0 +1,1277 @@
+[
+    {
+        "code": "BEN",
+        "name": "Benin",
+        "currency": "XOF",
+        "onramp": [
+            {
+                "type": "Momo",
+                "institutions": "Moov"
+            },
+            {
+                "type": "Momo",
+                "institutions": "MTN"
+            },
+            {
+                "type": "Momo",
+                "institutions": "Mtn Mobile Money BJ"
+            }
+        ],
+        "offramp": [
+            {
+                "type": "Momo",
+                "institutions": "Moov"
+            },
+            {
+                "type": "Momo",
+                "institutions": "MTN"
+            },
+            {
+                "type": "Momo",
+                "institutions": "Mtn Mobile Money BJ"
+            }
+        ]
+    },
+    {
+        "code": "BWA",
+        "name": "Botswana",
+        "currency": "BWP",
+        "onramp": [
+            {
+                "type": "Bank",
+                "institutions": "ABSA Bank Botswana"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Access Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Bank Gaborone Limited"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Bank Of Baroda Botswana"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Barclays Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "First Capital Bank Botswana"
+            },
+            {
+                "type": "Bank",
+                "institutions": "First National Bank"
+            },
+            {
+                "type": "Momo",
+                "institutions": "Mobile Money"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Stanbic Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Standard Chartered Bank Botswana Limited"
+            }
+        ],
+        "offramp": [
+            {
+                "type": "Bank",
+                "institutions": "ABSA Bank Botswana"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Access Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Bank Gaborone Limited"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Bank Of Baroda Botswana"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Barclays Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "First Capital Bank Botswana"
+            },
+            {
+                "type": "Bank",
+                "institutions": "First National Bank"
+            },
+            {
+                "type": "Momo",
+                "institutions": "Mobile Money"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Stanbic Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Standard Chartered Bank Botswana Limited"
+            }
+        ]
+    },
+    {
+        "code": "BFA",
+        "name": "Burkina Faso",
+        "currency": "XOF",
+        "onramp": [
+            {
+                "type": "Momo",
+                "institutions": "Moov Money"
+            },
+            {
+                "type": "Momo",
+                "institutions": "Orange Money"
+            }
+        ],
+        "offramp": [
+            {
+                "type": "Momo",
+                "institutions": "Moov Money"
+            },
+            {
+                "type": "Momo",
+                "institutions": "Orange Money"
+            }
+        ]
+    },
+    {
+        "code": "CMR",
+        "name": "Cameroon",
+        "currency": "XAF",
+        "onramp": [
+            {
+                "type": "Momo",
+                "institutions": "Mobile Wallet"
+            }
+        ],
+        "offramp": [
+            {
+                "type": "Momo",
+                "institutions": "Mobile Wallet"
+            }
+        ]
+    },
+    {
+        "code": "CIV",
+        "name": "C\u00f4te d\u2019Ivoire",
+        "currency": "XOF",
+        "onramp": [
+            {
+                "type": "Momo",
+                "institutions": "Moov"
+            },
+            {
+                "type": "Momo",
+                "institutions": "MTN"
+            },
+            {
+                "type": "Momo",
+                "institutions": "Orange Money"
+            },
+            {
+                "type": "Card",
+                "institutions": "VISA/MasterCard"
+            },
+            {
+                "type": "Momo",
+                "institutions": "Wave"
+            }
+        ],
+        "offramp": [
+            {
+                "type": "Momo",
+                "institutions": "Moov"
+            },
+            {
+                "type": "Momo",
+                "institutions": "MTN"
+            },
+            {
+                "type": "Momo",
+                "institutions": "Orange Money"
+            },
+            {
+                "type": "Card",
+                "institutions": "VISA/MasterCard"
+            },
+            {
+                "type": "Momo",
+                "institutions": "Wave"
+            }
+        ]
+    },
+    {
+        "code": "KEN",
+        "name": "Kenya",
+        "currency": "KES",
+        "onramp": [
+            {
+                "type": "Momo",
+                "institutions": "Mobile Wallet (M-PESA)"
+            }
+        ],
+        "offramp": [
+            {
+                "type": "Bank",
+                "institutions": "Absa Bank Kenya Plc"
+            },
+            {
+                "type": "Bank",
+                "institutions": "African Banking Corporation"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Bank of Africa Kenya Ltd"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Bank of Baroda"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Bank of India"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Central Bank of Kenya"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Charterhouse Bank Ltd"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Citibank N.A."
+            },
+            {
+                "type": "Bank",
+                "institutions": "Co-operative Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Commercial Bank of Africa Ltd"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Consolidated Bank of Kenya Ltd"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Credit Bank Ltd"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Development Bank of Kenya"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Diamond Trust Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Dubai Bank of Kenya Ltd"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Ecobank Kenya Ltd"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Equitorial Commercial Bank Ltd"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Equity Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Family Bank Ltd"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Fidelity Commercial Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "First Community Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Giro Bank Ltd"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Guaranty Trust (Kenya) Ltd"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Guardian Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Gulf African Bank Ltd"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Habib Bank A.G."
+            },
+            {
+                "type": "Bank",
+                "institutions": "Habib Bank Ltd"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Housing Finance Corporation of Kenya"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Imperial Bank Limited"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Investments and Mortgages"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Jamii Bora Bank Ltd"
+            },
+            {
+                "type": "Bank",
+                "institutions": "K-Rep Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Kenya Commercial Bank Ltd"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Middle East Bank (K) Limited"
+            },
+            {
+                "type": "Bank",
+                "institutions": "National Bank of Kenya"
+            },
+            {
+                "type": "Bank",
+                "institutions": "NCBA Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Oriental Commercial Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Paramount Universal Bank Ltd"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Prime Bank Limited"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Stanbic Bank Kenya Limited"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Standard Chartered"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Trans-National Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "UBA Kenya Ltd"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Victoria Commercial Bank Ltd"
+            }
+        ]
+    },
+    {
+        "code": "MWI",
+        "name": "Malawi",
+        "currency": "MWK",
+        "onramp": [
+            {
+                "type": "Momo",
+                "institutions": "Airtel"
+            },
+            {
+                "type": "Momo",
+                "institutions": "TNM"
+            }
+        ],
+        "offramp": [
+            {
+                "type": "Momo",
+                "institutions": "Airtel"
+            },
+            {
+                "type": "Momo",
+                "institutions": "TNM"
+            }
+        ]
+    },
+    {
+        "code": "MLI",
+        "name": "Mali",
+        "currency": "XOF",
+        "onramp": [
+            {
+                "type": "Momo",
+                "institutions": "Moov Money"
+            },
+            {
+                "type": "Momo",
+                "institutions": "Orange Money"
+            }
+        ],
+        "offramp": [
+            {
+                "type": "Momo",
+                "institutions": "Moov Money"
+            },
+            {
+                "type": "Momo",
+                "institutions": "Orange Money"
+            }
+        ]
+    },
+    {
+        "code": "NGA",
+        "name": "Nigeria",
+        "currency": "NGN",
+        "onramp": [
+            {
+                "type": "Momo",
+                "institutions": "9JAPAY Microfinance"
+            },
+            {
+                "type": "Momo",
+                "institutions": "Fairmoney Microfinance Bank Ltd"
+            },
+            {
+                "type": "Momo",
+                "institutions": "GoMoney"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Jaiz Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Kuda Microfinance Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Lotus Bank"
+            },
+            {
+                "type": "Momo",
+                "institutions": "MoMo PSB"
+            },
+            {
+                "type": "Momo",
+                "institutions": "Moniepoint Microfinance Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "NET MFB"
+            },
+            {
+                "type": "Momo",
+                "institutions": "Nownow (Contec Global)"
+            },
+            {
+                "type": "Momo",
+                "institutions": "OPay"
+            },
+            {
+                "type": "Momo",
+                "institutions": "PalmPay"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Taj Bank"
+            },
+            {
+                "type": "Card",
+                "institutions": "Titan-Paystack"
+            },
+            {
+                "type": "Bank",
+                "institutions": "VFD Microfinance Bank"
+            }
+        ],
+        "offramp": [
+            {
+                "type": "Momo",
+                "institutions": "9JAPAY Microfinance"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Access Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Access Bank (Diamond)"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Accion MFB"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Alternative Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Bellbank Microfinance"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Bowen MFB"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Citibank Nigeria"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Ecobank Nigeria"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Enterprise Bank"
+            },
+            {
+                "type": "Momo",
+                "institutions": "Fairmoney Microfinance Bank Ltd"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Fidelity Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "First Bank of Nigeria"
+            },
+            {
+                "type": "Bank",
+                "institutions": "First City Monument Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Globus Bank"
+            },
+            {
+                "type": "Momo",
+                "institutions": "GoMoney"
+            },
+            {
+                "type": "Bank",
+                "institutions": "GT Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Guaranty Trust Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Heritage Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Jaiz Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Keystone Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Kuda Microfinance Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Lotus Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Mint-Finex Microfinance Bank"
+            },
+            {
+                "type": "Momo",
+                "institutions": "MoMo PSB"
+            },
+            {
+                "type": "Momo",
+                "institutions": "Moniepoint Microfinance Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "NET MFB"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Nomba Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Nova MB"
+            },
+            {
+                "type": "Momo",
+                "institutions": "Nownow (Contec Global)"
+            },
+            {
+                "type": "Momo",
+                "institutions": "OPay"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Optimus Bank"
+            },
+            {
+                "type": "Momo",
+                "institutions": "Paga"
+            },
+            {
+                "type": "Momo",
+                "institutions": "PalmPay"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Parallex Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Polaris Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Premium Trust Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "PremiumTrust Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Providus Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Stanbic Ibtc Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Standard Chartered Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Suntrust Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Taj Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Titan Trust Bank"
+            },
+            {
+                "type": "Card",
+                "institutions": "Titan-Paystack"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Union Bank of Nigeria"
+            },
+            {
+                "type": "Bank",
+                "institutions": "United Bank for Africa"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Unity Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "VFD Microfinance Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Wema Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Zenith Bank"
+            }
+        ]
+    },
+    {
+        "code": "SEN",
+        "name": "Senegal",
+        "currency": "XOF",
+        "onramp": [
+            {
+                "type": "Momo",
+                "institutions": "Free"
+            },
+            {
+                "type": "Momo",
+                "institutions": "Orange"
+            },
+            {
+                "type": "Momo",
+                "institutions": "Wave"
+            }
+        ],
+        "offramp": [
+            {
+                "type": "Momo",
+                "institutions": "Free"
+            },
+            {
+                "type": "Momo",
+                "institutions": "Orange"
+            },
+            {
+                "type": "Momo",
+                "institutions": "Wave"
+            }
+        ]
+    },
+    {
+        "code": "ZAR",
+        "name": "South Africa",
+        "currency": "ZAR",
+        "onramp": [
+            {
+                "type": "Bank",
+                "institutions": "Absa Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Capitec Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Discovery Bank Limited"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Finbond Mutual Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "FirstRand Bank Limited"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Investec Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Mercantile Bank Limited"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Nedbank (South Africa)"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Old Mutual"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Rand Merchant Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Standard Bank (South Africa)"
+            }
+        ],
+        "offramp": [
+            {
+                "type": "Bank",
+                "institutions": "Absa Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Capitec Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Discovery Bank Limited"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Finbond Mutual Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "FirstRand Bank Limited"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Investec Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Mercantile Bank Limited"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Nedbank (South Africa)"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Old Mutual"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Rand Merchant Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Standard Bank (South Africa)"
+            }
+        ]
+    },
+    {
+        "code": "TZA",
+        "name": "Tanzania",
+        "currency": "TZS",
+        "onramp": [
+            {
+                "type": "Bank",
+                "institutions": "Absa Bank Tanzania Limited"
+            },
+            {
+                "type": "Bank",
+                "institutions": "AccessBank Tanzania"
+            },
+            {
+                "type": "Momo",
+                "institutions": "AIRTELMONEYTZ"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Akiba Commercial Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Amana Bank"
+            },
+            {
+                "type": "Momo",
+                "institutions": "AZAMPESA"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Azania Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "BancABC Tanzania"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Bank of Africa Tanzania Limited"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Bank of Baroda Tanzania Limited"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Bank of Tanzania"
+            },
+            {
+                "type": "Bank",
+                "institutions": "China Commercial Bank Limited"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Citibank Tanzania Ltd"
+            },
+            {
+                "type": "Bank",
+                "institutions": "CRDB Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "DCB Commercial Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Diamond Trust Bank Tanzania"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Ecobank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Equity Bank (Tanzania)"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Exim Bank (Tanzania)"
+            },
+            {
+                "type": "Bank",
+                "institutions": "First National Bank of Tanzania"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Guaranty Trust Bank (Tanzania) Limited"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Habib African Bank"
+            },
+            {
+                "type": "Momo",
+                "institutions": "HALOPESA"
+            },
+            {
+                "type": "Bank",
+                "institutions": "I&M Bank (Tanzania)"
+            },
+            {
+                "type": "Bank",
+                "institutions": "International Commercial Bank Tanzania"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Kcb Bank Tanzania Limited"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Letshego Bank Tanzania"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Maendeleo Bank Ltd"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Mkombozi Commercial Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Mwalimu Commercial Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "National Bank of Commerce (Tanzania)"
+            },
+            {
+                "type": "Bank",
+                "institutions": "National Microfinance Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "NCBA Bank Tanzania"
+            },
+            {
+                "type": "Bank",
+                "institutions": "People's Bank of Zanzibar"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Stanbic Bank Tanzania Limited"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Standard Chartered Bank"
+            },
+            {
+                "type": "Momo",
+                "institutions": "TIGO"
+            },
+            {
+                "type": "Bank",
+                "institutions": "TPB Bank Plc"
+            },
+            {
+                "type": "Bank",
+                "institutions": "United Bank for Africa"
+            },
+            {
+                "type": "Momo",
+                "institutions": "VODACOM"
+            }
+        ],
+        "offramp": [
+            {
+                "type": "Bank",
+                "institutions": "Absa Bank Tanzania Limited"
+            },
+            {
+                "type": "Bank",
+                "institutions": "AccessBank Tanzania"
+            },
+            {
+                "type": "Momo",
+                "institutions": "AIRTELMONEYTZ"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Akiba Commercial Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Amana Bank"
+            },
+            {
+                "type": "Momo",
+                "institutions": "AZAMPESA"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Azania Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "BancABC Tanzania"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Bank of Africa Tanzania Limited"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Bank of Baroda Tanzania Limited"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Bank of Tanzania"
+            },
+            {
+                "type": "Bank",
+                "institutions": "China Commercial Bank Limited"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Citibank Tanzania Ltd"
+            },
+            {
+                "type": "Bank",
+                "institutions": "CRDB Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "DCB Commercial Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Diamond Trust Bank Tanzania"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Ecobank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Equity Bank (Tanzania)"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Exim Bank (Tanzania)"
+            },
+            {
+                "type": "Bank",
+                "institutions": "First National Bank of Tanzania"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Guaranty Trust Bank (Tanzania) Limited"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Habib African Bank"
+            },
+            {
+                "type": "Momo",
+                "institutions": "HALOPESA"
+            },
+            {
+                "type": "Bank",
+                "institutions": "I&M Bank (Tanzania)"
+            },
+            {
+                "type": "Bank",
+                "institutions": "International Commercial Bank Tanzania"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Kcb Bank Tanzania Limited"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Letshego Bank Tanzania"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Maendeleo Bank Ltd"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Mkombozi Commercial Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Mwalimu Commercial Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "National Bank of Commerce (Tanzania)"
+            },
+            {
+                "type": "Bank",
+                "institutions": "National Microfinance Bank"
+            },
+            {
+                "type": "Bank",
+                "institutions": "NCBA Bank Tanzania"
+            },
+            {
+                "type": "Bank",
+                "institutions": "People's Bank of Zanzibar"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Stanbic Bank Tanzania Limited"
+            },
+            {
+                "type": "Bank",
+                "institutions": "Standard Chartered Bank"
+            },
+            {
+                "type": "Momo",
+                "institutions": "TIGO"
+            },
+            {
+                "type": "Bank",
+                "institutions": "TPB Bank Plc"
+            },
+            {
+                "type": "Bank",
+                "institutions": "United Bank for Africa"
+            },
+            {
+                "type": "Momo",
+                "institutions": "VODACOM"
+            }
+        ]
+    },
+    {
+        "code": "TGO",
+        "name": "Togo",
+        "currency": "XOF",
+        "onramp": [
+            {
+                "type": "Momo",
+                "institutions": "Flooz TG"
+            },
+            {
+                "type": "Momo",
+                "institutions": "Moov"
+            },
+            {
+                "type": "Momo",
+                "institutions": "Tmoney TG"
+            },
+            {
+                "type": "Momo",
+                "institutions": "TogoCell"
+            }
+        ],
+        "offramp": [
+            {
+                "type": "Momo",
+                "institutions": "Flooz TG"
+            },
+            {
+                "type": "Momo",
+                "institutions": "Moov"
+            },
+            {
+                "type": "Momo",
+                "institutions": "Tmoney TG"
+            },
+            {
+                "type": "Momo",
+                "institutions": "TogoCell"
+            }
+        ]
+    },
+    {
+        "code": "UGA",
+        "name": "Uganda",
+        "currency": "UGX",
+        "onramp": [
+            {
+                "type": "Momo",
+                "institutions": "Mobile Money"
+            }
+        ],
+        "offramp": [
+            {
+                "type": "Momo",
+                "institutions": "Mobile Money"
+            }
+        ]
+    },
+    {
+        "code": "ZMB",
+        "name": "Zambia",
+        "currency": "ZMW",
+        "onramp": [
+            {
+                "type": "Momo",
+                "institutions": "Airtel"
+            },
+            {
+                "type": "Momo",
+                "institutions": "MTN"
+            },
+            {
+                "type": "Momo",
+                "institutions": "Zamtel"
+            }
+        ],
+        "offramp": [
+            {
+                "type": "Momo",
+                "institutions": "Airtel"
+            },
+            {
+                "type": "Momo",
+                "institutions": "MTN"
+            },
+            {
+                "type": "Momo",
+                "institutions": "Zamtel"
+            }
+        ]
+    }
+]

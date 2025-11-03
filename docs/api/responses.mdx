@@ -1,10 +1,40 @@
 ---
-title: "Expanding Responses"
+title: "Responses"
 ---
+
+All HIFI API endpoints return structured JSON responses containing the requested data. Understanding the response format and how to work with API responses is essential for building reliable integrations.
+
+## Response Format
+
+API responses follow a consistent JSON structure. Most endpoints return data directly, while some return paginated lists or nested objects. The exact structure depends on the endpoint and any query parameters you use.
+
+**Example response:**
+
+```json
+{
+  "userId": "6513dcd0-2161-4d18-bdca-c1ef94ebf21d",
+  "kycInfo": {
+    "type": "business",
+    "businessName": "Random Bizz"
+  }
+}
+```
+
+## Response Properties
+
+By default, API responses include:
+
+- **Direct properties** of the requested object
+- **IDs for related objects** (which require additional API calls to fetch full details)
+- **Status and metadata** relevant to the request
+
+This design keeps responses lightweight and allows you to fetch related data only when needed.
+
+## Expanding Related Objects
 
 The HIFI API supports expanding related objects in responses to reduce API calls and improve efficiency. Instead of making multiple requests to fetch related data, you can use the `expand` parameter to include nested objects directly in a single response.
 
-## How Expanding Works
+## How Expansion Works
 
 By default, API responses include only basic object properties and IDs for related objects. When you use the `expand` parameter, the API replaces these IDs with the full related objects, including all their properties.
 
@@ -94,7 +124,7 @@ curl -X GET "https://production.hifibridge.com/v2/users/{userId}/kyc?expand[]=ul
 - Show all associated documents in a single request
 - Access nested document information for each UBO
 
-## UBO (Ultimate Beneficial Owner) Endpoints
+## UBO Endpoints
 
 ### Add a UBO
 
@@ -156,79 +186,6 @@ curl -X GET "https://production.hifibridge.com/v2/users/{userId}/kyc/ultimateBen
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
-## Advanced Expansion Techniques
-
-### Multiple Properties
-
-Expand multiple properties in a single request by adding multiple `expand[]` parameters:
-
-```bash
-curl -X GET "https://production.hifibridge.com/v2/users/{userId}/kyc?expand[]=ultimateBeneficialOwners&expand[]=documents" \
-  -H "Authorization: Bearer YOUR_API_KEY"
-```
-
-### Multi-Level Expansion
-
-Use dot notation to expand nested relationships across multiple levels:
-
-```bash
-curl -X GET "https://production.hifibridge.com/v2/users/{userId}/kyc?expand[]=ultimateBeneficialOwners.documents" \
-  -H "Authorization: Bearer YOUR_API_KEY"
-```
-
-This expands the `documents` property within each `ultimateBeneficialOwner`, giving you:
-
-- Full UBO objects with all their properties
-- Complete document objects for each UBO
-
-### Combining Expansions
-
-You can combine single-level and multi-level expansions:
-
-```bash
-curl -X GET "https://production.hifibridge.com/v2/users/{userId}/kyc?expand[]=ultimateBeneficialOwners&expand[]=documents&expand[]=ultimateBeneficialOwners.documents" \
-  -H "Authorization: Bearer YOUR_API_KEY"
-```
-
-## Best Practices
-
-### Performance Considerations
-
-1. **Only expand what you need** - Each expansion adds to response size and processing time
-2. **Use specific expansions** - Avoid expanding unnecessary relationships
-3. **Consider response size** - Large expansions can impact network performance
-
-### Common Use Cases
-
-1. **KYC Dashboard Display**
-
-   ```bash
-   # Get complete KYC status with all UBOs and documents
-   GET /v2/users/{userId}/kyc?expand[]=ultimateBeneficialOwners.documents
-   ```
-
-2. **Document Management**
-
-   ```bash
-   # Get all documents for a specific UBO
-   GET /v2/users/{userId}/kyc/ultimateBeneficialOwners/{uboId}?expand[]=documents
-   ```
-
-3. **Compliance Review**
-   ```bash
-   # Get KYC info with all related data for review
-   GET /v2/users/{userId}/kyc?expand[]=ultimateBeneficialOwners&expand[]=documents
-   ```
-
-## Error Handling
-
-If you try to expand a property that doesn't exist or isn't expandable, the API will ignore that expansion and return the response without it. Check the API reference to see which properties support expansion.
-
-<Info>
-  Not all properties can be expanded. The API reference marks expandable
-  properties with the "Expandable" label.
-</Info>
-
 ## API Reference
 
-For complete details on which endpoints support expansion and which properties are expandable, refer to the [API Reference](/api-reference).
+For complete details on which endpoints support expansion and which properties are expandable, refer to the [API Reference](https://docs.hifibridge.com/api-reference).
