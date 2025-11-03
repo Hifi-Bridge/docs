@@ -121,7 +121,7 @@
               {
                 "group": "Documents",
                 "pages": [
-                  "docs/compliance/documents/overview",
+                  "docs/compliance/documents/index",
                   "docs/compliance/documents/identity",
                   "docs/compliance/documents/proof-of-address"
                 ]

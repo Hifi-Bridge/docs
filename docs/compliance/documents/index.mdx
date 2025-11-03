@@ -1,0 +1,476 @@
+---
+title: "Documents"
+sidebarTitle: "Overview"
+---
+
+**Documents** enable programmatic upload and management of KYC verification documents. Upload identity documents, proof of address, and business documents through the Documents API.
+
+## How Documents Work
+
+<Steps>
+  <Step title="Upload file">
+    First, upload the document file using the [Upload File](/api-reference/files/upload-file) endpoint to get a file ID.
+  </Step>
+  <Step title="Add document">
+    Then, associate the file with the user by calling [Add Documents](/api-reference/kyc/add-documents) with the file ID, type, subtype, and issued country.
+  </Step>
+  <Step title="KYC approval">
+    Once all required documents are uploaded and verified, submit KYC to trigger review.
+  </Step>
+</Steps>
+
+## Document Attributes
+
+Each document requires three key attributes:
+
+| Attribute         | Description                                              | Example          |
+| :---------------- | :------------------------------------------------------- | :--------------- |
+| **type**          | Category of document being uploaded                      | `PASSPORT`       |
+| **subType**       | Side of document (for multi-sided documents)             | `FRONT_SIDE`     |
+| **issuedCountry** | ISO country code where document was issued               | `US`, `GB`       |
+
+## Document Types
+
+Supported document types vary by user type (individual vs business).
+
+### Individual Documents
+
+For `individual` user accounts:
+
+| Type                 | Description                            | Document Group |
+| :------------------- | :------------------------------------- | :------------- |
+| **DRIVERS**          | Government-issued driver's license     | Identity       |
+| **ID_CARD**          | National ID card                       | Identity       |
+| **PASSPORT**         | Passport                               | Identity       |
+| **RESIDENCE_PERMIT** | Residence permit or visa               | Identity       |
+| **PROOF_OF_ADDRESS** | Utility bill, bank statement, lease    | Address        |
+| **SELFIE**           | Selfie photo for identity verification | Identity       |
+
+### Business Documents
+
+For `business` user accounts, requirements are organized by document groups. Check your specific rail's requirements (e.g., [USD Rail](/docs/rails/usd)).
+
+| Type                      | Description                        | Document Group         |
+| :------------------------ | :--------------------------------- | :--------------------- |
+| **INCORPORATION_ARTICLES** | Incorporation articles document    | legalPresence          |
+| **INCORPORATION_CERT**    | Incorporation certificate document | legalPresence          |
+| **STATE_REGISTRY**        | State registry document            | legalPresence, ownershipStructure, controlStructure |
+| **SHAREHOLDER_REGISTRY**  | Shareholder registry document      | ownershipStructure     |
+| **TRUST_AGREEMENT**       | Trust agreement document           | ownershipStructure, controlStructure |
+| **INFORMATION_STATEMENT** | Information statement document     | ownershipStructure, controlStructure |
+| **DIRECTORS_REGISTRY**    | Directors registry document        | controlStructure       |
+| **PROOF_OF_ADDRESS**      | Proof of address document          | companyDetails         |
+
+## Document SubTypes
+
+SubTypes specify which side of a document you're uploading:
+
+| SubType         | Use For                                              |
+| :-------------- | :--------------------------------------------------- |
+| **FRONT_SIDE**  | Front of ID card or driver's license                 |
+| **BACK_SIDE**   | Back of ID card or driver's license                  |
+| **SINGLE_SIDE** | All other documents (passport, bills, certificates)  |
+
+<Info>
+**Multi-sided documents:** Only `ID_CARD` and `DRIVERS` require both `FRONT_SIDE` and `BACK_SIDE`. All other document types use `SINGLE_SIDE` only.
+</Info>
+
+## Document Groups
+
+Compliance requirements are organized into document groups. Users must satisfy all required groups for KYC approval.
+
+### Individual Requirements
+
+For individual users, typically required:
+
+**Identity Group** (satisfy with one of):
+- Driver's License (front + back)
+- ID Card (front + back)
+- Passport
+- Residence Permit
+
+**Address Group** (satisfy with one of):
+- Utility bill
+- Bank statement
+- Lease agreement
+
+### Business Requirements
+
+Business document requirements are organized by groups. Requirements vary by rail and jurisdiction.
+
+**For USD Rail**, typically required groups include:
+- **legalPresence** (min 1): INCORPORATION_ARTICLES, INCORPORATION_CERT, or STATE_REGISTRY
+- **ownershipStructure** (min 1): SHAREHOLDER_REGISTRY, TRUST_AGREEMENT, INFORMATION_STATEMENT, or STATE_REGISTRY
+- **companyDetails** (min 1): PROOF_OF_ADDRESS
+- **controlStructure** (min 1): DIRECTORS_REGISTRY, TRUST_AGREEMENT, INFORMATION_STATEMENT, or STATE_REGISTRY
+
+**Beneficial Owner Identity** (for each owner >25% share):
+- Same as individual identity requirements: DRIVERS, ID_CARD, PASSPORT, or RESIDENCE_PERMIT
+
+<Note>
+Specific requirements vary by rail and jurisdiction. Check the KYC requirements for your specific use case.
+</Note>
+
+## Uploading Documents
+
+Document upload is a two-step process: first upload the file, then associate it with the user.
+
+### Step 1: Upload File
+
+Upload the document file using the [Upload File](/api-reference/files/upload-file) endpoint.
+
+**Request:**
+
+```bash
+curl -X POST "https://sandbox.hifi.com/v2/files" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: multipart/form-data" \
+  -F "file=@/path/to/passport.pdf"
+```
+
+**Response:**
+
+```json
+{
+  "id": "file_zEFpbPhk71NaQfEVMR544",
+  "createdAt": "2023-10-01T12:00:00Z",
+  "fileName": "passport.pdf",
+  "size": 204800,
+  "mimeType": "application/pdf"
+}
+```
+
+Save the `id` from the response - you'll need it in step 2.
+
+### Step 2: Add Document
+
+Associate the uploaded file with the user using the [Add Documents](/api-reference/kyc/add-documents) endpoint.
+
+**Request:**
+
+```bash
+curl -X POST "https://sandbox.hifi.com/v2/kyc/documents" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "userId": "usr_abc123",
+    "type": "PASSPORT",
+    "subType": "SINGLE_SIDE",
+    "issuedCountry": "US",
+    "fileId": "file_zEFpbPhk71NaQfEVMR544"
+  }'
+```
+
+**Request Fields:**
+
+- **userId** (required): User ID for whom documents are being uploaded
+- **type** (required): Document type from the supported types list
+- **subType** (required): `FRONT_SIDE`, `BACK_SIDE`, or `SINGLE_SIDE`
+- **issuedCountry** (required): ISO 3166-1 alpha-2 country code
+- **fileId** (required): File ID from step 1
+
+**Response:**
+
+```json
+{
+  "id": "doc_abc123",
+  "type": "PASSPORT",
+  "subType": "SINGLE_SIDE",
+  "issuedCountry": "US",
+  "fileId": "file_zEFpbPhk71NaQfEVMR544",
+  "url": "https://example.com/doc_123"
+}
+```
+
+<Info>
+For detailed field documentation, see the [Add Documents](/api-reference/kyc/add-documents) API reference.
+</Info>
+
+## File Requirements
+
+Documents must meet these requirements:
+
+| Requirement     | Specification                                      |
+| :-------------- | :------------------------------------------------- |
+| **File types**  | PDF, JPG, JPEG, PNG                                |
+| **Max size**    | 10 MB per file                                     |
+| **Resolution**  | Minimum 300 DPI recommended                        |
+| **Quality**     | Clear, legible, all corners visible                |
+| **Color**       | Color or grayscale (no black & white)              |
+
+<Warning>
+**Document quality matters:** Blurry, cropped, or illegible documents will be rejected. Ensure all text and photos are clearly visible before uploading.
+</Warning>
+
+## Key Concepts
+
+<AccordionGroup>
+  <Accordion title="Satisfying Document Groups">
+    KYC approval requires satisfying all document groups:
+    
+    **Example for Individual (USD Rail):**
+    - **Identity group:** Upload ONE of (passport, driver's license, ID card, residence permit)
+    - **Address group:** Upload ONE of (utility bill, bank statement, lease)
+    
+    **Example for Business (USD Rail):**
+    - **legalPresence group:** Upload ONE of (INCORPORATION_ARTICLES, INCORPORATION_CERT, STATE_REGISTRY)
+    - **ownershipStructure group:** Upload ONE of (SHAREHOLDER_REGISTRY, TRUST_AGREEMENT, INFORMATION_STATEMENT, STATE_REGISTRY)
+    - **companyDetails group:** Upload ONE of (PROOF_OF_ADDRESS)
+    - **controlStructure group:** Upload ONE of (DIRECTORS_REGISTRY, TRUST_AGREEMENT, INFORMATION_STATEMENT, STATE_REGISTRY)
+    - **Owner identity:** Upload identity documents for EACH beneficial owner (>25% share)
+    
+    You must provide enough documents to satisfy each required group.
+  </Accordion>
+
+  <Accordion title="Multi-sided Document Upload">
+    For driver's licenses and ID cards, upload both sides separately using the two-step process:
+    
+    **Upload front side:**
+    ```bash
+    # Step 1: Upload front file
+    curl -X POST "https://sandbox.hifi.com/v2/files" \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -F "file=@front.jpg"
+    # Returns: { "id": "file_front123", ... }
+    
+    # Step 2: Add front document
+    curl -X POST "https://sandbox.hifi.com/v2/kyc/documents" \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "userId": "usr_abc123",
+        "type": "DRIVERS",
+        "subType": "FRONT_SIDE",
+        "issuedCountry": "US",
+        "fileId": "file_front123"
+      }'
+    ```
+    
+    **Upload back side:**
+    ```bash
+    # Step 1: Upload back file
+    curl -X POST "https://sandbox.hifi.com/v2/files" \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -F "file=@back.jpg"
+    # Returns: { "id": "file_back123", ... }
+    
+    # Step 2: Add back document
+    curl -X POST "https://sandbox.hifi.com/v2/kyc/documents" \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "userId": "usr_abc123",
+        "type": "DRIVERS",
+        "subType": "BACK_SIDE",
+        "issuedCountry": "US",
+        "fileId": "file_back123"
+      }'
+    ```
+    
+    Both uploads must complete successfully for the document to be considered complete.
+  </Accordion>
+
+  <Accordion title="Issued Country Importance">
+    The `issuedCountry` field is critical for compliance:
+    
+    - Must match the country that issued the document
+    - Use ISO 3166-1 alpha-2 codes (e.g., `US`, `GB`, `CA`, `DE`)
+    - Affects which documents are accepted
+    - Used for sanctions screening and compliance checks
+    
+    **Common codes:**
+    - `US` - United States
+    - `GB` - United Kingdom
+    - `CA` - Canada
+    - `MX` - Mexico
+    - `BR` - Brazil
+  </Accordion>
+
+  <Accordion title="Document Status">
+    Uploaded documents progress through verification:
+    
+    - **PENDING_REVIEW:** Document uploaded, awaiting verification
+    - **APPROVED:** Document verified and accepted
+    - **REJECTED:** Document rejected (see rejection reason)
+    - **EXPIRED:** Document expired and needs replacement
+    
+    Subscribe to KYC webhook events to track document verification status.
+  </Accordion>
+
+  <Accordion title="Proof of Address Requirements">
+    Proof of address documents must meet specific criteria:
+    
+    **Accepted documents:**
+    - Utility bills (electric, gas, water, internet)
+    - Bank statements
+    - Lease agreements
+    - Government correspondence
+    
+    **Requirements:**
+    - Dated within last 3 months
+    - Shows full name matching KYC information
+    - Shows complete address
+    - Issued by reputable organization
+    
+    Screenshots or photos of digital statements are typically rejected.
+  </Accordion>
+</AccordionGroup>
+
+## Try it out
+
+Here's a complete document upload workflow for individual KYC:
+
+<Steps>
+  <Step title="Upload identity document">
+    Upload the identity document (passport):
+    
+    ```javascript
+    async function uploadIdentityDocument(userId, passportFile) {
+      const formData = new FormData();
+      formData.append('userId', userId);
+      formData.append('type', 'PASSPORT');
+      formData.append('subType', 'SINGLE_SIDE');
+      formData.append('issuedCountry', 'US');
+      formData.append('file', passportFile);
+      
+      const response = await fetch('https://sandbox.hifi.com/v2/kyc/documents', {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer YOUR_API_KEY'
+        },
+        body: formData
+      }).then(r => r.json());
+      
+      console.log('Passport uploaded:', response.documentId);
+      return response;
+    }
+    ```
+  </Step>
+  
+  <Step title="Upload proof of address">
+    Upload the proof of address document:
+    
+    ```javascript
+    async function uploadProofOfAddress(userId, utilityBillFile) {
+      const formData = new FormData();
+      formData.append('userId', userId);
+      formData.append('type', 'PROOF_OF_ADDRESS');
+      formData.append('subType', 'SINGLE_SIDE');
+      formData.append('issuedCountry', 'US');
+      formData.append('file', utilityBillFile);
+      
+      const response = await fetch('https://sandbox.hifi.com/v2/kyc/documents', {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer YOUR_API_KEY'
+        },
+        body: formData
+      }).then(r => r.json());
+      
+      console.log('Proof of address uploaded:', response.documentId);
+      return response;
+    }
+    ```
+  </Step>
+  
+  <Step title="Upload driver's license (both sides)">
+    Upload both sides of the driver's license:
+    
+    ```javascript
+    async function uploadDriversLicense(userId, frontFile, backFile) {
+      // Upload front
+      const frontData = new FormData();
+      frontData.append('userId', userId);
+      frontData.append('type', 'DRIVERS');
+      frontData.append('subType', 'FRONT_SIDE');
+      frontData.append('issuedCountry', 'US');
+      frontData.append('file', frontFile);
+      
+      const frontResponse = await fetch('https://sandbox.hifi.com/v2/kyc/documents', {
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer YOUR_API_KEY' },
+        body: frontData
+      }).then(r => r.json());
+      
+      console.log('Front side uploaded:', frontResponse.documentId);
+      
+      // Upload back
+      const backData = new FormData();
+      backData.append('userId', userId);
+      backData.append('type', 'DRIVERS');
+      backData.append('subType', 'BACK_SIDE');
+      backData.append('issuedCountry', 'US');
+      backData.append('file', backFile);
+      
+      const backResponse = await fetch('https://sandbox.hifi.com/v2/kyc/documents', {
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer YOUR_API_KEY' },
+        body: backData
+      }).then(r => r.json());
+      
+      console.log('Back side uploaded:', backResponse.documentId);
+      
+      return { front: frontResponse, back: backResponse };
+    }
+    ```
+  </Step>
+  
+  <Step title="Complete KYC workflow">
+    Complete the KYC workflow:
+    
+    ```javascript
+    async function completeKYC(userId, documents) {
+      // Upload identity document
+      await uploadIdentityDocument(userId, documents.passport);
+      
+      // Upload proof of address
+      await uploadProofOfAddress(userId, documents.utilityBill);
+      
+      // Check KYC status
+      const user = await fetch(`https://sandbox.hifi.com/v2/users/${userId}`, {
+        headers: { 'Authorization': 'Bearer YOUR_API_KEY' }
+      }).then(r => r.json());
+      
+      console.log('KYC Status:', user.kycStatus);
+      
+      if (user.kycStatus === 'APPROVED') {
+        console.log('KYC approved! User can now offramp.');
+      } else if (user.kycStatus === 'PENDING') {
+        console.log('KYC under review. Documents are being verified.');
+      }
+    }
+    ```
+  </Step>
+  
+  <Step title="Handle webhook for document verification">
+    Handle webhook events for document verification:
+    
+    ```javascript
+    function handleDocumentWebhook(event) {
+      if (event.eventType === 'USER.KYC.UPDATE') {
+        const { id, kycStatus, kycRejectionReason } = event.data;
+        
+        if (kycStatus === 'APPROVED') {
+          console.log('KYC approved for user:', id);
+          enableOfframping(id);
+        } else if (kycStatus === 'REJECTED') {
+          console.log('KYC rejected:', kycRejectionReason);
+          notifyUserToResubmit(id, kycRejectionReason);
+        }
+      }
+    }
+    ```
+  </Step>
+</Steps>
+
+## Getting Help
+
+- 📧 **Email:** support@hifi.com
+- 💬 **Slack:** Message us in our shared Slack channel
+
+## Related Resources
+
+- [Users](/docs/users) - Understanding user accounts and KYC status
+- [KYC Link](/docs/features/kyc-link) - Hosted KYC collection flow
+- [Webhooks](/docs/webhooks) - Monitor KYC verification status
+- [API Reference](/api-reference/kyc/add-documents) - Complete endpoint documentation
