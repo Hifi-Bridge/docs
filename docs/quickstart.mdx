@@ -13,7 +13,7 @@ In this guide, you'll learn how to use the **HIFI Sandbox API** to simulate mone
 This guide uses the **Sandbox API** where:
 
 - ✅ All transactions are simulated - no real money moves
-- ✅ KYC applications are automatically approved
+- ✅ KYC applications are typically automatically approved (may be blocked by compliance checks)
 - ✅ Transactions complete instantly for testing
 - ✅ You can experiment freely without financial risk
 
@@ -618,12 +618,14 @@ curl --request POST \
 
 1. **Status starts as `CREATED`** (immediate)
 2. **Transitions to `PENDING`** (within minutes in sandbox)
-3. **Final status: `ACTIVE` or `REJECTED`** (automatic in sandbox, 1-3 business days in production)
+3. **Final status: `ACTIVE` or `REJECTED`** (typically automatic in sandbox, 1-3 business days in production)
 
 <Note>
   **Sandbox Auto-Approval:** In the sandbox environment, KYC applications are
-  automatically approved within minutes for testing purposes. In production, the
-  review process typically takes 1-3 business days.
+  typically automatically approved within minutes for testing purposes. However,
+  certain compliance checks (like PEP screening by banking partners) may still
+  block approval even in sandbox. In production, the review process typically
+  takes 1-3 business days.
 </Note>
 
 You can either:

@@ -38,21 +38,28 @@ curl -X GET "https://sandbox.hifibridge.com/v2/ping" \
 
 The sandbox environment is designed to simulate production behavior while providing a safe testing environment:
 
-| Feature            | Sandbox                    | Production                        |
-| :----------------- | :------------------------- | :-------------------------------- |
-| **API Base URL**   | `https://sandbox.hifibridge.com` | `https://production.hifibridge.com`     |
-| **Money Movement** | Simulated                  | Real                              |
-| **KYC Processing** | Auto-approved              | Manual review (1-3 business days) |
-| **Blockchain**     | Testnet                    | Mainnet                           |
-| **Tokens**         | No real value              | Real cryptocurrency               |
+| Feature            | Sandbox                                                       | Production                          |
+| :----------------- | :------------------------------------------------------------ | :---------------------------------- |
+| **API Base URL**   | `https://sandbox.hifibridge.com`                              | `https://production.hifibridge.com` |
+| **Money Movement** | Simulated                                                     | Real                                |
+| **KYC Processing** | Typically auto-approved (may be blocked by compliance checks) | Manual review (1-3 business days)   |
+| **Blockchain**     | Testnet                                                       | Mainnet                             |
+| **Tokens**         | No real value                                                 | Real cryptocurrency                 |
 
 ### Automated KYC Approval
 
 In sandbox, the KYC process is streamlined for testing:
 
-- **Instant Approval** - KYC submissions are approved within a minute
-- **No Real Verification** - No actual identity verification occurs
+- **Typically Auto-Approved** - KYC submissions are usually approved within minutes
+- **Compliance Checks Still Apply** - Some compliance checks (like PEP screening) may still block approval even in sandbox
 - **Dummy Data** - Use any test personal information and documents
+
+<Warning>
+  While KYC is typically auto-approved in sandbox, certain compliance checks may
+  still block approval. For example, banking partners like Cross River may
+  perform PEP (Politically Exposed Person) screening that can prevent sandbox
+  users from unlocking rails even in the test environment.
+</Warning>
 
 <Info>
   In production, KYC applications undergo real compliance review and typically
