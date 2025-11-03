@@ -1,7 +1,7 @@
 {
   "$schema": "https://hifibridge.com/docs.json",
   "theme": "almond",
-  "name": "HIFI Docs",
+  "name": "HIFI Developer Docs",
   "description": "Developer Documentation for HIFI",
   "colors": {
     "primary": "#33171E",
@@ -10,24 +10,24 @@
   },
   "fonts": {
     "family": "Rhithmic Sans",
-    "source": "http://dashboard.hifibridge.com/fonts/rhithmic/RhithmicSans-Regular.woff2",
+    "source": "https://dashboard.hifibridge.com/fonts/rhithmic/RhithmicSans-Regular.woff2",
     "format": "woff2",
     "weight": 400,
     "heading": {
       "family": "Rhithmic Sans",
-      "source": "http://dashboard.hifibridge.com/fonts/rhithmic/RhithmicSans-Regular.woff2",
+      "source": "https://dashboard.hifibridge.com/fonts/rhithmic/RhithmicSans-Regular.woff2",
       "format": "woff2",
       "weight": 400
     },
     "body": {
       "family": "Inter",
-      "source": "http://dashboard.hifibridge.com/fonts/inter/Inter-Regular.woff2",
+      "source": "https://dashboard.hifibridge.com/fonts/inter/Inter-Regular.woff2",
       "format": "woff2",
       "weight": 400
     },
     "code": {
       "family": "Space Mono",
-      "source": "http://dashboard.hifibridge.com/fonts/rhithmic/SpaceMono-Regular.woff2",
+      "source": "https://dashboard.hifibridge.com/fonts/space-mono/SpaceMono-Regular.woff2",
       "format": "woff2",
       "weight": 400
     }
@@ -37,22 +37,126 @@
   "favicon": "/favicon.svg",
   "seo": {
     "metatags": {
-      "description": "Build borderless financial workflows with programmable money. HIFI makes it easy to build, automate, and scale modern financial products.",
-      "keywords": "HIFI, fintech API, developer documentation, payments API, transfers, KYC, compliance, virtual accounts, crypto payments, stablecoins, blockchain, programmable money, financial infrastructure",
+      "title": "HIFI Developer Docs — Programmable Money & Payment Orchestration API",
+      "description": "Compose payment workflows and automate money movement with HIFI's programmable layer. Connect KYC/KYB, virtual accounts, transfers, and webhooks into intelligent flows that orchestrate stablecoins and fiat rails.",
+      "keywords": "HIFI, payments API, programmable money, payment orchestration, payment workflows, automated flows, composable payments, workflow builder, payment automation, orchestration layer, flow composition, fintech API, stablecoins, USDC, USDT, bank transfers, ACH, SWIFT, RTP, KYC, KYB, compliance, virtual accounts, payouts, webhooks, developer documentation",
       "author": "HIFI",
-      "og:title": "HIFI Developer Docs",
+      "robots": "index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1",
+      "og:title": "HIFI Developer Docs — Programmable Money & Payment Orchestration API",
       "og:type": "website",
-      "og:url": "https://docs.hifibridge.com",
+      "og:url": "https://docs.hifibridge.com/",
       "og:image": "https://docs.hifibridge.com/og.png",
-      "og:description": "Build borderless financial workflows with programmable money. HIFI makes it easy to build, automate, and scale modern financial products.",
+      "og:image:width": "1200",
+      "og:image:height": "630",
+      "og:image:alt": "HIFI Developer Docs",
+      "og:description": "Compose payment workflows and automate money movement with HIFI—the programmable layer for orchestrating stablecoins and fiat rails into intelligent flows.",
       "og:site_name": "HIFI Docs",
       "og:locale": "en_US",
       "twitter:card": "summary_large_image",
       "twitter:site": "@hifibridge",
-      "twitter:title": "HIFI Developer Docs",
-      "twitter:description": "Build borderless financial workflows with programmable money. HIFI makes it easy to build, automate, and scale modern financial products.",
+      "twitter:title": "HIFI Developer Docs — Programmable Money & Payment Orchestration",
+      "twitter:description": "Compose payment workflows by orchestrating stablecoin & fiat rails, KYC/KYB, virtual accounts, transfers, and webhooks into automated flows.",
       "twitter:image": "https://docs.hifibridge.com/og.png",
-      "twitter:image:alt": "HIFI Developer Docs"
+      "twitter:image:alt": "HIFI Developer Docs",
+      "theme-color": "#33171E",
+      "application-name": "HIFI Docs",
+      "apple-mobile-web-app-title": "HIFI Docs"
+    },
+    "links": [
+      { "rel": "canonical", "href": "https://docs.hifibridge.com/" },
+      { "rel": "sitemap", "href": "https://docs.hifibridge.com/sitemap.xml" },
+      {
+        "rel": "alternate",
+        "href": "https://docs.hifibridge.com/",
+        "hreflang": "x-default"
+      },
+      {
+        "rel": "alternate",
+        "href": "https://docs.hifibridge.com/",
+        "hreflang": "en"
+      },
+      { "rel": "manifest", "href": "/site.webmanifest" },
+      { "rel": "icon", "href": "/favicon.svg", "type": "image/svg+xml" },
+      {
+        "rel": "icon",
+        "href": "/favicon-32x32.png",
+        "sizes": "32x32",
+        "type": "image/png"
+      },
+      {
+        "rel": "icon",
+        "href": "/favicon-192.png",
+        "sizes": "192x192",
+        "type": "image/png"
+      },
+      {
+        "rel": "apple-touch-icon",
+        "href": "/apple-touch-icon.png",
+        "sizes": "180x180"
+      },
+      {
+        "rel": "preconnect",
+        "href": "https://dashboard.hifibridge.com",
+        "crossorigin": ""
+      }
+    ],
+    "jsonld": [
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "HIFI",
+        "url": "https://hifibridge.com",
+        "logo": "https://docs.hifibridge.com/og.png",
+        "sameAs": ["https://twitter.com/hifibridge"]
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "HIFI Payment Orchestration & Programmable Money API",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Web",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": "5",
+          "ratingCount": "12"
+        },
+        "url": "https://hifibridge.com",
+        "description": "Programmable layer for composing payment workflows—orchestrate stablecoin and fiat rails, KYC/KYB onboarding, virtual accounts, transfers, and webhooks into automated flows."
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "HIFI Developer Docs",
+        "url": "https://docs.hifibridge.com/",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://docs.hifibridge.com/search?q={query}",
+          "query-input": "required name=query"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Getting Started",
+            "item": "https://docs.hifibridge.com/getting-started"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "API Reference",
+            "item": "https://docs.hifibridge.com/reference"
+          }
+        ]
+      }
+    ],
+    "verifications": {
+      "google": "GOOGLE_SITE_VERIFICATION_TOKEN",
+      "bing": "BING_SITE_VERIFICATION_TOKEN"
     }
   },
   "redirects": [
