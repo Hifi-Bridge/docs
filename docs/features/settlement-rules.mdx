@@ -1,20 +1,29 @@
 ---
 title: "Settlement Rules"
+sidebarTitle: "Settlement Rules"
 ---
 
-Settlement Rules allow you to configure automated fee calculations and distributions for Virtual Account transactions. Automatically deduct fees using fixed amounts, percentages, or tiered pricing models, and send them to specified wallet addresses.
+**Settlement Rules** allow you to configure automated fee calculations and distributions for Virtual Account transactions. Automatically deduct fees using fixed amounts, percentages, or tiered pricing models, and send them to specified wallet addresses.
 
 <Info>
-  Looking to charge fees for offramps? Visit [Developer Fees](/docs/transfers/features/developer-fees) for more details.
+Looking to charge fees for offramps? Visit [Developer Fees](/docs/features/developer-fees) for more details.
 </Info>
 
 ## How Settlement Rules Work
 
-1. **Create settlement rule** – Define fee calculation methods and destination wallets
-2. **Apply to virtual account** – Associate the rule with a user's virtual account
-3. **Automatic distribution** – Fees are automatically calculated and distributed on each transaction
+<Steps>
+  <Step title="Create settlement rule">
+    Define fee calculation methods and destination wallets. Settlement rules support fixed and tiered pricing models with percentage or flat fee amounts.
+  </Step>
+  <Step title="Apply to virtual account">
+    Associate the rule with a user's virtual account. Rules must be created on the same blockchain network as the virtual account's destination chain.
+  </Step>
+  <Step title="Automatic distribution">
+    Fees are automatically calculated and distributed on each transaction. The transaction amount is received, fees are deducted, and payments are sent to specified wallet addresses.
+  </Step>
+</Steps>
 
-### Rule Configuration
+## Rule Configuration
 
 Settlement rules support two calculation models that can be combined:
 
@@ -25,40 +34,52 @@ For each model, you can use either fixed values (flat fee amounts) or percentage
 
 You can also configure whether to include the HIFI platform fee in the calculation.
 
-## Create Settlement Rule
+## Creating Settlement Rules
+
+Create a settlement rule using the [Create Settlement Rule](/api-reference/virtual-account/create-settlement-rule) endpoint.
+
+### Request
 
 ```bash
-curl --request POST \
-     --url https://production.hifibridge.com/v2/virtual-accounts/settlement-rules \
-     --header 'accept: application/json' \
-     --header 'content-type: application/json' \
-     --data '{
-  "chain": "BASE",
-  "includeHIFIFee": true,
-  "rules": [
-    {
-      "type": "PERCENTAGE",
-      "calculationModel": "FIXED",
-      "value": 0.001,
-      "walletAddress": "0x15FB50680fEB2f726413416665c25f9B397b047b"
-    },
-    {
-      "type": "FIXED",
-      "calculationModel": "FIXED",
-      "value": 0.5,
-      "walletAddress": "0x15FB50680fEB2f726413416665c25f9B397b047b"
-    }
-  ]
-}'
+curl -X POST "https://sandbox.hifibridge.com/v2/virtual-accounts/settlement-rules" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "chain": "BASE",
+    "includeHIFIFee": true,
+    "rules": [
+      {
+        "type": "PERCENTAGE",
+        "calculationModel": "FIXED",
+        "value": 0.001,
+        "walletAddress": "0x15FB50680fEB2f726413416665c25f9B397b047b"
+      },
+      {
+        "type": "FIXED",
+        "calculationModel": "FIXED",
+        "value": 0.5,
+        "walletAddress": "0x15FB50680fEB2f726413416665c25f9B397b047b"
+      }
+    ]
+  }'
 ```
 
+**Request Fields:**
+
+- **chain** (required): Blockchain network for the settlement rule (e.g., `BASE`, `POLYGON`, `ETHEREUM`)
+- **includeHIFIFee** (optional): Whether to include HIFI platform fee in the calculation. Defaults to `false`.
+- **rules** (required): Array of fee rules. Each rule requires:
+  - **type** (required): Either `PERCENTAGE` or `FIXED`
+  - **calculationModel** (required): Either `FIXED` or `TIERED`
+  - **value** (required for FIXED model): Fee value (percentage as decimal or flat amount)
+  - **tiers** (required for TIERED model): Array of tier configurations
+  - **walletAddress** (required): Beneficiary wallet address to receive the fee
+
 <Info>
-  Multiple rules can be applied to a single settlement rule configuration. The rules are processed in the order they are defined.
+Multiple rules can be applied to a single settlement rule configuration. The rules are processed in the order they are defined.
 </Info>
 
-## Response Structure
-
-When you create a settlement rule, the API response includes detailed information about the rule configuration:
+### Response
 
 ```json
 {
@@ -83,6 +104,26 @@ When you create a settlement rule, the API response includes detailed informatio
   ]
 }
 ```
+
+<ResponseField name="id" type="string">
+  Unique settlement rule ID. Use this when applying the rule to virtual accounts.
+</ResponseField>
+
+<ResponseField name="chain" type="string">
+  Blockchain network the rule is configured for. Must match the virtual account's destination chain.
+</ResponseField>
+
+<ResponseField name="includeHIFIFee" type="boolean">
+  Whether HIFI platform fees are included in fee calculations.
+</ResponseField>
+
+<ResponseField name="rules" type="array">
+  Array of fee rules with their configuration, including type, calculation model, values, and beneficiary wallets.
+</ResponseField>
+
+<Info>
+For detailed field documentation, see the [Create Settlement Rule](/api-reference/virtual-account/create-settlement-rule) API reference.
+</Info>
 
 ## Rule Types
 
@@ -147,29 +188,170 @@ Settlement rules support two calculation models that can be combined to create f
   </Accordion>
 </AccordionGroup>
 
-## Apply Rule to Virtual Account
+## Applying Rules to Virtual Accounts
 
-After creating a settlement rule, associate it with a specific user's virtual account:
+After creating a settlement rule, associate it with a specific user's virtual account using the [Apply Settlement Rule](/api-reference/virtual-account/apply-settlement-rule) endpoint.
+
+### Request
 
 ```bash
-curl --request POST \
-     --url https://production.hifibridge.com/v2/users/{userId}/virtual-accounts/{accountId}/settlement-rules/{ruleId} \
-     --header 'accept: application/json'
+curl -X POST "https://sandbox.hifibridge.com/v2/users/{userId}/virtual-accounts/{accountId}/settlement-rules/{ruleId}" \
+  -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
+**Path Parameters:**
+
+- **userId** (required): User ID who owns the virtual account
+- **accountId** (required): Virtual account ID to apply the rule to
+- **ruleId** (required): Settlement rule ID from the create response
+
 <Warning>
-  Settlement rules must be created on the same blockchain network as the virtual account's destination chain. For example, a virtual account configured for POLYGON can only use settlement rules created on POLYGON.
+Settlement rules must be created on the same blockchain network as the virtual account's destination chain. For example, a virtual account configured for POLYGON can only use settlement rules created on POLYGON.
 </Warning>
 
-## Fee Distribution
+## How Fee Distribution Works
 
 When a transaction is processed through a virtual account with settlement rules:
 
-1. The transaction amount is received through the virtual account
-3. Fees are automatically deducted from the transaction
-4. The remaining amount is sent to the virtual account's destination wallet
-5. Fee payments are sent to the specified wallet addresses
+<Steps>
+  <Step title="Transaction received">
+    The transaction amount is received through the virtual account.
+  </Step>
+  <Step title="Fees calculated">
+    Fees are automatically calculated based on the settlement rule configuration.
+  </Step>
+  <Step title="Amounts distributed">
+    The remaining amount is sent to the virtual account's destination wallet, and fee payments are sent to the specified wallet addresses.
+  </Step>
+</Steps>
 
 ### Monitoring Fees
 
-Track settlement transactions and fee distributions by monitoring the specified wallet addresses.
+Track settlement transactions and fee distributions by monitoring the specified wallet addresses. Each fee distribution includes an on-chain transaction hash for verification.
+
+## Key Concepts
+
+<AccordionGroup>
+  <Accordion title="Calculation Models">
+    Settlement rules support two calculation models:
+    
+    **Fixed Model:**
+    - Applies a single rate or value to all transactions
+    - Use for consistent pricing regardless of transaction size
+    - Example: 0.1% of all transactions or $1 flat fee per transaction
+    
+    **Tiered Model:**
+    - Applies different rates or values based on transaction amount ranges
+    - Use for volume-based pricing (e.g., lower fees for larger transactions)
+    - Example: 0.1% for transactions under $1,000, 0.05% for transactions over $1,000
+    
+    Both models can use either percentage or fixed values.
+  </Accordion>
+
+  {" "}
+
+  <Accordion title="Fee Types">
+    Each rule can use one of two fee types:
+    
+    **Percentage Fees:**
+    - Calculated as a percentage of the transaction amount
+    - Specified as a decimal value (e.g., `0.001` for 0.1%)
+    - Example: 0.1% of a $1,000 transaction = $1
+    
+    **Fixed Fees:**
+    - Flat amount regardless of transaction size
+    - Specified as a number (e.g., `0.5` for $0.50)
+    - Example: $1 flat fee per transaction
+    
+    You can combine multiple rules with different types in a single settlement rule configuration.
+  </Accordion>
+
+  {" "}
+
+  <Accordion title="HIFI Fee Inclusion">
+    The `includeHIFIFee` parameter controls whether HIFI's platform fee is included in your fee calculation:
+    
+    - **false** (default): Your fee is calculated on the base transaction amount
+    - **true**: Your fee is calculated on the transaction amount plus HIFI's fee
+    
+    Example with `includeHIFIFee: true`:
+    - Transaction: $1,000
+    - HIFI fee: $10 (1%)
+    - Your fee (0.1%): Calculated on $1,010 = $1.01
+  </Accordion>
+
+  {" "}
+
+  <Accordion title="Tiered Pricing">
+    Tiered rules use amount ranges to apply different rates:
+    
+    ```json
+    {
+      "type": "PERCENTAGE",
+      "calculationModel": "TIERED",
+      "tiers": [
+        {
+          "max": "1000",
+          "min": "",
+          "value": 0.0007
+        },
+        {
+          "max": "5000",
+          "min": "1000",
+          "value": 0.0005
+        },
+        {
+          "max": "",
+          "min": "5000",
+          "value": 0.0002
+        }
+      ]
+    }
+    ```
+    
+    - Leave `min` empty for the first tier (0 to max)
+    - Leave `max` empty for the last tier (min and above)
+    - Tiers should not overlap and should cover all possible amounts
+  </Accordion>
+
+  {" "}
+
+  <Accordion title="Rule Order">
+    When multiple rules are specified, they are processed in order:
+    
+    1. Each rule is calculated independently
+    2. Fees are deducted sequentially
+    3. The final amount sent to the destination wallet is the transaction amount minus all fees
+    
+    Example with two rules (0.1% + $1):
+    - Transaction: $1,000
+    - Rule 1 (0.1%): $1
+    - Rule 2 ($1 flat): $1
+    - Total fees: $2
+    - Destination receives: $998
+  </Accordion>
+
+  {" "}
+
+  <Accordion title="Chain Compatibility">
+    Settlement rules must match the virtual account's blockchain:
+    
+    - Create the rule on the same chain as the virtual account's destination
+    - POLYGON virtual accounts require POLYGON settlement rules
+    - BASE virtual accounts require BASE settlement rules
+    - Attempting to apply an incompatible rule will fail
+    
+    You can create the same rule configuration on multiple chains if needed.
+  </Accordion>
+</AccordionGroup>
+
+## Getting Help
+
+- 📧 **Email:** support@hifibridge.com
+- 💬 **Slack:** Message us in our shared Slack channel
+
+## Related Resources
+
+- [Virtual Accounts](/docs/accounts/virtual-accounts) - Set up reusable bank accounts for deposits
+- [Developer Fees](/docs/features/developer-fees) - Fee calculation for offramp transactions
+- [API Reference](/api-reference/virtual-account/create-settlement-rule) - Complete endpoint documentation

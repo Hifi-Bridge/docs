@@ -1,71 +1,209 @@
 ---
 title: "Transfer Approvals"
+sidebarTitle: "Transfer Approvals"
 ---
 
-This feature introduces a maker–checker workflow ("Four Eyes Principle") to on-chain transfers, ensuring that any transfer initiated by one User must be explicitly approved by another authorized User before it is executed.
+**Transfer Approvals** introduce a maker–checker workflow ("Four Eyes Principle") to on-chain transfers, ensuring that any transfer initiated by one user must be explicitly approved by another authorized user before it is executed.
 
 <Info>
-  This release applies only to on-chain stablecoin transfers (wallet transfers,
-  batch transfers, and bridging).
+This feature applies only to on-chain stablecoin transfers (wallet transfers, batch transfers, and bridging). Onramp and offramp transactions are not included.
 </Info>
 
-## How Transfer Approvals work
+## How Transfer Approvals Work
 
-### Approvals on Dashboard
+<Steps>
+  <Step title="Initiate transfer">
+    Create a transfer with `requireApproval: true` to enter the approval workflow.
+  </Step>
+  <Step title="Await approval">
+    The transfer remains in a pending state until an authorized approver reviews and approves it.
+  </Step>
+  <Step title="Approve or reject">
+    An authorized user (typically an Admin) reviews and either approves or rejects the transfer request.
+  </Step>
+  <Step title="Transfer executes">
+    If approved, the transfer proceeds normally. If rejected, the transfer is cancelled.
+  </Step>
+</Steps>
 
-- Members can initiate wallet transfers (onramp/offramp restricted to Admins)
-- Member transfers require Admin approval before execution
-- Email notifications sent for approvals/rejections
-- Admin transfers execute without approval
+## Implementation Options
 
-### Approvals on API
+Transfer approvals work differently depending on where transfers are initiated:
 
-A new parameter `requireApproval` can be included when creating transfers. If set to `true`, the transfer will enter the approval workflow until it is approved or rejected.
+### Dashboard Approvals
 
-### Create Transfer with Approval
+When using the HIFI Dashboard:
+
+- **Members** can initiate wallet transfers (onramp/offramp restricted to Admins)
+- **Member transfers** require Admin approval before execution
+- **Email notifications** are sent for approvals/rejections
+- **Admin transfers** execute without approval
+
+### API Approvals
+
+When using the API, include the `requireApproval` parameter when creating transfers. If set to `true`, the transfer will enter the approval workflow until it is approved or rejected.
+
+## Creating Transfers with Approval
+
+Include the `requireApproval` parameter when creating transfers to require approval before execution.
+
+### Request
 
 ```bash
-curl --request POST \
-     --url https://production.hifibridge.com/v2/wallets/transfers \
-     --header 'accept: application/json' \
-     --header 'content-type: application/json' \
-     --data '{
-  "currency": "usdc",
-  "amount": 100,
-  "chain": "POLYGON",
-  "source": {
-    "userId": "user-id"
-  },
-  "destination": {
-    "userId": "user-id"
-  },
-  "requireApproval": true
-}'
+curl -X POST "https://sandbox.hifibridge.com/v2/wallets/transfers" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "currency": "usdc",
+    "amount": 100,
+    "chain": "POLYGON",
+    "source": {
+      "userId": "7d54a7a7-dac3-4313-8b09-27fa4b7fd1ee"
+    },
+    "destination": {
+      "userId": "12c1c496-8f57-41a1-8292-dbe6547791ce"
+    },
+    "requireApproval": true
+  }'
 ```
 
-The parameter defaults to `false`, so existing integrations are unaffected. This gives you the flexibility to define your own rules for when Admin approval is required.
+**Request Fields:**
 
-### Endpoints
+- **requireApproval** (optional): Set to `true` to require approval before execution. Defaults to `false`, so existing integrations are unaffected.
 
-- `POST /wallets/transfers` – stablecoin to stablecoin
-- `POST /wallets/transfers/batches` – stablecoin batch
-- `POST /wallets/bridges` – stablecoin bridging
+**Standard Transfer Fields:**
+
+- **currency** (required): Stablecoin currency code (e.g., `usdc`)
+- **amount** (required): Transfer amount
+- **chain** (required): Blockchain network (e.g., `POLYGON`, `ETHEREUM`, `BASE`)
+- **source** (required): Source wallet details including userId
+- **destination** (required): Destination wallet details including userId
+
+### Supported Endpoints
+
+The `requireApproval` parameter is supported on:
+
+- `POST /v2/wallets/transfers` – Stablecoin to stablecoin transfers
+- `POST /v2/wallets/transfers/batches` – Stablecoin batch transfers
+- `POST /v2/wallets/bridges` – Stablecoin bridging transfers
 
 <Info>
-  {" "}
-  Because bridging is quote based, quotes are only generated after approval. This
-  ensures that they do not expire while waiting for review.
+Because bridging is quote-based, quotes are only generated after approval. This ensures that they do not expire while waiting for review.
 </Info>
+
+## Transfer Status
+
+When a transfer requires approval, it enters a pending state:
+
+- **PENDING_APPROVAL**: Transfer is awaiting approval
+- **APPROVED**: Transfer was approved and will proceed
+- **REJECTED**: Transfer was rejected and will not execute
+
+Check the transfer status using the [Retrieve Transfer](/api-reference/wallet/retrieve-transfer) endpoint to monitor approval status.
 
 ## Notifications
 
-- Admins receive email notifications when a transfer is pending approval.
-- Members receive email notifications when their transfer request is approved or rejected.
+### Email Notifications
 
-### Webhooks
+- **Admins** receive email notifications when a transfer is pending approval
+- **Members** receive email notifications when their transfer request is approved or rejected
 
-If your organization has enabled webhooks, you can also listen for transfer approval events:
+### Webhook Events
+
+If your organization has enabled webhooks, you can listen for transfer approval events:
 
 - `TRANSFER.APPROVAL.PENDING` - Request for approval
 - `TRANSFER.APPROVAL.APPROVED` - Transfer was approved
 - `TRANSFER.APPROVAL.REJECTED` - Transfer was rejected
+
+Subscribe to these events to automate your approval workflow and update your system when approvals are processed.
+
+## Key Concepts
+
+<AccordionGroup>
+  <Accordion title="Approval Workflow">
+    Transfer approvals follow a simple workflow:
+    
+    1. **Transfer created** with `requireApproval: true`
+    2. **Status changes** to `PENDING_APPROVAL`
+    3. **Approver notified** via email (or webhook)
+    4. **Approver reviews** the transfer in Dashboard
+    5. **Transfer approved or rejected** by authorized user
+    6. **Transfer executes** (if approved) or is cancelled (if rejected)
+    
+    Transfers without `requireApproval` or set to `false` execute immediately without approval.
+  </Accordion>
+
+  {" "}
+
+  <Accordion title="Approval Permissions">
+    Only authorized users can approve transfers:
+    
+    - **Dashboard:** Admins can approve Member-initiated transfers
+    - **API:** Users with appropriate permissions can approve transfers via the approval endpoints
+    
+    Member transfers require Admin approval. Admin transfers execute without approval.
+  </Accordion>
+
+  {" "}
+
+  <Accordion title="Quote-Based Transfers">
+    For bridging transfers (which are quote-based), quotes are generated **after** approval:
+    
+    - Prevents quote expiration while waiting for approval
+    - Ensures the quote reflects current market conditions
+    - User must wait for both approval and quote generation
+    
+    Other transfer types proceed immediately after approval.
+  </Accordion>
+
+  {" "}
+
+  <Accordion title="Approval Timing">
+    Consider approval timing in your workflows:
+    
+    - **Pending state**: Transfers remain in `PENDING_APPROVAL` until reviewed
+    - **No timeout**: Approvals don't automatically expire (but quotes do if applicable)
+    - **Manual action required**: Approvals must be explicitly approved or rejected
+    
+    Implement monitoring to ensure transfers don't remain pending indefinitely.
+  </Accordion>
+
+  {" "}
+
+  <Accordion title="Conditional Approvals">
+    You can implement conditional approval logic:
+    
+    - **High-value transfers**: Require approval for amounts above a threshold
+    - **External wallets**: Require approval for transfers to new or external wallets
+    - **Risk-based**: Require approval based on transaction patterns
+    
+    The `requireApproval` parameter gives you full control over when approvals are needed.
+  </Accordion>
+
+  {" "}
+
+  <Accordion title="Batch Transfers">
+    Batch transfers support approval workflows:
+    
+    - Set `requireApproval: true` when creating a batch
+    - The entire batch requires approval before execution
+    - If approved, all transfers in the batch proceed
+    - If rejected, the entire batch is cancelled
+    
+    Individual batch transfers cannot be approved separately.
+  </Accordion>
+</AccordionGroup>
+
+## Getting Help
+
+- 📧 **Email:** support@hifibridge.com
+- 💬 **Slack:** Message us in our shared Slack channel
+
+## Related Resources
+
+- [Wallet Transfers](/docs/wallets/index) - Complete guide to wallet transfers
+- [Batch Transfers](/docs/features/batch-transfers) - Execute multiple transfers at once
+- [Bridging](/docs/transfers/bridging) - Transfer stablecoins between networks
+- [Webhooks](/docs/webhooks) - Real-time transfer approval notifications
+- [API Reference](/api-reference/wallet/create-transfer) - Complete endpoint documentation

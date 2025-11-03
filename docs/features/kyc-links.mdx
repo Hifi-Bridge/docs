@@ -1,0 +1,433 @@
+---
+title: "KYC Links"
+---
+
+**KYC Links** enable you to collect Know Your Customer (KYC) information from users through a secure, hosted flow. Use KYC links to create a user, unlock rails for a user, or submit KYC for a user.
+
+## How KYC Links Work
+
+<Steps>
+  <Step title="Generate KYC link">
+    Create a unique KYC link for a user, optionally specifying which rails require verification.
+  </Step>
+  <Step title="Present to user">
+    Share the link with the user via email or redirect them to the KYC page.
+  </Step>
+  <Step title="User completes KYC">
+    User fills out their personal information and uploads required documents.
+  </Step>
+  <Step title="Verification and redirect">
+    HIFI verifies the information and redirects the user back to your application.
+  </Step>
+</Steps>
+
+## Use Cases
+
+KYC links support two primary workflows:
+
+### Create New User with KYC
+
+Generate a KYC link without providing a user ID. The link will:
+1. Create a new HIFI user account
+2. Collect KYC information for specified rails
+3. Return the new user ID after completion
+
+**Best for:** Initial user onboarding when you don't have a HIFI user yet.
+
+### Submit KYC for Existing User
+
+Generate a KYC link with a user ID to collect or update KYC information for an existing user.
+
+**Best for:** Adding new rails, updating information, or re-submitting after rejection.
+
+## Creating KYC Links
+
+Use the [Generate KYC Link](/api-reference/kyc-link/generate-kyc-link) endpoint to create KYC links.
+
+**Request:**
+
+Generate a KYC link for creating a new user:
+
+```bash
+curl -X POST "https://sandbox.hifibridge.com/v2/kyc-link" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "userType": "INDIVIDUAL",
+    "rails": ["USD"],
+    "redirectUrl": "https://yourapp.com/kyc-complete",
+    "recipientEmail": "user@example.com",
+    "templateId": "template_id"
+  }'
+```
+
+Generate a KYC link for unlocking rails for an existing user:
+
+```bash
+curl -X POST "https://sandbox.hifibridge.com/v2/kyc-link" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "userId": "usr_abc123",
+    "rails": ["USD"],
+    "redirectUrl": "https://yourapp.com/kyc-complete",
+    "recipientEmail": "user@example.com",
+    "templateId": "template_id"
+  }'
+```
+
+**Request Fields:**
+
+For creating a new user:
+- **userType** (required): Type of user account - `INDIVIDUAL` or `BUSINESS`
+- **rails** (optional): Array of KYC rails to unlock - `USD`, `SOUTH_AMERICA_STANDARD`, `AFRICA_GENERAL`, `AFRICA_NIGERIA`. If not provided, only wallet will be created
+- **redirectUrl** (optional): URL to redirect to after KYC information is submitted (userId will be appended as a query parameter)
+- **recipientEmail** (optional): Email address to send the KYC link to (only in production)
+- **templateId** (optional): Template ID to use for the KYC link
+
+For unlocking rails for existing user:
+- **userId** (required): Existing user ID
+- **rails** (required): Array of KYC rails to unlock - `USD`, `SOUTH_AMERICA_STANDARD`, `AFRICA_GENERAL`, `AFRICA_NIGERIA`
+- **redirectUrl** (optional): URL to redirect to after KYC information is submitted (userId will be appended as a query parameter)
+- **recipientEmail** (optional): Email address to send the KYC link to (only in production)
+- **templateId** (optional): Template ID to use for the KYC link
+
+**Response:**
+
+```json
+{
+  "kycLinkUrl": "http://dashboard.hifibridge.com/production/kyc-link?sessionToken=768fb84ad65284cb5fffda212f5e779829318acwdab5a36efbf83c4f44369c73"
+}
+```
+
+<Info>
+For detailed field documentation, see the [Generate KYC Link](/api-reference/kyc-link/generate-kyc-link) API reference.
+</Info>
+
+## Implementation Options
+
+### Option 1: Redirect Flow
+
+Redirect users to the KYC link URL for a fully hosted experience.
+
+```javascript
+// Generate KYC link
+const response = await fetch('https://sandbox.hifibridge.com/v2/kyc-link', {
+  method: 'POST',
+  headers: {
+    'Authorization': 'Bearer YOUR_API_KEY',
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    userType: 'INDIVIDUAL',
+    rails: ['USD'],
+    redirectUrl: 'https://yourapp.com/kyc-complete'
+  })
+});
+
+const { kycLinkUrl } = await response.json();
+
+// Redirect user
+window.location.href = kycLinkUrl;
+```
+
+After KYC completion, the user is redirected to your `redirectUrl` with the user ID appended:
+
+```
+https://yourapp.com/kyc-complete?userId=usr_abc123
+```
+
+### Option 2: Email Link
+
+Have HIFI automatically email the KYC link to the user (production only).
+
+```javascript
+const response = await fetch('https://production.hifibridge.com/v2/kyc-link', {
+  method: 'POST',
+  headers: {
+    'Authorization': 'Bearer YOUR_API_KEY',
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    userType: 'INDIVIDUAL',
+    rails: ['USD'],
+    recipientEmail: 'user@example.com',
+    redirectUrl: 'https://yourapp.com/kyc-complete'
+  })
+});
+
+const { kycLinkUrl } = await response.json();
+
+// User receives email with KYC link
+// No need to redirect - user clicks link from email
+```
+
+<Note>
+**Production Only:** The `recipientEmail` feature is only available in production environments for security reasons. In sandbox, you must manually share the link.
+</Note>
+
+## Handling KYC Completion
+
+After users complete KYC, monitor their status and handle the redirect.
+
+### Redirect URL Parameters
+
+When users complete KYC, they're redirected to your `redirectUrl` with query parameters:
+
+```
+https://yourapp.com/kyc-complete?userId=usr_abc123
+```
+
+Extract the user ID and check their KYC status:
+
+```javascript
+// On your redirect page
+const urlParams = new URLSearchParams(window.location.search);
+const userId = urlParams.get('userId');
+
+// Fetch user to check KYC status
+const response = await fetch(`https://sandbox.hifibridge.com/v2/users/${userId}`, {
+  headers: {
+    'Authorization': 'Bearer YOUR_API_KEY'
+  }
+});
+const user = await response.json();
+console.log('KYC Status:', user.kycStatus);
+```
+
+### Monitoring KYC Status
+
+Use webhooks to receive real-time KYC status updates:
+
+```javascript
+// Subscribe to KYC webhook events
+function handleKycUpdate(event) {
+  const { id, kycStatus, rails } = event.data;
+  
+  if (kycStatus === 'APPROVED') {
+    // Enable features requiring KYC
+    enableOfframping(id);
+  } else if (kycStatus === 'REJECTED') {
+    // Notify user to retry
+    sendKycRejectionEmail(id);
+  }
+}
+```
+
+See [Webhooks](/docs/webhooks) for webhook setup.
+
+## Rails and KYC Requirements
+
+Different rails have different KYC requirements:
+
+| Rail                        | Description                       |
+| :-------------------------- | :-------------------------------- |
+| **USD**                     | United States Dollar rail         |
+| **SOUTH_AMERICA_STANDARD**  | Standard South American rails     |
+| **AFRICA_GENERAL**          | General African rails             |
+| **AFRICA_NIGERIA**          | Nigeria-specific rail             |
+
+<Info>
+**Multiple Rails:** You can request KYC for multiple rails in a single link by passing multiple rails in the `rails` array. The user completes one form that satisfies all requirements.
+</Info>
+
+## Custom Templates
+
+Brand the KYC page with your company logo and colors:
+
+1. **Contact Support:** Request custom template creation
+2. **Provide Branding:** Share your logo and color scheme
+3. **Receive Template ID:** HIFI creates a template and provides the ID
+4. **Use Template ID:** Include `templateId` when generating links
+
+```bash
+curl -X POST "https://sandbox.hifibridge.com/v2/kyc-link" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "userType": "INDIVIDUAL",
+    "rails": ["USD"],
+    "templateId": "template_id"
+  }'
+```
+
+## Key Concepts
+
+<AccordionGroup>
+  <Accordion title="User Creation via KYC Link">
+    When you generate a KYC link **without** a `userId`, the KYC flow will:
+    
+    1. Create a new HIFI user account automatically
+    2. Collect KYC information during the flow
+    3. Return the new user ID via redirect URL
+    
+    This streamlines onboarding by combining user creation and KYC in one step.
+    
+    ```javascript
+    // No userId provided - creates new user
+    const response = await fetch('https://sandbox.hifibridge.com/v2/kyc-link', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer YOUR_API_KEY',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        userType: 'INDIVIDUAL',
+        rails: ['USD'],
+        redirectUrl: 'https://yourapp.com/kyc-complete'
+      })
+    });
+    const { kycLinkUrl } = await response.json();
+    
+    // After completion, get userId from redirect
+    // https://yourapp.com/kyc-complete?userId=usr_new123
+    ```
+  </Accordion>
+
+  <Accordion title="Updating Existing Users">
+    Generate a KYC link **with** a `userId` to submit or update KYC for an existing user.
+    
+    **Use cases:**
+    - Adding KYC for a new rail
+    - Updating expired documents
+    - Re-submitting after rejection
+    
+    ```javascript
+    // Existing user needs USD rail KYC
+    const response = await fetch('https://sandbox.hifibridge.com/v2/kyc-link', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer YOUR_API_KEY',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        userId: 'usr_abc123',
+        rails: ['USD'],
+        redirectUrl: 'https://yourapp.com/kyc-complete'
+      })
+    });
+    const { kycLinkUrl } = await response.json();
+    ```
+  </Accordion>
+
+  <Accordion title="KYC Status States">
+    Users progress through several KYC statuses:
+    
+    - **NOT_SUBMITTED**: No KYC information submitted yet
+    - **PENDING**: KYC submitted and under review
+    - **APPROVED**: KYC verified and approved
+    - **REJECTED**: KYC rejected (see rejection reason)
+    - **EXPIRED**: KYC documents expired (rare, annual review)
+    
+    Subscribe to KYC webhooks to track status changes in real-time.
+  </Accordion>
+
+  <Accordion title="Individual vs Business KYC">
+    Choose `userType` based on who will own the account:
+    
+    **INDIVIDUAL:**
+    - Personal account for one person
+    - Requires personal identification
+    - Faster verification process
+    
+    **BUSINESS:**
+    - Company or organization account
+    - Requires business documentation
+    - May require additional verification steps
+    
+    Cannot change user type after creation - choose carefully.
+  </Accordion>
+
+  <Accordion title="Session Tokens">
+    The `sessionToken` in the `kycLinkUrl` can be used for programmatic KYC submission if you want to build your own KYC UI instead of using the hosted page. Contact support for documentation on this advanced use case.
+  </Accordion>
+</AccordionGroup>
+
+## Complete Implementation Example
+
+Here's a complete flow for user onboarding with KYC:
+
+```javascript
+// Step 1: Generate KYC link during onboarding
+async function startUserOnboarding(email) {
+  const response = await fetch('https://sandbox.hifibridge.com/v2/kyc-link', {
+    method: 'POST',
+    headers: {
+      'Authorization': 'Bearer YOUR_API_KEY',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      userType: 'INDIVIDUAL',
+      rails: ['USD'],
+      redirectUrl: `${window.location.origin}/onboarding/complete`,
+      recipientEmail: email
+    })
+  });
+  const { kycLinkUrl } = await response.json();
+  
+  // Option A: Redirect user
+  window.location.href = kycLinkUrl;
+  
+  // Option B: Email sent automatically (production only)
+  // Just show success message
+}
+
+// Step 2: Handle redirect after KYC completion
+async function handleKycComplete() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const userId = urlParams.get('userId');
+  
+  if (!userId) {
+    console.error('No userId in redirect');
+    return;
+  }
+  
+  // Fetch user to verify KYC status
+  const response = await fetch(`https://sandbox.hifibridge.com/v2/users/${userId}`, {
+    headers: {
+      'Authorization': 'Bearer YOUR_API_KEY'
+    }
+  });
+  const user = await response.json();
+  
+  // Check KYC status
+  if (user.kycStatus === 'APPROVED') {
+    // KYC approved - continue onboarding
+    console.log('KYC approved! User can now offramp.');
+    redirectToApp();
+  } else if (user.kycStatus === 'PENDING') {
+    // Still under review
+    showPendingMessage();
+  } else if (user.kycStatus === 'REJECTED') {
+    // Rejected - allow retry
+    showRejectionMessage(user.kycRejectionReason);
+  }
+}
+
+// Step 3: Subscribe to webhook for status updates
+function handleWebhook(event) {
+  if (event.eventType === 'KYC_UPDATE') {
+    const { id, kycStatus } = event.data;
+    
+    // Update your database
+    updateUserKycStatus(id, kycStatus);
+    
+    // Notify user if needed
+    if (kycStatus === 'APPROVED') {
+      sendApprovalEmail(id);
+    }
+  }
+}
+```
+
+## Getting Help
+
+- 📧 **Email:** support@hifi.com
+- 💬 **Slack:** Message us in our shared Slack channel
+
+## Related Resources
+
+- [Users](/docs/users) - Understanding user accounts and KYC status
+- [Webhooks](/docs/webhooks) - Monitor KYC status changes in real-time
+- [Offramp Accounts](/docs/accounts/offramp-accounts) - KYC is required for offramping
+- [API Reference](/api-reference/kyc-link/generate-kyc-link) - Complete endpoint documentation

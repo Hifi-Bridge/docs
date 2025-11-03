@@ -104,7 +104,7 @@
             "pages": [
               {
                 "group": "Onboarding",
-                "pages": ["docs/features/tos-link", "docs/features/kyc-link"]
+                "pages": ["docs/features/tos-links", "docs/features/kyc-links"]
               },
               "docs/features/exchange-rates",
               "docs/features/batch-transfers",

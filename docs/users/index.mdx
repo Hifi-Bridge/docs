@@ -172,15 +172,11 @@ These accounts are created separately after user creation and require KYC verifi
 
 {" "}
 
-<Accordion title="Rails">
+<Accordion title="Rails & KYC">
   A "rail" is a payment corridor enabling conversions between specific fiat
   currencies and stablecoins. For example, the USD rail allows conversion
   between USD and USDC. Each rail has its own KYC requirements.
 </Accordion>
-
-  <Accordion title="User Types and Business Logic">
-    **Individual users** represent natural persons and have simpler KYC requirements. **Business users** represent legal entities and require additional documentation like articles of incorporation, beneficial ownership information, and authorized signer verification.
-  </Accordion>
 </AccordionGroup>
 
 ## Common Patterns
@@ -263,6 +259,7 @@ These accounts are created separately after user creation and require KYC verifi
         }
       ]'
     ```
+
   </Step>
 
   <Step title="Submit KYC application">
