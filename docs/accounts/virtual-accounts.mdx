@@ -23,7 +23,7 @@ Each virtual account is configured for a specific conversion pair (e.g., USD →
 
 ## Creating Virtual Accounts
 
-Create a virtual account using the [Create Virtual Account](/api-reference/virtual-account/create-a-virtual-account) endpoint.
+Create a virtual account using the [Create Virtual Account](https://docs.hifibridge.com/api-reference/virtual-account/create-a-virtual-account) endpoint.
 
 **Request:**
 
@@ -60,7 +60,7 @@ curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/virtual-account
 
 <Warning>
   **USD Only:** Virtual accounts currently support USD deposits only. For other
-  currencies, use the [Onramp API](/api-reference/onramp/create-an-onramp).
+  currencies, use the [Onramp API](https://docs.hifibridge.com/api-reference/onramp/create-an-onramp).
 </Warning>
 
 **Response:**
@@ -291,7 +291,7 @@ curl -X GET "https://sandbox.hifibridge.com/v2/onramps?userId=usr_abc123" \
 
 ### Update Configuration
 
-Change the destination chain or currency for an existing virtual account using the [Update Virtual Account](/api-reference/virtual-account/update-a-virtual-account) endpoint.
+Change the destination chain or currency for an existing virtual account using the [Update Virtual Account](https://docs.hifibridge.com/api-reference/virtual-account/update-a-virtual-account) endpoint.
 
 **Request:**
 
@@ -312,7 +312,7 @@ curl -X PATCH "https://sandbox.hifibridge.com/v2/users/usr_abc123/virtual-accoun
 
 ### Deactivate Account
 
-Temporarily disable a virtual account to prevent new deposits using the [Deactivate Virtual Account](/api-reference/virtual-account/deactivate-a-virtual-account) endpoint.
+Temporarily disable a virtual account to prevent new deposits using the [Deactivate Virtual Account](https://docs.hifibridge.com/api-reference/virtual-account/deactivate-a-virtual-account) endpoint.
 
 **Request:**
 
@@ -359,7 +359,7 @@ curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/virtual-account
 </Accordion>
 
   <Accordion title="External Wallets">
-    By default, stablecoins are sent to the user's HIFI wallet. Use the `externalWalletId` parameter to send to an external wallet address instead. The external wallet must be pre-registered via the [External Wallets API](/api-reference/external-wallet/create-external-wallet).
+    By default, stablecoins are sent to the user's HIFI wallet. Use the `externalWalletId` parameter to send to an external wallet address instead. The external wallet must be pre-registered via the [External Wallets API](https://docs.hifibridge.com/api-reference/external-wallet/create-external-wallet).
     
     <Note>
       **Registration Required:** Unlike regular wallet transfers (which can send directly to any address), virtual accounts require external wallets to be registered first when using the `externalWalletId` parameter. If you prefer not to register, create a standard virtual account without `externalWalletId` and then transfer funds to the external wallet using the [Wallet Transfer API](/docs/wallets).
@@ -369,7 +369,7 @@ curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/virtual-account
 
 ## Sandbox Testing
 
-In sandbox, simulate deposits without real bank transfers using the [Simulate Deposit](/api-reference/virtual-account/simulate-a-deposit) endpoint.
+In sandbox, simulate deposits without real bank transfers using the [Simulate Deposit](https://docs.hifibridge.com/api-reference/virtual-account/simulate-a-deposit) endpoint.
 
 **Request:**
 
@@ -525,4 +525,4 @@ Deposits to this virtual account will be converted to USDC and sent directly to 
 - [Users](/docs/users) - Understand user creation and KYC requirements
 - [Onramps](/docs/transfers/onramps) - Alternative onramp methods for non-USD currencies
 - [Webhooks](/docs/webhooks) - Subscribe to account and onramp events
-- [API Reference](/api-reference/virtual-account/create-a-virtual-account) - Complete endpoint documentation
+- [API Reference](https://docs.hifibridge.com/api-reference/virtual-account/create-a-virtual-account) - Complete endpoint documentation

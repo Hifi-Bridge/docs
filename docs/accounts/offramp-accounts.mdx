@@ -28,7 +28,7 @@ Each offramp account is configured for a specific currency and region (e.g., USD
 
 ## Creating Offramp Accounts
 
-Create an offramp account using the [Create Account](/api-reference/account/create-an-account) endpoint. The required fields vary by region and currency.
+Create an offramp account using the [Create Account](https://docs.hifibridge.com/api-reference/account/create-an-account) endpoint. The required fields vary by region and currency.
 
 ### USD Accounts
 
@@ -394,12 +394,12 @@ curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/accounts" \
 </ResponseField>
 
 <Note>
-Check the [Africa Rail documentation](/docs/compliance/rails/africa) for supported combinations of country, currency, and financial institution.
+Check the [Africa Rail documentation](/docs/rails/africa) for supported combinations of country, currency, and financial institution.
 </Note>
 
 ## Using Offramp Accounts
 
-Once created and active, reference the account when creating offramp transfers using the [Create Offramp](/api-reference/offramp/create-an-offramp) endpoint.
+Once created and active, reference the account when creating offramp transfers using the [Create Offramp](https://docs.hifibridge.com/api-reference/offramp/create-an-offramp) endpoint.
 
 **Request:**
 
@@ -761,4 +761,4 @@ After creating an offramp account, HIFI validates the account details:
 - [Rails](/docs/rails) - Understand KYC requirements for different rails
 - [Offramps](/docs/transfers/offramps) - Complete guide to executing offramp transfers
 - [Webhooks](/docs/webhooks) - Real-time account validation notifications
-- [API Reference](/api-reference/account/create-an-account) - Complete endpoint documentation
+- [API Reference](https://docs.hifibridge.com/api-reference/account/create-an-account) - Complete endpoint documentation

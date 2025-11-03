@@ -40,6 +40,100 @@
       "og:image": "/og.png"
     }
   },
+  "redirects": [
+    {
+      "source": "/docs/overview",
+      "destination": "/docs/index"
+    },
+    {
+      "source": "/docs/compliance/documents/overview",
+      "destination": "/docs/compliance/documents/index"
+    },
+    {
+      "source": "/docs/compliance/documents/supported-identity-documents",
+      "destination": "/docs/references/identity-documents"
+    },
+    {
+      "source": "/docs/rails/overview",
+      "destination": "/docs/rails/index"
+    },
+    {
+      "source": "/docs/rails/usd-individual",
+      "destination": "/docs/rails/usd"
+    },
+    {
+      "source": "/docs/rails/usd-business",
+      "destination": "/docs/rails/usd"
+    },
+    {
+      "source": "/docs/compliance/currencies",
+      "destination": "/docs/references/currencies"
+    },
+    {
+      "source": "/docs/compliance/references/:path*",
+      "destination": "/docs/references/:path*"
+    },
+    {
+      "source": "/docs/transfers/wallets",
+      "destination": "/docs/transfers/onchain"
+    },
+    {
+      "source": "/docs/users/features/kyc-link",
+      "destination": "/docs/features/kyc-links"
+    },
+    {
+      "source": "/docs/transfers/features/batch-transfers",
+      "destination": "/docs/features/batch-transfers"
+    },
+    {
+      "source": "/docs/transfers/features/virtual-accounts",
+      "destination": "/docs/accounts/virtual-accounts"
+    },
+    {
+      "source": "/docs/transfers/features/transfer-approvals",
+      "destination": "/docs/features/transfer-approvals"
+    },
+    {
+      "source": "/docs/transfers/features/developer-fees",
+      "destination": "/docs/features/developer-fees"
+    },
+    {
+      "source": "/docs/transfers/features/settlement-rules",
+      "destination": "/docs/features/settlement-rules"
+    },
+    {
+      "source": "/guides/quickstart",
+      "destination": "/docs/quickstart"
+    },
+    {
+      "source": "/docs/api/postman",
+      "destination": "/docs/postman"
+    },
+    {
+      "source": "/docs/webhooks/user",
+      "destination": "/docs/webhooks/user-events"
+    },
+    {
+      "source": "/docs/webhooks/kyc",
+      "destination": "/docs/webhooks/kyc-events"
+    },
+    {
+      "source": "/docs/webhooks/account",
+      "destination": "/docs/webhooks/account-events"
+    },
+    {
+      "source": "/docs/webhooks/onramp",
+      "destination": "/docs/webhooks/onramp-events"
+    },
+    {
+      "source": "/docs/webhooks/offramp",
+      "destination": "/docs/webhooks/offramp-events"
+    },
+    {
+      "source": "/docs/webhooks/wallet",
+      "destination": "/docs/webhooks/wallet-events"
+    }
+  ],
   "navigation": {
     "tabs": [
       {

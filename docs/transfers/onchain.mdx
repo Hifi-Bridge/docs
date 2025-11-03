@@ -57,7 +57,7 @@ curl -X POST "https://sandbox.hifibridge.com/v2/wallets/transfers" \
 </CodeGroup>
 
 <Warning>
-**External Wallet Registration:** Before sending to external wallet addresses, you must register them using the [External Wallets API](/api-reference/wallet/add-external-wallets-to-a-user). Unregistered addresses will cause the transfer to fail.
+**External Wallet Registration:** Before sending to external wallet addresses, you must register them using the [External Wallets API](https://docs.hifibridge.com/api-reference/wallet/add-external-wallets-to-a-user). Unregistered addresses will cause the transfer to fail.
 </Warning>
 
 The response contains the transfer details:
@@ -98,7 +98,7 @@ The response contains the transfer details:
 </Accordion>
 
 <ResponseField name="transferDetails.id" type="string">
-  Unique transfer ID. Use this to check status using the [Retrieve a crypto transfer](/api-reference/crypto-transfer/retrieve-a-crypto-transfer) endpoint.
+  Unique transfer ID. Use this to check status using the [Retrieve a crypto transfer](https://docs.hifibridge.com/api-reference/crypto-transfer/retrieve-a-crypto-transfer) endpoint.
 </ResponseField>
 
 <ResponseField name="transferDetails.status" type="string">
@@ -122,7 +122,7 @@ The response contains the transfer details:
 </ResponseField>
 
 <Info>
-For detailed response field documentation, see the [Create Crypto Transfer](/api-reference/crypto-transfer/create-a-crypto-transfer) API reference.
+For detailed response field documentation, see the [Create Crypto Transfer](https://docs.hifibridge.com/api-reference/crypto-transfer/create-a-crypto-transfer) API reference.
 </Info>
 
 ## Creating Batch Transfers
@@ -154,7 +154,7 @@ curl -X POST "https://sandbox.hifibridge.com/v2/wallets/transfers/batch" \
 ```
 
 <Warning>
-**External Wallet Registration:** External wallet addresses in batch transfers must be registered before use. Register them using the [External Wallets API](/api-reference/wallet/add-external-wallets-to-a-user).
+**External Wallet Registration:** External wallet addresses in batch transfers must be registered before use. Register them using the [External Wallets API](https://docs.hifibridge.com/api-reference/wallet/add-external-wallets-to-a-user).
 </Warning>
 
 Let's take a look at the response:
@@ -202,7 +202,7 @@ Let's take a look at the response:
 </Accordion>
 
 <ResponseField name="transferDetails.id" type="string">
-  Unique batch transfer ID. Use this to check status using the [Retrieve a crypto transfer](/api-reference/crypto-transfer/retrieve-a-crypto-transfer) endpoint.
+  Unique batch transfer ID. Use this to check status using the [Retrieve a crypto transfer](https://docs.hifibridge.com/api-reference/crypto-transfer/retrieve-a-crypto-transfer) endpoint.
 </ResponseField>
 
 <ResponseField name="transferDetails.status" type="string">
@@ -222,7 +222,7 @@ Let's take a look at the response:
 </ResponseField>
 
 <Info>
-For detailed field documentation, see the [Create Batch Transfer](/api-reference/crypto-transfer/create-a-batch-transfer) API reference.
+For detailed field documentation, see the [Create Batch Transfer](https://docs.hifibridge.com/api-reference/crypto-transfer/create-a-batch-transfer) API reference.
 </Info>
 
 ## Transaction Status
@@ -245,7 +245,7 @@ Wallet transfers progress through several statuses:
 **Status Updates:** Subscribe to `WALLET.TRANSFER.UPDATE` webhook events to receive real-time status notifications. See [Webhooks](/docs/webhooks/wallet) for setup instructions.
 </Note>
 
-Monitor transfer status using the [Retrieve Crypto Transfer](/api-reference/crypto-transfer/retrieve-a-crypto-transfer) endpoint. The response structure matches the create endpoint shown above.
+Monitor transfer status using the [Retrieve Crypto Transfer](https://docs.hifibridge.com/api-reference/crypto-transfer/retrieve-a-crypto-transfer) endpoint. The response structure matches the create endpoint shown above.
 
 ```bash
 curl -X GET "https://sandbox.hifibridge.com/v2/wallets/transfers/xfr_abc123" \
@@ -354,7 +354,7 @@ When approval is required, the response includes approval details:
     **HIFI transfers** use `userId` as the destination while **external transfers** use a `walletAddress` as the destination.
     
     <Warning>
-    **Registration Required:** External wallet addresses must be registered before use. Create an external wallet record using the [External Wallets API](/api-reference/wallet/add-external-wallets-to-a-user) before including the address in transfer requests.
+    **Registration Required:** External wallet addresses must be registered before use. Create an external wallet record using the [External Wallets API](https://docs.hifibridge.com/api-reference/wallet/add-external-wallets-to-a-user) before including the address in transfer requests.
     </Warning>
   </Accordion>
 
@@ -385,5 +385,5 @@ When approval is required, the response includes approval details:
 
 - [Wallets](/docs/wallets) - Understand wallet addresses and balances
 - [Webhooks](/docs/webhooks) - Real-time transfer status notifications
-- [API: Single Transfer](/api-reference/crypto-transfer/create-a-crypto-transfer) - Complete single transfer documentation
-- [API: Batch Transfer](/api-reference/crypto-transfer/create-a-batch-crypto-transfer) - Complete batch transfer documentation
+- [API: Single Transfer](https://docs.hifibridge.com/api-reference/crypto-transfer/create-a-crypto-transfer) - Complete single transfer documentation
+- [API: Batch Transfer](https://docs.hifibridge.com/api-reference/crypto-transfer/create-a-batch-crypto-transfer) - Complete batch transfer documentation

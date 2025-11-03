@@ -109,7 +109,7 @@ curl --request POST \
 
   <Accordion title="Create User">
 
-Once your user has accepted the Terms of Service (and you've received the webhook event or confirmed acceptance), create the user account with the [Create User](/api-reference/user/create-a-user) endpoint.
+Once your user has accepted the Terms of Service (and you've received the webhook event or confirmed acceptance), create the user account with the [Create User](https://docs.hifibridge.com/api-reference/user/create-a-user) endpoint.
 
 **Request:**
 
@@ -220,7 +220,7 @@ In this quickstart, we'll complete KYC for the **USD rail**, which allows your u
 
 <Note>
   **Rail-Specific Requirements:** Each rail has different KYC requirements based
-  on regulatory needs. Visit our [Rails page](/compliance/rails) to learn about
+  on regulatory needs. Visit our [Rails page](/docs/rails) to learn about
   available rails and their specific requirements.
 </Note>
 
@@ -588,7 +588,7 @@ curl --request POST \
 
   <Accordion title="Submit KYC">
 
-With all fields and documents provided, submit the KYC application to unlock the USD rail using the [Submit KYC](/api-reference/kyc/submit-kyc) endpoint.
+With all fields and documents provided, submit the KYC application to unlock the USD rail using the [Submit KYC](https://docs.hifibridge.com/api-reference/kyc/submit-kyc) endpoint.
 
 **Request:**
 
@@ -628,14 +628,14 @@ curl --request POST \
 
 You can either:
 
-1. **Poll** the [Retrieve KYC Status](/api-reference/kyc/retrieve-kyc-status)endpoint
+1. **Poll** the [Retrieve KYC Status](https://docs.hifibridge.com/api-reference/kyc/retrieve-kyc-status)endpoint
 2. **Listen** for `KYC.STATUS_UPDATE` [webhook events](/docs/webhooks)
 
   </Accordion>
 
    <Accordion title="Retrieve KYC Status">
 
-Check the current KYC status for the USD rail using the [Retrieve KYC Status](/api-reference/kyc/retrieve-kyc-status) endpoint.
+Check the current KYC status for the USD rail using the [Retrieve KYC Status](https://docs.hifibridge.com/api-reference/kyc/retrieve-kyc-status) endpoint.
 
 **Request:**
 
@@ -1484,7 +1484,7 @@ Wait for the status to update to `COMPLETE`, then check User A's wallet balance 
 
   <Accordion title="Transfer 1 USDC Between Wallets">
 
-Now User A will send 1 USDC to User B using the [Create a crypto transfer](/api-reference/crypto-transfer/create-a-crypto-transfer) endpoint.
+Now User A will send 1 USDC to User B using the [Create a crypto transfer](https://docs.hifibridge.com/api-reference/crypto-transfer/create-a-crypto-transfer) endpoint.
 
 **Request:**
 
@@ -1599,7 +1599,7 @@ curl --request POST \
 
 <ResponseField name="transferDetails.id" type="string">
   Unique transfer ID. **Save this** to check status using the [Retrieve a crypto
-  transfer](/api-reference/crypto-transfer/retrieve-a-crypto-transfer) endpoint.
+  transfer](https://docs.hifibridge.com/api-reference/crypto-transfer/retrieve-a-crypto-transfer) endpoint.
 </ResponseField>
 
 <ResponseField name="transferDetails.status" type="string">
@@ -1697,7 +1697,7 @@ Finally, User A will convert their remaining 1 USDC back to USD and send it to t
 
 #### Create Offramp Request
 
-Create an offramp request using the [Create an offramp](/api-reference/offramp/create-an-offramp) endpoint:
+Create an offramp request using the [Create an offramp](https://docs.hifibridge.com/api-reference/offramp/create-an-offramp) endpoint:
 
 **Request:**
 
@@ -1967,7 +1967,7 @@ curl --request POST \
 
 #### Accept the Quote
 
-After reviewing the quote, accept it to start the offramp process using the [Accept Quote](/api-reference/offramp/accept-quote) endpoint:
+After reviewing the quote, accept it to start the offramp process using the [Accept Quote](https://docs.hifibridge.com/api-reference/offramp/accept-quote) endpoint:
 
 **Request:**
 
@@ -2060,7 +2060,7 @@ curl --request POST \
 
 You can track the offramp progress by:
 
-- **Polling:** Call [Retrieve an offramp](/api-reference/offramp/retrieve-an-offramp) with the transaction ID
+- **Polling:** Call [Retrieve an offramp](https://docs.hifibridge.com/api-reference/offramp/retrieve-an-offramp) with the transaction ID
 - **Webhooks:** Subscribe to `OFFRAMP.UPDATE` events for real-time notifications
 
 In the sandbox, the offramp will complete automatically. In production, it may take 1-3 business days for the fiat to arrive in the user's bank account.
@@ -2085,6 +2085,6 @@ You've successfully completed the HIFI API quickstart! By following the steps ab
 Ready to build your integration? Here's what to explore next:
 
 - **[Webhooks](/docs/webhooks)** - Set up real-time event notifications for transaction updates
-- **[Rails Overview](/docs/compliance/rails)** - Learn about additional currency rails
+- **[Rails Overview](/docs/rails)** - Learn about additional currency rails
 - **[Error Handling](/docs/api/errors)** - Understand error codes and how to handle failures
-- **[API Reference](/api-reference)** - Explore all available endpoints and parameters
+- **[API Reference](https://docs.hifibridge.com/api-reference)** - Explore all available endpoints and parameters

@@ -22,7 +22,7 @@ Bridging follows a straightforward process:
 
 ## Creating Bridge Requests
 
-Use the [Create Bridge](/api-reference/bridge/create-a-bridge) endpoint to initiate a cross-chain transfer.
+Use the [Create Bridge](https://docs.hifibridge.com/api-reference/bridge/create-a-bridge) endpoint to initiate a cross-chain transfer.
 
 **Request:**
 
@@ -111,7 +111,7 @@ The response contains the bridge request details:
 </Accordion>
 
 <ResponseField name="transferDetails.id" type="string">
-  Unique bridge ID. Use this to check status using the [Retrieve Bridge](/api-reference/cross-chain-bridge/retrieve-a-bridging-request) endpoint.
+  Unique bridge ID. Use this to check status using the [Retrieve Bridge](https://docs.hifibridge.com/api-reference/cross-chain-bridge/retrieve-a-bridging-request) endpoint.
 </ResponseField>
 
 <ResponseField name="transferDetails.status" type="string">
@@ -139,7 +139,7 @@ The response contains the bridge request details:
 </ResponseField>
 
 <Info>
-For detailed field documentation, see the [Create Bridge](/api-reference/bridge/create-a-bridge) API reference.
+For detailed field documentation, see the [Create Bridge](https://docs.hifibridge.com/api-reference/bridge/create-a-bridge) API reference.
 </Info>
 
 ## Transaction Status
@@ -179,7 +179,7 @@ Bridge transactions progress through several phases:
 **Status Updates:** Subscribe to `WALLET.BRIDGE.CREATE` and `WALLET.BRIDGE.UPDATE` webhook events to receive real-time status notifications. See [Webhooks](/docs/webhooks) for setup instructions.
 </Note>
 
-Monitor bridge status using the [Retrieve Bridge](/api-reference/bridge/retrieve-a-bridge) endpoint.
+Monitor bridge status using the [Retrieve Bridge](https://docs.hifibridge.com/api-reference/bridge/retrieve-a-bridge) endpoint.
 
 **Request:**
 
@@ -388,4 +388,4 @@ Currently supported bridging routes:
 - [Wallet Transfers](/docs/transfers/onchain) - Same-chain transfers
 - [Wallets](/docs/wallets) - Understand wallet addresses and balances
 - [Webhooks](/docs/webhooks) - Real-time bridge status notifications
-- [API Reference](/api-reference/bridge/create-a-bridge) - Complete endpoint documentation
+- [API Reference](https://docs.hifibridge.com/api-reference/bridge/create-a-bridge) - Complete endpoint documentation

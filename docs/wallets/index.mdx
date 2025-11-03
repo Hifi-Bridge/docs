@@ -32,7 +32,7 @@ Wallets are automatically created when a user is created - no separate setup req
 
 ## Checking Balances
 
-Get real-time balance information for a specific currency on a specific chain using the [Get Wallet Balance](/api-reference/wallet/get-wallet-balance) endpoint.
+Get real-time balance information for a specific currency on a specific chain using the [Get Wallet Balance](https://docs.hifibridge.com/api-reference/wallet/get-wallet-balance) endpoint.
 
 **Request:**
 
@@ -143,7 +143,7 @@ See [Virtual Accounts](/docs/accounts/virtual-accounts) for detailed setup instr
 
 ## Tracking Deposits
 
-Track all incoming blockchain deposits via the [Get Inbound Deposits](/api-reference/wallet/get-inbound-deposits) endpoint, which returns a full history of stablecoins received by the user's wallet.
+Track all incoming blockchain deposits via the [Get Inbound Deposits](https://docs.hifibridge.com/api-reference/wallet/get-inbound-deposits) endpoint, which returns a full history of stablecoins received by the user's wallet.
 
 **Request:**
 
@@ -219,7 +219,7 @@ Wallets can send stablecoins through two methods:
 
 ### Wallet Transfers
 
-Send stablecoins to other HIFI users or external wallet addresses using the [Create Crypto Transfer](/api-reference/crypto-transfer/create-a-crypto-transfer) endpoint.
+Send stablecoins to other HIFI users or external wallet addresses using the [Create Crypto Transfer](https://docs.hifibridge.com/api-reference/crypto-transfer/create-a-crypto-transfer) endpoint.
 
 **Transfer to another HIFI user:**
 
@@ -274,7 +274,7 @@ Convert stablecoins to fiat currency and send to a bank account. This requires:
 1. **KYC verification** for the relevant rail
 2. **Offramp account setup** with bank account details
 
-See [Offramp](/docs/offramp) for detailed instructions.
+See [Offramp](/docs/transfers/offramps) for detailed instructions.
 
 ## Key Concepts
 
@@ -319,7 +319,7 @@ See [Offramp](/docs/offramp) for detailed instructions.
 
 <Steps>
   <Step title="Check balance before transfer">
-    Get the current balance using the [Get Wallet Balance](/api-reference/wallet/get-wallet-balance) endpoint.
+    Get the current balance using the [Get Wallet Balance](https://docs.hifibridge.com/api-reference/wallet/get-wallet-balance) endpoint.
 
     ```bash
     curl -X GET "https://sandbox.hifibridge.com/v2/users/usr_abc123/wallets/balance?chain=POLYGON&currency=usdc" \
@@ -330,7 +330,7 @@ See [Offramp](/docs/offramp) for detailed instructions.
   </Step>
 
   <Step title="Monitor deposit status">
-    List recent deposits using the [Get Inbound Deposits](/api-reference/wallet/get-inbound-deposits) endpoint.
+    List recent deposits using the [Get Inbound Deposits](https://docs.hifibridge.com/api-reference/wallet/get-inbound-deposits) endpoint.
 
     ```bash
     curl -X GET "https://sandbox.hifibridge.com/v2/users/usr_abc123/wallets/deposits" \
@@ -382,4 +382,4 @@ See [Offramp](/docs/offramp) for detailed instructions.
 - [Virtual Accounts](/docs/accounts/virtual-accounts) - Set up fiat onramps to wallets
 - [Offramps](/docs/transfers/offramps) - Convert wallet balances to fiat
 - [Webhooks](/docs/webhooks) - Real-time deposit and transfer notifications
-- [API Reference](/api-reference/wallet/retrieve-wallet-balance) - Complete endpoint documentation
+- [API Reference](https://docs.hifibridge.com/api-reference/wallet/retrieve-wallet-balance) - Complete endpoint documentation
