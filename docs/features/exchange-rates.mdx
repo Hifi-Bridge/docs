@@ -22,8 +22,8 @@ Exchange rates work similarly for both offramps (stablecoin to fiat) and onramps
 
 Use these endpoints to get estimated conversion rates:
 
-- [Retrieve Offramp Rate](https://docs.hifibridge.com/api-reference/offramp/retrieve-offramp-rate) - For stablecoin to fiat conversions
-- [Retrieve Onramp Rate](https://docs.hifibridge.com/api-reference/onramp/retrieve-onramp-rate) - For fiat to stablecoin conversions
+- [Retrieve Offramp Rate](https://docs.hifibridge.com/api-reference/offramp/retrieve-an-offramp-rate) - For stablecoin to fiat conversions
+- [Retrieve Onramp Rate](https://docs.hifibridge.com/api-reference/onramp/retrieve-an-onramp-rate) - For fiat to stablecoin conversions
 
 ### Offramp Rates (Stablecoin to Fiat)
 
@@ -32,10 +32,10 @@ curl -X GET "https://sandbox.hifibridge.com/v2/offramps/rates?fromCurrency=usdc&
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
-| Parameter        | Required | Supported Values                                                                                        |
-| :--------------- | :------- | :------------------------------------------------------------------------------------------------------ |
-| **fromCurrency** | Yes      | `usdc`                                                                                                  |
-| **toCurrency**   | Yes      | `usd`, `eur`, `brl`, `mxn`, `ars`, `cop`, `ugx`, `ngn`, `kes`, `xof`, `rwf`, `tzs`, `zmw`, `mwk`, `xaf` |
+| Parameter        | Required | Supported Values                                                                                                                                                 |
+| :--------------- | :------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **fromCurrency** | Yes      | `usdc`                                                                                                                                                           |
+| **toCurrency**   | Yes      | `usd`, `usd-hka`, `usd-chn`, `eur`, `brl`, `mxn`, `ars`, `cop`, `ugx`, `ngn`, `kes`, `xof`, `rwf`, `tzs`, `zmw`, `mwk`, `xaf`, `bwp`, `ghs`, `zar`, `hkd`, `cny` |
 
 ### Onramp Rates (Fiat to Stablecoin)
 
@@ -55,7 +55,13 @@ curl -X GET "https://sandbox.hifibridge.com/v2/onramps/rates?fromCurrency=usd&to
 {
   "fromCurrency": "usdc",
   "toCurrency": "usd",
-  "conversionRate": "1"
+  "conversionRate": "1",
+  "conversionRates": [
+    {
+      "transferType": "default",
+      "conversionRate": "1"
+    }
+  ]
 }
 ```
 
@@ -70,8 +76,25 @@ curl -X GET "https://sandbox.hifibridge.com/v2/onramps/rates?fromCurrency=usd&to
 </ResponseField>
 
 <ResponseField name="conversionRate" type="string">
-  Estimated conversion rate from the source currency to the destination
-  currency. The rate is expressed as a string to preserve precision.
+  Estimated conversion rate from the source currency to the destination currency
+  for the default transfer type. The rate is expressed as a string to preserve
+  precision.
+</ResponseField>
+
+<ResponseField name="conversionRates" type="array">
+  Array of conversion rates for different transfer types. Each object contains:
+  <Expandable title="Array item properties">
+    <ResponseField name="transferType" type="string">
+      The transfer type identifier. When `transferType` is `default`, this is
+      the conversion rate for the default transfer type.
+    </ResponseField>
+
+    <ResponseField name="conversionRate" type="string">
+      The estimated conversion rate for this specific transfer type, expressed
+      as a string to preserve precision.
+    </ResponseField>
+
+  </Expandable>
 </ResponseField>
 
 ## Usage Examples
@@ -170,17 +193,18 @@ console.log(`${fiatAmount} USD ≈ ${estimatedUsdc} USDC`);
 <Accordion title="Rate Format">
   Conversion rates are returned as strings to preserve decimal precision. When performing calculations, always parse them to numbers.
 
-  ```javascript
-  // Correct: Parse to float for calculations
-  const rate = parseFloat(response.conversionRate);
-  const amount = parseFloat(cryptoAmount);
-  const result = amount * rate;
+```javascript
+// Correct: Parse to float for calculations
+const rate = parseFloat(response.conversionRate);
+const amount = parseFloat(cryptoAmount);
+const result = amount * rate;
 
-  // Incorrect: Direct string operations
-  const result2 = response.conversionRate * cryptoAmount; // May cause precision loss
-  ```
+// Incorrect: Direct string operations
+const result2 = response.conversionRate * cryptoAmount; // May cause precision loss
+```
 
-  Use `parseFloat()` or a decimal library (like `decimal.js`) for financial calculations to maintain accuracy.
+Use `parseFloat()` or a decimal library (like `decimal.js`) for financial calculations to maintain accuracy.
+
 </Accordion>
 
   <Accordion title="Error Handling">
