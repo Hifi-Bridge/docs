@@ -32,10 +32,10 @@ curl -X GET "https://sandbox.hifibridge.com/v2/offramps/rates?fromCurrency=usdc&
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
-| Parameter        | Required | Supported Values                                                                                                                                                 |
-| :--------------- | :------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **fromCurrency** | Yes      | `usdc`                                                                                                                                                           |
-| **toCurrency**   | Yes      | `usd`, `usd-hka`, `usd-chn`, `eur`, `brl`, `mxn`, `ars`, `cop`, `ugx`, `ngn`, `kes`, `xof`, `rwf`, `tzs`, `zmw`, `mwk`, `xaf`, `bwp`, `ghs`, `zar`, `hkd`, `cny` |
+| Parameter        | Required | Supported Values                                                                                                |
+| :--------------- | :------- | :-------------------------------------------------------------------------------------------------------------- |
+| **fromCurrency** | Yes      | `usdc`                                                                                                          |
+| **toCurrency**   | Yes      | `usd`, `brl`, `mxn`, `ugx`, `ngn`, `kes`, `tzs`, `mwk`, `xaf`, `bwp`, `zar`, `usd-hka`, `usd-chn`, `cny`, `hkd` |
 
 ### Onramp Rates (Fiat to Stablecoin)
 
@@ -44,10 +44,10 @@ curl -X GET "https://sandbox.hifibridge.com/v2/onramps/rates?fromCurrency=usd&to
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
-| Parameter        | Required | Supported Values                                                                                        |
-| :--------------- | :------- | :------------------------------------------------------------------------------------------------------ |
-| **fromCurrency** | Yes      | `usd`, `eur`, `brl`, `mxn`, `ars`, `cop`, `ugx`, `ngn`, `kes`, `xof`, `rwf`, `tzs`, `zmw`, `mwk`, `xaf` |
-| **toCurrency**   | Yes      | `usdc`                                                                                                  |
+| Parameter        | Required | Supported Values                                       |
+| :--------------- | :------- | :----------------------------------------------------- |
+| **fromCurrency** | Yes      | `usd`, `ugx`, `ngn`, `bwp`, `tzs`, `mwk`, `xaf`, `kes` |
+| **toCurrency**   | Yes      | `usdc`                                                 |
 
 ### Response
 
