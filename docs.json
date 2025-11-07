@@ -137,6 +137,10 @@
   },
   "redirects": [
     {
+      "source": "/docs/:path*",
+      "destination": "/:path*"
+    },
+    {
       "source": "/docs/compliance/documents/overview",
       "destination": "/compliance/documents/index"
     },
@@ -223,10 +227,6 @@
     {
       "source": "/docs/webhooks/wallet",
       "destination": "/webhooks/wallet-events"
-    },
-    {
-      "source": "/docs/:path*",
-      "destination": "/:path*"
     }
   ],
   "navigation": {
