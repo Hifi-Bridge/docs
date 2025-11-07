@@ -137,8 +137,8 @@
   },
   "redirects": [
     {
-      "source": "/docs/:path*",
-      "destination": "/:path*"
+      "source": "/docs/:slug*",
+      "destination": "/:slug*"
     },
     {
       "source": "/docs/compliance/documents/overview",
