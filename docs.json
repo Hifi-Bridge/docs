@@ -137,96 +137,96 @@
   },
   "redirects": [
     {
-      "source": "/docs/overview",
-      "destination": "/docs/index"
-    },
-    {
       "source": "/docs/compliance/documents/overview",
-      "destination": "/docs/compliance/documents/index"
+      "destination": "/compliance/documents/index"
     },
     {
       "source": "/docs/compliance/documents/supported-identity-documents",
-      "destination": "/docs/references/identity-documents"
+      "destination": "/references/identity-documents"
     },
     {
       "source": "/docs/rails/overview",
-      "destination": "/docs/rails/index"
+      "destination": "/rails/index"
     },
     {
       "source": "/docs/rails/usd-individual",
-      "destination": "/docs/rails/usd"
+      "destination": "/rails/usd"
     },
     {
       "source": "/docs/rails/usd-business",
-      "destination": "/docs/rails/usd"
+      "destination": "/rails/usd"
     },
     {
       "source": "/docs/compliance/currencies",
-      "destination": "/docs/references/currencies"
+      "destination": "/references/currencies"
     },
     {
       "source": "/docs/compliance/references/:path*",
-      "destination": "/docs/references/:path*"
+      "destination": "/references/:path*"
     },
     {
       "source": "/docs/transfers/wallets",
-      "destination": "/docs/transfers/onchain"
+      "destination": "/transfers/onchain"
     },
     {
       "source": "/docs/users/features/kyc-link",
-      "destination": "/docs/features/kyc-links"
+      "destination": "/features/kyc-links"
     },
     {
       "source": "/docs/transfers/features/batch-transfers",
-      "destination": "/docs/features/batch-transfers"
+      "destination": "/features/batch-transfers"
     },
     {
       "source": "/docs/transfers/features/virtual-accounts",
-      "destination": "/docs/accounts/virtual-accounts"
+      "destination": "/accounts/virtual-accounts"
     },
     {
       "source": "/docs/transfers/features/transfer-approvals",
-      "destination": "/docs/features/transfer-approvals"
+      "destination": "/features/transfer-approvals"
     },
     {
       "source": "/docs/transfers/features/developer-fees",
-      "destination": "/docs/features/developer-fees"
+      "destination": "/features/developer-fees"
     },
     {
       "source": "/docs/transfers/features/settlement-rules",
-      "destination": "/docs/features/settlement-rules"
+      "destination": "/features/settlement-rules"
     },
     {
       "source": "/guides/quickstart",
-      "destination": "/docs/quickstart"
+      "destination": "/quickstart"
     },
     {
       "source": "/docs/api/postman",
-      "destination": "/docs/postman"
+      "destination": "/postman"
     },
     {
       "source": "/docs/webhooks/user",
-      "destination": "/docs/webhooks/user-events"
+      "destination": "/webhooks/user-events"
     },
     {
       "source": "/docs/webhooks/kyc",
-      "destination": "/docs/webhooks/kyc-events"
+      "destination": "/webhooks/kyc-events"
     },
     {
       "source": "/docs/webhooks/account",
-      "destination": "/docs/webhooks/account-events"
+      "destination": "/webhooks/account-events"
     },
     {
       "source": "/docs/webhooks/onramp",
-      "destination": "/docs/webhooks/onramp-events"
+      "destination": "/webhooks/onramp-events"
     },
     {
       "source": "/docs/webhooks/offramp",
-      "destination": "/docs/webhooks/offramp-events"
+      "destination": "/webhooks/offramp-events"
     },
     {
       "source": "/docs/webhooks/wallet",
-      "destination": "/docs/webhooks/wallet-events"
+      "destination": "/webhooks/wallet-events"
+    },
+    {
+      "source": "/docs/:path*",
+      "destination": "/:path*"
     }
   ],
   "navigation": {
@@ -236,54 +236,49 @@
         "pages": [
           {
             "group": "Get started",
-            "pages": [
-              "docs/index",
-              "docs/quickstart",
-              "docs/sandbox",
-              "docs/postman"
-            ]
+            "pages": ["overview", "quickstart", "sandbox", "postman"]
           },
           {
             "group": "Core concepts",
             "pages": [
-              "docs/users/index",
-              "docs/wallets/index",
+              "users/index",
+              "wallets/index",
               {
                 "group": "Rails",
                 "pages": [
-                  "docs/rails/index",
-                  "docs/rails/usd",
-                  "docs/rails/global-network",
-                  "docs/rails/africa"
+                  "rails/index",
+                  "rails/usd",
+                  "rails/global-network",
+                  "rails/africa"
                 ]
               },
               {
                 "group": "Accounts",
                 "pages": [
-                  "docs/accounts/virtual-accounts",
-                  "docs/accounts/offramp-accounts"
+                  "accounts/virtual-accounts",
+                  "accounts/offramp-accounts"
                 ]
               },
               {
                 "group": "Transfers",
                 "pages": [
-                  "docs/transfers/onchain",
-                  "docs/transfers/onramps",
-                  "docs/transfers/offramps",
-                  "docs/transfers/bridging",
-                  "docs/transfers/swaps"
+                  "transfers/onchain",
+                  "transfers/onramps",
+                  "transfers/offramps",
+                  "transfers/bridging",
+                  "transfers/swaps"
                 ]
               },
               {
                 "group": "Webhooks",
                 "pages": [
-                  "docs/webhooks/index",
-                  "docs/webhooks/user-events",
-                  "docs/webhooks/kyc-events",
-                  "docs/webhooks/wallet-events",
-                  "docs/webhooks/account-events",
-                  "docs/webhooks/onramp-events",
-                  "docs/webhooks/offramp-events"
+                  "webhooks/index",
+                  "webhooks/user-events",
+                  "webhooks/kyc-events",
+                  "webhooks/wallet-events",
+                  "webhooks/account-events",
+                  "webhooks/onramp-events",
+                  "webhooks/offramp-events"
                 ]
               }
             ]
@@ -293,26 +288,26 @@
             "pages": [
               {
                 "group": "Onboarding",
-                "pages": ["docs/features/tos-links", "docs/features/kyc-links"]
+                "pages": ["features/tos-links", "features/kyc-links"]
               },
-              "docs/features/exchange-rates",
-              "docs/features/batch-transfers",
-              "docs/features/transfer-approvals",
-              "docs/features/developer-fees",
-              "docs/features/settlement-rules"
+              "features/exchange-rates",
+              "features/batch-transfers",
+              "features/transfer-approvals",
+              "features/developer-fees",
+              "features/settlement-rules"
             ]
           },
           {
             "group": "Compliance",
             "pages": [
-              "docs/compliance/industries",
-              "docs/compliance/regions",
+              "compliance/industries",
+              "compliance/regions",
               {
                 "group": "Documents",
                 "pages": [
-                  "docs/compliance/documents/index",
-                  "docs/compliance/documents/identity",
-                  "docs/compliance/documents/proof-of-address"
+                  "compliance/documents/index",
+                  "compliance/documents/identity",
+                  "compliance/documents/proof-of-address"
                 ]
               }
             ]
@@ -320,35 +315,35 @@
           {
             "group": "References",
             "pages": [
-              "docs/references/currencies",
-              "docs/references/identity-documents",
+              "references/currencies",
+              "references/identity-documents",
               {
                 "group": "Business Industries",
                 "pages": [
-                  "docs/references/business-industries/index",
-                  "docs/references/business-industries/agriculture-forestry",
-                  "docs/references/business-industries/mining-energy",
-                  "docs/references/business-industries/construction",
-                  "docs/references/business-industries/manufacturing",
-                  "docs/references/business-industries/wholesale-retail-trade",
-                  "docs/references/business-industries/transportation-logistics",
-                  "docs/references/business-industries/information-media",
-                  "docs/references/business-industries/finance-insurance",
-                  "docs/references/business-industries/real-estate-leasing",
-                  "docs/references/business-industries/professional-technical-services",
-                  "docs/references/business-industries/administrative-support-services",
-                  "docs/references/business-industries/education",
-                  "docs/references/business-industries/health-social-services",
-                  "docs/references/business-industries/arts-recreation-entertainment",
-                  "docs/references/business-industries/hospitality-food",
-                  "docs/references/business-industries/other-services",
-                  "docs/references/business-industries/public-administration"
+                  "references/business-industries/index",
+                  "references/business-industries/agriculture-forestry",
+                  "references/business-industries/mining-energy",
+                  "references/business-industries/construction",
+                  "references/business-industries/manufacturing",
+                  "references/business-industries/wholesale-retail-trade",
+                  "references/business-industries/transportation-logistics",
+                  "references/business-industries/information-media",
+                  "references/business-industries/finance-insurance",
+                  "references/business-industries/real-estate-leasing",
+                  "references/business-industries/professional-technical-services",
+                  "references/business-industries/administrative-support-services",
+                  "references/business-industries/education",
+                  "references/business-industries/health-social-services",
+                  "references/business-industries/arts-recreation-entertainment",
+                  "references/business-industries/hospitality-food",
+                  "references/business-industries/other-services",
+                  "references/business-industries/public-administration"
                 ]
               },
-              "docs/references/occupations",
-              "docs/references/account-purposes",
-              "docs/references/export-categories",
-              "docs/references/product-service-categories"
+              "references/occupations",
+              "references/account-purposes",
+              "references/export-categories",
+              "references/product-service-categories"
             ]
           }
         ]
@@ -363,11 +358,7 @@
         "pages": [
           {
             "group": "Get started",
-            "pages": [
-              "docs/api/authentication",
-              "docs/api/responses",
-              "docs/api/errors"
-            ]
+            "pages": ["api/authentication", "api/responses", "api/errors"]
           },
           {
             "group": "Endpoints",
@@ -527,16 +518,7 @@
     "dark": "/logo/dark.svg"
   },
   "contextual": {
-    "options": [
-      "copy",
-      "view",
-      "chatgpt",
-      "claude",
-      "perplexity",
-      "mcp",
-      "cursor",
-      "vscode"
-    ]
+    "options": ["copy", "view"]
   },
   "navbar": {
     "primary": {
