@@ -17,3 +17,81 @@ Below are the possible statuses for a user’s KYC application:
 - **CONTACT_SUPPORT**
 
 We’ll go through each status in detail shortly. But first, let’s take a look at the structure of an individual KYC status response.
+
+## Response Overview
+
+Below is an example response of an individual KYC status response
+
+```json
+{
+    "status": "",
+    "message": "",
+    "reviewResult": {
+        "reviewAnswer": "",
+        "reviewRejectType": "",
+        "rejectReasons": [],
+        "comment": ""
+    },
+    "details": {
+        "identity": {
+			{
+        		"reviewAnswer": "",
+        		"reviewRejectType": "",
+        		"rejectReasons": [],
+        		"comment": ""
+    		},
+			"details": [
+				...
+			]
+        },
+        "questionnaire": {
+            {
+        		"reviewAnswer": "",
+        		"reviewRejectType": "",
+        		"rejectReasons": [],
+        		"comment": ""
+    		},
+			"details": [
+				...
+			]
+        },
+        "personalInfo": {
+            {
+        		"reviewAnswer": "",
+        		"reviewRejectType": "",
+        		"rejectReasons": [],
+        		"comment": ""
+    		},
+			"details": [
+				...
+			]
+        },
+		"proofOfAddress": {
+			{
+        		"reviewAnswer": "",
+        		"reviewRejectType": "",
+        		"rejectReasons": [],
+        		"comment": ""
+    		},
+			"details": [
+				...
+			]
+		}
+
+    }
+}
+```
+
+At the top level, the KYC status response consists of four main sections:
+
+- **status** – The primary status of the KYC application, indicating its current progress.
+- **message** – A human-readable message intended to provide additional context for developers.
+- **reviewResult** – A more detailed screening outcome from our compliance engine, which can serve as a secondary reference for understanding a user’s KYC status.
+- **details** – A comprehensive breakdown of the compliance categories and data points screened for the applicant.
+
+Under the first level of the `details` there are four compliance categories that we screen against the individual KYC
+
+- idnetity - This section indicate the screening result of the ID documentation
+- questionnaire - This section indicate the screening result of the source of funds expected use questionnaire
+- personalInfo - This scetion is for the non-doc information the user provided, for example first name, last name, address ...etc
+- proofOfAddress - This section indicate the screening result of the PoA documentation if provided during the KYC application
