@@ -89,9 +89,9 @@ At the top level, the KYC status response consists of four main sections:
 - **reviewResult** – A more detailed screening outcome from our compliance engine, which can serve as a secondary reference for understanding a user’s KYC status.
 - **details** – A comprehensive breakdown of the compliance categories and data points screened for the applicant.
 
-Under the first level of the `details` there are four compliance categories that we screen against the individual KYC
+Under the `details` section, there are four compliance categories that we screen against each individual KYC applicant:
 
-- idnetity - This section indicate the screening result of the ID documentation
-- questionnaire - This section indicate the screening result of the source of funds expected use questionnaire
-- personalInfo - This scetion is for the non-doc information the user provided, for example first name, last name, address ...etc
-- proofOfAddress - This section indicate the screening result of the PoA documentation if provided during the KYC application
+- **identity** – Indicates the screening result of the user’s ID documentation.
+- **questionnaire** – Indicates the screening result of the “source of funds and intended use” questionnaire.
+- **personalInfo** – Contains the results based on non-document information provided by the user, such as first name, last name, and address.
+- **proofOfAddress** – Indicates the screening result of the proof of address (PoA) documentation, if provided during the KYC application.
