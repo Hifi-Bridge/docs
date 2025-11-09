@@ -190,3 +190,43 @@ Below is an example of a KYC application with an `INACTIVE` status:
 ```
 
 When the top-level `status` is `INACTIVE`, it means the user has not yet submitted their KYC application. To submit the KYC application, please call [Submit KYC](https://hifi-wy-fix-doc.mintlify.app/api-reference/kyc/submit-kyc).
+
+## REJECTED
+
+Below is an example of a KYC application with an `REJECTED` status:
+
+```json expandable
+{
+    "status": "REJECTED",
+    "message": "",
+    "reviewResult": {},
+    "details": {}
+}
+```
+
+When the top-level `status` is `REJECTED`, it means the user has been denied access to the USD rail, and resubmission is **not allowed**.
+
+<Info>
+  Please contact support if you believe the user’s status is incorrect.
+</Info>
+
+## PENDING
+
+Below is an example of a KYC application with an `PENDING` status:
+
+```json expandable
+{
+    "status": "PENDING",
+    "message": "",
+    "reviewResult": {
+		
+	},
+    "details": {}
+}
+```
+
+When the top-level `status` is `PENDING`, it means the user is still undergoing the compliance screening process. This could indicate that the user is either being reviewed by our compliance engine or is in the process of bank onboarding.
+
+<Info>
+  Please reach out to support if an individual applicant has remained in this status for more than 24 hours.
+</Info>
