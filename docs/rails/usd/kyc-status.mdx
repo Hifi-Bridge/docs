@@ -105,9 +105,9 @@ Let’s also take a look at the `reviewResult` object, which appears both at the
 - **rejectReasons** – An array of enums that specify the reasons for a declined screening result. This field is only populated when `reviewAnswer` is `DECLINED`.
 - **comment** – A human-readable message providing additional details about the rejection. This field is intended to be shared with developers and end users for better clarity. This field is only populated when `reviewAnswer` is `DECLINED`.
 
-## Active
+## ACTIVE
 
-Below is an example of an active KYC application status
+Below is an example of a KYC application with an `ACTIVE` status:
 
 ```json expandable
 {
@@ -175,3 +175,18 @@ Below is an example of an active KYC application status
 ```
 
 When the top-level `status` is `ACTIVE`, it means the user has been successfully approved for the USD rail, including both compliance screening and bank onboarding.
+
+## INACTIVE
+
+Below is an example of a KYC application with an `INACTIVE` status:
+
+```json expandable
+{
+    "status": "INACTIVE",
+    "message": "",
+    "reviewResult": {},
+    "details": {}
+}
+```
+
+When the top-level `status` is `INACTIVE`, it means the user has not yet submitted their KYC application. To submit the KYC application, please call [Submit KYC](https://hifi-wy-fix-doc.mintlify.app/api-reference/kyc/submit-kyc).
