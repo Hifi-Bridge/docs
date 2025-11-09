@@ -255,7 +255,8 @@
                   {
                     "group": "USD Rail",
                     "pages": [
-                      "docs/rails/usd"
+                      "docs/rails/usd",
+                      "docs/rails/usd/kyc-status"
                     ]
                   },
                   "docs/rails/global-network",
