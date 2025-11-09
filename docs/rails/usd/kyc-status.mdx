@@ -20,7 +20,7 @@ We’ll go through each status in detail shortly. But first, let’s take a look
 
 ## Response Overview
 
-Below is an example response of an individual KYC status response
+Below is an example of an individual KYC status response:
 
 ```json expandable
 {
@@ -104,3 +104,74 @@ Let’s also take a look at the `reviewResult` object, which appears both at the
   - When the value is `FINAL`, it indicates a hard rejection — resubmission via API is not permitted.
 - **rejectReasons** – An array of enums that specify the reasons for a declined screening result. This field is only populated when `reviewAnswer` is `DECLINED`.
 - **comment** – A human-readable message providing additional details about the rejection. This field is intended to be shared with developers and end users for better clarity. This field is only populated when `reviewAnswer` is `DECLINED`.
+
+## Active
+
+Below is an example of an active KYC application status
+
+```json expandable
+{
+    "status": "ACTIVE",
+    "message": "",
+    "reviewResult": {
+        "reviewAnswer": "APPROVED",
+        "reviewRejectType": "",
+        "rejectReasons": [],
+        "comment": ""
+    },
+    "details": {
+        "identity": {
+            "reviewResult": {
+                "reviewAnswer": "APPROVED",
+                "reviewRejectType": "",
+                "rejectReasons": [],
+                "comment": ""
+            },
+            "details": [
+                {
+                    "id": "989c9fae-9846-48e0-a5c1-2035e9cbd323",
+                    "type": "ID_CARD",
+                    "subType": "FRONT_SIDE",
+                    "reviewResult": {
+                        "reviewAnswer": "APPROVED",
+                        "reviewRejectType": "",
+                        "rejectReasons": [],
+                        "comment": ""
+                    }
+                },
+                {
+                    "id": "d8b105a2-c506-4cfe-8863-373fc3dfda89",
+                    "type": "ID_CARD",
+                    "subType": "BACK_SIDE",
+                    "reviewResult": {
+                        "reviewAnswer": "APPROVED",
+                        "reviewRejectType": "",
+                        "rejectReasons": [],
+                        "comment": ""
+                    }
+                }
+            ]
+        },
+        "questionnaire": {
+            "reviewResult": {
+                "reviewAnswer": "APPROVED",
+                "reviewRejectType": "",
+                "rejectReasons": [],
+                "comment": ""
+            },
+            "details": []
+        },
+        "personalInfo": {
+            "reviewResult": {
+                "reviewAnswer": "APPROVED",
+                "reviewRejectType": "",
+                "rejectReasons": [],
+                "comment": ""
+            },
+            "details": []
+        }
+    }
+}
+```
+
+When the top-level `status` is `ACTIVE`, it means the user has been successfully approved for the USD rail, including both compliance screening and bank onboarding.
