@@ -2,3 +2,18 @@
 title: "Understand KYC Status Response"
 description: "This resource will guide you how to correctly interpret the KYC status response"
 ---
+
+For USD rails, we provide detailed KYC information to help developers debug issues or request additional or updated information from end users in order to complete the KYC process.
+
+Below are the possible statuses for a user’s KYC application:
+
+- **ACTIVE**
+- **INACTIVE**
+- **REJECTED**
+- **PENDING**
+- **RFI_PENDING**
+- **INCOMPLETE**
+- **MANUAL_REVIEW**
+- **CONTACT_SUPPORT**
+
+We’ll go through each status in detail shortly. But first, let’s take a look at the structure of an individual KYC status response.
