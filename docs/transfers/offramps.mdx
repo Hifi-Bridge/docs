@@ -2,35 +2,63 @@
 title: "Offramps"
 ---
 
-Offramps are transactions that convert stablecoins in HIFI wallets to fiat currencies. The available offramp methods vary by region due to local payment infrastructure and regulatory requirements.
+**Offramps** convert stablecoins into fiat currency and send it to external bank accounts. Users must accept a quote before the conversion executes.
 
 ## How Offramps Work
 
-Offramps follow a simple three-step process:
+Offramps follow a quote-based flow:
 
-1. **Create an offramp** – Initiate a payment from Wallet to Account
-2. **Review quote** – Examine the exchange rate, fees, and quote validity period
-3. **Accept quote** – The fiat currency is transferred to the Account
+<Steps>
+  <Step title="Create offramp request">
+    Specify the source wallet, destination account, and amount to convert.
+  </Step>
+  <Step title="Review quote">
+    Examine the exchange rate, fees, and quote expiration time.
+  </Step>
+  <Step title="Accept quote">
+    Accept the quote to execute the conversion. Stablecoins are converted to fiat and sent to the registered bank account.
+  </Step>
+</Steps>
 
-### Quote Validity
+## Creating Offramps
 
-Quotes are time-sensitive and typically expire within 10 minutes. This ensures you get current market rates and prevents stale pricing. If a quote expires before you accept it, you'll need to create a new offramp request to get updated pricing.
+Use the [Create Offramp](https://docs.hifibridge.com/api-reference/offramp/create-an-offramp) endpoint to get a quote.
 
-<Info>
-  All USDT-related offramps incur an additional **0.1% exchange fee**, which will be reflected on your monthly invoice.
-</Info>
+**Request:**
 
-## Supported Regions
+```bash
+curl -X POST "https://sandbox.hifibridge.com/v2/offramps" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "requestId": "201ca31d-700f-4c76-ac4b-961623acbb79",
+    "source": {
+      "currency": "usdc",
+      "chain": "POLYGON",
+      "userId": "7d54a7a7-dac3-4313-8b09-27fa4b7fd1ee",
+      "amount": 10
+    },
+    "destination": {
+      "currency": "usd",
+      "accountId": "12c1c496-8f57-41a1-8292-dbe6547791ce",
+      "userId": "7d54a7a7-dac3-4313-8b09-27fa4b7fd1ee",
+      "sameDayAch": false
+    },
+    "developerFee": {
+      "fees": [
+        {
+          "type": "PERCENTAGE",
+          "value": "0.0005",
+          "walletAddress": "0x366B759bAA089Fa57a08edd3F2E028E86b97f8D7"
+        }
+      ]
+    }
+  }'
+```
 
-The available offramp methods vary by region due to local payment infrastructure and regulatory requirements.
+The response contains the offramp quote information:
 
-<Card title="Currencies" icon="globe" href="/docs/currencies">
-  Learn about supported regions, payment methods, and currencies
-</Card>
-
-## Transaction Structure
-
-When you create an offramp, the API response includes detailed information about the transaction:
+<Accordion title="Response">
 
 ```json
 {
@@ -40,145 +68,298 @@ When you create an offramp, the API response includes detailed information about
     "requestId": "201ca31d-700f-4c76-ac4b-961623acbb79",
     "createdAt": "2025-02-03T16:12:04.331652+00:00",
     "updatedAt": "2025-02-03T16:12:08.732+00:00",
-    "status": "CREATED",
-    "failedReason": "",
+    "status": "OPEN_QUOTE",
+    "failedReason": null,
     "source": {
-      /* Source */
+      "userId": "7d54a7a7-dac3-4313-8b09-27fa4b7fd1ee",
+      "chain": "POLYGON",
+      "currency": "usdc",
+      "amount": 10,
+      "walletAddress": "0x366B759bAA089Fa57a08edd3F2E028E86b97f8D6",
+      "user": {
+        "email": "john.doe@hifibridge.com",
+        "firstName": "John",
+        "lastName": "Doe",
+        "businessName": null
+      }
     },
     "destination": {
-      /* Destination */
+      "userId": "7d54a7a7-dac3-4313-8b09-27fa4b7fd1ee",
+      "amount": 0,
+      "currency": "usd",
+      "user": {
+        "email": "john.doe@hifibridge.com",
+        "firstName": "John",
+        "lastName": "Doe",
+        "businessName": null
+      },
+      "accountId": "12c1c496-8f57-41a1-8292-dbe6547791ce",
+      "sameDayAch": false
     },
-    "receipt": { "transactionHash": null, "uetr": null },
+    "receipt": {
+      "transactionHash": null,
+      "paymentTracking": null
+    },
     "developerFee": {
-      /* Developer Fee */
+      "id": "1c3d24c1-6136-574c-a647-e7eb6a9fb6ed",
+      "transactionHash": null,
+      "fees": [
+        {
+          "type": "PERCENTAGE",
+          "value": "0.0005",
+          "amount": "0.000515",
+          "walletAddress": "0x366B759bAA089Fa57a08edd3F2E028E86b97f8D7"
+        },
+        {
+          "type": "FLAT",
+          "value": "0.01",
+          "amount": "0.010000",
+          "walletAddress": "0x366B759bAA089Fa57a08edd3F2E028E86b97f8D7"
+        }
+      ]
     },
     "quoteInformation": {
-      /* Quote */
+      "sendGross": {
+        "amount": "10",
+        "currency": "usdc"
+      },
+      "sendNet": {
+        "amount": "10",
+        "currency": "usdc"
+      },
+      "receiveGross": {
+        "amount": "10",
+        "currency": "usd"
+      },
+      "receiveNet": {
+        "amount": "10",
+        "currency": "usd"
+      },
+      "rate": "1",
+      "expiresAt": "2025-02-03T16:22:08.668Z"
+    },
+    "depositInformation": []
+  }
+}
+```
+
+</Accordion>
+
+<ResponseField name="transferDetails.id" type="string">
+  Unique offramp ID. Use this to track the transaction and accept the quote.
+</ResponseField>
+
+<ResponseField name="transferDetails.status" type="string">
+  Offramp status. `OPEN_QUOTE` means the quote is ready for review. See [Transaction Status](#transaction-status) for details.
+</ResponseField>
+
+<ResponseField name="transferDetails.quoteInformation" type="object">
+  Conversion quote details including exchange rate, amounts, and expiration time.
+
+  <Expandable title="properties">
+    <ResponseField name="sendGross" type="object">
+      Total stablecoins being converted.
+    </ResponseField>
+    <ResponseField name="sendNet" type="object">
+      Net stablecoin amount after fees.
+    </ResponseField>
+    <ResponseField name="receiveGross" type="object">
+      Total fiat amount before fees.
+    </ResponseField>
+    <ResponseField name="receiveNet" type="object">
+      Actual fiat amount you'll receive. Verify this matches your expectations before accepting.
+    </ResponseField>
+    <ResponseField name="rate" type="string">
+      Exchange rate (stablecoin to fiat).
+    </ResponseField>
+    <ResponseField name="expiresAt" type="string">
+      Quote expiration timestamp. Quotes expire 10 minutes after creation.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="transferDetails.developerFee" type="object">
+  Developer fee details if included in the request.
+</ResponseField>
+
+<ResponseField name="transferDetails.source" type="object">
+  Source wallet details including user information and stablecoin amount.
+</ResponseField>
+
+<ResponseField name="transferDetails.destination" type="object">
+  Destination bank account details including account ID and user information.
+</ResponseField>
+
+<ResponseField name="transferDetails.receipt" type="object">
+  Transaction receipt. Contains `transactionHash` once the stablecoin conversion is confirmed on-chain, and `paymentTracking` once fiat processing begins.
+</ResponseField>
+
+<Info>
+For detailed field documentation, see the [Create Offramp](https://docs.hifibridge.com/api-reference/offramp/create-an-offramp) API reference.
+</Info>
+
+## Accepting Quotes
+
+After reviewing the quote, accept it to execute the conversion using the [Accept Quote](https://docs.hifibridge.com/api-reference/offramp/accept-quote) endpoint.
+
+**Request:**
+
+```bash
+curl -X POST "https://sandbox.hifibridge.com/v2/offramps/173c1e89-7bbd-4352-9e5d-73807681510d/quote/accept" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+When the quote is accepted, the response shows the updated status:
+
+<Accordion title="Response">
+
+```json
+{
+  "transferType": "OFFRAMP",
+  "transferDetails": {
+    "id": "off_abc123",
+    "status": "CRYPTO_INITIATED",
+    "quoteInformation": {
+      "expiresAt": "2025-02-03T16:22:08.668Z"
     }
   }
 }
 ```
 
-<AccordionGroup>
-  <Accordion title="Source">
-    ```json
-    {
-      "userId": "7d54a7a7-dac3-4313-8b09-27fa4b7fd1ee",
-      "chain": "POLYGON_MAINNET",
-      "currency": "usdc",
-      "amount": 10,
-      "walletAddress": "0x366B759bAA089Fa57a08edd3F2E028E86b97f8D6"
-    }
-    ```
-  </Accordion>
-  <Accordion title="Destination">
-    ```json
-    {
-      "userId": "7d54a7a7-dac3-4313-8b09-27fa4b7fd1ee",
-      "amount": 0,
-      "currency": "mwk",
-      "accountId": "12c1c496-8f57-41a1-8292-dbe6547791ce"
-    }
-    ```
-  </Accordion>
-  <Accordion title="Quote">
-    ```json
-    {
-      "sendGross": {
-        "amount": "10.00",
-        "currency": "usdc"
-      },
-      "sendNet": {
-        "amount": "10.00",
-        "currency": "usdc"
-      },
-      "receiveGross": {
-        "amount": "32500.00",
-        "currency": "mwk"
-      },
-      "receiveNet": {
-        "amount": "32500.00",
-        "currency": "mwk"
-      },
-      "rate": "3250.0000",
-      "expiresAt": "2025-02-03T16:22:08.668Z"
-    }
-    ```
-  </Accordion>
-  <Accordion title="Developer Fee">
-    ```json
-    {
-      "feeId": "9b354c37-d20d-4d94-bcd8-c852353ca406",
-      "feeType": "FIX",
-      "feeAmount": 0.5,
-      "feePercent": 0,
-      "status": "CREATED",
-      "transactionHash": null,
-      "failedReason": null
-    }
-    ```
-  </Accordion>
-</AccordionGroup>
+</Accordion>
+
+<ResponseField name="transferDetails.status" type="string">
+  Updated offramp status. `CRYPTO_INITIATED` means the conversion has started. See [Transaction Status](#transaction-status) for progression.
+</ResponseField>
+
+Once accepted, the offramp progresses through crypto and fiat processing phases until completion.
 
 ## Transaction Status
 
-**1. Transaction Creation**
+Offramps progress through several phases:
 
-- **`CREATED`** – The transaction has been created but not yet processed.
-- **`NOT_INITIATED`** – The transaction was not submitted due to a validation error.
+### Creation & Quote Phase
 
-**2. Quote and Funding Phase**
+| Status              | Description                                                       |
+| :------------------ | :---------------------------------------------------------------- |
+| **CREATED**         | Offramp request created successfully                              |
+| **NOT_INITIATED**   | Request not submitted due to validation error                     |
+| **OPEN_QUOTE**      | Quote generated and awaiting acceptance                           |
+| **QUOTE_FAILED**    | Quote expired before acceptance                                   |
 
-- **`OPEN_QUOTE`** – A quote has been generated and is awaiting user acceptance.
-- **`QUOTE_FAILED`** – The transaction failed or expired before the quote was accepted.
-- **`AWAITING_FUNDS`** – Waiting for funds to be sent to the specified liquidation address.
+### Crypto Processing Phase
 
-**3. Crypto Processing**
+| Status              | Description                                                       |
+| :------------------ | :---------------------------------------------------------------- |
+| **CRYPTO_INITIATED**| Converting stablecoins, blockchain transaction started            |
+| **CRYPTO_PENDING**  | Blockchain transaction awaiting confirmation                      |
+| **CRYPTO_PROCESSED**| Stablecoins successfully converted                                |
+| **CRYPTO_FAILED**   | Blockchain transaction failed                                     |
+| **CRYPTO_RETURNED** | Failed transaction refunded to user's wallet                      |
 
-- **`CRYPTO_INITIATED`** – The transaction process has started for the crypto transfer.
-- **`CRYPTO_PENDING`** – The transaction is in progress and awaiting on-chain confirmation.
-- **`CRYPTO_PROCESSED`** – The crypto transaction was successfully processed.
-- **`CRYPTO_FAILED`** – The crypto transaction failed.
-- **`CRYPTO_RETURNED`** – The failed crypto transaction has been refunded to the user.
+### Fiat Processing Phase
 
-**4. Fiat Processing**
+| Status              | Description                                                       |
+| :------------------ | :---------------------------------------------------------------- |
+| **FIAT_INITIATED**  | Fiat payout process started                                       |
+| **FIAT_PENDING**    | Fiat transaction awaiting settlement                              |
+| **FIAT_FAILED**     | Fiat transaction failed                                           |
+| **COMPLETED**       | Fiat successfully delivered to bank account                       |
 
-- **`FIAT_INITIATED`** – The fiat payout process has started.
-- **`FIAT_PENDING`** – The fiat transaction is awaiting settlement.
-- **`FIAT_FAILED`** – The fiat transaction encountered an error and could not be completed.
-- **`COMPLETED`** – The transaction was successfully settled in fiat.
+## Tracking Offramps
 
-### Flow Chart
+<Note>
+**Status Updates:** Subscribe to `OFFRAMP.CREATE` and `OFFRAMP.UPDATE` webhook events to receive real-time status notifications. See [Webhooks](/docs/webhooks) for setup instructions.
+</Note>
 
-![Offramp Status Flow Chart](/images/offramp-status.png)
+Monitor offramp status using the [Retrieve Offramp](https://docs.hifibridge.com/api-reference/offramp/retrieve-an-offramp) endpoint. The response structure matches the create endpoint shown above.
 
-## Quote Information
+**Request:**
 
-The quote includes both gross and net amounts for both sending and receiving:
+```bash
+curl -X GET "https://sandbox.hifibridge.com/v2/offramps/173c1e89-7bbd-4352-9e5d-73807681510d" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
 
-- **sendGross**: Total amount you're sending in stablecoins
-- **sendNet**: Net amount after any fees are deducted
-- **receiveGross**: Total amount you'll receive in fiat currency
-- **receiveNet**: Net amount you'll actually receive
-- **rate**: Current exchange rate between stablecoin and fiat
-- **expiresAt**: When the quote expires and you'll need a new one
+## Quote Validity
 
-### Developer Fee Types
+Quotes expire **10 minutes** after creation to ensure current market rates. This prevents:
+- Stale pricing during volatile markets
+- Long-pending transactions
+- Rate arbitrage
 
-You can monetize offramp transactions by adding a developer fee. Developer fees can be configured in two ways:
+If your quote expires (status becomes `QUOTE_FAILED`):
+1. Create a new offramp request
+2. Review the updated quote
+3. Accept the new quote within 10 minutes
 
-- **FIX**: Fixed fee amount regardless of transaction size
-- **PERCENT**: Percentage-based fee calculated on the transaction amount
+<Warning>
+**Time Sensitive:** Always check `quoteInformation.expiresAt` before accepting. Attempting to accept an expired quote will fail.
+</Warning>
 
-## Receipt Information
+## Key Concepts
 
-The `receipt` object contains transaction details once completed:
+<AccordionGroup>
+  <Accordion title="Quote Information">
+    The quote provides complete pricing transparency:
+    
+    - **sendGross**: Total stablecoins being converted
+    - **sendNet**: Net amount after fees
+    - **receiveGross**: Total fiat before fees
+    - **receiveNet**: Actual fiat you'll receive
+    - **rate**: Exchange rate (stablecoin to fiat)
+    - **expiresAt**: Quote expiration timestamp
+    
+    Always verify `receiveNet` matches your expectations before accepting.
+  </Accordion>
 
-- **transactionHash**: Blockchain transaction hash for the stablecoin transfer
-- **uetr**: Unique End-to-end Transaction Reference for international wire transfers
+  <Accordion title="Developer Fees">
+    Monetize offramp transactions by adding a developer fee when creating the offramp:
+    
+    **FIX**: Fixed amount regardless of transaction size
+    ```json
+    {
+      "fee": {
+        "type": "FIX",
+        "value": 0.5
+      }
+    }
+    ```
+    
+    **PERCENT**: Percentage of transaction amount
+    ```json
+    {
+      "fee": {
+        "type": "PERCENT",
+        "value": 0.01
+      }
+    }
+    ```
+    
+    Developer fees are paid in stablecoins from the source wallet before conversion.
+  </Accordion>
 
-## Try it out
+  <Accordion title="USDT Fee">
+    USDT offramps incur an additional 0.1% exchange fee beyond standard rates. This fee appears on your monthly invoice, not deducted from the transaction amount.
+  </Accordion>
 
-<Card title="Convert USDC to USD" icon="code" href="/guides/convert/usdc-usd">
-  Learn how to convert stablecoins to fiat
-</Card>
+  <Accordion title="Account Requirements">
+    Before creating offramps, ensure:
+    - User has completed KYC for the destination currency's rail
+    - Offramp account is created and active (status: `ACTIVE`)
+    - Sufficient stablecoin balance in the source wallet
+  </Accordion>
+</AccordionGroup>
+
+## Getting Help
+
+- 📧 **Email:** support@hifibridge.com
+- 💬 **Slack:** Message us in our shared Slack channel
+
+## Related Resources
+
+- [Quickstart Guide](/docs/quickstart) - Complete offramp tutorial
+- [Offramp Accounts](/docs/accounts/offramp-accounts) - Set up bank accounts for receiving fiat
+- [Users](/docs/users) - KYC requirements for offramping
+- [Webhooks](/docs/webhooks) - Real-time offramp status notifications
+- [API Reference](https://docs.hifibridge.com/api-reference/offramp/create-an-offramp) - Complete endpoint documentation

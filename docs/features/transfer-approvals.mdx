@@ -1,0 +1,386 @@
+---
+title: "Transfer Approvals"
+---
+
+**Transfer approvals** provide multi-party authorization for transfers, adding security and compliance controls to your organization's transaction workflow. Require approval before executing high-value or sensitive transfers.
+
+<Info>
+Transfer approvals apply to on-chain stablecoin transfers (wallet transfers, batch transfers, and bridging) only. Onramps and offramps do not support approval workflows.
+</Info>
+
+## How Transfer Approvals Work
+
+<Steps>
+  <Step title="Create transfer with approval">
+    Include `requireApproval: true` when creating a transfer via API.
+  </Step>
+  <Step title="Transfer enters pending state">
+    Transfer status becomes `PENDING_APPROVAL` and does not execute.
+  </Step>
+  <Step title="Admin notification">
+    Dashboard admins receive email notifications about the pending approval.
+  </Step>
+  <Step title="Approve or reject">
+    Authorized admins review and either approve or reject the transfer.
+  </Step>
+  <Step title="Execution or cancellation">
+    If approved, transfer executes normally. If rejected, transfer is cancelled.
+  </Step>
+</Steps>
+
+## Implementation Options
+
+Transfer approvals work differently depending on where transfers are initiated:
+
+### Dashboard Approvals
+
+When transfers are created in the HIFI Dashboard:
+- **Members** can initiate wallet transfers
+- **Member-initiated transfers** require Admin approval before execution
+- **Admin-initiated transfers** execute without approval
+- **Email notifications** sent for approvals and rejections
+
+### API Approvals
+
+When using the API:
+- Include `requireApproval: true` when creating transfers
+- Transfers enter approval workflow until approved or rejected
+- Supported on wallet transfers, batch transfers, and bridging
+- Can be integrated into your application's approval logic
+
+## Creating Transfers with Approval
+
+Add the `requireApproval` parameter to any supported transfer endpoint.
+
+**Request:**
+
+```bash
+curl -X POST "https://sandbox.hifi.com/v2/wallets/transfers" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "requestId": "a40ea2aa-7937-4be9-bb1f-b75f1489bcc6",
+    "source": {
+      "userId": "usr_abc123"
+    },
+    "destination": {
+      "userId": "usr_xyz789"
+    },
+    "amount": 10000,
+    "currency": "usdc",
+    "chain": "POLYGON",
+    "requireApproval": true
+  }'
+```
+
+**Response:**
+
+```json
+{
+  "transferType": "WALLET.TRANSFER",
+  "transferDetails": {
+    "id": "xfr_abc123",
+    "requestId": "a40ea2aa-7937-4be9-bb1f-b75f1489bcc6",
+    "status": "PENDING_APPROVAL",
+    "amount": 10000,
+    "currency": "usdc",
+    "chain": "POLYGON",
+    "receipt": {
+      "approval": {
+        "id": "apv_xyz789",
+        "status": "PENDING",
+        "transferId": "xfr_abc123",
+        "transferType": "WALLET.TRANSFER",
+        "createdAt": "2025-02-03T16:11:36.654998+00:00",
+        "votes": []
+      }
+    }
+  }
+}
+```
+
+### Supported Endpoints
+
+The `requireApproval` parameter works with:
+
+| Endpoint                              | Transfer Type                                    |
+| :------------------------------------ | :----------------------------------------------- |
+| `POST /v2/wallets/transfers`          | Single wallet transfers                          |
+| `POST /v2/wallets/transfers/batches`  | Batch transfers (up to 50 recipients)            |
+| `POST /v2/wallets/bridges`            | Cross-chain bridging transfers                   |
+
+<Info>
+**Bridging Note:** For bridging transfers, quotes are generated **after** approval. This prevents quotes from expiring while awaiting review.
+</Info>
+
+## Listing Pending Approvals
+
+Retrieve all transfers awaiting approval using the [List Transfer Approvals](https://docs.hifibridge.com/api-reference/transfer-approval/list-transfer-approvals) endpoint.
+
+**Request:**
+
+```bash
+curl -X GET "https://sandbox.hifi.com/v2/transfer-approvals?limit=20&offset=0" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+**Query Parameters:**
+
+- **limit** (optional): Number of approvals to return (default: 20, max: 100)
+- **offset** (optional): Number of approvals to skip for pagination (default: 0)
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "message": "Pending approvals retrieved successfully",
+  "count": 2,
+  "approvals": [
+    {
+      "id": "apv_abc123",
+      "transferId": "xfr_xyz789",
+      "status": "PENDING",
+      "transferType": "WALLET.TRANSFER",
+      "createdAt": "2024-01-15T10:30:00.000Z",
+      "updatedAt": "2024-01-15T11:00:00.000Z"
+    },
+    {
+      "id": "apv_def456",
+      "transferId": "bat_ghi789",
+      "status": "PENDING",
+      "transferType": "WALLET.TRANSFER.BATCH",
+      "createdAt": "2024-01-15T09:15:00.000Z",
+      "updatedAt": "2024-01-15T09:15:00.000Z"
+    }
+  ]
+}
+```
+
+Use this endpoint to build approval dashboards or automate approval workflows.
+
+## Approving Transfers
+
+Approve pending transfers using the [Approve Transfer](https://docs.hifibridge.com/api-reference/transfer-approval/approve-transfer) endpoint.
+
+**Request:**
+
+```bash
+curl -X POST "https://sandbox.hifi.com/v2/transfer-approvals/apv_abc123/approve" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "comment": "Approved after reviewing transaction details"
+  }'
+```
+
+**Request Fields:**
+
+- **approvalId** (required, path): ID of the approval to approve
+- **comment** (optional): Explanation for the approval decision (max 1000 characters)
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "message": "Transfer approved and initiated successfully",
+  "approvalId": "apv_abc123",
+  "status": "APPROVED",
+  "timestamp": "2024-01-15T11:00:00.000Z"
+}
+```
+
+After approval, the transfer proceeds to execution immediately.
+
+## Rejecting Transfers
+
+Reject pending transfers using the [Reject Transfer](https://docs.hifibridge.com/api-reference/transfer-approval/reject-transfer) endpoint.
+
+**Request:**
+
+```bash
+curl -X POST "https://sandbox.hifi.com/v2/transfer-approvals/apv_abc123/reject" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "comment": "Transfer amount exceeds daily limit"
+  }'
+```
+
+**Request Fields:**
+
+- **approvalId** (required, path): ID of the approval to reject
+- **comment** (optional): Reason for rejection (max 1000 characters)
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "message": "Transfer rejected successfully",
+  "approvalId": "apv_abc123",
+  "status": "REJECTED",
+  "timestamp": "2024-01-15T11:00:00.000Z"
+}
+```
+
+Rejected transfers are cancelled and will not execute.
+
+## Approval Status Flow
+
+Transfers with `requireApproval: true` follow this status progression:
+
+| Status                  | Description                                               |
+| :---------------------- | :-------------------------------------------------------- |
+| **PENDING_APPROVAL**    | Transfer awaiting admin approval                          |
+| **APPROVED**            | Transfer approved and proceeding to execution             |
+| **REJECTED**            | Transfer rejected and cancelled                           |
+
+After approval, transfers move to normal execution statuses (`CREATED`, `INITIATED`, `PENDING`, `COMPLETED`).
+
+<Note>
+**Status Updates:** Subscribe to `TRANSFER.APPROVAL.PENDING`, `TRANSFER.APPROVAL.APPROVED`, and `TRANSFER.APPROVAL.REJECTED` webhook events to receive real-time approval notifications. See [Webhooks](/docs/webhooks) for setup instructions.
+</Note>
+
+## Notifications
+
+### Email Notifications
+
+**Admins receive notifications when:**
+- A transfer requires approval (Member-initiated)
+- A transfer needs their review
+
+**Members receive notifications when:**
+- Their transfer request is approved
+- Their transfer request is rejected (with reason if provided)
+
+### Webhook Events
+
+Subscribe to approval events for automated workflows:
+
+| Event Type                          | Description                                  |
+| :---------------------------------- | :------------------------------------------- |
+| **TRANSFER.APPROVAL.PENDING**       | Transfer created, awaiting approval          |
+| **TRANSFER.APPROVAL.APPROVED**      | Transfer approved, proceeding to execution   |
+| **TRANSFER.APPROVAL.REJECTED**      | Transfer rejected and cancelled              |
+
+## Sample Code
+
+Here's a complete approval workflow implementation:
+
+<Steps>
+  <Step title="Create a High-Value Transfer That Requires Approval">
+    To trigger an approval workflow for transfers over a certain threshold (e.g., $10k), include `requireApproval: true` in your request:
+    ```javascript
+    async function createHighValueTransfer(amount, destinationUserId) {
+      const requireApproval = amount > 10000;
+      const transfer = await fetch('https://sandbox.hifi.com/v2/wallets/transfers', {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer YOUR_API_KEY',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          requestId: crypto.randomUUID(),
+          source: { userId: 'usr_treasury' },
+          destination: { userId: destinationUserId },
+          amount,
+          currency: 'usdc',
+          chain: 'POLYGON',
+          requireApproval
+        })
+      }).then(r => r.json());
+
+      if (transfer.transferDetails.status === 'PENDING_APPROVAL') {
+        notifyApprovers(transfer.transferDetails.id);
+      }
+      return transfer;
+    }
+    ```
+    If the transfer is flagged for approval, notify approvers (e.g., by email or internal notification).
+  </Step>
+
+  <Step title="List Pending Approvals (for Admin Review)">
+    Fetch all pending transfer approvals to display in an admin dashboard:
+    ```javascript
+    async function fetchPendingApprovals() {
+      const approvals = await fetch(
+        'https://sandbox.hifi.com/v2/transfer-approvals?limit=50',
+        {
+          headers: { 'Authorization': 'Bearer YOUR_API_KEY' }
+        }
+      ).then(r => r.json());
+      
+      return approvals.approvals.map(approval => ({
+        id: approval.id,
+        transferId: approval.transferId,
+        type: approval.transferType,
+        pendingSince: approval.createdAt
+      }));
+    }
+    ```
+  </Step>
+
+  <Step title="Approve a Pending Transfer">
+    Admins can approve a pending transfer by submitting an approval action:
+    ```javascript
+    async function approveTransfer(approvalId, adminComment) {
+      const approval = await fetch(
+        `https://sandbox.hifi.com/v2/transfer-approvals/${approvalId}/approve`,
+        {
+          method: 'POST',
+          headers: {
+            'Authorization': 'Bearer YOUR_API_KEY',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            comment: adminComment
+          })
+        }
+      ).then(r => r.json());
+      
+      console.log('Transfer approved:', approval.approvalId);
+      return approval;
+    }
+    ```
+  </Step>
+
+  <Step title="React to Approval Webhook Events">
+    Use webhook events to automatically notify stakeholders and update your application's state:
+    ```javascript
+    function handleApprovalWebhook(event) {
+      switch (event.eventType) {
+        case 'TRANSFER.APPROVAL.PENDING':
+          sendSlackNotification({
+            message: `Transfer ${event.data.transferId} requires approval`,
+            amount: event.data.amount,
+            destination: event.data.destination
+          });
+          break;
+        case 'TRANSFER.APPROVAL.APPROVED':
+          updateTransferStatus(event.data.transferId, 'APPROVED');
+          notifyRequester(event.data.initiatorId, 'approved');
+          break;
+        case 'TRANSFER.APPROVAL.REJECTED':
+          notifyRequester(event.data.initiatorId, 'rejected', event.data.comment);
+          break;
+      }
+    }
+    ```
+    Subscribe to webhook endpoints to handle `TRANSFER.APPROVAL.*` events.
+  </Step>
+</Steps>
+
+## Getting Help
+
+- 📧 **Email:** support@hifi.com
+- 💬 **Slack:** Message us in our shared Slack channel
+
+## Related Resources
+
+- [Wallet Transfers](/docs/transfers/onchain) - Single wallet transfers
+- [Batch Transfers](/docs/features/batch-transfers) - Multiple recipient transfers
+- [Bridging](/docs/transfers/bridging) - Cross-chain transfers
+- [Webhooks](/docs/webhooks) - Real-time approval notifications
+- [API Reference](https://docs.hifibridge.com/api-reference/transfer-approval/list-transfer-approvals) - Complete endpoint documentation

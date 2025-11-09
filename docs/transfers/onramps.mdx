@@ -2,217 +2,309 @@
 title: "Onramps"
 ---
 
-Onramps are transactions that convert fiat currencies to stablecoins in HIFI wallets. The available onramp methods vary by region due to local payment infrastructure and regulatory requirements.
+**Onramps** convert fiat currency into stablecoins and deliver them to wallets. Users can onramp through virtual accounts (reusable) or the Onramp API (one-time virtual accounts).
 
-## How Onramps Work
+## Onramp Methods
 
-Onramps follow a simple three-step process:
+HIFI supports two onramp methods:
 
-1. **Create an onramp** – Initiate a payment from an Account into a Wallet
-2. **Review quote** – Examine the exchange rate, fees, and quote validity period
-3. **Send money** – Transfer the fiat currency to the provided bank account using the reference ID
-
-### Quote Validity
-
-Quotes are time-sensitive and typically expire within 24 hours. This ensures you get current market rates and prevents stale pricing.
-
-If a quote expires before you deposit funds, you'll need to create a new onramp request to get updated pricing.
+| Method              | Description                                              | Best For                                    |
+| :------------------ | :------------------------------------------------------- | :------------------------------------------ |
+| **Virtual Account** | Reusable bank account for USD deposits                   | Recurring USD deposits, simplified flows    |
+| **Onramp API**      | One-time virtual account per transaction                 | USD and Africa currencies via API           |
 
 <Info>
-  All USDT-related onramps incur an additional **0.1% exchange fee**, which will be reflected on your monthly invoice.
+**Virtual Accounts for USD:** For recurring USD deposits, use reusable [Virtual Accounts](/docs/accounts/virtual-accounts) which provide permanent bank account numbers. The Onramp API generates one-time virtual accounts per transaction and currently supports USD and Africa currencies.
 </Info>
 
-## Transaction Structure
+## Using the Onramp API
 
-When you create an onramp, the API response includes detailed information about the transaction:
+The Onramp API generates a one-time virtual account for a specific transaction. This method currently supports USD and Africa currencies. The flow is similar to regular virtual accounts, but the bank account details are valid only for this single transaction.
+
+### Request Quote
+
+Create an onramp to get a conversion quote using the [Create Onramp](https://docs.hifibridge.com/api-reference/onramp/create-an-onramp) endpoint.
+
+**Request:**
+
+```bash
+curl -X POST "https://sandbox.hifibridge.com/v2/onramps" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "source": {
+      "userId": "usr_abc123",
+      "currency": "usd",
+      "amount": 100,
+      "transferType": "ach"
+    },
+    "destination": {
+      "userId": "usr_abc123",
+      "currency": "usdc",
+      "chain": "POLYGON"
+    },
+    "requestId": "e1047def-6942-4fd7-be04-e62eb41813b6"
+  }'
+```
+
+The response contains the onramp quote and deposit information:
+
+<Accordion title="Response">
 
 ```json
 {
   "transferType": "ONRAMP",
   "transferDetails": {
-    "id": "b26927e6-2771-423c-af44-a3c7a3e815c5",
+    "id": "onr_abc123",
     "requestId": "e1047def-6942-4fd7-be04-e62eb41813b6",
     "createdAt": "2025-02-03T17:15:31.927121+00:00",
     "updatedAt": "2025-02-03T17:15:35.882+00:00",
     "status": "AWAITING_FUNDS",
-    "failedReason": null,
     "source": {
-      /* Source */
+      "userId": "usr_abc123",
+      "currency": "usd",
+      "amount": 100,
+      "transferType": "ach"
     },
     "destination": {
-      /* Destination */
+      "userId": "usr_abc123",
+      "currency": "usdc",
+      "chain": "POLYGON",
+      "walletAddress": "0x848732f6c834E05b17C56fa01E83EE095f72C3c3"
     },
-    "receipt": { "transactionHash": null },
-    "developerFee": null,
     "quoteInformation": {
-      /* Quote */
+      "sendGross": {
+        "amount": "100.00",
+        "currency": "usd"
+      },
+      "receiveNet": {
+        "amount": "100.00",
+        "currency": "usdc"
+      },
+      "rate": "1.0000",
+      "expiresAt": "2025-02-04T17:15:31.927Z"
     },
     "depositInfo": {
-      /* Deposit Info */
+      "bankName": "Cross River Bank",
+      "bankAddress": "885 Teaneck Road, Teaneck, NJ 07666",
+      "accountNumber": "11223344556677",
+      "routingNumber": "021214891",
+      "beneficiary": {
+        "name": "HIFI Bridge",
+        "address": "123 Main St, New York, NY 10010"
+      },
+      "referenceId": "BRGWX4J5BB7MP693BT8Z",
+      "amount": "100.0",
+      "currency": "usd",
+      "instruction": "Please deposit the exact amount to the bank account provided. Use the reference ID as the deposit reference."
+    },
+    "receipt": {
+      "transactionHash": null
     }
   }
 }
 ```
 
-<AccordionGroup>
-  <Accordion title="Source">
-    ```json
-    {
-      "userId": "c15c0adf-3e45-4a62-b334-73aeec127649",
-      "currency": "usd",
-      "transferType": "ach",
-      "amount": 10,
-      "accountId": null,
-      "user": {
-        "email": "henry@hifibridge.com",
-        "lastName": "Wu",
-        "firstName": "Henry",
-        "businessName": null
-      },
-      "bankInfo": null
-    }
-    ```
-  </Accordion>
-  <Accordion title="Destination">
-    ```json
-    {
-      "userId": "c15c0adf-3e45-4a62-b334-73aeec127649",
-      "currency": "usdc",
-      "chain": "POLYGON_AMOY",
-      "walletAddress": "0x848732f6c834E05b17C56fa01E83EE095f72C3c3",
-      "externalWalletId": "335051d6-44ba-4ad7-ab78-bb433a568161",
-      "amount": null,
-      "user": {
-        "email": "henry@hifibridge.com",
-        "lastName": "Wu",
-        "firstName": "Henry",
-        "businessName": null
-      }
-    }
-    ```
-  </Accordion>
-  <Accordion title="Quote">
-    ```json
-    {
-      "sendGross": {
-        "amount": "10.00",
-        "currency": "usd"
-      },
-      "sendNet": {
-        "amount": "10.00",
-        "currency": "usd"
-      },
-      "railFee": {
-        "amount": "0.00",
-        "currency": "usd"
-      },
-      "receiveGross": {
-        "amount": "10.00",
-        "currency": "usdc"
-      },
-      "receiveNet": {
-        "amount": "10.00",
-        "currency": "usdc"
-      },
-      "rate": "1.0000",
-      "expiresAt": "2025-02-04T17:15:31.927Z"
-    }
-    ```
-  </Accordion>
-  <Accordion title="Deposit Info">
-    ```json
-    {
-      "bankName": "Bank of Nowhere",
-      "bankAddress": "1800 North Pole St., Orlando, FL 32801",
-      "accountNumber": "11223344556677",
-      "routingNumber": "123456789",
-      "iban": "",
-      "bic": "",
-      "beneficiary": {
-        "name": "HiFi Bridge",
-        "address": "1234 Elm St, Springfield, IL 12345"
-      },
-      "referenceId": "BRGWX4J5BB7MP693BT8Z",
-      "amount": "10.0",
-      "currency": "usd",
-      "instruction": "Please deposit the exact amount of currency to the bank account provided. Use the reference ID as the deposit reference."
-    }
-    ```
-  </Accordion>
-</AccordionGroup>
+</Accordion>
+
+<ResponseField name="transferDetails.id" type="string">
+  Unique onramp ID. **Save this** for tracking the transaction status.
+</ResponseField>
+
+<ResponseField name="transferDetails.status" type="string">
+  Current status. `AWAITING_FUNDS` means the quote is ready and waiting for your deposit.
+</ResponseField>
+
+<ResponseField name="transferDetails.quoteInformation" type="object">
+  Conversion details including rates and amounts.
+  
+  <Expandable title="properties">
+    <ResponseField name="sendGross" type="object">
+      Total fiat amount to send
+    </ResponseField>
+    <ResponseField name="receiveNet" type="object">
+      Stablecoin amount you'll receive
+    </ResponseField>
+    <ResponseField name="rate" type="string">
+      Exchange rate between fiat and stablecoin
+    </ResponseField>
+    <ResponseField name="expiresAt" type="string">
+      Quote expiration timestamp. Deposit must arrive before this time.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="transferDetails.depositInfo" type="object">
+  **Most Important:** Bank account details for sending your fiat deposit.
+  
+  <Expandable title="properties">
+    <ResponseField name="referenceId" type="string">
+      **Critical:** Include this reference ID with your bank transfer. Without it, your deposit cannot be matched to this onramp.
+    </ResponseField>
+    <ResponseField name="accountNumber" type="string">
+      Bank account number for deposit
+    </ResponseField>
+    <ResponseField name="routingNumber" type="string">
+      Bank routing number
+    </ResponseField>
+    <ResponseField name="amount" type="string">
+      Exact amount to deposit (must match exactly)
+    </ResponseField>
+    <ResponseField name="instruction" type="string">
+      Deposit instructions and requirements
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+### Send Payment
+
+After receiving the quote, send the exact amount specified in `depositInfo` to the provided bank account. 
+
+**Critical requirements:**
+
+- **Use the reference ID** - Include the `referenceId` in your bank transfer memo/reference field
+- **Send exact amount** - The amount must match `depositInfo.amount` exactly
+- **Send before expiration** - Deposit must arrive before `quoteInformation.expiresAt`
+
+<Warning>
+**Reference ID Required:** Always include the reference ID with your deposit. Deposits without the correct reference ID cannot be matched to your onramp and may be lost or delayed.
+</Warning>
+
+### Processing
+
+Once HIFI detects your deposit:
+
+1. **Fiat validation** - Confirms amount and reference ID match
+2. **Conversion** - Exchanges fiat for stablecoins at the quoted rate
+3. **Delivery** - Sends stablecoins to the destination wallet
+4. **Completion** - Transaction hash becomes available in `receipt.transactionHash`
+
+Processing times vary by payment method:
+- **ACH**: 1-3 business days
+- **Wire**: Same day
+- **International transfers**: 1-5 business days depending on country
 
 ## Transaction Status
 
-**1. Transaction Creation Phase**
+Onramps progress through several phases:
 
-- **`CREATED`**: The transaction request has been successfully created.
-- **`NOT_INITIATED`**: The transaction was not submitted due to a validation error.
+### Creation & Quote Phase
 
-**2. Quote and Funding Phase**
+| Status              | Description                                                       |
+| :------------------ | :---------------------------------------------------------------- |
+| **CREATED**         | Onramp request created successfully                               |
+| **NOT_INITIATED**   | Request not submitted due to validation error                     |
+| **OPEN_QUOTE**      | Quote generated and awaiting deposit                              |
+| **QUOTE_FAILED**    | Quote expired before deposit was received                         |
+| **AWAITING_FUNDS**  | Waiting for fiat deposit with reference ID                        |
 
-- **`OPEN_QUOTE`**: A quote has been generated and is awaiting user acceptance.
-- **`QUOTE_FAILED`**: The transaction failed or expired before the quote was accepted.
-- **`AWAITING_FUNDS`**: Waiting for funds to be sent to the provided deposit instruction.
+### Fiat Processing Phase
 
-**3. Fiat Processing Phase**
+| Status              | Description                                                       |
+| :------------------ | :---------------------------------------------------------------- |
+| **FIAT_INITIATED**  | Deposit detected, fiat processing started                         |
+| **FIAT_PENDING**    | Fiat clearing and validation in progress                          |
+| **FIAT_PROCESSED**  | Fiat successfully received and validated                          |
+| **FIAT_FAILED**     | Fiat processing failed (e.g., invalid amount, missing reference)  |
+| **FIAT_RETURNED**   | Fiat returned to sender after failure                             |
 
-- **`FIAT_INITIATED`**: The fiat transaction process has started.
-- **`FIAT_PENDING`**: The fiat transaction is in progress and awaiting processing.
-- **`FIAT_PROCESSED`**: The fiat transaction has been successfully processed.
-- **`FIAT_FAILED`**: The fiat transaction failed due to an error.
-- **`FIAT_RETURNED`**: The fiat funds were returned after a failed transaction.
+### Crypto Processing Phase
 
-**4. Crypto Processing Phase**
+| Status              | Description                                                       |
+| :------------------ | :---------------------------------------------------------------- |
+| **CRYPTO_INITIATED**| Converting fiat to stablecoins                                    |
+| **CRYPTO_PENDING**  | Sending stablecoins on blockchain                                 |
+| **CRYPTO_FAILED**   | Blockchain transaction failed                                     |
+| **COMPLETED**       | Stablecoins delivered to wallet, transaction complete             |
 
-- **`CRYPTO_INITIATED`**: The crypto transaction process has started.
-- **`CRYPTO_PENDING`**: The crypto transaction is in progress and awaiting on-chain confirmation.
-- **`CRYPTO_FAILED`**: The crypto transaction failed due to an error.
-- **`COMPLETED`**: The transaction has been successfully confirmed on-chain.
+## Tracking Onramps
 
-### Flow Chart
+<Note>
+**Status Updates:** Subscribe to `ONRAMP.CREATE` and `ONRAMP.UPDATE` webhook events to receive real-time status notifications. See [Webhooks](/docs/webhooks) for setup instructions.
+</Note>
 
-![Onramp Status Flow Chart](/images/onramp-status.png)
+Monitor onramp status using the [Retrieve Onramp](https://docs.hifibridge.com/api-reference/onramp/retrieve-an-onramp) endpoint. The response structure matches the create endpoint shown above.
 
-## Deposit Information
+**Request:**
 
-The `depositInfo` object contains all the details you need to complete your fiat deposit:
+```bash
+curl -X GET "https://sandbox.hifibridge.com/v2/onramps/onr_abc123" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
 
-- **Bank details**: Account number, routing number, and bank address
-- **Beneficiary information**: Name and address of the receiving entity
-- **Reference ID**: Unique identifier you must include with your deposit
-- **Amount**: Exact amount to deposit (must match exactly)
-- **Instructions**: Specific guidance for completing the deposit
+Use the `transactionHash` in the response to view the stablecoin delivery on a blockchain explorer.
+
+## Quote Validity
+
+Quote expiration times vary by currency. This ensures:
+- Current market rates
+- Prevention of stale pricing
+- Timely transaction processing
+
+If your quote expires (status becomes `QUOTE_FAILED`):
+1. Create a new onramp request
+2. Get updated pricing
+3. Complete the deposit with the new reference ID
 
 <Info>
-  Always use the exact reference ID provided in the deposit information when making your fiat transfer. This ensures your funds are properly credited to your onramp transaction.
+**Quote Expiration:** The `expiresAt` timestamp in `quoteInformation` shows exactly when the quote expires for your specific currency. Always check this timestamp and plan to send your deposit with enough time for bank processing before this deadline.
 </Info>
 
-## Quote Information
+## Key Concepts
 
-The quote includes both gross and net amounts for both sending and receiving:
+<AccordionGroup>
+  <Accordion title="Virtual Account vs Onramp API">
+    Both methods use virtual accounts, but with different characteristics:
+    
+    **Virtual Accounts** (reusable):
+    - Permanent bank account number
+    - Can be used for multiple deposits
+    - USD currency only
+    - Created via Virtual Accounts API
+    
+    **Onramp API** (one-time):
+    - One-time virtual account per transaction
+    - Generated per transaction via Onramps API
+    - Currently supports USD and Africa currencies
+    - Bank details valid only for that transaction
+  </Accordion>
 
-- **sendGross**: Total amount you're sending in fiat currency
-- **sendNet**: Net amount after any rail fees are deducted
-- **receiveGross**: Total amount you'll receive in stablecoins
-- **receiveNet**: Net amount you'll actually receive
-- **rate**: Current exchange rate between fiat and stablecoin
-- **expiresAt**: When the quote expires and you'll need a new one
+  <Accordion title="Reference ID Requirements">
+    The Onramp API works like one-time virtual accounts. The reference ID functions similarly to how deposits are matched to virtual accounts:
+    - Each onramp generates a unique reference ID
+    - Include it in your bank transfer memo/reference field
+    - HIFI uses it to match your deposit to the correct transaction
+    - Missing reference IDs cause delays or lost funds
+    
+    **Where to include it:** Most banks have a "memo," "reference," or "description" field for transfers. Put the reference ID there.
+  </Accordion>
 
-## Settlement Rules
+  <Accordion title="Exact Amount Matching">
+    The deposit amount must match exactly:
+    - Send the exact amount shown in `depositInfo.amount`
+    - Include all decimal places (e.g., $100.00, not $100)
+    - Don't round or adjust for fees
+    - Mismatched amounts may be rejected or require manual intervention
+  </Accordion>
 
-You can configure settlement rules to automatically calculate and distribute fees for onramp transactions. Settlement rules support:
+  <Accordion title="USDT Fee">
+    USDT onramps incur an additional 0.1% exchange fee beyond standard rates. This fee appears on your monthly invoice, not deducted from the transaction amount.
+  </Accordion>
 
-- Percentage-based or fixed fee structures
-- Tiered pricing based on transaction volume
-- Fee distribution to multiple wallet addresses
-- Network-specific configurations
+  <Accordion title="External Wallets">
+    By default, stablecoins go to the user's HIFI wallet. To send to an external wallet instead, include `externalWalletId` in the destination.
+  </Accordion>
+</AccordionGroup>
 
-<Card title="Settlement Rules" icon="gear" href="/docs/transfers/virtual-accounts/settlement-rules">
-  Learn how to configure fee calculations and distribution
-</Card>
+## Getting Help
 
-## Try it out
+- 📧 **Email:** support@hifibridge.com
+- 💬 **Slack:** Message us in our shared Slack channel
 
-<Card title="Convert USD to USDC" icon="code" href="/guides/convert/usd-usdc">
-  Learn how to pay in to a Wallet
-</Card>
+## Related Resources
+
+- [Quickstart Guide](/docs/quickstart) - Complete onramp tutorial
+- [Virtual Accounts](/docs/accounts/virtual-accounts) - Automatic onramp solution (recommended)
+- [Users](/docs/users) - KYC requirements for onramping
+- [Webhooks](/docs/webhooks) - Real-time onramp status notifications
+- [API Reference](https://docs.hifibridge.com/api-reference/onramp/create-an-onramp) - Complete endpoint documentation

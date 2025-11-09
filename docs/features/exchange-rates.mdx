@@ -1,0 +1,255 @@
+---
+title: "Exchange Rates"
+sidebarTitle: "Exchange Rates"
+---
+
+**Exchange Rates** provide estimated conversion rates for transactions between stablecoins and fiat. Use these rates to display pricing information to users before creating offramp or onramp requests.
+
+## How Exchange Rates Work
+
+Exchange rates work similarly for both offramps (stablecoin to fiat) and onramps (fiat to stablecoin):
+
+<Steps>
+  <Step title="Request rate">
+    Query the rates endpoint with the source and destination currencies.
+  </Step>
+  <Step title="Display to user">
+    Show the rate to your user in your UI before they initiate the transaction.
+  </Step>
+</Steps>
+
+## Retrieving Exchange Rates
+
+Use these endpoints to get estimated conversion rates:
+
+- [Retrieve Offramp Rate](https://docs.hifibridge.com/api-reference/offramp/retrieve-an-offramp-rate) - For stablecoin to fiat conversions
+- [Retrieve Onramp Rate](https://docs.hifibridge.com/api-reference/onramp/retrieve-an-onramp-rate) - For fiat to stablecoin conversions
+
+### Offramp Rates (Stablecoin to Fiat)
+
+```bash
+curl -X GET "https://sandbox.hifibridge.com/v2/offramps/rates?fromCurrency=usdc&toCurrency=usd" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+| Parameter        | Required | Supported Values                                                                                                |
+| :--------------- | :------- | :-------------------------------------------------------------------------------------------------------------- |
+| **fromCurrency** | Yes      | `usdc`                                                                                                          |
+| **toCurrency**   | Yes      | `usd`, `brl`, `mxn`, `ugx`, `ngn`, `kes`, `tzs`, `mwk`, `xaf`, `bwp`, `zar`, `usd-hka`, `usd-chn`, `cny`, `hkd` |
+
+### Onramp Rates (Fiat to Stablecoin)
+
+```bash
+curl -X GET "https://sandbox.hifibridge.com/v2/onramps/rates?fromCurrency=usd&toCurrency=usdc" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+| Parameter        | Required | Supported Values                                       |
+| :--------------- | :------- | :----------------------------------------------------- |
+| **fromCurrency** | Yes      | `usd`, `ugx`, `ngn`, `bwp`, `tzs`, `mwk`, `xaf`, `kes` |
+| **toCurrency**   | Yes      | `usdc`                                                 |
+
+### Response
+
+```json
+{
+  "fromCurrency": "usdc",
+  "toCurrency": "usd",
+  "conversionRate": "1",
+  "conversionRates": [
+    {
+      "transferType": "default",
+      "conversionRate": "1"
+    }
+  ]
+}
+```
+
+<ResponseField name="fromCurrency" type="string">
+  Source currency code (e.g., `usdc` for stablecoin, `usd`, `eur`, `brl` for
+  fiat).
+</ResponseField>
+
+<ResponseField name="toCurrency" type="string">
+  Destination currency code (e.g., `usd`, `eur`, `brl` for fiat, `usdc` for
+  stablecoin).
+</ResponseField>
+
+<ResponseField name="conversionRate" type="string">
+  Estimated conversion rate from the source currency to the destination currency
+  for the default transfer type. The rate is expressed as a string to preserve
+  precision.
+</ResponseField>
+
+<ResponseField name="conversionRates" type="array">
+  Array of conversion rates for different transfer types. Each object contains:
+  <Expandable title="Array item properties">
+    <ResponseField name="transferType" type="string">
+      The transfer type identifier. When `transferType` is `default`, this is
+      the conversion rate for the default transfer type.
+    </ResponseField>
+
+    <ResponseField name="conversionRate" type="string">
+      The estimated conversion rate for this specific transfer type, expressed
+      as a string to preserve precision.
+    </ResponseField>
+
+  </Expandable>
+</ResponseField>
+
+## Usage Examples
+
+### Display Rate in UI
+
+Retrieve rates to show users estimated conversion amounts before they create an offramp or onramp:
+
+```javascript
+async function getOfframpRate(fromCurrency, toCurrency) {
+  const response = await fetch(
+    `https://sandbox.hifibridge.com/v2/offramps/rates?fromCurrency=${fromCurrency}&toCurrency=${toCurrency}`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: "Bearer YOUR_API_KEY",
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch exchange rate");
+  }
+
+  const rateData = await response.json();
+  return rateData.conversionRate;
+}
+
+async function getOnrampRate(fromCurrency, toCurrency) {
+  const response = await fetch(
+    `https://sandbox.hifibridge.com/v2/onramps/rates?fromCurrency=${fromCurrency}&toCurrency=${toCurrency}`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: "Bearer YOUR_API_KEY",
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch exchange rate");
+  }
+
+  const rateData = await response.json();
+  return rateData.conversionRate;
+}
+
+// Example usage - Offramp
+const offrampRate = await getOfframpRate("usdc", "usd");
+console.log(`1 USDC = ${offrampRate} USD`);
+
+// Example usage - Onramp
+const onrampRate = await getOnrampRate("usd", "usdc");
+console.log(`1 USD = ${onrampRate} USDC`);
+```
+
+### Calculate Estimated Amount
+
+Use the rate to calculate estimated conversion amounts:
+
+```javascript
+function calculateEstimatedAmount(sourceAmount, conversionRate) {
+  // Parse string rates to numbers for calculation
+  const amount = parseFloat(sourceAmount);
+  const rate = parseFloat(conversionRate);
+  return (amount * rate).toFixed(2);
+}
+
+// Example: Calculate USD equivalent of 100 USDC (Offramp)
+const cryptoAmount = "100";
+const offrampRate = await getOfframpRate("usdc", "usd");
+const estimatedUsd = calculateEstimatedAmount(cryptoAmount, offrampRate);
+console.log(`${cryptoAmount} USDC ≈ ${estimatedUsd} USD`);
+
+// Example: Calculate USDC equivalent of 100 USD (Onramp)
+const fiatAmount = "100";
+const onrampRate = await getOnrampRate("usd", "usdc");
+const estimatedUsdc = calculateEstimatedAmount(fiatAmount, onrampRate);
+console.log(`${fiatAmount} USD ≈ ${estimatedUsdc} USDC`);
+```
+
+## Key Concepts
+
+<AccordionGroup>
+  <Accordion title="Estimated vs. Final Rates">
+    Exchange rates from these endpoints are **estimates** for display purposes. The final conversion rate will be determined when you create the offramp or onramp request and may differ based on:
+    
+    - Current market conditions at transaction time
+    - Fee calculations
+    - Network fees
+    - Quote expiration (quotes are valid for 10 minutes)
+    
+    Always inform users that displayed rates are estimates and final amounts will be shown in the quote.
+  </Accordion>
+
+<Accordion title="Rate Format">
+  Conversion rates are returned as strings to preserve decimal precision. When performing calculations, always parse them to numbers.
+
+```javascript
+// Correct: Parse to float for calculations
+const rate = parseFloat(response.conversionRate);
+const amount = parseFloat(cryptoAmount);
+const result = amount * rate;
+
+// Incorrect: Direct string operations
+const result2 = response.conversionRate * cryptoAmount; // May cause precision loss
+```
+
+Use `parseFloat()` or a decimal library (like `decimal.js`) for financial calculations to maintain accuracy.
+
+</Accordion>
+
+  <Accordion title="Error Handling">
+    Handle common error responses:
+    
+    - **401 Unauthorized:** Invalid or missing API key
+    - **404 Not Found:** Unsupported currency pair
+    - **500 Internal Server Error:** Temporary service issue
+    
+    ```javascript
+    try {
+      const rate = await getOfframpRate('usdc', 'usd');
+    } catch (error) {
+      if (error.response?.status === 404) {
+        console.error('Currency pair not supported');
+      } else if (error.response?.status === 401) {
+        console.error('Authentication failed');
+      } else {
+        console.error('Failed to fetch rate:', error);
+      }
+    }
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Best Practices
+
+<Note>
+  **Rate Caching:** Cache exchange rates for 1-2 minutes to reduce API calls
+  while keeping data reasonably fresh. Don't cache longer than 5 minutes as
+  rates can change.
+</Note>
+
+- **Show estimates only:** Always label displayed rates as "estimated" to set user expectations
+- **Refresh on user action:** Update rates when users change currency pairs
+- **Handle rate changes gracefully:** If a rate changes between display and transaction creation, the quote will show the actual rate
+- **Validate currency pairs:** Verify the requested currency pair is supported before displaying rates
+
+## Getting Help
+
+- 📧 **Email:** support@hifibridge.com
+- 💬 **Slack:** Message us in our shared Slack channel
+
+## Related Resources
+
+- [Offramps](/docs/transfers/offramps) - Create offramp transactions using these rates
+- [Onramps](/docs/transfers/onramps) - Create onramp transactions using these rates
+- [Currencies Reference](/docs/references/currencies) - Complete list of supported currencies
