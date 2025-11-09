@@ -95,3 +95,12 @@ Under the `details` section, there are four compliance categories that we screen
 - **questionnaire** – Indicates the screening result of the “source of funds and intended use” questionnaire.
 - **personalInfo** – Contains the results based on non-document information provided by the user, such as first name, last name, and address.
 - **proofOfAddress** – Indicates the screening result of the proof of address (PoA) documentation, if provided during the KYC application.
+
+Let’s also take a look at the `reviewResult` object, which appears both at the top level and within each compliance category.
+
+- **reviewAnswer** – Indicates the outcome of the screening. Possible values are `APPROVED` and `DECLINED`.
+- **reviewRejectType** – Indicates whether resubmission is allowed. Possible values are `FINAL` and `RETRY`. This field is only populated when `reviewAnswer` is `DECLINED`.
+  - When the value is `RETRY`, the user may resubmit their information and trigger a new KYC review.
+  - When the value is `FINAL`, it indicates a hard rejection — resubmission via API is not permitted.
+- **rejectReasons** – An array of enums that specify the reasons for a declined screening result. This field is only populated when `reviewAnswer` is `DECLINED`.
+- **comment** – A human-readable message providing additional details about the rejection. This field is intended to be shared with developers and end users for better clarity. This field is only populated when `reviewAnswer` is `DECLINED`.
