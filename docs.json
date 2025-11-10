@@ -135,100 +135,27 @@
       "bing": "BING_SITE_VERIFICATION_TOKEN"
     }
   },
-  "redirects": [
-    {
-      "source": "/docs/:slug*",
-      "destination": "/:slug*"
-    },
-    {
-      "source": "/docs/compliance/documents/overview",
-      "destination": "/compliance/documents/index"
-    },
-    {
-      "source": "/docs/compliance/documents/supported-identity-documents",
-      "destination": "/references/identity-documents"
-    },
-    {
-      "source": "/docs/rails/overview",
-      "destination": "/rails/index"
-    },
-    {
-      "source": "/docs/rails/usd-individual",
-      "destination": "/rails/usd"
-    },
-    {
-      "source": "/docs/rails/usd-business",
-      "destination": "/rails/usd"
-    },
-    {
-      "source": "/docs/compliance/currencies",
-      "destination": "/references/currencies"
-    },
-    {
-      "source": "/docs/compliance/references/:path*",
-      "destination": "/references/:path*"
-    },
-    {
-      "source": "/docs/transfers/wallets",
-      "destination": "/transfers/onchain"
-    },
-    {
-      "source": "/docs/users/features/kyc-link",
-      "destination": "/features/kyc-links"
-    },
-    {
-      "source": "/docs/transfers/features/batch-transfers",
-      "destination": "/features/batch-transfers"
-    },
-    {
-      "source": "/docs/transfers/features/virtual-accounts",
-      "destination": "/accounts/virtual-accounts"
-    },
-    {
-      "source": "/docs/transfers/features/transfer-approvals",
-      "destination": "/features/transfer-approvals"
-    },
-    {
-      "source": "/docs/transfers/features/developer-fees",
-      "destination": "/features/developer-fees"
-    },
-    {
-      "source": "/docs/transfers/features/settlement-rules",
-      "destination": "/features/settlement-rules"
-    },
-    {
-      "source": "/guides/quickstart",
-      "destination": "/quickstart"
-    },
-    {
-      "source": "/docs/api/postman",
-      "destination": "/postman"
-    },
-    {
-      "source": "/docs/webhooks/user",
-      "destination": "/webhooks/user-events"
-    },
-    {
-      "source": "/docs/webhooks/kyc",
-      "destination": "/webhooks/kyc-events"
-    },
-    {
-      "source": "/docs/webhooks/account",
-      "destination": "/webhooks/account-events"
-    },
-    {
-      "source": "/docs/webhooks/onramp",
-      "destination": "/webhooks/onramp-events"
-    },
-    {
-      "source": "/docs/webhooks/offramp",
-      "destination": "/webhooks/offramp-events"
-    },
-    {
-      "source": "/docs/webhooks/wallet",
-      "destination": "/webhooks/wallet-events"
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg"
+  },
+  "contextual": {
+    "options": ["copy", "view"]
+  },
+  "navbar": {
+    "primary": {
+      "type": "button",
+      "label": "Dashboard",
+      "href": "https://dashboard.hifibridge.com"
     }
-  ],
+  },
+  "footer": {
+    "socials": {
+      "x": "https://x.com/hifibridge",
+      "github": "https://github.com/Hifi-Bridge",
+      "linkedin": "https://www.linkedin.com/company/hifibridge"
+    }
+  },
   "navigation": {
     "tabs": [
       {
@@ -236,13 +163,19 @@
         "pages": [
           {
             "group": "Get started",
-            "pages": ["overview", "quickstart", "sandbox", "postman"]
+            "pages": [
+              "overview",
+              "quickstart",
+              "sandbox",
+              "postman",
+              "dashboard/index"
+            ]
           },
           {
             "group": "Core concepts",
             "pages": [
-              "users/index",
-              "wallets/index",
+              "users",
+              "wallets",
               {
                 "group": "Rails",
                 "pages": [
@@ -305,7 +238,7 @@
               {
                 "group": "Documents",
                 "pages": [
-                  "compliance/documents/index",
+                  "compliance/documents",
                   "compliance/documents/identity",
                   "compliance/documents/proof-of-address"
                 ]
@@ -320,7 +253,7 @@
               {
                 "group": "Business Industries",
                 "pages": [
-                  "references/business-industries/index",
+                  "references/business-industries",
                   "references/business-industries/agriculture-forestry",
                   "references/business-industries/mining-energy",
                   "references/business-industries/construction",
@@ -513,25 +446,410 @@
       }
     ]
   },
-  "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
-  },
-  "contextual": {
-    "options": ["copy", "view"]
-  },
-  "navbar": {
-    "primary": {
-      "type": "button",
-      "label": "Dashboard",
-      "href": "https://dashboard.hifibridge.com"
+  "redirects": [
+    {
+      "source": "/docs/compliance/documents/overview",
+      "destination": "/compliance/documents"
+    },
+    {
+      "source": "/docs/compliance/documents/supported-identity-documents",
+      "destination": "/references/identity-documents"
+    },
+    {
+      "source": "/docs/rails/overview",
+      "destination": "/rails"
+    },
+    {
+      "source": "/docs/rails/usd-individual",
+      "destination": "/rails/usd"
+    },
+    {
+      "source": "/docs/rails/usd-business",
+      "destination": "/rails/usd"
+    },
+    {
+      "source": "/docs/compliance/currencies",
+      "destination": "/references/currencies"
+    },
+    {
+      "source": "/docs/compliance/references/:path*",
+      "destination": "/references/:path*"
+    },
+    {
+      "source": "/docs/transfers/wallets",
+      "destination": "/transfers/onchain"
+    },
+    {
+      "source": "/docs/users/features/kyc-link",
+      "destination": "/features/kyc-links"
+    },
+    {
+      "source": "/docs/transfers/features/batch-transfers",
+      "destination": "/features/batch-transfers"
+    },
+    {
+      "source": "/docs/transfers/features/virtual-accounts",
+      "destination": "/accounts/virtual-accounts"
+    },
+    {
+      "source": "/docs/transfers/features/transfer-approvals",
+      "destination": "/features/transfer-approvals"
+    },
+    {
+      "source": "/docs/transfers/features/developer-fees",
+      "destination": "/features/developer-fees"
+    },
+    {
+      "source": "/docs/transfers/features/settlement-rules",
+      "destination": "/features/settlement-rules"
+    },
+    {
+      "source": "/guides/quickstart",
+      "destination": "/quickstart"
+    },
+    {
+      "source": "/docs/api/postman",
+      "destination": "/postman"
+    },
+    {
+      "source": "/docs/webhooks/user",
+      "destination": "/webhooks/user-events"
+    },
+    {
+      "source": "/docs/webhooks/kyc",
+      "destination": "/webhooks/kyc-events"
+    },
+    {
+      "source": "/docs/webhooks/account",
+      "destination": "/webhooks/account-events"
+    },
+    {
+      "source": "/docs/webhooks/onramp",
+      "destination": "/webhooks/onramp-events"
+    },
+    {
+      "source": "/docs/webhooks/offramp",
+      "destination": "/webhooks/offramp-events"
+    },
+    {
+      "source": "/docs/webhooks/wallet",
+      "destination": "/webhooks/wallet-events"
+    },
+    {
+      "source": "/docs/accounts/offramp-accounts",
+      "destination": "/accounts/offramp-accounts"
+    },
+    {
+      "source": "/docs/accounts/virtual-accounts",
+      "destination": "/accounts/virtual-accounts"
+    },
+    {
+      "source": "/docs/api/authentication",
+      "destination": "/api/authentication"
+    },
+    {
+      "source": "/docs/api/errors",
+      "destination": "/api/errors"
+    },
+    {
+      "source": "/docs/api/responses",
+      "destination": "/api/responses"
+    },
+    {
+      "source": "/docs/compliance/documents/identity",
+      "destination": "/compliance/documents/identity"
+    },
+    {
+      "source": "/docs/compliance/documents",
+      "destination": "/compliance/documents"
+    },
+    {
+      "source": "/docs/compliance/documents/index",
+      "destination": "/compliance/documents"
+    },
+    {
+      "source": "/docs/compliance/documents/proof-of-address",
+      "destination": "/compliance/documents/proof-of-address"
+    },
+    {
+      "source": "/docs/compliance/industries",
+      "destination": "/compliance/industries"
+    },
+    {
+      "source": "/docs/compliance/regions",
+      "destination": "/compliance/regions"
+    },
+    {
+      "source": "/docs/dashboard",
+      "destination": "/dashboard"
+    },
+    {
+      "source": "/docs/dashboard/index",
+      "destination": "/dashboard"
+    },
+    {
+      "source": "/docs/dashboard/roles",
+      "destination": "/dashboard/roles"
+    },
+    {
+      "source": "/docs/features/batch-transfers",
+      "destination": "/features/batch-transfers"
+    },
+    {
+      "source": "/docs/features/developer-fees",
+      "destination": "/features/developer-fees"
+    },
+    {
+      "source": "/docs/features/exchange-rates",
+      "destination": "/features/exchange-rates"
+    },
+    {
+      "source": "/docs/features/kyc-links",
+      "destination": "/features/kyc-links"
+    },
+    {
+      "source": "/docs/features/settlement-rules",
+      "destination": "/features/settlement-rules"
+    },
+    {
+      "source": "/docs/features/tos-links",
+      "destination": "/features/tos-links"
+    },
+    {
+      "source": "/docs/features/transfer-approvals",
+      "destination": "/features/transfer-approvals"
+    },
+    {
+      "source": "/docs/guides",
+      "destination": "/guides"
+    },
+    {
+      "source": "/docs/guides/index",
+      "destination": "/guides"
+    },
+    {
+      "source": "/docs",
+      "destination": "/"
+    },
+    {
+      "source": "/docs/index",
+      "destination": "/"
+    },
+    {
+      "source": "/docs/overview",
+      "destination": "/overview"
+    },
+    {
+      "source": "/docs/postman",
+      "destination": "/postman"
+    },
+    {
+      "source": "/docs/quickstart",
+      "destination": "/quickstart"
+    },
+    {
+      "source": "/docs/rails/africa",
+      "destination": "/rails/africa"
+    },
+    {
+      "source": "/docs/rails/global-network",
+      "destination": "/rails/global-network"
+    },
+    {
+      "source": "/docs/rails",
+      "destination": "/rails"
+    },
+    {
+      "source": "/docs/rails/index",
+      "destination": "/rails"
+    },
+    {
+      "source": "/docs/rails/usd",
+      "destination": "/rails/usd"
+    },
+    {
+      "source": "/docs/references/account-purposes",
+      "destination": "/references/account-purposes"
+    },
+    {
+      "source": "/docs/references/business-industries/administrative-support-services",
+      "destination": "/references/business-industries/administrative-support-services"
+    },
+    {
+      "source": "/docs/references/business-industries/agriculture-forestry",
+      "destination": "/references/business-industries/agriculture-forestry"
+    },
+    {
+      "source": "/docs/references/business-industries/arts-recreation-entertainment",
+      "destination": "/references/business-industries/arts-recreation-entertainment"
+    },
+    {
+      "source": "/docs/references/business-industries/construction",
+      "destination": "/references/business-industries/construction"
+    },
+    {
+      "source": "/docs/references/business-industries/education",
+      "destination": "/references/business-industries/education"
+    },
+    {
+      "source": "/docs/references/business-industries/finance-insurance",
+      "destination": "/references/business-industries/finance-insurance"
+    },
+    {
+      "source": "/docs/references/business-industries/health-social-services",
+      "destination": "/references/business-industries/health-social-services"
+    },
+    {
+      "source": "/docs/references/business-industries/hospitality-food",
+      "destination": "/references/business-industries/hospitality-food"
+    },
+    {
+      "source": "/docs/references/business-industries",
+      "destination": "/references/business-industries"
+    },
+    {
+      "source": "/docs/references/business-industries/index",
+      "destination": "/references/business-industries"
+    },
+    {
+      "source": "/docs/references/business-industries/information-media",
+      "destination": "/references/business-industries/information-media"
+    },
+    {
+      "source": "/docs/references/business-industries/manufacturing",
+      "destination": "/references/business-industries/manufacturing"
+    },
+    {
+      "source": "/docs/references/business-industries/mining-energy",
+      "destination": "/references/business-industries/mining-energy"
+    },
+    {
+      "source": "/docs/references/business-industries/other-services",
+      "destination": "/references/business-industries/other-services"
+    },
+    {
+      "source": "/docs/references/business-industries/professional-technical-services",
+      "destination": "/references/business-industries/professional-technical-services"
+    },
+    {
+      "source": "/docs/references/business-industries/public-administration",
+      "destination": "/references/business-industries/public-administration"
+    },
+    {
+      "source": "/docs/references/business-industries/real-estate-leasing",
+      "destination": "/references/business-industries/real-estate-leasing"
+    },
+    {
+      "source": "/docs/references/business-industries/transportation-logistics",
+      "destination": "/references/business-industries/transportation-logistics"
+    },
+    {
+      "source": "/docs/references/business-industries/wholesale-retail-trade",
+      "destination": "/references/business-industries/wholesale-retail-trade"
+    },
+    {
+      "source": "/docs/references/currencies",
+      "destination": "/references/currencies"
+    },
+    {
+      "source": "/docs/references/export-categories",
+      "destination": "/references/export-categories"
+    },
+    {
+      "source": "/docs/references/identity-documents",
+      "destination": "/references/identity-documents"
+    },
+    {
+      "source": "/docs/references/occupations",
+      "destination": "/references/occupations"
+    },
+    {
+      "source": "/docs/references/product-service-categories",
+      "destination": "/references/product-service-categories"
+    },
+    {
+      "source": "/docs/sandbox",
+      "destination": "/sandbox"
+    },
+    {
+      "source": "/docs/transfers/bridging",
+      "destination": "/transfers/bridging"
+    },
+    {
+      "source": "/docs/transfers/offramps",
+      "destination": "/transfers/offramps"
+    },
+    {
+      "source": "/docs/transfers/onchain",
+      "destination": "/transfers/onchain"
+    },
+    {
+      "source": "/docs/transfers/onramps",
+      "destination": "/transfers/onramps"
+    },
+    {
+      "source": "/docs/transfers/swaps",
+      "destination": "/transfers/swaps"
+    },
+    {
+      "source": "/docs/users",
+      "destination": "/users"
+    },
+    {
+      "source": "/docs/users/index",
+      "destination": "/users"
+    },
+    {
+      "source": "/docs/users/kyc",
+      "destination": "/users/kyc"
+    },
+    {
+      "source": "/docs/wallets/balances",
+      "destination": "/wallets/balances"
+    },
+    {
+      "source": "/docs/wallets/deposits",
+      "destination": "/wallets/deposits"
+    },
+    {
+      "source": "/docs/wallets",
+      "destination": "/wallets"
+    },
+    {
+      "source": "/docs/wallets/index",
+      "destination": "/wallets"
+    },
+    {
+      "source": "/docs/webhooks/account-events",
+      "destination": "/webhooks/account-events"
+    },
+    {
+      "source": "/docs/webhooks",
+      "destination": "/webhooks"
+    },
+    {
+      "source": "/docs/webhooks/index",
+      "destination": "/webhooks"
+    },
+    {
+      "source": "/docs/webhooks/kyc-events",
+      "destination": "/webhooks/kyc-events"
+    },
+    {
+      "source": "/docs/webhooks/offramp-events",
+      "destination": "/webhooks/offramp-events"
+    },
+    {
+      "source": "/docs/webhooks/onramp-events",
+      "destination": "/webhooks/onramp-events"
+    },
+    {
+      "source": "/docs/webhooks/user-events",
+      "destination": "/webhooks/user-events"
+    },
+    {
+      "source": "/docs/webhooks/wallet-events",
+      "destination": "/webhooks/wallet-events"
     }
-  },
-  "footer": {
-    "socials": {
-      "x": "https://x.com/hifibridge",
-      "github": "https://github.com/Hifi-Bridge",
-      "linkedin": "https://www.linkedin.com/company/hifibridge"
-    }
-  }
+  ]
 }
