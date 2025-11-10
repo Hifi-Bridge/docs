@@ -12,9 +12,9 @@ Below are the possible statuses for a user’s KYC application:
 - **REJECTED**
 - **PENDING**
 - **RFI_PENDING**
-- **INCOMPLETE**
 - **MANUAL_REVIEW**
 - **CONTACT_SUPPORT**
+- **INCOMPLETE**
 
 We’ll go through each status in detail shortly. But first, let’s take a look at the structure of an individual KYC status response.
 
@@ -184,8 +184,8 @@ Below is an example of a KYC application with an `INACTIVE` status:
 {
     "status": "INACTIVE",
     "message": "",
-    "reviewResult": {},
-    "details": {}
+    "reviewResult": {...},
+    "details": {...}
 }
 ```
 
@@ -199,8 +199,8 @@ Below is an example of a KYC application with an `REJECTED` status:
 {
     "status": "REJECTED",
     "message": "",
-    "reviewResult": {},
-    "details": {}
+    "reviewResult": {...},
+    "details": {...}
 }
 ```
 
@@ -218,10 +218,8 @@ Below is an example of a KYC application with an `PENDING` status:
 {
     "status": "PENDING",
     "message": "",
-    "reviewResult": {
-		
-	},
-    "details": {}
+    "reviewResult": {...},
+    "details": {...}
 }
 ```
 
@@ -231,18 +229,16 @@ When the top-level `status` is `PENDING`, it means the user is still undergoing 
   Please reach out to support if an individual applicant has remained in this status for more than 24 hours.
 </Info>
 
-## RFI-PENDING
+## RFI_PENDING
 
-Below is an example of a KYC application with an `RFI-PENDING` status:
+Below is an example of a KYC application with an `RFI_PENDING` status:
 
 ```json expandable
 {
-    "status": "RFI-PENDING",
+    "status": "RFI_PENDING",
     "message": "",
-    "reviewResult": {
-		
-	},
-    "details": {}
+    "reviewResult": {...},
+    "details": {...}
 }
 ```
 
@@ -251,3 +247,135 @@ When the top-level **status** is `RFI_PENDING`, it means there is an open RFI (R
 <Info>
   Please closely monitor your mailbox for any RFI requests from **@**[**hifi.com**](http://hifi.com).
 </Info>
+
+## MANUAL_REVIEW
+
+Below is an example of a KYC application with an `MANUAL_REVIEW` status:
+
+```json expandable
+{
+    "status": "MANUAL_REVIEW",
+    "message": "",
+    "reviewResult": {...},
+    "details": {...}
+}
+```
+
+When the top-level status is `MANUAL_REVIEW`, it means our compliance team is manually reviewing the KYC information provided by the user. This usually occurs after the `PENDING` status, when a more detailed investigation is required before proceeding to the next step.
+
+<Info>
+  Please reach out to support if an individual applicant has remained in this status for more than 24 hours.
+</Info>
+
+## CONTACT_SUPPORT
+
+Below is an example of a KYC application with an `CONTACT_SUPPORT` status:
+
+```json expandable
+{
+    "status": "CONTACT_SUPPORT",
+    "message": "",
+    "reviewResult": {...},
+    "details": {...}
+}
+```
+
+When the top-level status is `CONTACT_SUPPORT`, it means our system was unable to properly process the KYC or return the correct user status. Please reach out to support if you encounter this status for an individual user.
+
+## INCOMPLETE
+
+Below is an example of a KYC application with an `INCOMPLETE` status:
+
+```json expandable
+{
+    "status": "INCOMPLETE",
+    "message": "",
+    "reviewResult": {
+        "reviewAnswer": "DECLINED",
+        "reviewRejectType": "RETRY",
+        "rejectReasons": [
+            "BAD_PROOF_OF_IDENTITY"
+        ],
+        "comment": ""
+    },
+    "details": {
+        "identity": {
+            "reviewResult": {
+                "reviewAnswer": "DECLINED",
+                "reviewRejectType": "RETRY",
+                "rejectReasons": [],
+                "comment": "The uploaded document is not acceptable or no longer valid. Upload a different document."
+            },
+            "details": [
+                {
+                    "id": "42e54f82-dd1d-4cdf-844c-fd56fcfcdb8e",
+                    "type": "ID_CARD",
+                    "subType": "BACK_SIDE",
+                    "reviewResult": {
+                        "reviewAnswer": "DECLINED",
+                        "reviewRejectType": "RETRY",
+                        "rejectReasons": [
+                            "BAD_PROOF_OF_IDENTITY"
+                        ],
+                        "comment": "The uploaded document is not acceptable or no longer valid. Upload a different document."
+                    }
+                },
+                {
+                    "id": "0b13ba7c-b89b-4c2b-8685-bd23ec175d29",
+                    "type": "ID_CARD",
+                    "subType": "FRONT_SIDE",
+                    "reviewResult": {
+                        "reviewAnswer": "DECLINED",
+                        "reviewRejectType": "RETRY",
+                        "rejectReasons": [
+                            "BAD_PROOF_OF_IDENTITY"
+                        ],
+                        "comment": "The uploaded document is not acceptable or no longer valid. Upload a different document."
+                    }
+                }
+            ]
+        },
+        "questionnaire": {
+            "reviewResult": {
+                "reviewAnswer": "APPROVED",
+                "reviewRejectType": "",
+                "rejectReasons": [],
+                "comment": ""
+            },
+            "details": []
+        },
+        "personalInfo": {
+            "reviewResult": {
+                "reviewAnswer": "APPROVED",
+                "reviewRejectType": "",
+                "rejectReasons": [],
+                "comment": ""
+            },
+            "details": []
+        },
+        "proofOfAddress": {
+            "reviewResult": {
+                "reviewAnswer": "DECLINED",
+                "reviewRejectType": "RETRY",
+                "rejectReasons": [],
+                "comment": "The uploaded document is not acceptable or no longer valid. Upload a different document."
+            },
+            "details": [
+                {
+                    "id": "13b89554-f077-4bfa-a22a-285ede06d89f",
+                    "type": "PROOF_OF_ADDRESS",
+                    "subType": "SINGLE_SIDE",
+                    "reviewResult": {
+                		"reviewAnswer": "DECLINED",
+                		"reviewRejectType": "RETRY",
+                		"rejectReasons": [],
+                		"comment": "The uploaded document is not acceptable or no longer valid. Upload a different document."
+            		},
+                }
+            ]
+        }
+    }
+}
+```
+
+When the top-level status is `CONTACT_SUPPORT`, it means our system was unable to properly process the KYC or return the correct user status. Please reach out to support if you encounter this status for an individual user.
