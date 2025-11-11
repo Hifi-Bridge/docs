@@ -5,15 +5,12 @@ title: "KYB Status"
 To check where a business's verification stands, diagnose issues, and confirm when they're ready to use a rail, use the [KYC Status endpoint](https://docs.hifibridge.com/api-reference/kyc/retrieve-kyc-status). This guide focuses on interpreting the business-specific response.
 
 <Tip>
-  Read the [KYC Status](/kyc/kyc-status) guide first—it explains the compliance
-  screening structure without Ultimate Beneficial Owners.
+  Read the [KYC Status](/kyc/kyc-status) guide first—it explains the compliance screening structure without Ultimate Beneficial Owners.
 </Tip>
 
 <Note>
-  This guide focuses on the USD rail. Requirements and response structure differ
-  for other rails—see the [API
-  Reference](https://docs.hifibridge.com/api-reference/kyc/retrieve-kyc-status)
-  for complete details.
+  This guide focuses on the USD rail. Requirements and response structure differ for other rails—see the [API
+  Reference](https://docs.hifibridge.com/api-reference/kyc/retrieve-kyc-status) for complete details.
 </Note>
 
 ## Status Overview
@@ -32,8 +29,7 @@ Business KYB applications move through the same statuses as individual KYC:
 | **CONTACT_SUPPORT** | System couldn't confirm status—contact HIFI support                                |
 
 <Info>
-  Contact support if a business applicant remains in `PENDING` or
-  `MANUAL_REVIEW` for more than 3 days.
+  Contact support if a business applicant remains in `PENDING` or `MANUAL_REVIEW` for more than 3 days.
 </Info>
 
 ## Response Structure
@@ -51,8 +47,7 @@ The KYB status response has the same top-level structure as individual KYC, but 
 </ResponseField>
 
 <ResponseField name="reviewResult" type="object">
-  Overall decision for the KYB submission (`APPROVED`, `DECLINED`, or empty
-  while pending review).
+  Overall decision for the KYB submission (`APPROVED`, `DECLINED`, or empty while pending review).
 </ResponseField>
 
 <ResponseField name="details" type="object">
@@ -68,8 +63,7 @@ Each compliance category includes a `reviewResult` object with a general summary
 </ResponseField>
 
 <ResponseField name="reviewRejectType" type="string">
-  Resubmission permission: `RETRY` (can resubmit) or `FINAL` (hard rejection).
-  Only present when `reviewAnswer` is `DECLINED`.
+  Resubmission permission: `RETRY` (can resubmit) or `FINAL` (hard rejection). Only present when `reviewAnswer` is `DECLINED`.
 </ResponseField>
 
 <ResponseField name="rejectReasons" type="array[string]">
@@ -77,8 +71,7 @@ Each compliance category includes a `reviewResult` object with a general summary
 </ResponseField>
 
 <ResponseField name="comment" type="string">
-  Human-readable explanation of the rejection. Only present when `reviewAnswer`
-  is `DECLINED`.
+  Human-readable explanation of the rejection. Only present when `reviewAnswer` is `DECLINED`.
 </ResponseField>
 
 ### Review Details
@@ -86,8 +79,7 @@ Each compliance category includes a `reviewResult` object with a general summary
 The `details` object returns the compliance review outcome for each information category. Every category includes a `reviewResult`, and some categories provide additional nested data.
 
 <ResponseField name="companyInfo" type="object">
-  Structured business data: legal name, registered address, registration number,
-  tax identifiers, and other non-document metadata.
+  Structured business data: legal name, registered address, registration number, tax identifiers, and other non-document metadata.
 
   <Expandable title="properties">
     <ResponseField name="reviewResult" type="ReviewResultObject">
@@ -97,8 +89,7 @@ The `details` object returns the compliance review outcome for each information 
 </ResponseField>
 
 <ResponseField name="questionnaire" type="object">
-  Responses to the compliance questionnaire (purpose of account, expected
-  transaction volume, counterparties, source of funds).
+  Responses to the compliance questionnaire (purpose of account, expected transaction volume, counterparties, source of funds).
 
   <Expandable title="properties">
     <ResponseField name="reviewResult" type="ReviewResultObject">
@@ -114,7 +105,6 @@ The `details` object returns the compliance review outcome for each information 
     <ResponseField name="reviewResult" type="ReviewResultObject">
       Aggregate result for all submitted documents in this category.
     </ResponseField>
-
     <ResponseField name="details" type="array[Document]">
       List of every uploaded document that was reviewed.
 
@@ -122,35 +112,27 @@ The `details` object returns the compliance review outcome for each information 
         <ResponseField name="id" type="string">
           UUID for the document uploaded through Update KYC.
         </ResponseField>
-
         <ResponseField name="type" type="string">
           Document category such as `INCORPORATION_CERT`, `INFORMATION_STATEMENT`, or `PROOF_OF_ADDRESS`.
         </ResponseField>
-
         <ResponseField name="subType" type="string">
           Optional qualifier like `SINGLE_SIDE` or `FRONT_SIDE`.
         </ResponseField>
-
         <ResponseField name="reviewResult" type="ReviewResultObject">
           Outcome for the individual document; comments explain what to resubmit when declined.
         </ResponseField>
       </Expandable>
     </ResponseField>
-
   </Expandable>
 </ResponseField>
 
 <ResponseField name="ultimateBeneficialOwners" type="object">
-  Aggregated status for all UBOs. It contains a category-level `reviewResult`
-  and a `details` array with one entry per UBO. Each UBO entry mirrors the
-  individual KYC structure described in the [KYC Status guide](/kyc/kyc-status)
-  (personal info, identity documents, proof of address, questionnaire).
+  Aggregated status for all UBOs. It contains a category-level `reviewResult` and a `details` array with one entry per UBO. Each UBO entry mirrors the individual KYC structure described in the [KYC Status guide](/kyc/kyc-status) (personal info, identity documents, proof of address, questionnaire).
 
   <Expandable title="properties">
     <ResponseField name="reviewResult" type="ReviewResultObject">
       Combined decision for the UBO set. If declined, consult each entry for remediation guidance.
     </ResponseField>
-
     <ResponseField name="details" type="array[Ubo]">
       One entry per Ultimate Beneficial Owner.
 
@@ -158,25 +140,20 @@ The `details` object returns the compliance review outcome for each information 
         <ResponseField name="id" type="string">
           UUID used to update the UBO's information via Update KYC.
         </ResponseField>
-
         <ResponseField name="status" type="string">
           Current onboarding status for that UBO (`ACTIVE`, `INCOMPLETE`, etc.).
         </ResponseField>
-
         <ResponseField name="message" type="string">
           Contextual message for developers or support agents.
         </ResponseField>
-
         <ResponseField name="reviewResult" type="ReviewResultObject">
           Decision for the specific UBO.
         </ResponseField>
-
         <ResponseField name="details" type="object">
           Nested verification categories (`personalInfo`, `identity`, `proofOfAddress`, `questionnaire`) following the individual KYC schema.
         </ResponseField>
       </Expandable>
     </ResponseField>
-
   </Expandable>
 </ResponseField>
 
@@ -185,270 +162,273 @@ The `details` object returns the compliance review outcome for each information 
 <Tabs>
   <Tab title="ACTIVE">
     Business passed all compliance checks and completed bank onboarding. They can now use the USD rail.
-```json expandable
-{
-  "status": "ACTIVE",
-  "message": "",
-  "reviewResult": {
-    "reviewAnswer": "APPROVED",
-    "reviewRejectType": "",
-    "rejectReasons": [],
-    "comment": ""
-  },
-  "details": {
-    "companyInfo": {
-      "reviewResult": {
-        "reviewAnswer": "APPROVED",
-        "reviewRejectType": "",
-        "rejectReasons": [],
-        "comment": ""
-      }
-    },
-    "questionnaire": {
-      "reviewResult": {
-        "reviewAnswer": "APPROVED",
-        "reviewRejectType": "",
-        "rejectReasons": [],
-        "comment": ""
-      }
-    },
-    "companyDocuments": {
+
+    ```json expandable
+    {
+      "status": "ACTIVE",
+      "message": "",
       "reviewResult": {
         "reviewAnswer": "APPROVED",
         "reviewRejectType": "",
         "rejectReasons": [],
         "comment": ""
       },
-      "details": [...]
-    },
-    "ultimateBeneficialOwners": {
-      "reviewResult": {
-        "reviewAnswer": "APPROVED",
-        "reviewRejectType": "",
-        "rejectReasons": [],
-        "comment": ""
-      },
-      "details": [
-        {
-          "id": "74441b74-caab-5f74-8e24-3fcee83faac8",
-          "status": "ACTIVE",
+      "details": {
+        "companyInfo": {
           "reviewResult": {
             "reviewAnswer": "APPROVED",
             "reviewRejectType": "",
             "rejectReasons": [],
             "comment": ""
           }
+        },
+        "questionnaire": {
+          "reviewResult": {
+            "reviewAnswer": "APPROVED",
+            "reviewRejectType": "",
+            "rejectReasons": [],
+            "comment": ""
+          }
+        },
+        "companyDocuments": {
+          "reviewResult": {
+            "reviewAnswer": "APPROVED",
+            "reviewRejectType": "",
+            "rejectReasons": [],
+            "comment": ""
+          },
+          "details": [...]
+        },
+        "ultimateBeneficialOwners": {
+          "reviewResult": {
+            "reviewAnswer": "APPROVED",
+            "reviewRejectType": "",
+            "rejectReasons": [],
+            "comment": ""
+          },
+          "details": [
+            {
+              "id": "74441b74-caab-5f74-8e24-3fcee83faac8",
+              "status": "ACTIVE",
+              "reviewResult": {
+                "reviewAnswer": "APPROVED",
+                "reviewRejectType": "",
+                "rejectReasons": [],
+                "comment": ""
+              }
+            }
+          ]
         }
-      ]
+      }
     }
-  }
-}
-```
-
+    ```
   </Tab>
   <Tab title="INACTIVE">
     No KYB submission made yet. Call the [Submit KYC endpoint](https://docs.hifibridge.com/api-reference/kyc/submit-kyc) to begin verification.
-```json
-{
-  "status": "INACTIVE",
-  "message": "The rail is not active.",
-  "reviewResult": {},
-  "details": {}
-}
-```
 
+    ```json
+    {
+      "status": "INACTIVE",
+      "message": "The rail is not active.",
+      "reviewResult": {},
+      "details": {}
+    }
+    ```
   </Tab>
   <Tab title="PENDING">
     Application is moving through automated compliance screening or bank onboarding.
-```json expandable
-{
-  "status": "PENDING",
-  "message": "",
-  "reviewResult": {},
-  "details": {
-    "companyInfo": {
-      "reviewResult": {}
-    },
-    "questionnaire": {
-      "reviewResult": {}
-    },
-    "companyDocuments": {
+
+    ```json expandable
+    {
+      "status": "PENDING",
+      "message": "",
       "reviewResult": {},
-      "details": [...]
+      "details": {
+        "companyInfo": {
+          "reviewResult": {}
+        },
+        "questionnaire": {
+          "reviewResult": {}
+        },
+        "companyDocuments": {
+          "reviewResult": {},
+          "details": [...]
+        }
+      }
     }
-  }
-}
-```
+    ```
 
     <Info>
       Contact support if status doesn't change within 3 days for business applicants.
     </Info>
-
   </Tab>
   <Tab title="MANUAL_REVIEW">
     Compliance team is manually reviewing the application. This typically follows `PENDING` when additional investigation is needed.
-```json
-{
-  "status": "MANUAL_REVIEW",
-  "message": "",
-  "reviewResult": {},
-  "details": {}
-}
-```
+
+    ```json
+    {
+      "status": "MANUAL_REVIEW",
+      "message": "",
+      "reviewResult": {},
+      "details": {}
+    }
+    ```
 
     <Info>
       Contact support if status doesn't change within 3 days.
     </Info>
-
   </Tab>
   <Tab title="INCOMPLETE">
     Submitted data needs updates before verification can continue. Use the `reviewResult` in each compliance category to identify what needs fixing.
-```json expandable
-{
-  "status": "INCOMPLETE",
-  "message": "",
-  "reviewResult": {
-    "reviewAnswer": "DECLINED",
-    "reviewRejectType": "RETRY",
-    "rejectReasons": ["UNFILLED_ID"],
-    "comment": ""
-  },
-  "details": {
-    "companyInfo": {
-      "reviewResult": {
-        "reviewAnswer": "APPROVED",
-        "reviewRejectType": "",
-        "rejectReasons": [],
-        "comment": ""
-      }
-    },
-    "questionnaire": {
-      "reviewResult": {
-        "reviewAnswer": "APPROVED",
-        "reviewRejectType": "",
-        "rejectReasons": [],
-        "comment": ""
-      }
-    },
-    "companyDocuments": {
+
+    ```json expandable
+    {
+      "status": "INCOMPLETE",
+      "message": "",
       "reviewResult": {
         "reviewAnswer": "DECLINED",
         "reviewRejectType": "RETRY",
-        "rejectReasons": [],
-        "comment": "The document is missing key company identification details like the registration number or company name."
+        "rejectReasons": ["UNFILLED_ID"],
+        "comment": ""
       },
-      "details": [
-        {
-          "id": "d9f38450-ec16-4a4b-bf69-f8c88bb73a94",
-          "type": "SHAREHOLDER_REGISTRY",
-          "subType": "SINGLE_SIDE",
+      "details": {
+        "companyInfo": {
+          "reviewResult": {
+            "reviewAnswer": "APPROVED",
+            "reviewRejectType": "",
+            "rejectReasons": [],
+            "comment": ""
+          }
+        },
+        "questionnaire": {
+          "reviewResult": {
+            "reviewAnswer": "APPROVED",
+            "reviewRejectType": "",
+            "rejectReasons": [],
+            "comment": ""
+          }
+        },
+        "companyDocuments": {
           "reviewResult": {
             "reviewAnswer": "DECLINED",
             "reviewRejectType": "RETRY",
-            "rejectReasons": ["UNFILLED_ID"],
+            "rejectReasons": [],
             "comment": "The document is missing key company identification details like the registration number or company name."
-          }
-        }
-      ]
-    },
-    "ultimateBeneficialOwners": {
-      "reviewResult": {
-        "reviewAnswer": "DECLINED",
-        "reviewRejectType": "RETRY",
-        "rejectReasons": ["SCREENSHOTS"],
-        "comment": ""
-      },
-      "details": [
-        {
-          "id": "74441b74-caab-5f74-8e24-3fcee83faac8",
-          "status": "INCOMPLETE",
+          },
+          "details": [
+            {
+              "id": "d9f38450-ec16-4a4b-bf69-f8c88bb73a94",
+              "type": "SHAREHOLDER_REGISTRY",
+              "subType": "SINGLE_SIDE",
+              "reviewResult": {
+                "reviewAnswer": "DECLINED",
+                "reviewRejectType": "RETRY",
+                "rejectReasons": ["UNFILLED_ID"],
+                "comment": "The document is missing key company identification details like the registration number or company name."
+              }
+            }
+          ]
+        },
+        "ultimateBeneficialOwners": {
           "reviewResult": {
             "reviewAnswer": "DECLINED",
             "reviewRejectType": "RETRY",
             "rejectReasons": ["SCREENSHOTS"],
             "comment": ""
           },
-          "details": {
-            "identity": {
+          "details": [
+            {
+              "id": "74441b74-caab-5f74-8e24-3fcee83faac8",
+              "status": "INCOMPLETE",
               "reviewResult": {
                 "reviewAnswer": "DECLINED",
                 "reviewRejectType": "RETRY",
                 "rejectReasons": ["SCREENSHOTS"],
-                "comment": "Screenshots aren't accepted. Please upload a live photo of the document."
+                "comment": ""
+              },
+              "details": {
+                "identity": {
+                  "reviewResult": {
+                    "reviewAnswer": "DECLINED",
+                    "reviewRejectType": "RETRY",
+                    "rejectReasons": ["SCREENSHOTS"],
+                    "comment": "Screenshots aren't accepted. Please upload a live photo of the document."
+                  }
+                }
               }
             }
-          }
+          ]
         }
-      ]
+      }
     }
-  }
-}
-```
+    ```
 
     **How to resolve:**
 
     1. Check the `reviewResult` in each compliance category for `DECLINED` items
     2. Read the `comment` field for specific guidance
-    3. For company data: Use [Update KYC](https://docs.hifibridge.com/api-reference/kyc/update-kyc-information) to fix company information or documents
-    4. For UBO data: Update the specific UBO's information using their `id`
+    3. For company data: Use [**Update KYC**](https://docs.hifibridge.com/api-reference/kyc/update-kyc-information) to update non-document information, or [**Update Document**](https://docs.hifibridge.com/api-reference/kyc/update-a-document) / [**Add Document**](https://docs.hifibridge.com/api-reference/kyc/add-documents) to update documentation.
+    4. For UBO data: Update the specific UBO's information using their `id` with [Update UBO](https://docs.hifibridge.com/api-reference/kyc/update-a-ubo) or [**Update Document**](https://docs.hifibridge.com/api-reference/kyc/update-a-document) / [**Add Document**](https://docs.hifibridge.com/api-reference/kyc/add-documents) to update documentation.
     5. Call [Submit KYC](https://docs.hifibridge.com/api-reference/kyc/submit-kyc) to trigger a new review
 
     **Business compliance category mapping:**
 
-    | Category            | Contains                                             |
-    | ------------------- | ---------------------------------------------------- |
-    | companyInfo         | Business name, address, registration number, tax ID  |
-    | questionnaire       | Source of funds and intended use responses           |
-    | companyDocuments    | Incorporation certificate, shareholder registry, proof of address, other supporting files |
-    | ultimateBeneficialOwners | Individual KYC for each UBO (see [KYC Status](/kyc/kyc-status)) |
+    | Category                 | Contains                                                                                                 |
+    | ------------------------ | -------------------------------------------------------------------------------------------------------- |
+    | companyInfo              | Business name, address, registration number, tax ID                                                      |
+    | questionnaire            | Source of funds and intended use responses                                                               |
+    | legalPresence            | [Legal presence documentation](https://docs.hifibridge.com/compliance/documents#business-documents)      |
+    | ownershipStructure       | [Ownership structure documentation](https://docs.hifibridge.com/compliance/documents#business-documents) |
+    | companyDetails           | [Company details documentation](https://docs.hifibridge.com/compliance/documents#business-documents)     |
+    | controlStructure         | [Control structure documentation](https://docs.hifibridge.com/compliance/documents#business-documents)   |
+    | ultimateBeneficialOwners | Individual KYC for each UBO (see [KYC Status](/kyc/kyc-status))                                          |
 
     <Info>
       For compliance reasons, detailed rejection information is only available for documentation—not for other categories. Each UBO follows the individual KYC structure detailed in the [KYC Status guide](/kyc/kyc-status).
     </Info>
-
   </Tab>
   <Tab title="RFI_PENDING">
     Compliance sent a Request for Information (RFI) to your compliance email asking for additional details about this business.
-```json
-{
-  "status": "RFI_PENDING",
-  "message": "",
-  "reviewResult": {},
-  "details": {}
-}
-```
+
+    ```json
+    {
+      "status": "RFI_PENDING",
+      "message": "",
+      "reviewResult": {},
+      "details": {}
+    }
+    ```
 
     <Info>
       Monitor your compliance inbox for RFI requests from **@hifi.com**
     </Info>
-
   </Tab>
   <Tab title="REJECTED">
     Business is permanently denied for the USD rail. Resubmission via API is not permitted.
-```json
-{
-  "status": "REJECTED",
-  "message": "",
-  "reviewResult": {},
-  "details": {}
-}
-```
+
+    ```json
+    {
+      "status": "REJECTED",
+      "message": "",
+      "reviewResult": {},
+      "details": {}
+    }
+    ```
 
     <Info>
       Contact support if you believe this status is incorrect.
     </Info>
-
   </Tab>
   <Tab title="CONTACT_SUPPORT">
     System couldn't process the KYB or return the correct status. Contact HIFI support for resolution.
-```json
-{
-  "status": "CONTACT_SUPPORT",
-  "message": "",
-  "reviewResult": {},
-  "details": {}
-}
-```
 
+    ```json
+    {
+      "status": "CONTACT_SUPPORT",
+      "message": "",
+      "reviewResult": {},
+      "details": {}
+    }
+    ```
   </Tab>
 </Tabs>
