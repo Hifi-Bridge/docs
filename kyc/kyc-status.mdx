@@ -31,6 +31,8 @@ Use the KYC Status endpoint to check where a user's verification stands, diagnos
 
 ## Response Structure
 
+### Top-Level Fields
+
 The KYC status response contains four top-level fields:
 
 <ResponseField name="status" type="string">
@@ -71,7 +73,7 @@ Each compliance category includes a `reviewResult` object with a general summary
   is `DECLINED`.
 </ResponseField>
 
-### Details Object
+### Review Details
 
 The `details` object returns the compliance review outcome for each KYC category. Every category includes a `reviewResult`, and documentation-based categories also expose the individual files that were reviewed.
 
@@ -161,29 +163,7 @@ The `details` object returns the compliance review outcome for each KYC category
   </Expandable>
 </ResponseField>
 
-### Review Result
-
-Each compliance category includes a `reviewResult` object with a general summary of the compliance review outcome:
-
-<ResponseField name="reviewAnswer" type="string">
-  Screening outcome: `APPROVED` or `DECLINED`
-</ResponseField>
-
-<ResponseField name="reviewRejectType" type="string">
-  Resubmission permission: `RETRY` (can resubmit) or `FINAL` (hard rejection).
-  Only present when `reviewAnswer` is `DECLINED`.
-</ResponseField>
-
-<ResponseField name="rejectReasons" type="array[string]">
-  Enumerated rejection reasons. Only present when `reviewAnswer` is `DECLINED`.
-</ResponseField>
-
-<ResponseField name="comment" type="string">
-  Human-readable explanation of the rejection. Only present when `reviewAnswer`
-  is `DECLINED`.
-</ResponseField>
-
-## Breakdown by Status
+## Response Breakdown
 
 <Tabs>
   <Tab title="ACTIVE">
