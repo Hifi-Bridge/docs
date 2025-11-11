@@ -190,7 +190,34 @@ The `details` object returns the compliance review outcome for each information 
             "comment": ""
           }
         },
-        "companyDocuments": {
+        "legalPresence": {
+          "reviewResult": {
+            "reviewAnswer": "APPROVED",
+            "reviewRejectType": "",
+            "rejectReasons": [],
+            "comment": ""
+          },
+          "details": [...]
+        },
+    	"ownershipStructure": {
+          "reviewResult": {
+            "reviewAnswer": "APPROVED",
+            "reviewRejectType": "",
+            "rejectReasons": [],
+            "comment": ""
+          },
+          "details": [...]
+        },
+    	"companyDetails": {
+          "reviewResult": {
+            "reviewAnswer": "APPROVED",
+            "reviewRejectType": "",
+            "rejectReasons": [],
+            "comment": ""
+          },
+          "details": [...]
+        },
+    	"controlStructure": {
           "reviewResult": {
             "reviewAnswer": "APPROVED",
             "reviewRejectType": "",
@@ -244,16 +271,7 @@ The `details` object returns the compliance review outcome for each information 
       "message": "",
       "reviewResult": {},
       "details": {
-        "companyInfo": {
-          "reviewResult": {}
-        },
-        "questionnaire": {
-          "reviewResult": {}
-        },
-        "companyDocuments": {
-          "reviewResult": {},
-          "details": [...]
-        }
+        ...
       }
     }
     ```
@@ -308,26 +326,41 @@ The `details` object returns the compliance review outcome for each information 
             "comment": ""
           }
         },
-        "companyDocuments": {
+        "legalPresence": {
           "reviewResult": {
             "reviewAnswer": "DECLINED",
             "reviewRejectType": "RETRY",
-            "rejectReasons": [],
-            "comment": "The document is missing key company identification details like the registration number or company name."
+            "rejectReasons": ["SCREENSHOTS"],
+            "comment": "Screenshots aren't accepted. Please upload a live photo of the document."
           },
-          "details": [
-            {
-              "id": "d9f38450-ec16-4a4b-bf69-f8c88bb73a94",
-              "type": "SHAREHOLDER_REGISTRY",
-              "subType": "SINGLE_SIDE",
-              "reviewResult": {
-                "reviewAnswer": "DECLINED",
-                "reviewRejectType": "RETRY",
-                "rejectReasons": ["UNFILLED_ID"],
-                "comment": "The document is missing key company identification details like the registration number or company name."
-              }
-            }
-          ]
+          "details": [...]
+        },
+    	"ownershipStructure": {
+          "reviewResult": {
+            "reviewAnswer": "DECLINED",
+            "reviewRejectType": "RETRY",
+            "rejectReasons": ["SCREENSHOTS"],
+            "comment": "Screenshots aren't accepted. Please upload a live photo of the document."
+          },
+          "details": [...]
+        },
+    	"companyDetails": {
+          "reviewResult": {
+            "reviewAnswer": "APPROVED",
+            "reviewRejectType": "",
+            "rejectReasons": [],
+            "comment": ""
+          },
+          "details": [...]
+        },
+    	"controlStructure": {
+          "reviewResult": {
+            "reviewAnswer": "APPROVED",
+            "reviewRejectType": "",
+            "rejectReasons": [],
+            "comment": ""
+          },
+          "details": [...]
         },
         "ultimateBeneficialOwners": {
           "reviewResult": {
