@@ -374,4 +374,60 @@ From the `reviewResult` under the identity section, we can see that the complian
 
 In this situation, you should use the [update documentation endpoint](https://docs.hifibridge.com/api-reference/kyc/update-a-document) to update the ID documentation previously submitted for compliance screening. If the user wishes to submit a different type of documentation, you can also use the [add documentation endpoint](https://docs.hifibridge.com/api-reference/kyc/add-documents).
 
-If the proof of address documentation is submitted during the initial KYC screening 
+If proof-of-address documentation was submitted during the initial KYC screening process, you will also see `proofOfAddress` among all the KYC screening categories.
+
+```json expandable
+{
+    "status": "INCOMPLETE",
+    "message": "",
+    "reviewResult": {
+        "reviewAnswer": "DECLINED",
+        "reviewRejectType": "RETRY",
+        "rejectReasons": [
+            "BAD_PROOF_OF_IDENTITY"
+        ],
+        "comment": ""
+    },
+    "details": {
+        "identity": {
+            ...
+        },
+        "questionnaire": {
+            ...
+        },
+        "personalInfo": {
+            ...
+        },
+        "proofOfAddress": {
+            "reviewResult": {
+				"reviewAnswer": "DECLINED",
+				"reviewRejectType": "RETRY",
+				"rejectReasons": [],
+				"comment": "The uploaded document is not acceptable or no longer valid. Upload a different document."
+			}
+            "details": [
+                {
+                    "id": "13b89554-f077-4bfa-a22a-285ede06d89f",
+                    "type": "PROOF_OF_ADDRESS",
+                    "subType": "SINGLE_SIDE",
+                    "reviewResult": {
+						"reviewAnswer": "DECLINED",
+						"reviewRejectType": "RETRY",
+						"rejectReasons": [],
+						"comment": "The uploaded document is not acceptable or no longer valid. Upload a different document."
+					}
+                }
+            ]
+        }
+    }
+}
+```
+
+Below is a table showing the KYC information categorized under each section.
+
+| Section        | KYC Fields |
+| -------------- | ---------- |
+| identity       |            |
+| questionnaire  |            |
+| personalInfo   |            |
+| proofOfAddress |            |
