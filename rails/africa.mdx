@@ -2,9 +2,27 @@
 title: Africa Rail
 ---
 
-The Africa Rail enables local currency pay-ins and pay-outs across 15 African countries through bank transfers and mobile money. It supports both onramp and offramp flows for individual and business users.
+The Africa Rail enables local currency pay-ins and pay-outs across multiple African countries through bank transfers and mobile money. It supports both onramp and offramp flows for individual and business users.
 
-**Supported Countries:** Benin, Botswana, Burkina Faso, Cameroon, Côte d'Ivoire, Kenya, Malawi, Mali, Nigeria, Senegal, South Africa, Tanzania, Togo, Uganda, Zambia
+## Currency Support
+
+| Country       | Currency | Direction       |
+| :------------ | :------- | :-------------- |
+| Benin         | XOF      | Pay-in, Pay-out |
+| Botswana      | BWP      | Pay-in, Pay-out |
+| Burkina Faso  | XOF      | Pay-in, Pay-out |
+| Cameroon      | XAF      | Pay-in, Pay-out |
+| Côte d'Ivoire | XOF      | Pay-in, Pay-out |
+| Kenya         | KES      | Pay-in, Pay-out |
+| Malawi        | MWK      | Pay-in, Pay-out |
+| Mali          | XOF      | Pay-in, Pay-out |
+| Nigeria       | NGN      | Pay-in, Pay-out |
+| Senegal       | XOF      | Pay-in, Pay-out |
+| South Africa  | ZAR      | Pay-in, Pay-out |
+| Tanzania      | TZS      | Pay-in, Pay-out |
+| Togo          | XOF      | Pay-in, Pay-out |
+| Uganda        | UGX      | Pay-in, Pay-out |
+| Zambia        | ZMW      | Pay-in, Pay-out |
 
 ## Individual
 
@@ -45,16 +63,17 @@ For Nigerian users, the following additional fields are required:
 
 ## Business
 
-<Info>
-  **Note:** We only support individual accounts in Nigeria, not business.
-</Info>
-
 ### KYB Fields
 
 | Field                       | Description                         | `Required` |
 | :-------------------------- | :---------------------------------- | :--------- |
 | **businessName**            | The full legal name of the business | `Required` |
 | **taxIdentificationNumber** | Company tax number                  | `Required` |
+
+<Warning>
+  **Note:** Business accounts are not currently supported in Nigeria—only
+  individual accounts are available.
+</Warning>
 
 ## Financial Institutions
 
@@ -66,7 +85,7 @@ Here's a list of financial institutions supported for each country:
 **Availability:** Onramp & Offramp
 
 <AccordionGroup>
-  <Accordion title="Onramp">
+  <Accordion title="Financial Institutions">
 
 | Name                            | Type         |
 | ------------------------------- | ------------ |
@@ -130,12 +149,6 @@ Here's a list of financial institutions supported for each country:
 | VFD Microfinance Bank           | Mobile Money |
 
   </Accordion>
-
-  <Accordion title="Offramp">
-
-Same as onramp.
-
-  </Accordion>
 </AccordionGroup>
 
 ---
@@ -146,7 +159,7 @@ Same as onramp.
 **Availability:** Onramp & Offramp
 
 <AccordionGroup>
-  <Accordion title="Onramp">
+  <Accordion title="Financial Institutions">
 
 | Name                           | Type         |
 | ------------------------------ | ------------ |
@@ -178,12 +191,6 @@ Same as onramp.
 | M-Pesa                         | Mobile Money |
 
   </Accordion>
-
-  <Accordion title="Offramp">
-
-Same as onramp.
-
-  </Accordion>
 </AccordionGroup>
 
 ---
@@ -194,7 +201,7 @@ Same as onramp.
 **Availability:** Onramp & Offramp
 
 <AccordionGroup>
-  <Accordion title="Onramp">
+  <Accordion title="Financial Institutions">
 
 | Name                                   | Type         |
 | -------------------------------------- | ------------ |
@@ -229,12 +236,6 @@ Same as onramp.
 | Vodacom M-Pesa (VODACOM)               | Mobile Money |
 
   </Accordion>
-
-  <Accordion title="Offramp">
-
-Same as onramp.
-
-  </Accordion>
 </AccordionGroup>
 
 ---
@@ -245,17 +246,11 @@ Same as onramp.
 **Availability:** Onramp & Offramp
 
 <AccordionGroup>
-  <Accordion title="Onramp">
+  <Accordion title="Financial Institutions">
 
 | Name                             | Type         |
 | -------------------------------- | ------------ |
 | Mobile Money (operator coverage) | Mobile Money |
-
-  </Accordion>
-
-  <Accordion title="Offramp">
-
-Same as onramp.
 
   </Accordion>
 </AccordionGroup>
@@ -268,7 +263,7 @@ Same as onramp.
 **Availability:** Onramp & Offramp
 
 <AccordionGroup>
-  <Accordion title="Onramp">
+  <Accordion title="Financial Institutions">
 
 | Name                                     | Type         |
 | ---------------------------------------- | ------------ |
@@ -283,12 +278,6 @@ Same as onramp.
 | Mobile Money                             | Mobile Money |
 
   </Accordion>
-
-  <Accordion title="Offramp">
-
-Same as onramp.
-
-  </Accordion>
 </AccordionGroup>
 
 ---
@@ -299,17 +288,11 @@ Same as onramp.
 **Availability:** Onramp & Offramp
 
 <AccordionGroup>
-  <Accordion title="Onramp">
+  <Accordion title="Financial Institutions">
 
 | Name          | Type         |
 | ------------- | ------------ |
 | Mobile Wallet | Mobile Money |
-
-  </Accordion>
-
-  <Accordion title="Offramp">
-
-Same as onramp.
 
   </Accordion>
 </AccordionGroup>
@@ -322,18 +305,12 @@ Same as onramp.
 **Availability:** Onramp & Offramp
 
 <AccordionGroup>
-  <Accordion title="Onramp">
+  <Accordion title="Financial Institutions">
 
 | Name         | Type         |
 | ------------ | ------------ |
 | Airtel Money | Mobile Money |
 | TNM          | Mobile Money |
-
-  </Accordion>
-
-  <Accordion title="Offramp">
-
-Same as onramp.
 
   </Accordion>
 </AccordionGroup>
@@ -346,19 +323,13 @@ Same as onramp.
 **Availability:** Onramp & Offramp
 
 <AccordionGroup>
-  <Accordion title="Onramp">
+  <Accordion title="Financial Institutions">
 
 | Name         | Type         |
 | ------------ | ------------ |
 | MTN          | Mobile Money |
 | Zamtel       | Mobile Money |
 | Airtel Money | Mobile Money |
-
-  </Accordion>
-
-  <Accordion title="Offramp">
-
-Same as onramp.
 
   </Accordion>
 </AccordionGroup>
@@ -373,7 +344,7 @@ Same as onramp.
 > Coverage varies by WAEMU market; operator labels below include country hints where provided in the source.
 
 <AccordionGroup>
-  <Accordion title="Onramp">
+  <Accordion title="Financial Institutions">
 
 | Name                  | Type         |
 | --------------------- | ------------ |
@@ -388,12 +359,6 @@ Same as onramp.
 | VISA / MasterCard     | Mobile Money |
 
   </Accordion>
-
-  <Accordion title="Offramp">
-
-Same as onramp.
-
-  </Accordion>
 </AccordionGroup>
 
 ---
@@ -404,7 +369,7 @@ Same as onramp.
 **Availability:** Onramp & Offramp
 
 <AccordionGroup>
-  <Accordion title="Onramp">
+  <Accordion title="Financial Institutions">
 
 | Name                         | Type |
 | ---------------------------- | ---- |
@@ -426,12 +391,6 @@ Same as onramp.
 | Standard Bank (South Africa) | Bank |
 | Tyme Bank                    | Bank |
 | Ubank                        | Bank |
-
-  </Accordion>
-
-  <Accordion title="Offramp">
-
-Same as onramp.
 
   </Accordion>
 </AccordionGroup>

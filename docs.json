@@ -177,6 +177,15 @@
               "users",
               "wallets",
               {
+                "group": "KYC",
+                "pages": [
+                  "kyc/index",
+                  "kyc/kyc-requirements",
+                  "kyc/kyc-status",
+                  "kyc/kyb-status"
+                ]
+              },
+              {
                 "group": "Rails",
                 "pages": [
                   "rails/index",

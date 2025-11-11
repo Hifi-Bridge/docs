@@ -1,0 +1,61 @@
+---
+title: "Overview"
+---
+
+To comply with financial regulations, HIFI enforces **KYC (Know Your Customer)** and **KYB (Know Your Business)** checks before a User can receive funds from fiat (onramps) or pay out to fiat (offramps).
+
+## KYC & Rails
+
+A Rail is a payment corridor that enables payins or payouts to specific regions. Each rail has different KYC requirements depending on what it enables.
+
+| Rail                | Access                                                | Notes                                        |
+| ------------------- | ----------------------------------------------------- | -------------------------------------------- |
+| USD Rail            | Payins and payouts to the US via ACH and wire         | Full USD coverage, includes virtual accounts |
+| Global Network Rail | Payouts to select corridors in Asia and Africa        | Multi-currency support across key markets    |
+| Africa Rail         | Payins and payouts across supported African countries | Local currency settlement                    |
+
+<Card title="Explore rails" href="/docs/rails" arrow>
+  View supported rails and their KYC requirements
+</Card>
+
+## KYC Requirements
+
+Before submitting KYC information, call the KYC Requirements endpoint to see what documents and information are needed for a specific user and rail combination.
+
+<CodeGroup>
+```http Request
+GET https://sandbox.hifibridge.com/v2/users/{userId}/kyc/requirements?rails=USD
+Authorization: Bearer <token>
+```
+</CodeGroup>
+
+<Card title="KYC Requirements Guide" href="/kyc/kyc-requirements" arrow>
+  Learn about the endpoint and response structure
+</Card>
+
+## Submit KYC
+
+Once you've gathered and uploaded the required information for the User, submit it using the [KYC Submit](https://docs.hifibridge.com/api-reference/kyc/submit-kyc) endpoint.
+
+**What happens next:**
+
+- **Successful submission**: Status progresses to `pending` and enters compliance review
+- **Unsuccessful submission**: Status moves to `incomplete` with details about what's missing or invalid
+
+## Track KYC Status
+
+After you submit KYC data, use the [KYC Status](https://docs.hifibridge.com/api-reference/kyc/retrieve-kyc-status) endpoint to monitor review progress and see any follow-up actions.
+When the status reaches `active`, the user can now access the functionalities of that rail.
+
+This guide lists every possible status, explains review results, and shows complete response examples.
+
+<Card title="KYC Status Guide" href="/kyc/kyc-status" arrow>
+  Learn more about the endpoint and response structure
+</Card>
+## Alternative: KYC Link
+
+If you don't want to handle KYC submission via API, generate a KYC link for users to complete verification through a web interface.
+
+<Card title="Create KYC Link" href="/features/kyc-links" arrow>
+  Learn how to onboard users using a link
+</Card>
