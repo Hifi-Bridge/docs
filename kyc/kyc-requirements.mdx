@@ -4,7 +4,7 @@ title: "KYC Requirements"
 
 The KYC Requirements endpoint tells you exactly which data points and documents are needed to unlock a given rail for a specific user.
 
-Use it **before** submitting KYC information so you can pre-fill forms, surface missing fields, and resolve issues without triggering a compliance review cycle.
+Use it **before** submitting KYC information so you can pre-fill forms, surface missing fields, and resolve issues.
 
 <Info>
   After you submit KYC information, switch to the [KYC
@@ -41,9 +41,9 @@ Authorization: Bearer <token>
   requirements at once.
 </Tip>
 
-## Response Overview
+## Response Structure
 
-Below is a trimmed example of a `200 OK` response for a USD business user:
+Below is an example of a `200 OK` response for a USD business user:
 
 ```json expandable
 [
@@ -76,7 +76,15 @@ Below is a trimmed example of a `200 OK` response for a USD business user:
 ]
 ```
 
-**Top-level fields**
+The response has a standard shape:
+
+- top-level identifiers to anchor the entry (`userId`, `rails`, `type`)
+- three requirement buckets (`required`, `optional`, `invalid`)
+- reusable document-group metadata.
+
+Walk through the sections below to understand this structure.
+
+### Top-level fields
 
 <ResponseField name="userId" type="string" required>
   Unique identifier for the user. Always returned for context, even when the
@@ -91,25 +99,90 @@ Below is a trimmed example of a `200 OK` response for a USD business user:
   Indicates the user type. Possible values are `business` and `individual`.
 </ResponseField>
 
+### Requirement Buckets
+
+The `required`, `optional`, and `invalid` objects share the same internal layout. They differ only in intent—what must be supplied now, what enhances the submission, and what is missing today.
+
 <ResponseField name="required" type="object" required>
   Complete list of fields that must be populated **before** submitting KYC for
   the selected rail and profile. Fields appear only when they are required.
+
+  <Expandable title="properties">
+    <ResponseField name="fields" type="object">
+      Scalar requirements keyed by field name (for example `businessName`, `taxIdentificationNumber`).
+    </ResponseField>
+
+    <ResponseField name="documents" type="object">
+      Document groups that must be satisfied.
+
+      <Expandable title="Document group">
+        <ResponseField name="minCount" type="integer">
+          Minimum number of files required for that group.
+        </ResponseField>
+
+        <ResponseField name="acceptedDocTypes" type="array[string]">
+          Allowed document identifiers. The applicant must upload at least `minCount` files from this list.
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+
+    <ResponseField name="ultimateBeneficialOwners" type="array[object]">
+      Present for business profiles. Each entry lists the data and documentation required for a specific UBO.
+    </ResponseField>
+
+  </Expandable>
 </ResponseField>
 
 <ResponseField name="optional" type="object">
   Fields and document groups that improve submission quality but are not
   mandatory.
+
+  <Expandable title="properties">
+    <ResponseField name="fields" type="object">
+      Optional scalar fields that may unlock higher limits or smoother reviews.
+    </ResponseField>
+
+    <ResponseField name="documents" type="object">
+      Optional document groups following the same structure as required document groups.
+    </ResponseField>
+
+  </Expandable>
 </ResponseField>
 
 <ResponseField name="invalid" type="object">
   Any fields or document groups that the user currently has but are missing or
   invalid for this rail. If the user has not provided data yet, this object may
   be empty.
+
+  <Expandable title="properties">
+    <ResponseField name="message" type="string">
+      High-level explanation of what still blocks submission.
+    </ResponseField>
+
+    <ResponseField name="fields" type="object">
+      Each property corresponds to an invalid field with the reason (`missing`, `invalid_format`, etc.).
+    </ResponseField>
+
+    <ResponseField name="documents" type="object">
+      Structured document feedback that mirrors the document-group schema.
+
+      <Expandable title="Document validation">
+        <ResponseField name="message" type="string">
+          Human-readable summary of which groups need attention.
+        </ResponseField>
+
+        <ResponseField name="groups" type="object">
+          Per-group validation using the `minCount`/`acceptedDocTypes` format so you can surface the exact requirements still outstanding.
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+
+  </Expandable>
 </ResponseField>
 
-## Document Groups
+### Document Groups
 
-Some requirements are represented as **document groups**. Each group specifies a minimum number of documents and the accepted document types.
+Document groups appear anywhere documents are referenced (`required.documents`, `optional.documents`, and `invalid.documents.groups`). Each group specifies a minimum number of files and the accepted document types.
 
 | Property           | Type    | Description                                                                                        |
 | ------------------ | ------- | -------------------------------------------------------------------------------------------------- |
@@ -379,25 +452,6 @@ The structure under `required`, `optional`, and `invalid` changes depending on w
 
   </Tab>
 </Tabs>
-
-## Invalid Object
-
-When the user is missing data, the `invalid` object provides structured hints:
-
-<ResponseField name="message" type="string">
-  Human-readable summary describing why the user cannot submit yet.
-</ResponseField>
-
-<ResponseField name="fields" type="object">
-  Key-value pairs where each property name matches a required field and the
-  value explains why it is invalid (for example `missing` or `invalid_format`).
-</ResponseField>
-
-<ResponseField name="documents" type="object">
-  Additional guidance for document-based requirements. Includes a `message` and,
-  when applicable, a `groups` object with the same structure as `documents` in
-  the `required` section.
-</ResponseField>
 
 ## Next Steps
 

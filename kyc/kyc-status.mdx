@@ -33,47 +33,139 @@ Use the KYC Status endpoint to check where a user's verification stands, diagnos
 
 The KYC status response contains four top-level fields:
 
-<ResponseField name="status" type="string" required>
+<ResponseField name="status" type="string">
   Current KYC application status
 </ResponseField>
 
-<ResponseField name="message" type="string" required>
+<ResponseField name="message" type="string">
   Human-readable context for developers
 </ResponseField>
 
-<ResponseField name="reviewResult" type="object" required>
+<ResponseField name="reviewResult" type="object">
   Detailed screening outcome from the compliance engine
 </ResponseField>
 
-<ResponseField name="details" type="object" required>
+<ResponseField name="details" type="object">
   Breakdown of compliance categories and review results
-</ResponseField>
-
-### Compliance Categories
-
-The `details` object contains review results for each compliance category:
-
-<ResponseField name="personalInfo" type="object">
-  Non-document information: name, address, date of birth, tax ID
-</ResponseField>
-
-<ResponseField name="identity" type="object">
-  Government ID documentation review results
-</ResponseField>
-
-<ResponseField name="proofOfAddress" type="object">
-  Proof of address documentation (if submitted)
-</ResponseField>
-
-<ResponseField name="questionnaire" type="object">
-  Source of funds and intended use responses
 </ResponseField>
 
 ### Review Result
 
-Each compliance category includes a `reviewResult` object:
+Each compliance category includes a `reviewResult` object with a general summary of the compliance review outcome:
 
-<ResponseField name="reviewAnswer" type="string" required>
+<ResponseField name="reviewAnswer" type="string">
+  Screening outcome: `APPROVED` or `DECLINED`
+</ResponseField>
+
+<ResponseField name="reviewRejectType" type="string">
+  Resubmission permission: `RETRY` (can resubmit) or `FINAL` (hard rejection).
+  Only present when `reviewAnswer` is `DECLINED`.
+</ResponseField>
+
+<ResponseField name="rejectReasons" type="array[string]">
+  Enumerated rejection reasons. Only present when `reviewAnswer` is `DECLINED`.
+</ResponseField>
+
+<ResponseField name="comment" type="string">
+  Human-readable explanation of the rejection. Only present when `reviewAnswer`
+  is `DECLINED`.
+</ResponseField>
+
+### Details Object
+
+The `details` object returns the compliance review outcome for each KYC category. Every category includes a `reviewResult`, and documentation-based categories also expose the individual files that were reviewed.
+
+<ResponseField name="personalInfo" type="object">
+  Non-document information: name, address, date of birth, tax ID
+
+  <Expandable title="properties">
+    <ResponseField name="reviewResult" type="ReviewResultObject">
+      Outcome of the compliance checks for the submitted personal information.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="identity" type="object">
+  Government ID documentation review results
+
+  <Expandable title="properties">
+    <ResponseField name="reviewResult" type="ReviewResultObject">
+      Aggregate decision for all identity documents.
+    </ResponseField>
+
+    <ResponseField name="details" type="array[Document]">
+      Uploaded identity documents that were reviewed.
+
+      <Expandable title="Document item">
+        <ResponseField name="id" type="string">
+          UUID for the document uploaded through Update KYC.
+        </ResponseField>
+
+        <ResponseField name="type" type="string">
+          Document category such as `PASSPORT` or `ID_CARD`.
+        </ResponseField>
+
+        <ResponseField name="subType" type="string">
+          Optional qualifier like `FRONT_SIDE` or `BACK_SIDE`.
+        </ResponseField>
+
+        <ResponseField name="reviewResult" type="ReviewResultObject">
+          Decision for the individual document, including remediation guidance when declined.
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="proofOfAddress" type="object">
+  Proof of address documentation (if submitted)
+
+  <Expandable title="properties">
+    <ResponseField name="reviewResult" type="ReviewResultObject">
+      Final decision for the proof-of-address submission.
+    </ResponseField>
+
+    <ResponseField name="details" type="array[Document]">
+      Proof-of-address documents under review.
+
+      <Expandable title="Document item">
+        <ResponseField name="id" type="string">
+          UUID for the document uploaded through Update KYC.
+        </ResponseField>
+
+        <ResponseField name="type" type="string">
+          Document category such as `UTILITY_BILL` or `BANK_STATEMENT`.
+        </ResponseField>
+
+        <ResponseField name="subType" type="string">
+          Qualifier like `SINGLE_SIDE` when applicable.
+        </ResponseField>
+
+        <ResponseField name="reviewResult" type="ReviewResultObject">
+          Outcome for that document, including decline feedback.
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="questionnaire" type="object">
+  Source of funds and intended use responses
+
+  <Expandable title="properties">
+    <ResponseField name="reviewResult" type="ReviewResultObject">
+      Status of the compliance questionnaire evaluation.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+### Review Result
+
+Each compliance category includes a `reviewResult` object with a general summary of the compliance review outcome:
+
+<ResponseField name="reviewAnswer" type="string">
   Screening outcome: `APPROVED` or `DECLINED`
 </ResponseField>
 
