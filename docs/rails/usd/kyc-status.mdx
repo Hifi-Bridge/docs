@@ -352,30 +352,26 @@ Below is an example of a KYC application with an `INCOMPLETE` status:
                 "comment": ""
             },
             "details": []
-        },
-        "proofOfAddress": {
-            "reviewResult": {
-                "reviewAnswer": "DECLINED",
-                "reviewRejectType": "RETRY",
-                "rejectReasons": [],
-                "comment": "The uploaded document is not acceptable or no longer valid. Upload a different document."
-            },
-            "details": [
-                {
-                    "id": "13b89554-f077-4bfa-a22a-285ede06d89f",
-                    "type": "PROOF_OF_ADDRESS",
-                    "subType": "SINGLE_SIDE",
-                    "reviewResult": {
-                		"reviewAnswer": "DECLINED",
-                		"reviewRejectType": "RETRY",
-                		"rejectReasons": [],
-                		"comment": "The uploaded document is not acceptable or no longer valid. Upload a different document."
-            		},
-                }
-            ]
         }
     }
 }
 ```
 
-When the top-level status is `CONTACT_SUPPORT`, it means our system was unable to properly process the KYC or return the correct user status. Please reach out to support if you encounter this status for an individual user.
+When you see the `INCOMPLETE` status, it means the data the user submitted requires updates in order to continue the KYC application. At this stage, you are allowed to use HIFI's API to programmatically [update the user's KYC information](https://docs.hifibridge.com/api-reference/kyc/update-kyc-information) and [re-submit](https://docs.hifibridge.com/api-reference/kyc/submit-kyc) it once ready.
+
+In the above example, we can see that there is an issue with the user's `identity` section.
+
+```json
+"reviewResult": {
+	"reviewAnswer": "DECLINED",
+	"reviewRejectType": "RETRY",
+	"rejectReasons": [],
+	"comment": "The uploaded document is not acceptable or no longer valid. Upload a different document."
+}
+```
+
+From the `reviewResult` under the identity section, we can see that the compliance information is `DECLINED` and a `RETRY` is allowed. The `comment` contains human-readable information regarding the reason for the rejection.
+
+In this situation, you should use the [update documentation endpoint](https://docs.hifibridge.com/api-reference/kyc/update-a-document) to update the ID documentation previously submitted for compliance screening. If the user wishes to submit a different type of documentation, you can also use the [add documentation endpoint](https://docs.hifibridge.com/api-reference/kyc/add-documents).
+
+If the proof of address documentation is submitted during the initial KYC screening 
