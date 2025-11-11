@@ -180,7 +180,10 @@
                 "group": "Rails",
                 "pages": [
                   "rails/index",
-                  "rails/usd",
+                  {
+                    "group": "USD",
+                    "pages": ["rails/usd/usd", "rails/usd/kyc-status"]
+                  },
                   "rails/global-network",
                   "rails/africa"
                 ]
