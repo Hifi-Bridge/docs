@@ -88,15 +88,15 @@ Below is an example of an individual KYC status response:
   The primary status of the KYC application, indicating its current progress.
 </ResponseField>
 
-<ResponseField name="message" type="string">
+<ResponseField name="message" type="string" required>
   A human-readable message intended to provide additional context for developers.
 </ResponseField>
 
-<ResponseField name="reviewResult" type="object">
+<ResponseField name="reviewResult" type="object" required>
   A detailed screening outcome from the compliance engine, providing additional context for interpreting a user's KYC status.
 </ResponseField>
 
-<ResponseField name="details" type="object">
+<ResponseField name="details" type="object" required>
   A comprehensive breakdown of the compliance categories and associated data points that were reviewed for the applicant.
 </ResponseField>
 
@@ -124,17 +124,17 @@ Below is an example of an individual KYC status response:
   Indicates the outcome of the screening. Possible values are `APPROVED` and `DECLINED`.
 </ResponseField>
 
-<ResponseField name="reviewRejectType" type="string">
+<ResponseField name="reviewRejectType" type="string" required>
   Indicates whether resubmission is allowed. Possible values are `FINAL` and `RETRY`. This field is only populated when `reviewAnswer` is `DECLINED`.
 
   When the value is `RETRY`, the user may resubmit their information to trigger a new KYC review. When the value is `FINAL`, it indicates a hard rejection — resubmission via API is not permitted.
 </ResponseField>
 
-<ResponseField name="rejectReasons" type="array[string]">
+<ResponseField name="rejectReasons" type="array[string]" required>
   An array of enumerated values specifying the reasons for a declined screening result. This field is only populated when `reviewAnswer` is `DECLINED`.
 </ResponseField>
 
-<ResponseField name="comment" type="string">
+<ResponseField name="comment" type="string" required>
   A human-readable message providing additional details about the rejection. This field is intended for developers and end users to better understand the reason for the decline. Only populated when `reviewAnswer` is `DECLINED`.
 </ResponseField>
 
