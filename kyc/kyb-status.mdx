@@ -98,8 +98,92 @@ The `details` object returns the compliance review outcome for each information 
   </Expandable>
 </ResponseField>
 
-<ResponseField name="companyDocuments" type="object">
-  Document verification for the business entity.
+<ResponseField name="legalPresence" type="object">
+  Document verification for the legal presence requirements.
+
+  <Expandable title="properties">
+    <ResponseField name="reviewResult" type="ReviewResultObject">
+      Aggregate result for all submitted documents in this category.
+    </ResponseField>
+    <ResponseField name="details" type="array[Document]">
+      List of every uploaded document that was reviewed.
+
+      <Expandable title="Document item">
+        <ResponseField name="id" type="string">
+          UUID for the document uploaded through Update KYC.
+        </ResponseField>
+        <ResponseField name="type" type="string">
+          Document category such as `INCORPORATION_CERT`, `INFORMATION_STATEMENT`, or `PROOF_OF_ADDRESS`.
+        </ResponseField>
+        <ResponseField name="subType" type="string">
+          Optional qualifier like `SINGLE_SIDE` or `FRONT_SIDE`.
+        </ResponseField>
+        <ResponseField name="reviewResult" type="ReviewResultObject">
+          Outcome for the individual document; comments explain what to resubmit when declined.
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="ownershipStructure" type="object">
+  Document verification for the ownership structure requirements.
+
+  <Expandable title="properties">
+    <ResponseField name="reviewResult" type="ReviewResultObject">
+      Aggregate result for all submitted documents in this category.
+    </ResponseField>
+    <ResponseField name="details" type="array[Document]">
+      List of every uploaded document that was reviewed.
+
+      <Expandable title="Document item">
+        <ResponseField name="id" type="string">
+          UUID for the document uploaded through Update KYC.
+        </ResponseField>
+        <ResponseField name="type" type="string">
+          Document category such as `INCORPORATION_CERT`, `INFORMATION_STATEMENT`, or `PROOF_OF_ADDRESS`.
+        </ResponseField>
+        <ResponseField name="subType" type="string">
+          Optional qualifier like `SINGLE_SIDE` or `FRONT_SIDE`.
+        </ResponseField>
+        <ResponseField name="reviewResult" type="ReviewResultObject">
+          Outcome for the individual document; comments explain what to resubmit when declined.
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="companyDetails" type="object">
+  Document verification for the company details requirements.
+
+  <Expandable title="properties">
+    <ResponseField name="reviewResult" type="ReviewResultObject">
+      Aggregate result for all submitted documents in this category.
+    </ResponseField>
+    <ResponseField name="details" type="array[Document]">
+      List of every uploaded document that was reviewed.
+
+      <Expandable title="Document item">
+        <ResponseField name="id" type="string">
+          UUID for the document uploaded through Update KYC.
+        </ResponseField>
+        <ResponseField name="type" type="string">
+          Document category such as `INCORPORATION_CERT`, `INFORMATION_STATEMENT`, or `PROOF_OF_ADDRESS`.
+        </ResponseField>
+        <ResponseField name="subType" type="string">
+          Optional qualifier like `SINGLE_SIDE` or `FRONT_SIDE`.
+        </ResponseField>
+        <ResponseField name="reviewResult" type="ReviewResultObject">
+          Outcome for the individual document; comments explain what to resubmit when declined.
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="controlStructure" type="object">
+  Document verification for the control structure requirements.
 
   <Expandable title="properties">
     <ResponseField name="reviewResult" type="ReviewResultObject">
