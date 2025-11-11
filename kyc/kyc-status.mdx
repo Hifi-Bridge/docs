@@ -5,10 +5,8 @@ title: "KYC Status"
 Use the KYC Status endpoint to check where a user's verification stands, diagnose issues, and confirm when they're ready to use a rail.
 
 <Note>
-  This guide focuses on the USD rail. Requirements and response structure differ
-  for other rails—see the [API
-  Reference](https://docs.hifibridge.com/api-reference/kyc/retrieve-kyc-status)
-  for complete details.
+  This guide focuses on the USD rail. Requirements and response structure differ for other rails—see the [API
+  Reference](https://docs.hifibridge.com/api-reference/kyc/retrieve-kyc-status) for complete details.
 </Note>
 
 ## Status Overview
@@ -25,8 +23,7 @@ Use the KYC Status endpoint to check where a user's verification stands, diagnos
 | **CONTACT_SUPPORT** | System couldn't confirm status—contact HIFI support                                |
 
 <Info>
-  Contact support if an applicant remains in `PENDING` or `MANUAL_REVIEW` for
-  more than 24 hours.
+  Contact support if an applicant remains in `PENDING` or `MANUAL_REVIEW` for more than 24 hours.
 </Info>
 
 ## Response Structure
@@ -60,8 +57,7 @@ Each compliance category includes a `reviewResult` object with a general summary
 </ResponseField>
 
 <ResponseField name="reviewRejectType" type="string">
-  Resubmission permission: `RETRY` (can resubmit) or `FINAL` (hard rejection).
-  Only present when `reviewAnswer` is `DECLINED`.
+  Resubmission permission: `RETRY` (can resubmit) or `FINAL` (hard rejection). Only present when `reviewAnswer` is `DECLINED`.
 </ResponseField>
 
 <ResponseField name="rejectReasons" type="array[string]">
@@ -69,8 +65,7 @@ Each compliance category includes a `reviewResult` object with a general summary
 </ResponseField>
 
 <ResponseField name="comment" type="string">
-  Human-readable explanation of the rejection. Only present when `reviewAnswer`
-  is `DECLINED`.
+  Human-readable explanation of the rejection. Only present when `reviewAnswer` is `DECLINED`.
 </ResponseField>
 
 ### Review Details
@@ -94,7 +89,6 @@ The `details` object returns the compliance review outcome for each KYC category
     <ResponseField name="reviewResult" type="ReviewResultObject">
       Aggregate decision for all identity documents.
     </ResponseField>
-
     <ResponseField name="details" type="array[Document]">
       Uploaded identity documents that were reviewed.
 
@@ -102,21 +96,17 @@ The `details` object returns the compliance review outcome for each KYC category
         <ResponseField name="id" type="string">
           UUID for the document uploaded through Update KYC.
         </ResponseField>
-
         <ResponseField name="type" type="string">
           Document category such as `PASSPORT` or `ID_CARD`.
         </ResponseField>
-
         <ResponseField name="subType" type="string">
           Optional qualifier like `FRONT_SIDE` or `BACK_SIDE`.
         </ResponseField>
-
         <ResponseField name="reviewResult" type="ReviewResultObject">
           Decision for the individual document, including remediation guidance when declined.
         </ResponseField>
       </Expandable>
     </ResponseField>
-
   </Expandable>
 </ResponseField>
 
@@ -127,7 +117,6 @@ The `details` object returns the compliance review outcome for each KYC category
     <ResponseField name="reviewResult" type="ReviewResultObject">
       Final decision for the proof-of-address submission.
     </ResponseField>
-
     <ResponseField name="details" type="array[Document]">
       Proof-of-address documents under review.
 
@@ -135,21 +124,17 @@ The `details` object returns the compliance review outcome for each KYC category
         <ResponseField name="id" type="string">
           UUID for the document uploaded through Update KYC.
         </ResponseField>
-
         <ResponseField name="type" type="string">
           Document category such as `UTILITY_BILL` or `BANK_STATEMENT`.
         </ResponseField>
-
         <ResponseField name="subType" type="string">
           Qualifier like `SINGLE_SIDE` when applicable.
         </ResponseField>
-
         <ResponseField name="reviewResult" type="ReviewResultObject">
           Outcome for that document, including decline feedback.
         </ResponseField>
       </Expandable>
     </ResponseField>
-
   </Expandable>
 </ResponseField>
 
@@ -169,29 +154,159 @@ The `details` object returns the compliance review outcome for each KYC category
   <Tab title="ACTIVE">
     User passed all compliance checks and completed bank onboarding. They can now use the USD rail.
 
-```json expandable
-{
-  "status": "ACTIVE",
-  "message": "",
-  "reviewResult": {
-    "reviewAnswer": "APPROVED",
-    "reviewRejectType": "",
-    "rejectReasons": [],
-    "comment": ""
-  },
-  "details": {
-    "identity": {
+    ```json expandable
+    {
+      "status": "ACTIVE",
+      "message": "",
       "reviewResult": {
         "reviewAnswer": "APPROVED",
         "reviewRejectType": "",
         "rejectReasons": [],
         "comment": ""
       },
-      "details": [
+      "details": {
+        "identity": {
+          "reviewResult": {
+            "reviewAnswer": "APPROVED",
+            "reviewRejectType": "",
+            "rejectReasons": [],
+            "comment": ""
+          },
+          "details": [
+            {
+              "id": "989c9fae-9846-48e0-a5c1-2035e9cbd323",
+              "type": "ID_CARD",
+              "subType": "FRONT_SIDE",
+              "reviewResult": {
+                "reviewAnswer": "APPROVED",
+                "reviewRejectType": "",
+                "rejectReasons": [],
+                "comment": ""
+              }
+            }
+          ]
+        },
+        "questionnaire": {
+          "reviewResult": {
+            "reviewAnswer": "APPROVED",
+            "reviewRejectType": "",
+            "rejectReasons": [],
+            "comment": ""
+          },
+          "details": []
+        },
+        "personalInfo": {
+          "reviewResult": {
+            "reviewAnswer": "APPROVED",
+            "reviewRejectType": "",
+            "rejectReasons": [],
+            "comment": ""
+          },
+          "details": []
+        }
+      }
+    }
+    ```
+  </Tab>
+  <Tab title="INACTIVE">
+    No KYC submission made yet. Call the [Submit KYC endpoint](https://docs.hifibridge.com/api-reference/kyc/submit-kyc) to begin verification.
+
+    ```json
+    {
+      "status": "INACTIVE",
+      "message": "The rail is not active.",
+      "reviewResult": {},
+      "details": {}
+    }
+    ```
+  </Tab>
+  <Tab title="PENDING">
+    Application is moving through automated compliance screening or bank onboarding.
+
+    ```json
         {
-          "id": "989c9fae-9846-48e0-a5c1-2035e9cbd323",
-          "type": "ID_CARD",
-          "subType": "FRONT_SIDE",
+            "status": "PENDING",
+            "message": "",
+            "reviewResult": {},
+            "details": {
+                "identity": {
+                    "reviewResult": {},
+                    "details": [...]
+                },
+                "questionnaire": {
+                    "reviewResult": {}
+                },
+                "personalInfo": {
+                    "reviewResult": {}
+                }
+            }
+        }
+    ```
+
+    <Info>
+      Contact support if status doesn't change within 24 hours for individual applicants.
+    </Info>
+  </Tab>
+  <Tab title="MANUAL_REVIEW">
+    Compliance team is manually reviewing the application. This typically follows `PENDING` when additional investigation is needed.
+
+    ```json
+    {
+      "status": "MANUAL_REVIEW",
+      "message": "",
+      "reviewResult": {},
+      "details": {}
+    }
+    ```
+
+    <Info>
+      Contact support if status doesn't change within 24 hours.
+    </Info>
+  </Tab>
+  <Tab title="INCOMPLETE">
+    Submitted data needs updates before verification can continue. Use the `reviewResult` in each compliance category to identify what needs fixing.
+
+    ```json expandable
+    {
+      "status": "INCOMPLETE",
+      "message": "",
+      "reviewResult": {
+        "reviewAnswer": "DECLINED",
+        "reviewRejectType": "RETRY",
+        "rejectReasons": ["BAD_PROOF_OF_IDENTITY"],
+        "comment": ""
+      },
+      "details": {
+        "identity": {
+          "reviewResult": {
+            "reviewAnswer": "DECLINED",
+            "reviewRejectType": "RETRY",
+            "rejectReasons": [],
+            "comment": "The uploaded document is not acceptable or no longer valid. Upload a different document."
+          },
+          "details": [
+            {
+              "id": "42e54f82-dd1d-4cdf-844c-fd56fcfcdb8e",
+              "type": "ID_CARD",
+              "subType": "BACK_SIDE",
+              "reviewResult": {
+                "reviewAnswer": "DECLINED",
+                "reviewRejectType": "RETRY",
+                "rejectReasons": ["BAD_PROOF_OF_IDENTITY"],
+                "comment": "The uploaded document is not acceptable or no longer valid. Upload a different document."
+              }
+            }
+          ]
+        },
+        "questionnaire": {
+          "reviewResult": {
+            "reviewAnswer": "APPROVED",
+            "reviewRejectType": "",
+            "rejectReasons": [],
+            "comment": ""
+          }
+        },
+        "personalInfo": {
           "reviewResult": {
             "reviewAnswer": "APPROVED",
             "reviewRejectType": "",
@@ -199,210 +314,72 @@ The `details` object returns the compliance review outcome for each KYC category
             "comment": ""
           }
         }
-      ]
-    },
-    "questionnaire": {
-      "reviewResult": {
-        "reviewAnswer": "APPROVED",
-        "reviewRejectType": "",
-        "rejectReasons": [],
-        "comment": ""
-      },
-      "details": []
-    },
-    "personalInfo": {
-      "reviewResult": {
-        "reviewAnswer": "APPROVED",
-        "reviewRejectType": "",
-        "rejectReasons": [],
-        "comment": ""
-      },
-      "details": []
-    }
-  }
-}
-```
-
-  </Tab>
-  <Tab title="INACTIVE">
-    No KYC submission made yet. Call the [Submit KYC endpoint](https://docs.hifibridge.com/api-reference/kyc/submit-kyc) to begin verification.
-
-```json
-{
-  "status": "INACTIVE",
-  "message": "The rail is not active.",
-  "reviewResult": {},
-  "details": {}
-}
-```
-
-  </Tab>
-  <Tab title="PENDING">
-    Application is moving through automated compliance screening or bank onboarding.
-
-```json
-    {
-        "status": "PENDING",
-        "message": "",
-        "reviewResult": {},
-        "details": {
-            "identity": {
-                "reviewResult": {},
-                "details": [...]
-            },
-            "questionnaire": {
-                "reviewResult": {}
-            },
-            "personalInfo": {
-                "reviewResult": {}
-            }
-        }
-    }
-```
-
-    <Info>
-      Contact support if status doesn't change within 24 hours for individual applicants.
-    </Info>
-
-  </Tab>
-  <Tab title="MANUAL_REVIEW">
-    Compliance team is manually reviewing the application. This typically follows `PENDING` when additional investigation is needed.
-
-```json
-{
-  "status": "MANUAL_REVIEW",
-  "message": "",
-  "reviewResult": {},
-  "details": {}
-}
-```
-
-    <Info>
-      Contact support if status doesn't change within 24 hours.
-    </Info>
-
-  </Tab>
-  <Tab title="INCOMPLETE">
-    Submitted data needs updates before verification can continue. Use the `reviewResult` in each compliance category to identify what needs fixing.
-
-```json expandable
-{
-  "status": "INCOMPLETE",
-  "message": "",
-  "reviewResult": {
-    "reviewAnswer": "DECLINED",
-    "reviewRejectType": "RETRY",
-    "rejectReasons": ["BAD_PROOF_OF_IDENTITY"],
-    "comment": ""
-  },
-  "details": {
-    "identity": {
-      "reviewResult": {
-        "reviewAnswer": "DECLINED",
-        "reviewRejectType": "RETRY",
-        "rejectReasons": [],
-        "comment": "The uploaded document is not acceptable or no longer valid. Upload a different document."
-      },
-      "details": [
-        {
-          "id": "42e54f82-dd1d-4cdf-844c-fd56fcfcdb8e",
-          "type": "ID_CARD",
-          "subType": "BACK_SIDE",
-          "reviewResult": {
-            "reviewAnswer": "DECLINED",
-            "reviewRejectType": "RETRY",
-            "rejectReasons": ["BAD_PROOF_OF_IDENTITY"],
-            "comment": "The uploaded document is not acceptable or no longer valid. Upload a different document."
-          }
-        }
-      ]
-    },
-    "questionnaire": {
-      "reviewResult": {
-        "reviewAnswer": "APPROVED",
-        "reviewRejectType": "",
-        "rejectReasons": [],
-        "comment": ""
-      }
-    },
-    "personalInfo": {
-      "reviewResult": {
-        "reviewAnswer": "APPROVED",
-        "reviewRejectType": "",
-        "rejectReasons": [],
-        "comment": ""
       }
     }
-  }
-}
-```
+    ```
 
     **How to resolve:**
 
     1. Check the `reviewResult` in each compliance category for `DECLINED` items
     2. Read the `comment` field for specific guidance
-    3. Use [Update KYC](https://docs.hifibridge.com/api-reference/kyc/update-kyc-information) to fix the issues
+    3. Use [**Update KYC**](https://docs.hifibridge.com/api-reference/kyc/update-kyc-information) to update non-document information, or [**Update Document**](https://docs.hifibridge.com/api-reference/kyc/update-a-document)** / **[**Add Document**](https://docs.hifibridge.com/api-reference/kyc/add-documents) to update documentation.
     4. Call [Submit KYC](https://docs.hifibridge.com/api-reference/kyc/submit-kyc) to trigger a new review
 
     **Compliance category mapping:**
 
-    | Category       | Contains                                    |
-    | -------------- | ------------------------------------------- |
-    | identity       | Government ID documentation                 |
-    | questionnaire  | Source of funds and intended use responses  |
-    | personalInfo   | Name, address, date of birth, tax ID        |
-    | proofOfAddress | Proof of address documentation (if provided)|
+    | Category       | Contains                                     |
+    | -------------- | -------------------------------------------- |
+    | identity       | Government ID documentation                  |
+    | questionnaire  | Source of funds and intended use responses   |
+    | personalInfo   | Name, address, date of birth, tax ID         |
+    | proofOfAddress | Proof of address documentation (if provided) |
 
     <Info>
       For compliance reasons, detailed rejection information is only available for documentation—not for other categories.
     </Info>
-
   </Tab>
   <Tab title="RFI_PENDING">
     Compliance sent a Request for Information (RFI) to your compliance email asking for additional details about this user.
 
-```json
-{
-  "status": "RFI_PENDING",
-  "message": "",
-  "reviewResult": {},
-  "details": {}
-}
-```
+    ```json
+    {
+      "status": "RFI_PENDING",
+      "message": "",
+      "reviewResult": {},
+      "details": {}
+    }
+    ```
 
     <Info>
       Monitor your compliance inbox for RFI requests from **@hifi.com**
     </Info>
-
   </Tab>
   <Tab title="REJECTED">
     User is permanently denied for the USD rail. Resubmission via API is not permitted.
 
-```json
-{
-  "status": "REJECTED",
-  "message": "",
-  "reviewResult": {},
-  "details": {}
-}
-```
+    ```json
+    {
+      "status": "REJECTED",
+      "message": "",
+      "reviewResult": {},
+      "details": {}
+    }
+    ```
 
     <Info>
       Contact support if you believe this status is incorrect.
     </Info>
-
   </Tab>
   <Tab title="CONTACT_SUPPORT">
     System couldn't process the KYC or return the correct status. Contact HIFI support for resolution.
 
-```json
-{
-  "status": "CONTACT_SUPPORT",
-  "message": "",
-  "reviewResult": {},
-  "details": {}
-}
-```
-
+    ```json
+    {
+      "status": "CONTACT_SUPPORT",
+      "message": "",
+      "reviewResult": {},
+      "details": {}
+    }
+    ```
   </Tab>
 </Tabs>

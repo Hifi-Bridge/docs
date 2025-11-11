@@ -1,0 +1,575 @@
+---
+title: "Understanding the KYB Status Response"
+description: "This section provides guidance on how to correctly interpret the KYB status response. It explains the structure of the response object, the meaning of each field, and how to use this information to manage and troubleshoot user KYB applications effectively."
+---
+
+<Tip>
+  We recommend first reading the [KYC Status Response](/rails/usd/kyc-status) documentation, as it will help you understand the compliance screening status for the ultimate beneficial owner in the KYB process.
+</Tip>
+
+For USD rails, we provide detailed KYB information to help developers debug issues or request additional or updated information from end users in order to complete the KYB process.
+
+Below are the possible statuses for a user’s KYB application:
+
+- **ACTIVE**
+- **INACTIVE**
+- **REJECTED**
+- **PENDING**
+- **RFI_PENDING**
+- **MANUAL_REVIEW**
+- **CONTACT_SUPPORT**
+- **INCOMPLETE**
+
+We’ll go through each status in detail shortly. But first, let’s take a look at the structure of an business KYB status response.
+
+## Response Overview
+
+Below is an example of an individual KYC status response:
+
+```json expandable
+{
+    "status": "",
+    "message": "",
+    "reviewResult": {
+        "reviewAnswer": "",
+        "reviewRejectType": "",
+        "rejectReasons": [],
+        "comment": ""
+    },
+    "details": {
+        "companyInfo": {
+            "reviewResult": {
+                "reviewAnswer": "",
+                "reviewRejectType": "",
+                "rejectReasons": [],
+                "comment": ""
+            },
+            "details": []
+        },
+        "questionnaire": {
+            "reviewResult": {
+                "reviewAnswer": "",
+                "reviewRejectType": "",
+                "rejectReasons": [],
+                "comment": ""
+            },
+            "details": []
+        },
+        "legalPresence": {
+            "reviewResult": {
+                "reviewAnswer": "",
+                "reviewRejectType": "",
+                "rejectReasons": [],
+                "comment": ""
+            },
+            "details": [
+                //...
+            ]
+        },
+        "ownershipStructure": {
+            "reviewResult": {
+                "reviewAnswer": "",
+                "reviewRejectType": "",
+                "rejectReasons": [],
+                "comment": ""
+            },
+            "details": [
+                //...
+            ]
+        },
+        "companyDetails": {
+            "reviewResult": {
+                "reviewAnswer": "",
+                "reviewRejectType": "",
+                "rejectReasons": [],
+                "comment": ""
+            },
+            "details": [
+                //...
+            ]
+        },
+        "controlStructure": {
+            "reviewResult": {
+                "reviewAnswer": "",
+                "reviewRejectType": "",
+                "rejectReasons": [],
+                "comment": ""
+            },
+            "details": [
+                //...
+            ]
+        },
+        "ultimateBeneficialOwners": {
+            "reviewResult": {
+                "reviewAnswer": "",
+                "reviewRejectType": "",
+                "rejectReasons": [],
+                "comment": ""
+            },
+            "details": [
+                {
+                    "id": "",
+                    "status": "",
+                    "message": "",
+                    "reviewResult": {
+                        "reviewAnswer": "",
+                        "reviewRejectType": "",
+                        "rejectReasons": [],
+                        "comment": ""
+                    },
+                    "details": {
+                        "identity": {
+                            //...
+                        },
+                        "personalInfo": {
+                            //...
+                        },
+                        "proofOfAddress": {
+                            //...
+                        }
+                    }
+                }
+            ]
+        }
+    }
+}
+```
+
+**At the top level, the KYB status response consists of four main sections:**
+
+<ResponseField name="staus" type="string" required>
+  The primary status of the KYB application, indicating its current progress.
+</ResponseField>
+
+<ResponseField name="message" type="string" required>
+  A human-readable message intended to provide additional context for developers.
+</ResponseField>
+
+<ResponseField name="reviewResult" type="object" required>
+  A detailed screening outcome from the compliance engine, providing additional context for interpreting a user's KYC status.
+</ResponseField>
+
+<ResponseField name="details" type="object" required>
+  A comprehensive breakdown of the compliance categories and associated data points that were reviewed for the applicant.
+</ResponseField>
+
+**Under the**`details`**section, there are seven compliance categories that we screen against each individual KYC applicant:**
+
+<ResponseField name="companyInfo" type="object">
+  Indicates the screening result of the company's non-document information
+</ResponseField>
+
+<ResponseField name="questionnaire" type="object">
+  Indicates the screening result of the “source of funds and intended use” questionnaire.
+</ResponseField>
+
+<ResponseField name="legalPresence" type="object">
+  Contains the screening results based on the documentation used to fulfill the legal presence requirement.
+</ResponseField>
+
+<ResponseField name="ownershipStructure" type="object">
+  Contains the screening results based on the documentation used to fulfill the ownership structure requirement.
+</ResponseField>
+
+<ResponseField name="companyDetails" type="object">
+  Contains the screening results based on the documentation used to fulfill the company details requirement.
+</ResponseField>
+
+<ResponseField name="controlStructure" type="object">
+  Contains the screening results based on the documentation used to fulfill the control structure requirement.
+</ResponseField>
+
+<ResponseField name="ultimateBeneficialOwners" type="object">
+  Contains the screening results based on the ultimate beneficial owner's information.
+</ResponseField>
+
+**Let’s also take a look at the** `reviewResult`**object, which appears both at the top level and within each compliance category.**
+
+<ResponseField name="reviewAnswer" type="string" required>
+  Indicates the outcome of the screening. Possible values are `APPROVED` and `DECLINED`.
+</ResponseField>
+
+<ResponseField name="reviewRejectType" type="string" required>
+  Indicates whether resubmission is allowed. Possible values are `FINAL` and `RETRY`. This field is only populated when `reviewAnswer` is `DECLINED`.
+
+  When the value is `RETRY`, the user may resubmit their information to trigger a new KYB review. When the value is `FINAL`, it indicates a hard rejection — resubmission via API is not permitted.
+</ResponseField>
+
+<ResponseField name="rejectReasons" type="array[string]" required>
+  An array of enumerated values specifying the reasons for a declined screening result. This field is only populated when `reviewAnswer` is `DECLINED`.
+</ResponseField>
+
+<ResponseField name="comment" type="string" required>
+  A human-readable message providing additional details about the rejection. This field is intended for developers and end users to better understand the reason for the decline. Only populated when `reviewAnswer` is `DECLINED`.
+</ResponseField>
+
+## Statuses
+
+<Tip>
+  Scroll the tabs horizontally to see all the statuses
+</Tip>
+
+<Tabs>
+  <Tab title="ACTIVE">
+    ### ACTIVE
+
+    Below is an example of a KYC application with an `ACTIVE` status:
+
+    ```json expandable
+    {
+        "status": "ACTIVE",
+        "message": "",
+        "reviewResult": {
+            "reviewAnswer": "APPROVED",
+            "reviewRejectType": "",
+            "rejectReasons": [],
+            "comment": ""
+        },
+        "details": {
+            "identity": {
+                "reviewResult": {
+                    "reviewAnswer": "APPROVED",
+                    "reviewRejectType": "",
+                    "rejectReasons": [],
+                    "comment": ""
+                },
+                "details": [
+                    {
+                        "id": "989c9fae-9846-48e0-a5c1-2035e9cbd323",
+                        "type": "ID_CARD",
+                        "subType": "FRONT_SIDE",
+                        "reviewResult": {
+                            "reviewAnswer": "APPROVED",
+                            "reviewRejectType": "",
+                            "rejectReasons": [],
+                            "comment": ""
+                        }
+                    },
+                    {
+                        "id": "d8b105a2-c506-4cfe-8863-373fc3dfda89",
+                        "type": "ID_CARD",
+                        "subType": "BACK_SIDE",
+                        "reviewResult": {
+                            "reviewAnswer": "APPROVED",
+                            "reviewRejectType": "",
+                            "rejectReasons": [],
+                            "comment": ""
+                        }
+                    }
+                ]
+            },
+            "questionnaire": {
+                "reviewResult": {
+                    "reviewAnswer": "APPROVED",
+                    "reviewRejectType": "",
+                    "rejectReasons": [],
+                    "comment": ""
+                },
+                "details": []
+            },
+            "personalInfo": {
+                "reviewResult": {
+                    "reviewAnswer": "APPROVED",
+                    "reviewRejectType": "",
+                    "rejectReasons": [],
+                    "comment": ""
+                },
+                "details": []
+            }
+        }
+    }
+    ```
+
+    When the top-level `status` is `ACTIVE`, it means the user has been successfully approved for the USD rail, including both compliance screening and bank onboarding.
+  </Tab>
+  <Tab title="INACTIVE">
+    ### INACTIVE
+
+    Below is an example of a KYC application with an `INACTIVE` status:
+
+    ```json
+    {
+        "status": "INACTIVE",
+        "message": "",
+        "reviewResult": {...},
+        "details": {...}
+    }
+    ```
+
+    When the top-level `status` is `INACTIVE`, it means the user has not yet submitted their KYC application. To submit the KYC application, please call [Submit KYC](https://hifi-wy-fix-doc.mintlify.app/api-reference/kyc/submit-kyc).
+
+    ## 
+  </Tab>
+  <Tab title="REJECTED">
+    ### REJECTED
+
+    Below is an example of a KYC application with an `REJECTED` status:
+
+    ```json
+    {
+        "status": "REJECTED",
+        "message": "",
+        "reviewResult": {
+    		//...
+    	},
+        "details": {
+    		//...
+    	}
+    }
+    ```
+
+    When the top-level `status` is `REJECTED`, it means the user has been denied access to the USD rail, and resubmission is **not allowed**.
+
+    <Info>
+      Please contact support if you believe the user’s status is incorrect.
+    </Info>
+    ## 
+  </Tab>
+  <Tab title="PENDING">
+    ### PENDING
+
+    Below is an example of a KYC application with an `PENDING` status:
+
+    ```json
+    {
+        "status": "PENDING",
+        "message": "",
+        "reviewResult": {
+    		//...
+    	},
+        "details": {
+    		//...
+    	}
+    }
+    ```
+
+    When the top-level `status` is `PENDING`, it means the user is still undergoing the compliance screening process. This could indicate that the user is either being reviewed by our compliance engine or is in the process of bank onboarding.
+
+    <Info>
+      Please reach out to support if an individual applicant has remained in this status for more than 24 hours.
+    </Info>
+  </Tab>
+  <Tab title="INCOMPLETE">
+    ### INCOMPLETE
+
+    Below is an example of a KYC application with an `INCOMPLETE` status:
+
+    ```json expandable
+    {
+        "status": "INCOMPLETE",
+        "message": "",
+        "reviewResult": {
+            "reviewAnswer": "DECLINED",
+            "reviewRejectType": "RETRY",
+            "rejectReasons": [
+                "BAD_PROOF_OF_IDENTITY"
+            ],
+            "comment": ""
+        },
+        "details": {
+            "identity": {
+                "reviewResult": {
+                    "reviewAnswer": "DECLINED",
+                    "reviewRejectType": "RETRY",
+                    "rejectReasons": [],
+                    "comment": "The uploaded document is not acceptable or no longer valid. Upload a different document."
+                },
+                "details": [
+                    {
+                        "id": "42e54f82-dd1d-4cdf-844c-fd56fcfcdb8e",
+                        "type": "ID_CARD",
+                        "subType": "BACK_SIDE",
+                        "reviewResult": {
+                            "reviewAnswer": "DECLINED",
+                            "reviewRejectType": "RETRY",
+                            "rejectReasons": [
+                                "BAD_PROOF_OF_IDENTITY"
+                            ],
+                            "comment": "The uploaded document is not acceptable or no longer valid. Upload a different document."
+                        }
+                    },
+                    {
+                        "id": "0b13ba7c-b89b-4c2b-8685-bd23ec175d29",
+                        "type": "ID_CARD",
+                        "subType": "FRONT_SIDE",
+                        "reviewResult": {
+                            "reviewAnswer": "DECLINED",
+                            "reviewRejectType": "RETRY",
+                            "rejectReasons": [
+                                "BAD_PROOF_OF_IDENTITY"
+                            ],
+                            "comment": "The uploaded document is not acceptable or no longer valid. Upload a different document."
+                        }
+                    }
+                ]
+            },
+            "questionnaire": {
+                "reviewResult": {
+                    "reviewAnswer": "APPROVED",
+                    "reviewRejectType": "",
+                    "rejectReasons": [],
+                    "comment": ""
+                },
+                "details": []
+            },
+            "personalInfo": {
+                "reviewResult": {
+                    "reviewAnswer": "APPROVED",
+                    "reviewRejectType": "",
+                    "rejectReasons": [],
+                    "comment": ""
+                },
+                "details": []
+            }
+        }
+    }
+    ```
+
+    When you see the `INCOMPLETE` status, it means the data the user submitted requires updates in order to continue the KYC application. At this stage, you are allowed to use HIFI's API to programmatically [update the user's KYC information](https://docs.hifibridge.com/api-reference/kyc/update-kyc-information) and [re-submit](https://docs.hifibridge.com/api-reference/kyc/submit-kyc) it once ready.
+
+    In the above example, we can see that there is an issue with the user's `identity` section.
+
+    ```json
+    "reviewResult": {
+    	"reviewAnswer": "DECLINED",
+    	"reviewRejectType": "RETRY",
+    	"rejectReasons": [],
+    	"comment": "The uploaded document is not acceptable or no longer valid. Upload a different document."
+    }
+    ```
+
+    From the `reviewResult` under the identity section, we can see that the compliance information is `DECLINED` and a `RETRY` is allowed. The `comment` contains human-readable information regarding the reason for the rejection.
+
+    In this situation, you should use the [update documentation endpoint](https://docs.hifibridge.com/api-reference/kyc/update-a-document) to update the ID documentation previously submitted for compliance screening. If the user wishes to submit a different type of documentation, you can also use the [add documentation endpoint](https://docs.hifibridge.com/api-reference/kyc/add-documents).
+
+    If proof-of-address documentation was submitted during the initial KYC screening process, you will also see `proofOfAddress` among all the KYC screening categories.
+
+    ```json
+    {
+        "status": "INCOMPLETE",
+        "message": "",
+        "reviewResult": {
+            "reviewAnswer": "DECLINED",
+            "reviewRejectType": "RETRY",
+            "rejectReasons": [
+                "BAD_PROOF_OF_IDENTITY"
+            ],
+            "comment": ""
+        },
+        "details": {
+            "identity": {
+                //...
+            },
+            "questionnaire": {
+                //...
+            },
+            "personalInfo": {
+                //...
+            },
+            "proofOfAddress": {
+                "reviewResult": {
+    				"reviewAnswer": "DECLINED",
+    				"reviewRejectType": "RETRY",
+    				"rejectReasons": [],
+    				"comment": "The uploaded document is not acceptable or no longer valid. Upload a different document."
+    			},
+                "details": [
+                    {
+                        "id": "13b89554-f077-4bfa-a22a-285ede06d89f",
+                        "type": "PROOF_OF_ADDRESS",
+                        "subType": "SINGLE_SIDE",
+                        "reviewResult": {
+    						"reviewAnswer": "DECLINED",
+    						"reviewRejectType": "RETRY",
+    						"rejectReasons": [],
+    						"comment": "The uploaded document is not acceptable or no longer valid. Upload a different document."
+    					}
+                    }
+                ]
+            }
+        }
+    }
+    ```
+
+    Below is a table showing the KYC information categorized under each section.
+
+    | Section        | KYC Fields                                     |
+    | -------------- | ---------------------------------------------- |
+    | identity       | ID Documentation                               |
+    | questionnaire  | Souece of funds and expected use questionnaire |
+    | personalInfo   | Non-doc information (first name, last name...) |
+    | proofOfAddress | Proof of address documentation                 |
+
+    <Info>
+      Due to compliance reasons, we can only provide limited information regarding why a given category was rejected, except for documentation.
+    </Info>
+  </Tab>
+  <Tab title="RFI_PENDING">
+    ### RFI_PENDING
+
+    Below is an example of a KYC application with an `RFI_PENDING` status:
+
+    ```json
+    {
+        "status": "RFI_PENDING",
+        "message": "",
+        "reviewResult": {
+    		//...
+    	},
+        "details": {
+    		//...
+    	}
+    }
+    ```
+
+    When the top-level **status** is `RFI_PENDING`, it means there is an open RFI (Request for Information) case for this application. Our compliance team has sent an email to your compliance team requesting additional information for this user.
+
+    <Info>
+      Please closely monitor your mailbox for any RFI requests from **@**[**hifi.com**](http://hifi.com).
+    </Info>
+  </Tab>
+  <Tab title="MANUAL_REVIEW">
+    ### MANUAL_REVIEW
+
+    Below is an example of a KYC application with an `MANUAL_REVIEW` status:
+
+    ```json
+    {
+        "status": "MANUAL_REVIEW",
+        "message": "",
+        "reviewResult": {
+    		//...
+    	},
+        "details": {
+    		//...
+    	}
+    }
+    ```
+
+    When the top-level status is `MANUAL_REVIEW`, it means our compliance team is manually reviewing the KYC information provided by the user. This usually occurs after the `PENDING` status, when a more detailed investigation is required before proceeding to the next step.
+
+    <Info>
+      Please reach out to support if an individual applicant has remained in this status for more than 24 hours.
+    </Info>
+  </Tab>
+  <Tab title="CONTACT_SUPPORT">
+    ### CONTACT_SUPPORT
+
+    Below is an example of a KYC application with an `CONTACT_SUPPORT` status:
+
+    ```json
+    {
+        "status": "CONTACT_SUPPORT",
+        "message": "",
+        "reviewResult": {
+    		//...
+    	},
+        "details": {
+    		//...
+    	}
+    }
+    ```
+
+    When the top-level status is `CONTACT_SUPPORT`, it means our system was unable to properly process the KYC or return the correct user status. Please reach out to support if you encounter this status for an individual user.
+  </Tab>
+</Tabs>
