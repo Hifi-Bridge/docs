@@ -1,0 +1,405 @@
+---
+title: "KYC Requirements"
+---
+
+The KYC Requirements endpoint tells you exactly which data points and documents are needed to unlock a given rail for a specific user.
+
+Use it **before** submitting KYC information so you can pre-fill forms, surface missing fields, and resolve issues without triggering a compliance review cycle.
+
+<Info>
+  After you submit KYC information, switch to the [KYC
+  Status](/docs/users/features/kyc-status) endpoint to monitor review progress
+  and any remaining blockers.
+</Info>
+
+## Usage
+
+- **Pre-fill onboarding flows** with the precise set of fields per rail.
+- **Detect missing or invalid data** before attempting a submission.
+- **Show document requirements** (including minimum counts and accepted document types) to users or operators.
+
+## Request Overview
+
+<CodeGroup>
+```http Request
+GET https://sandbox.hifibridge.com/v2/users/{userId}/kyc/requirements?rails=USD
+Authorization: Bearer <token>
+```
+</CodeGroup>
+
+<ResponseField name="userId" type="string" required>
+  Path parameter. Provide the target user ID (UUID).
+</ResponseField>
+
+<ResponseField name="rails" type="enum<string>" required>
+  Query parameter. Specify the rail to unlock — `USD`, `AFRICA_GENERAL`,
+  `AFRICA_NIGERIA`, or `GLOBAL_NETWORK`.
+</ResponseField>
+
+<Tip>
+  You can submit requirements for multiple rails at the same time and get all
+  requirements at once.
+</Tip>
+
+## Response Overview
+
+Below is a trimmed example of a `200 OK` response for a USD business user:
+
+```json expandable
+[
+  {
+    "userId": "35dbc7ea-2877-4a70-add6-b5458289df23",
+    "rails": "USD",
+    "type": "business",
+    "required": {
+      "businessName": "string",
+      "registeredAddress": "string",
+      "documents": {
+        "legalPresence": {
+          "minCount": 1,
+          "acceptedDocTypes": ["INCORPORATION_CERT"]
+        }
+      }
+    },
+    "optional": {
+      "incorporationState": "string"
+    },
+    "invalid": {
+      "fields": {
+        "taxIdentificationNumber": "missing"
+      },
+      "documents": {
+        "message": "The following document groups are not satisfied: ownershipStructure"
+      }
+    }
+  }
+]
+```
+
+**Top-level fields**
+
+<ResponseField name="userId" type="string" required>
+  Unique identifier for the user. Always returned for context, even when the
+  user has no invalid fields.
+</ResponseField>
+
+<ResponseField name="rails" type="string" required>
+  The rail the requirements apply to. Matches the `rails` query parameter.
+</ResponseField>
+
+<ResponseField name="type" type="string" required>
+  Indicates the user type. Possible values are `business` and `individual`.
+</ResponseField>
+
+<ResponseField name="required" type="object" required>
+  Complete list of fields that must be populated **before** submitting KYC for
+  the selected rail and profile. Fields appear only when they are required.
+</ResponseField>
+
+<ResponseField name="optional" type="object">
+  Fields and document groups that improve submission quality but are not
+  mandatory.
+</ResponseField>
+
+<ResponseField name="invalid" type="object">
+  Any fields or document groups that the user currently has but are missing or
+  invalid for this rail. If the user has not provided data yet, this object may
+  be empty.
+</ResponseField>
+
+## Document Groups
+
+Some requirements are represented as **document groups**. Each group specifies a minimum number of documents and the accepted document types.
+
+| Property           | Type    | Description                                                                                        |
+| ------------------ | ------- | -------------------------------------------------------------------------------------------------- |
+| `minCount`         | integer | Minimum number of documents needed for that group.                                                 |
+| `acceptedDocTypes` | array   | Accepted document identifiers; the user must provide at least `minCount` documents from this list. |
+
+<Info>
+  Only documents uploaded through the Documents API count toward these
+  requirements.
+</Info>
+
+## Response Breakdown
+
+The structure under `required`, `optional`, and `invalid` changes depending on whether the user is a business or an individual. Use the tabs below to explore both shapes.
+
+<Tabs>
+  <Tab title="Business (USD)">
+    ```json expandable
+    {
+      "userId": "35dbc7ea-2877-4a70-add6-b5458289df23",
+      "rails": "USD",
+      "type": "business",
+      "required": {
+        "businessName": "string",
+        "businessType": "string",
+        "businessIndustry": "string",
+        "registrationNumber": "string",
+        "registeredAddress": "string",
+        "address": {
+          "required": {
+            "addressLine1": "string",
+            "city": "string",
+            "stateProvinceRegion": "string",
+            "postalCode": "string",
+            "country": "string"
+          },
+          "optional": {
+            "addressLine2": "string"
+          }
+        },
+        "website": "string",
+        "incorporationDate": "date",
+        "email": "string",
+        "phone": "string",
+        "taxIdentificationNumber": "string",
+        "sofEuQuestionnaire": {
+          "required": {
+            "primaryPurpose": "string",
+            "sourceOfFunds": "string",
+            "transmitsCustomerFunds": "boolean",
+            "conductsMoneyServices": "boolean",
+            "highRiskActivities": "array",
+            "estimatedAnnualRevenueUsd": "string",
+            "expectedMonthlyPaymentsUsd": "string",
+            "customerFundsDescription": "string"
+          },
+          "optional": {
+            "operatesInProhibitedCountries": "string",
+            "primaryPurposeOther": "string",
+            "sourceOfFundsDescription": "string",
+            "transmitsCustomerFundsDescription": "string"
+          }
+        },
+        "ultimateBeneficialOwners": [
+          {
+            "required": {
+              "roles": "array",
+              "businessTitle": "string",
+              "firstName": "string",
+              "lastName": "string",
+              "nationality": "string",
+              "email": "string",
+              "phone": "string",
+              "address": {
+                "required": {
+                  "addressLine1": "string",
+                  "city": "string",
+                  "stateProvinceRegion": "string",
+                  "postalCode": "string",
+                  "country": "string"
+                },
+                "optional": {
+                  "addressLine2": "string"
+                }
+              },
+              "taxIdentificationNumber": "string",
+              "dateOfBirth": "date",
+              "shareProportion": "string",
+              "relationshipEstablishedAt": "date",
+              "documents": {
+                "identity": {
+                  "minCount": 1,
+                  "acceptedDocTypes": [
+                    "DRIVERS",
+                    "ID_CARD",
+                    "PASSPORT",
+                    "RESIDENCE_PERMIT"
+                  ]
+                }
+              }
+            },
+            "optional": {
+              "middleName": "string"
+            }
+          }
+        ],
+        "documents": {
+          "legalPresence": {
+            "minCount": 1,
+            "acceptedDocTypes": [
+              "INCORPORATION_ARTICLES",
+              "INCORPORATION_CERT",
+              "STATE_REGISTRY"
+            ]
+          },
+          "ownershipStructure": {
+            "minCount": 1,
+            "acceptedDocTypes": [
+              "SHAREHOLDER_REGISTRY",
+              "TRUST_AGREEMENT",
+              "INFORMATION_STATEMENT",
+              "STATE_REGISTRY"
+            ]
+          },
+          "companyDetails": {
+            "minCount": 1,
+            "acceptedDocTypes": [
+              "PROOF_OF_ADDRESS"
+            ]
+          },
+          "controlStructure": {
+            "minCount": 1,
+            "acceptedDocTypes": [
+              "DIRECTORS_REGISTRY",
+              "TRUST_AGREEMENT",
+              "INFORMATION_STATEMENT",
+              "STATE_REGISTRY"
+            ]
+          }
+        }
+      },
+      "optional": {
+        "incorporationCountry": "string",
+        "incorporationState": "string"
+      },
+      "invalid": {
+        "message": "fields are either missing or invalid",
+        "fields": {
+          "registrationNumber": "missing"
+        },
+        "documents": {
+          "message": "The following document groups are not satisfied: controlStructure",
+          "groups": {
+            "controlStructure": {
+              "minCount": 1,
+              "acceptedDocTypes": [
+                "DIRECTORS_REGISTRY",
+                "TRUST_AGREEMENT",
+                "INFORMATION_STATEMENT",
+                "STATE_REGISTRY"
+              ]
+            }
+          }
+        }
+      }
+    }
+    ```
+
+    **What to watch for**
+
+    - **Ultimate Beneficial Owners (UBOs)**: Each UBO must meet the same address, identity, and questionnaire requirements as an individual. If any UBO document is missing, the requirement appears under `invalid.documents.groups`.
+    - **Document groups**: All four groups (`legalPresence`, `ownershipStructure`, `companyDetails`, `controlStructure`) must satisfy `minCount`. The response repeats accepted document types, so you can render them directly in an operator dashboard.
+    - **SofEu questionnaire**: Every field listed under `required` must be supplied. Optional fields only appear when they are relevant to the rail.
+
+  </Tab>
+  <Tab title="Individual (USD)">
+    ```json expandable
+    {
+      "userId": "35dbc7ea-2877-4a70-add6-b5458289df23",
+      "rails": "USD",
+      "type": "individual",
+      "required": {
+        "firstName": "string",
+        "lastName": "string",
+        "email": "string",
+        "phone": "string",
+        "nationality": "string",
+        "dateOfBirth": "string",
+        "address": {
+          "required": {
+            "addressLine1": "string",
+            "city": "string",
+            "stateProvinceRegion": "string",
+            "postalCode": "string",
+            "country": "string"
+          },
+          "optional": {
+            "addressLine2": "string"
+          }
+        },
+        "taxIdentificationNumber": "string",
+        "documents": {
+          "identity": {
+            "minCount": 1,
+            "acceptedDocTypes": [
+              "DRIVERS",
+              "ID_CARD",
+              "PASSPORT",
+              "RESIDENCE_PERMIT"
+            ]
+          },
+          "proofOfResidence": {
+            "minCount": 1,
+            "acceptedDocTypes": [
+              "UTILITY_BILL",
+              "BANK_STATEMENT",
+              "GOVERNMENT_LETTER"
+            ]
+          }
+        }
+      },
+      "optional": {
+        "sofEuQuestionnaire": {
+          "required": {
+            "actingAsIntermediary": "string",
+            "employmentStatus": "string",
+            "expectedMonthlyPayments": "string",
+            "mostRecentOccupation": "string",
+            "primaryPurpose": "string",
+            "sourceOfFunds": "string"
+          },
+          "optional": {
+            "primaryPurposeOther": "string"
+          }
+        }
+      },
+      "invalid": {
+        "message": "fields are either missing or invalid",
+        "fields": {
+          "phone": "missing",
+          "nationality": "missing",
+          "taxIdentificationNumber": "missing"
+        },
+        "documents": {
+          "message": "The following document groups are not satisfied: identity",
+          "groups": {
+            "identity": {
+              "minCount": 1,
+              "acceptedDocTypes": [
+                "DRIVERS",
+                "ID_CARD",
+                "PASSPORT",
+                "RESIDENCE_PERMIT"
+              ]
+            }
+          }
+        }
+      }
+    }
+    ```
+
+    **What to watch for**
+
+    - **Identity documents**: Individuals must always satisfy the `identity` document group. If `minCount` is `1`, at least one document from the accepted list must be present.
+    - **Proof of residence**: Some rails require the `proofOfResidence` group; when it is optional it will surface in the `optional` object instead.
+    - **Invalid messages**: Use `invalid.fields` to highlight missing form inputs and `invalid.documents.message` for UI copy explaining outstanding document groups.
+
+  </Tab>
+</Tabs>
+
+## Invalid Object
+
+When the user is missing data, the `invalid` object provides structured hints:
+
+<ResponseField name="message" type="string">
+  Human-readable summary describing why the user cannot submit yet.
+</ResponseField>
+
+<ResponseField name="fields" type="object">
+  Key-value pairs where each property name matches a required field and the
+  value explains why it is invalid (for example `missing` or `invalid_format`).
+</ResponseField>
+
+<ResponseField name="documents" type="object">
+  Additional guidance for document-based requirements. Includes a `message` and,
+  when applicable, a `groups` object with the same structure as `documents` in
+  the `required` section.
+</ResponseField>
+
+## Next Steps
+
+- After all required fields and documents are satisfied, call [Submit KYC](https://docs.hifibridge.com/api-reference/kyc/submit-kyc).
+- Use the [KYC Status guide](/docs/users/features/kyc-status) to interpret post-submission results and remediation steps.

@@ -177,13 +177,19 @@
               "users",
               "wallets",
               {
+                "group": "KYC",
+                "pages": [
+                  "kyc/index",
+                  "kyc/kyc-requirements",
+                  "kyc/kyc-status",
+                  "kyc/kyb-status"
+                ]
+              },
+              {
                 "group": "Rails",
                 "pages": [
                   "rails/index",
-                  {
-                    "group": "USD",
-                    "pages": ["rails/usd/usd", "rails/usd/kyc-status"]
-                  },
+                  "rails/usd",
                   "rails/global-network",
                   "rails/africa"
                 ]
