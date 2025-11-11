@@ -34,47 +34,47 @@ Below is an example of an individual KYC status response:
     },
     "details": {
         "identity": {
-			{
+			"reviewResult": {
         		"reviewAnswer": "",
         		"reviewRejectType": "",
         		"rejectReasons": [],
         		"comment": ""
     		},
 			"details": [
-				...
+				//...
 			]
         },
         "questionnaire": {
-            {
+            "reviewResult": {
         		"reviewAnswer": "",
         		"reviewRejectType": "",
         		"rejectReasons": [],
         		"comment": ""
     		},
 			"details": [
-				...
+				//...
 			]
         },
         "personalInfo": {
-            {
+            "reviewResult": {
         		"reviewAnswer": "",
         		"reviewRejectType": "",
         		"rejectReasons": [],
         		"comment": ""
     		},
 			"details": [
-				...
+				//...
 			]
         },
 		"proofOfAddress": {
-			{
+			"reviewResult": {
         		"reviewAnswer": "",
         		"reviewRejectType": "",
         		"rejectReasons": [],
         		"comment": ""
     		},
 			"details": [
-				...
+				//...
 			]
 		}
 
@@ -82,28 +82,61 @@ Below is an example of an individual KYC status response:
 }
 ```
 
-At the top level, the KYC status response consists of four main sections:
+**At the top level, the KYC status response consists of four main sections:**
 
-- **status** – The primary status of the KYC application, indicating its current progress.
-- **message** – A human-readable message intended to provide additional context for developers.
-- **reviewResult** – A more detailed screening outcome from our compliance engine, which can serve as a secondary reference for understanding a user’s KYC status.
-- **details** – A comprehensive breakdown of the compliance categories and data points screened for the applicant.
+<ResponseField name="staus" type="string" required>
+  The primary status of the KYC application, indicating its current progress.
+</ResponseField>
 
-Under the `details` section, there are four compliance categories that we screen against each individual KYC applicant:
+<ResponseField name="message" type="string">
+  A human-readable message intended to provide additional context for developers.
+</ResponseField>
 
-- **identity** – Indicates the screening result of the user’s ID documentation.
-- **questionnaire** – Indicates the screening result of the “source of funds and intended use” questionnaire.
-- **personalInfo** – Contains the results based on non-document information provided by the user, such as first name, last name, and address.
-- **proofOfAddress** – Indicates the screening result of the proof of address (PoA) documentation, if provided during the KYC application.
+<ResponseField name="reviewResult" type="object">
+  A detailed screening outcome from the compliance engine, providing additional context for interpreting a user's KYC status.
+</ResponseField>
 
-Let’s also take a look at the `reviewResult` object, which appears both at the top level and within each compliance category.
+<ResponseField name="details" type="object">
+  A comprehensive breakdown of the compliance categories and associated data points that were reviewed for the applicant.
+</ResponseField>
 
-- **reviewAnswer** – Indicates the outcome of the screening. Possible values are `APPROVED` and `DECLINED`.
-- **reviewRejectType** – Indicates whether resubmission is allowed. Possible values are `FINAL` and `RETRY`. This field is only populated when `reviewAnswer` is `DECLINED`.
-  - When the value is `RETRY`, the user may resubmit their information and trigger a new KYC review.
-  - When the value is `FINAL`, it indicates a hard rejection — resubmission via API is not permitted.
-- **rejectReasons** – An array of enums that specify the reasons for a declined screening result. This field is only populated when `reviewAnswer` is `DECLINED`.
-- **comment** – A human-readable message providing additional details about the rejection. This field is intended to be shared with developers and end users for better clarity. This field is only populated when `reviewAnswer` is `DECLINED`.
+**Under the**`details`**section, there are four compliance categories that we screen against each individual KYC applicant:**
+
+<ResponseField name="identity" type="object">
+  Indicates the screening result of the user's ID documentation.
+</ResponseField>
+
+<ResponseField name="questionnaire" type="object">
+  Indicates the screening result of the “source of funds and intended use” questionnaire.
+</ResponseField>
+
+<ResponseField name="personalInfo" type="object">
+  Contains the screening results based on non-document information provided by the user, such as first name, last name, and address.
+</ResponseField>
+
+<ResponseField name="proofOfAddress" type="object">
+  Indicates the screening result of the proof of address (PoA) documentation, if submitted during the KYC application.
+</ResponseField>
+
+**Let’s also take a look at the** `reviewResult`**object, which appears both at the top level and within each compliance category.**
+
+<ResponseField name="reviewAnswer" type="string" required>
+  Indicates the outcome of the screening. Possible values are `APPROVED` and `DECLINED`.
+</ResponseField>
+
+<ResponseField name="reviewRejectType" type="string">
+  Indicates whether resubmission is allowed. Possible values are `FINAL` and `RETRY`. This field is only populated when `reviewAnswer` is `DECLINED`.
+
+  When the value is `RETRY`, the user may resubmit their information to trigger a new KYC review. When the value is `FINAL`, it indicates a hard rejection — resubmission via API is not permitted.
+</ResponseField>
+
+<ResponseField name="rejectReasons" type="array[string]">
+  An array of enumerated values specifying the reasons for a declined screening result. This field is only populated when `reviewAnswer` is `DECLINED`.
+</ResponseField>
+
+<ResponseField name="comment" type="string">
+  A human-readable message providing additional details about the rejection. This field is intended for developers and end users to better understand the reason for the decline. Only populated when `reviewAnswer` is `DECLINED`.
+</ResponseField>
 
 ## ACTIVE
 
@@ -180,7 +213,7 @@ When the top-level `status` is `ACTIVE`, it means the user has been successfully
 
 Below is an example of a KYC application with an `INACTIVE` status:
 
-```json expandable
+```json
 {
     "status": "INACTIVE",
     "message": "",
@@ -195,12 +228,16 @@ When the top-level `status` is `INACTIVE`, it means the user has not yet submitt
 
 Below is an example of a KYC application with an `REJECTED` status:
 
-```json expandable
+```json
 {
     "status": "REJECTED",
     "message": "",
-    "reviewResult": {...},
-    "details": {...}
+    "reviewResult": {
+		//...
+	},
+    "details": {
+		//...
+	}
 }
 ```
 
@@ -214,12 +251,16 @@ When the top-level `status` is `REJECTED`, it means the user has been denied acc
 
 Below is an example of a KYC application with an `PENDING` status:
 
-```json expandable
+```json
 {
     "status": "PENDING",
     "message": "",
-    "reviewResult": {...},
-    "details": {...}
+    "reviewResult": {
+		//...
+	},
+    "details": {
+		//...
+	}
 }
 ```
 
@@ -233,12 +274,16 @@ When the top-level `status` is `PENDING`, it means the user is still undergoing 
 
 Below is an example of a KYC application with an `RFI_PENDING` status:
 
-```json expandable
+```json
 {
     "status": "RFI_PENDING",
     "message": "",
-    "reviewResult": {...},
-    "details": {...}
+    "reviewResult": {
+		//...
+	},
+    "details": {
+		//...
+	}
 }
 ```
 
@@ -252,12 +297,16 @@ When the top-level **status** is `RFI_PENDING`, it means there is an open RFI (R
 
 Below is an example of a KYC application with an `MANUAL_REVIEW` status:
 
-```json expandable
+```json
 {
     "status": "MANUAL_REVIEW",
     "message": "",
-    "reviewResult": {...},
-    "details": {...}
+    "reviewResult": {
+		//...
+	},
+    "details": {
+		//...
+	}
 }
 ```
 
@@ -271,12 +320,16 @@ When the top-level status is `MANUAL_REVIEW`, it means our compliance team is ma
 
 Below is an example of a KYC application with an `CONTACT_SUPPORT` status:
 
-```json expandable
+```json
 {
     "status": "CONTACT_SUPPORT",
     "message": "",
-    "reviewResult": {...},
-    "details": {...}
+    "reviewResult": {
+		//...
+	},
+    "details": {
+		//...
+	}
 }
 ```
 
@@ -376,7 +429,7 @@ In this situation, you should use the [update documentation endpoint](https://do
 
 If proof-of-address documentation was submitted during the initial KYC screening process, you will also see `proofOfAddress` among all the KYC screening categories.
 
-```json Line focusing example expandable focus=2,4,5
+```json
 {
     "status": "INCOMPLETE",
     "message": "",
@@ -390,13 +443,13 @@ If proof-of-address documentation was submitted during the initial KYC screening
     },
     "details": {
         "identity": {
-            ...
+            //...
         },
         "questionnaire": {
-            ...
+            //...
         },
         "personalInfo": {
-            ...
+            //...
         },
         "proofOfAddress": {
             "reviewResult": {
@@ -404,7 +457,7 @@ If proof-of-address documentation was submitted during the initial KYC screening
 				"reviewRejectType": "RETRY",
 				"rejectReasons": [],
 				"comment": "The uploaded document is not acceptable or no longer valid. Upload a different document."
-			}
+			},
             "details": [
                 {
                     "id": "13b89554-f077-4bfa-a22a-285ede06d89f",
@@ -435,3 +488,5 @@ Below is a table showing the KYC information categorized under each section.
 <Info>
   Due to compliance reasons, we can only provide limited information regarding why a given category was rejected, except for documentation.
 </Info>
+
+/
