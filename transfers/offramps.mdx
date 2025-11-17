@@ -16,7 +16,8 @@ Offramps follow a quote-based flow:
     Examine the exchange rate, fees, and quote expiration time.
   </Step>
   <Step title="Accept quote">
-    Accept the quote to execute the conversion. Stablecoins are converted to fiat and sent to the registered bank account.
+    Accept the quote to execute the conversion. Stablecoins are converted to
+    fiat and sent to the registered bank account.
   </Step>
 </Steps>
 
@@ -150,7 +151,8 @@ The response contains the offramp quote information:
 </ResponseField>
 
 <ResponseField name="transferDetails.status" type="string">
-  Offramp status. `OPEN_QUOTE` means the quote is ready for review. See [Transaction Status](#transaction-status) for details.
+  Offramp status. `OPEN_QUOTE` means the quote is ready for review. See
+  [Transaction Status](#transaction-status) for details.
 </ResponseField>
 
 <ResponseField name="transferDetails.quoteInformation" type="object">
@@ -191,11 +193,14 @@ The response contains the offramp quote information:
 </ResponseField>
 
 <ResponseField name="transferDetails.receipt" type="object">
-  Transaction receipt. Contains `transactionHash` once the stablecoin conversion is confirmed on-chain, and `paymentTracking` once fiat processing begins.
+  Transaction receipt. Contains `transactionHash` once the stablecoin conversion
+  is confirmed on-chain, and `paymentTracking` once fiat processing begins.
 </ResponseField>
 
 <Info>
-For detailed field documentation, see the [Create Offramp](https://docs.hifibridge.com/api-reference/offramp/create-an-offramp) API reference.
+  For detailed field documentation, see the [Create
+  Offramp](https://docs.hifibridge.com/api-reference/offramp/create-an-offramp)
+  API reference.
 </Info>
 
 ## Accepting Quotes
@@ -229,7 +234,8 @@ When the quote is accepted, the response shows the updated status:
 </Accordion>
 
 <ResponseField name="transferDetails.status" type="string">
-  Updated offramp status. `CRYPTO_INITIATED` means the conversion has started. See [Transaction Status](#transaction-status) for progression.
+  Updated offramp status. `CRYPTO_INITIATED` means the conversion has started.
+  See [Transaction Status](#transaction-status) for progression.
 </ResponseField>
 
 Once accepted, the offramp progresses through crypto and fiat processing phases until completion.
@@ -238,38 +244,41 @@ Once accepted, the offramp progresses through crypto and fiat processing phases 
 
 Offramps progress through several phases:
 
-### Creation & Quote Phase
+### System Statuses
 
-| Status              | Description                                                       |
-| :------------------ | :---------------------------------------------------------------- |
-| **CREATED**         | Offramp request created successfully                              |
-| **NOT_INITIATED**   | Request not submitted due to validation error                     |
-| **OPEN_QUOTE**      | Quote generated and awaiting acceptance                           |
-| **QUOTE_FAILED**    | Quote expired before acceptance                                   |
+| Status            | Description                                    |
+| :---------------- | :--------------------------------------------- |
+| **CREATED**       | Offramp request created successfully           |
+| **NOT_INITIATED** | Request not submitted due to validation error  |
+| **OPEN_QUOTE**    | Quote generated and awaiting acceptance        |
+| **IN_REVIEW**     | Transaction under review by monitoring systems |
+| **QUOTE_FAILED**  | Quote expired before acceptance                |
 
 ### Crypto Processing Phase
 
-| Status              | Description                                                       |
-| :------------------ | :---------------------------------------------------------------- |
-| **CRYPTO_INITIATED**| Converting stablecoins, blockchain transaction started            |
-| **CRYPTO_PENDING**  | Blockchain transaction awaiting confirmation                      |
-| **CRYPTO_PROCESSED**| Stablecoins successfully converted                                |
-| **CRYPTO_FAILED**   | Blockchain transaction failed                                     |
-| **CRYPTO_RETURNED** | Failed transaction refunded to user's wallet                      |
+| Status               | Description                                            |
+| :------------------- | :----------------------------------------------------- |
+| **CRYPTO_INITIATED** | Converting stablecoins, blockchain transaction started |
+| **CRYPTO_PENDING**   | Blockchain transaction awaiting confirmation           |
+| **CRYPTO_PROCESSED** | Stablecoins successfully converted                     |
+| **CRYPTO_FAILED**    | Blockchain transaction failed                          |
+| **CRYPTO_RETURNED**  | Failed transaction refunded to user's wallet           |
 
 ### Fiat Processing Phase
 
-| Status              | Description                                                       |
-| :------------------ | :---------------------------------------------------------------- |
-| **FIAT_INITIATED**  | Fiat payout process started                                       |
-| **FIAT_PENDING**    | Fiat transaction awaiting settlement                              |
-| **FIAT_FAILED**     | Fiat transaction failed                                           |
-| **COMPLETED**       | Fiat successfully delivered to bank account                       |
+| Status             | Description                                 |
+| :----------------- | :------------------------------------------ |
+| **FIAT_INITIATED** | Fiat payout process started                 |
+| **FIAT_PENDING**   | Fiat transaction awaiting settlement        |
+| **FIAT_FAILED**    | Fiat transaction failed                     |
+| **COMPLETED**      | Fiat successfully delivered to bank account |
 
 ## Tracking Offramps
 
 <Note>
-**Status Updates:** Subscribe to `OFFRAMP.CREATE` and `OFFRAMP.UPDATE` webhook events to receive real-time status notifications. See [Webhooks](/docs/webhooks) for setup instructions.
+  **Status Updates:** Subscribe to `OFFRAMP.CREATE` and `OFFRAMP.UPDATE` webhook
+  events to receive real-time status notifications. See
+  [Webhooks](/docs/webhooks) for setup instructions.
 </Note>
 
 Monitor offramp status using the [Retrieve Offramp](https://docs.hifibridge.com/api-reference/offramp/retrieve-an-offramp) endpoint. The response structure matches the create endpoint shown above.
@@ -284,17 +293,20 @@ curl -X GET "https://sandbox.hifibridge.com/v2/offramps/173c1e89-7bbd-4352-9e5d-
 ## Quote Validity
 
 Quotes expire **10 minutes** after creation to ensure current market rates. This prevents:
+
 - Stale pricing during volatile markets
 - Long-pending transactions
 - Rate arbitrage
 
 If your quote expires (status becomes `QUOTE_FAILED`):
+
 1. Create a new offramp request
 2. Review the updated quote
 3. Accept the new quote within 10 minutes
 
 <Warning>
-**Time Sensitive:** Always check `quoteInformation.expiresAt` before accepting. Attempting to accept an expired quote will fail.
+  **Time Sensitive:** Always check `quoteInformation.expiresAt` before
+  accepting. Attempting to accept an expired quote will fail.
 </Warning>
 
 ## Key Concepts
@@ -339,9 +351,13 @@ If your quote expires (status becomes `QUOTE_FAILED`):
     Developer fees are paid in stablecoins from the source wallet before conversion.
   </Accordion>
 
-  <Accordion title="USDT Fee">
-    USDT offramps incur an additional 0.1% exchange fee beyond standard rates. This fee appears on your monthly invoice, not deducted from the transaction amount.
-  </Accordion>
+{" "}
+
+<Accordion title="USDT Fee">
+  USDT offramps incur an additional 0.1% exchange fee beyond standard rates.
+  This fee appears on your monthly invoice, not deducted from the transaction
+  amount.
+</Accordion>
 
   <Accordion title="Account Requirements">
     Before creating offramps, ensure:

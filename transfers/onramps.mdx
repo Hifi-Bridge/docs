@@ -188,13 +188,14 @@ Processing times vary by payment method:
 
 Onramps progress through several phases:
 
-### Creation & Quote Phase
+### System Statuses
 
 | Status              | Description                                                       |
 | :------------------ | :---------------------------------------------------------------- |
 | **CREATED**         | Onramp request created successfully                               |
 | **NOT_INITIATED**   | Request not submitted due to validation error                     |
 | **OPEN_QUOTE**      | Quote generated and awaiting deposit                              |
+| **IN_REVIEW**       | Transaction under review by monitoring systems                    |
 | **QUOTE_FAILED**    | Quote expired before deposit was received                         |
 | **AWAITING_FUNDS**  | Waiting for fiat deposit with reference ID                        |
 
