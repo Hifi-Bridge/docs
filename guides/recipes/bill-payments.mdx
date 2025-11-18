@@ -2,3 +2,976 @@
 title: "Bill Payments"
 ---
 
+Facilitate automated bill payment services for utilities, subscriptions, and other recurring expenses. Use virtual accounts to collect payments from users and route funds to billers automatically. Support batch transfers to process multiple payments efficiently, reducing operational overhead while ensuring timely settlements.
+
+**⏱️ Time to complete:** 25-35 minutes
+
+**🎯 What you'll build:** An automated bill payment system where users deposit USD into a virtual account, funds convert to USDC, then batch transfers pay multiple billers (utilities, subscriptions, etc.) in a single transaction.
+
+## Use Case Overview
+
+This recipe demonstrates an automated bill payment flow where:
+
+- ✅ Users deposit USD into dedicated virtual accounts
+- ✅ USD automatically converts to USDC stablecoin
+- ✅ Batch transfers distribute payments to multiple billers
+- ✅ Operational overhead is minimized through automation
+
+This flow enables scalable bill payment services with reduced processing costs and timely settlements.
+
+---
+
+## Prerequisites
+
+Before you start, make sure you have:
+
+- **API keys** from the Dashboard ([Get API keys](/docs/api/authentication))
+- **A tool for making API calls** (cURL, Postman, or similar)
+- **Basic understanding of REST APIs**
+- **Your sandbox endpoint:** `https://sandbox.hifibridge.com`
+
+<Note>
+  All examples in this guide use the sandbox environment. When you're ready for
+  production, simply replace the sandbox URL with the production endpoint and
+  use your production API keys.
+</Note>
+
+---
+
+## What you'll build
+
+Here's what we'll accomplish in this recipe:
+
+1. **Generate API Keys** - Set up authentication for HIFI API
+2. **Create User** - Onboard a bill payer and complete KYC for USD rail
+3. **Add Virtual Account** - Set up account for collecting USD payments that convert to USDC
+4. **Execute Batch Transfer** - Pay multiple billers in a single transaction
+
+**Payment Flow:**
+
+```
+USD → User Bank Account → Virtual Account → USDC → Batch Transfer → Multiple Billers
+```
+
+---
+
+## Generate API Keys
+
+Access to the HIFI API requires authentication via API keys. Generate your keys from the HIFI Dashboard before making any API calls.
+
+<AccordionGroup>
+  <Accordion title="Get Your API Keys">
+
+**Steps:**
+
+1. Navigate to [dashboard.hifibridge.com](https://dashboard.hifibridge.com/)
+2. Log in to your account
+3. Go to **Developer → API Keys**
+4. Click **Generate New Key**
+5. Select your environment: **Sandbox** (for testing) or **Production** (for live transactions)
+6. Copy the key immediately - it's only shown once
+
+**Important Security Notes:**
+
+- Store your API key securely (environment variables, secrets manager, etc.)
+- Never commit API keys to version control
+- Your key authenticates all HIFI API requests
+- If compromised, immediately revoke in the Dashboard and generate a new one
+
+<Warning>
+  **API keys are shown only once.** If you lose your key, you must revoke it and
+  generate a new one. There is no way to retrieve a lost key.
+</Warning>
+
+**Using Your API Key:**
+
+Include your API key in the `Authorization` header of all API requests:
+
+```bash
+--header 'authorization: Bearer YOUR_API_KEY'
+```
+
+For a complete guide on API authentication, see our [Authentication Documentation](/docs/api/authentication).
+
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Create User (Bill Payer)
+
+Create a verified user account for the bill payer. Every user must accept HIFI's Terms of Service and complete KYC verification before they can access fiat rails and make payments.
+
+<Note>
+  **Complete Onboarding Guide:** For a comprehensive walkthrough of user
+  onboarding and KYC verification, see our [User Guide](/docs/users).
+</Note>
+
+### User Creation Flow
+
+Creating a user involves four steps:
+
+1. **Generate Terms of Service Link** - Get acceptance link for your customer
+2. **Create User** - Create the user account after TOS acceptance
+3. **Update KYC Information** - Provide required personal details
+4. **Submit KYC** - Submit for verification to unlock USD rail
+
+<AccordionGroup>
+  <Accordion title="Generate Terms of Service Link">
+
+Before creating a user, they must accept HIFI's Terms of Service. Generate a unique acceptance link using the [Generate Terms of Service Link](https://docs.hifibridge.com/v2/reference/post_v2-tos-link) endpoint.
+
+**Request:**
+
+```bash
+curl --request POST \
+  --url https://sandbox.hifibridge.com/v2/tos-link \
+  --header 'accept: application/json' \
+  --header 'authorization: Bearer YOUR_API_KEY' \
+  --header 'content-type: application/json' \
+  --data '
+{
+  "idempotencyKey": "c9c91801-d3a2-4a1c-aa2e-fcb2c473198c"
+}
+'
+```
+
+**Request Fields:**
+
+<ResponseField name="idempotencyKey" type="string" required>
+  A unique UUID that becomes your `signedAgreementId` after the user accepts the
+  terms. Generate this using any [UUID
+  generator](https://www.uuidgenerator.net/).
+</ResponseField>
+
+**Response:**
+
+```json
+{
+  "signedAgreementId": "c9c91801-d3a2-4a1c-aa2e-fcb2c473198c",
+  "url": "https://dashboard.hifibridge.com/accept-terms-of-service?sessionToken=536bb03a..."
+}
+```
+
+**Response Fields:**
+
+<ResponseField name="url" type="string">
+  The unique link where your user will review and accept HIFI's Terms of
+  Service.
+</ResponseField>
+
+<ResponseField name="signedAgreementId" type="string">
+  The agreement ID (same as your `idempotencyKey`). **Save this** - you'll need
+  it to create the user in the next step.
+</ResponseField>
+
+**What to do with this response:**
+
+1. **Direct your user to the `url`** - Present this link to your end user (via email, in your app, etc.)
+2. **Save the `signedAgreementId`** - You'll need this to create the user in the next step
+3. **Wait for acceptance** - The `signedAgreementId` becomes valid only after the user clicks "Accept"
+
+<Info>
+  **Real-time Notifications:** HIFI triggers the `TOS_LINK.UPDATE` webhook event
+  when the user accepts the terms, allowing you to proceed with user creation
+  immediately. [Learn about webhooks →](/docs/webhooks)
+</Info>
+
+  </Accordion>
+
+  <Accordion title="Create User">
+
+Once your user has accepted the Terms of Service, create the user account with the [Create User](https://docs.hifibridge.com/api-reference/user/create-a-user) endpoint.
+
+**Request:**
+
+```bash
+curl --request POST \
+  --url https://sandbox.hifibridge.com/v2/users \
+  --header 'accept: application/json' \
+  --header 'authorization: Bearer YOUR_API_KEY' \
+  --header 'content-type: application/json' \
+  --data '
+{
+  "type": "individual",
+  "firstName": "John",
+  "lastName": "Doe",
+  "email": "johndoe@gmail.com",
+  "dateOfBirth": "1990-01-01",
+  "address": {
+    "addressLine1": "123 Park Ave",
+    "city": "Kansas City",
+    "stateProvinceRegion": "KS",
+    "postalCode": "10001",
+    "country": "USA"
+  },
+  "signedAgreementId": "c9c91801-d3a2-4a1c-aa2e-fcb2c473198c",
+  "requestId": "705f1f8b-a080-467c-b683-174eca409928"
+}
+'
+```
+
+**Request Fields:**
+
+<ResponseField name="type" type="string" required>
+  User type. Use `individual` for personal accounts or `business` for business
+  accounts.
+</ResponseField>
+
+<ResponseField name="firstName" type="string" required>
+  User's first name.
+</ResponseField>
+
+<ResponseField name="lastName" type="string" required>
+  User's last name.
+</ResponseField>
+
+<ResponseField name="email" type="string" required>
+  User's email address.
+</ResponseField>
+
+<ResponseField name="dateOfBirth" type="string" required>
+  User's date of birth in YYYY-MM-DD format.
+</ResponseField>
+
+<ResponseField name="address" type="object" required>
+  User's residential address.
+
+  <Expandable title="properties">
+    <ResponseField name="addressLine1" type="string" required>
+      Street address
+    </ResponseField>
+    <ResponseField name="city" type="string" required>
+      City
+    </ResponseField>
+    <ResponseField name="stateProvinceRegion" type="string" required>
+      State, province, or region code
+    </ResponseField>
+    <ResponseField name="postalCode" type="string" required>
+      Postal/ZIP code
+    </ResponseField>
+    <ResponseField name="country" type="string" required>
+      Country code (ISO 3166-1 alpha-3)
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="signedAgreementId" type="string" required>
+  The `signedAgreementId` from the Terms of Service acceptance.
+</ResponseField>
+
+<ResponseField name="requestId" type="string" required>
+  Unique identifier (UUID) for this request to ensure idempotency.
+</ResponseField>
+
+**Response:**
+
+```json
+{
+  "id": "3b77cec8-1bb9-5ea0-91a1-e8c1411dd429",
+  "type": "individual",
+  "email": "johndoe@gmail.com",
+  "name": "John Doe",
+  "wallets": {
+    "INDIVIDUAL": {
+      "ETHEREUM": {
+        "address": "0x062f27D749Db9AdE709FaCF753e71618a0d64eF7"
+      },
+      "POLYGON": {
+        "address": "0x63dAbB631bcE6d6090A4e6c5c7aB20d3D853C338"
+      }
+    }
+  }
+}
+```
+
+✅ **User created successfully!**
+
+**Response Fields:**
+
+<ResponseField name="id" type="string">
+  The unique user ID. **Save this** - you'll use it for all future operations
+  with this user.
+</ResponseField>
+
+<ResponseField name="wallets" type="object">
+  Automatically provisioned wallet addresses on supported blockchain networks.
+
+  <Expandable title="properties">
+    <ResponseField name="INDIVIDUAL" type="object">
+      <Expandable title="properties">
+        <ResponseField name="ETHEREUM" type="object">
+          <Expandable title="properties">
+            <ResponseField name="address" type="string">
+              Wallet address on the Ethereum network
+            </ResponseField>
+          </Expandable>
+        </ResponseField>
+        <ResponseField name="POLYGON" type="object">
+          <Expandable title="properties">
+            <ResponseField name="address" type="string">
+              Wallet address on the Polygon network
+            </ResponseField>
+          </Expandable>
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+**What you get:**
+
+- **User ID** (`3b77cec8-1bb9-5ea0-91a1-e8c1411dd429`) - Save this for all future operations
+- **Wallet addresses** - Pre-provisioned on multiple blockchains, ready to use immediately
+
+<Info>
+  **Automatic Wallet Provisioning:** Every user automatically receives wallet
+  addresses on supported blockchain networks (Polygon, Ethereum, etc.). These
+  wallets are fully functional immediately - no additional setup required.
+</Info>
+
+  </Accordion>
+
+  <Accordion title="Update KYC Information">
+
+Provide the required personal information for KYC verification using the [Update KYC](https://docs.hifibridge.com/v2/reference/post_v2-users-userid-kyc) endpoint.
+
+**Request:**
+
+```bash
+curl --request POST \
+  --url https://sandbox.hifibridge.com/v2/users/3b77cec8-1bb9-5ea0-91a1-e8c1411dd429/kyc \
+  --header 'accept: application/json' \
+  --header 'authorization: Bearer YOUR_API_KEY' \
+  --header 'content-type: application/json' \
+  --data '
+{
+  "firstName": "John",
+  "phone": "+11111111111",
+  "taxIdentificationNumber": "678898765",
+  "nationality": "USA"
+}
+'
+```
+
+**Request Fields:**
+
+<ResponseField name="firstName" type="string">
+  User's first name (can be used to update if needed).
+</ResponseField>
+
+<ResponseField name="phone" type="string" required>
+  User's phone number with country code (E.164 format).
+</ResponseField>
+
+<ResponseField name="taxIdentificationNumber" type="string" required>
+  Tax identification number (e.g., SSN for US users).
+</ResponseField>
+
+<ResponseField name="nationality" type="string" required>
+  User's nationality (ISO 3166-1 alpha-3 country code).
+</ResponseField>
+
+**Response:**
+
+```json
+{
+  "userId": "3b77cec8-1bb9-5ea0-91a1-e8c1411dd429",
+  "kycInfo": {
+    "type": "individual",
+    "firstName": "John",
+    "lastName": "Doe",
+    "nationality": "USA",
+    "email": "johndoe@gmail.com",
+    "phone": "+11111111111",
+    "address": {
+      "city": "Kansas City",
+      "country": "USA",
+      "postalCode": "10001",
+      "addressLine1": "123 Park Ave",
+      "stateProvinceRegion": "KS"
+    },
+    "dateOfBirth": "1990-01-01T00:00:00+00:00",
+    "taxIdentificationNumber": "678898765",
+    "documents": []
+  }
+}
+```
+
+✅ **Personal information updated!**
+
+<Note>
+  **Document Upload:** For a complete KYC submission in production, you'll also
+  need to upload identity documents (passport, driver's license, etc.). See the
+  [Quickstart Guide](/docs/quickstart) for detailed document upload
+  instructions. In sandbox, KYC may be automatically approved without documents.
+</Note>
+
+  </Accordion>
+
+  <Accordion title="Submit KYC for USD Rail">
+
+Submit the KYC application to unlock the USD rail using the [Submit KYC](https://docs.hifibridge.com/api-reference/kyc/submit-kyc) endpoint.
+
+**Request:**
+
+```bash
+curl --request POST \
+  --url https://sandbox.hifibridge.com/v2/users/3b77cec8-1bb9-5ea0-91a1-e8c1411dd429/kyc/submissions \
+  --header 'accept: application/json' \
+  --header 'authorization: Bearer YOUR_API_KEY' \
+  --header 'content-type: application/json' \
+  --data '
+{
+  "rails": "USD"
+}
+'
+```
+
+**Request Fields:**
+
+<ResponseField name="rails" type="string" required>
+  The currency rail to unlock. Use `USD` for US Dollar operations.
+</ResponseField>
+
+**Response:**
+
+```json
+{
+  "currency": "USD",
+  "status": "ACTIVE",
+  "reviewResult": {
+    "reviewAnswer": "APPROVED",
+    "reviewRejectType": "",
+    "rejectReasons": [],
+    "comment": ""
+  },
+  "details": {
+    "identity": {
+      "reviewAnswer": "APPROVED",
+      "documents": [
+        {
+          "id": "c00791d0-213a-480a-9e54-1c535673f10c",
+          "type": "PASSPORT",
+          "subType": "SINGLE_SIDE",
+          "reviewAnswer": "APPROVED"
+        }
+      ]
+    },
+    "questionnaire": {
+      "reviewAnswer": "APPROVED",
+      "details": []
+    },
+    "personalInfo": {
+      "reviewAnswer": "APPROVED",
+      "details": []
+    }
+  }
+}
+```
+
+✅ **KYC approved! USD rail is now active.**
+
+**Response Fields:**
+
+<ResponseField name="status" type="string">
+  Overall KYC status. `ACTIVE` means the USD rail is unlocked and the user can
+  now onramp and offramp USD.
+</ResponseField>
+
+<ResponseField name="reviewResult" type="object">
+  High-level review outcome.
+
+  <Expandable title="properties">
+    <ResponseField name="reviewAnswer" type="string">
+      Review decision: `APPROVED`, `REJECTED`, or `PENDING`
+    </ResponseField>
+    <ResponseField name="rejectReasons" type="array">
+      List of reasons for rejection, if applicable
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="details" type="object">
+  Detailed review results broken down by category.
+
+  <Expandable title="properties">
+    <ResponseField name="identity" type="object">
+      Review results for identity document verification
+    </ResponseField>
+    <ResponseField name="questionnaire" type="object">
+      Review results for KYC questionnaire responses
+    </ResponseField>
+    <ResponseField name="personalInfo" type="object">
+      Review results for personal information verification
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<Info>
+  **Sandbox Auto-Approval:** In sandbox, KYC applications are typically
+  automatically approved within minutes. In production, review typically takes
+  1-3 business days.
+</Info>
+
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Add Virtual Account
+
+Now that the user has passed KYC, create a **Virtual Account** for collecting bill payments. This is a bank account number automatically created by HIFI that users can deposit USD into. When fiat arrives, it's automatically converted to USDC and sent to their wallet, ready for batch distribution to billers.
+
+<Note>
+  **Virtual Account for Bill Payments:** Each virtual account comes with unique
+  ACH/wire/RTP details you can surface in your app. When deposits arrive, HIFI
+  detects the funds, applies your conversion settings (e.g., USD → USDC), and
+  makes them available for scheduled or batch payouts to billers.
+</Note>
+
+<AccordionGroup>
+  <Accordion title="Create Virtual Account">
+
+A Virtual Account enables users to deposit USD from their bank, which automatically converts to USDC on Polygon for bill payment distribution.
+
+**Request:**
+
+```bash
+curl --request POST \
+  --url https://sandbox.hifibridge.com/v2/users/3b77cec8-1bb9-5ea0-91a1-e8c1411dd429/virtual-accounts \
+  --header 'accept: application/json' \
+  --header 'authorization: Bearer YOUR_API_KEY' \
+  --header 'content-type: application/json' \
+  --data '
+{
+  "sourceCurrency": "usd",
+  "destinationCurrency": "usdc",
+  "destinationChain": "POLYGON"
+}
+'
+```
+
+**Request Fields:**
+
+<ResponseField name="sourceCurrency" type="string" required>
+  Fiat currency to deposit. Use `usd` for US Dollars.
+</ResponseField>
+
+<ResponseField name="destinationCurrency" type="string" required>
+  Stablecoin to receive after conversion. Use `usdc` for USD Coin.
+</ResponseField>
+
+<ResponseField name="destinationChain" type="string" required>
+  Blockchain network for the stablecoin. Options: `POLYGON`, `ETHEREUM`
+</ResponseField>
+
+**Response:**
+
+```json
+{
+  "id": "c48d1dd1-b5cd-5bc7-b85e-df1b0f17c1c8",
+  "status": "activated",
+  "provider": "CROSS_RIVER",
+  "userId": "3b77cec8-1bb9-5ea0-91a1-e8c1411dd429",
+  "source": {
+    "paymentRails": ["ach", "wire", "rtp"],
+    "currency": "usd"
+  },
+  "destination": {
+    "chain": "POLYGON",
+    "currency": "usdc",
+    "walletAddress": "0x63dAbB631bcE6d6090A4e6c5c7aB20d3D853C338"
+  },
+  "depositInstructions": {
+    "bankName": "Cross River Bank",
+    "bankAddress": "885 Teaneck Road, Teaneck, NJ 07666",
+    "beneficiary": {
+      "name": "John Doe",
+      "address": "123 Park Ave, Kansas City, KS, 10001, US"
+    },
+    "ach": {
+      "routingNumber": "021214891",
+      "accountNumber": "372232122120"
+    },
+    "wire": {
+      "routingNumber": "021214891",
+      "accountNumber": "372232122120"
+    },
+    "instruction": "Please deposit USD to the bank account provided. Ensure that the beneficiary name matches the account holder name provided, or the payment may be rejected."
+  }
+}
+```
+
+✅ **Virtual account created!**
+
+**Response Fields:**
+
+<ResponseField name="id" type="string">
+  The unique virtual account ID. **Save this** for monitoring deposits.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  Account status. `activated` means it's ready to receive deposits.
+</ResponseField>
+
+<ResponseField name="provider" type="string">
+  Banking partner providing the virtual account infrastructure.
+</ResponseField>
+
+<ResponseField name="source" type="object">
+  Source configuration for fiat deposits.
+
+  <Expandable title="properties">
+    <ResponseField name="paymentRails" type="array">
+      Supported payment methods: `ach`, `wire`, `rtp` (Real-Time Payments)
+    </ResponseField>
+    <ResponseField name="currency" type="string">
+      The fiat currency this account accepts
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="destination" type="object">
+  Destination configuration for crypto conversion.
+
+  <Expandable title="properties">
+    <ResponseField name="chain" type="string">
+      Blockchain where converted crypto will be sent
+    </ResponseField>
+    <ResponseField name="currency" type="string">
+      Stablecoin the user will receive
+    </ResponseField>
+    <ResponseField name="walletAddress" type="string">
+      User's wallet address where USDC will be deposited
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="depositInstructions" type="object">
+  **Most Important:** Bank account details users need to send money to.
+
+  <Expandable title="properties">
+    <ResponseField name="bankName" type="string">
+      Name of the bank holding the virtual account
+    </ResponseField>
+    <ResponseField name="bankAddress" type="string">
+      Physical address of the bank
+    </ResponseField>
+    <ResponseField name="beneficiary" type="object">
+      <Expandable title="properties">
+        <ResponseField name="name" type="string">
+          Beneficiary name (must match user's name)
+        </ResponseField>
+        <ResponseField name="address" type="string">
+          Beneficiary address
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+    <ResponseField name="ach" type="object">
+      <Expandable title="properties">
+        <ResponseField name="routingNumber" type="string">
+          ACH routing number
+        </ResponseField>
+        <ResponseField name="accountNumber" type="string">
+          Virtual account number for ACH deposits
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+    <ResponseField name="wire" type="object">
+      <Expandable title="properties">
+        <ResponseField name="routingNumber" type="string">
+          Wire routing number
+        </ResponseField>
+        <ResponseField name="accountNumber" type="string">
+          Virtual account number for wire deposits
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+    <ResponseField name="instruction" type="string">
+      Deposit instructions and compliance requirements
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<Info>
+  **How to Use:** Provide these deposit instructions to your users through your
+  app/website. When they send money to this account via their bank, HIFI
+  automatically detects the deposit, converts it to USDC, and sends it to their
+  wallet. The USDC is then available for batch bill payments. For monitoring
+  deposits, subscribe to `ONRAMP.CREATE` webhook events.
+</Info>
+
+For a complete guide on virtual accounts and onramping, see our [Virtual Accounts Guide](/docs/virtual-accounts).
+
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Execute Batch Transfer
+
+With deposits flowing into the virtual account and converting to USDC, create a **batch transfer** to pay multiple billers at once. Send one request containing every destination wallet address and amount; HIFI processes the entire batch and returns itemized statuses for your records.
+
+<Note>
+  **Batch Transfer Benefits:** Batch transfers reduce operational overhead by
+  consolidating multiple payments into a single transaction. This is ideal for
+  bill payment services where you need to distribute funds to multiple
+  utilities, subscription services, or other billers on a regular schedule.
+</Note>
+
+<AccordionGroup>
+  <Accordion title="Create Batch Transfer">
+
+Create a batch transfer to pay multiple billers in a single transaction using the [Create Batch Transfer](https://docs.hifibridge.com/api-reference/crypto-transfer/create-batch-transfer) endpoint.
+
+In this example, we'll pay three different billers (utilities, subscriptions, etc.) with 10 USDC each from the user's wallet.
+
+**Request:**
+
+```bash
+curl --request POST \
+  --url https://sandbox.hifibridge.com/v2/wallets/transfers/batches \
+  --header 'accept: application/json' \
+  --header 'authorization: Bearer YOUR_API_KEY' \
+  --header 'content-type: application/json' \
+  --data '
+{
+  "requestId": "b91772a6-f9c0-4479-a34c-c8723608d2e8",
+  "currency": "usdc",
+  "chain": "POLYGON",
+  "source": {
+    "userId": "3b77cec8-1bb9-5ea0-91a1-e8c1411dd429"
+  },
+  "destination": {
+    "batch": [
+      {
+        "walletAddress": "0xA4C951a7ca4138220a9D4611e7A058d4673e14c3",
+        "amount": "10"
+      },
+      {
+        "walletAddress": "0x0466DCD644Ae2Ee5d88CF0e1976c3ce237A0D760",
+        "amount": "10"
+      },
+      {
+        "walletAddress": "0x8356d234077d4b7c71E35c95B075ed4ba5FF7681",
+        "amount": "10"
+      }
+    ]
+  },
+  "requireApproval": false
+}
+'
+```
+
+**Request Fields:**
+
+<ResponseField name="requestId" type="string" required>
+  Unique identifier (UUID) for this batch transfer request to ensure
+  idempotency.
+</ResponseField>
+
+<ResponseField name="currency" type="string" required>
+  Cryptocurrency to transfer. Use `usdc` for USD Coin.
+</ResponseField>
+
+<ResponseField name="chain" type="string" required>
+  Blockchain network for the transfer. Options: `POLYGON`, `ETHEREUM`
+</ResponseField>
+
+<ResponseField name="source" type="object" required>
+  Source of the batch transfer (the bill payer).
+
+  <Expandable title="properties">
+    <ResponseField name="userId" type="string" required>
+      The user ID sending the payments (bill payer's account)
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="destination" type="object" required>
+  Destination configuration containing the batch of recipients.
+
+  <Expandable title="properties">
+    <ResponseField name="batch" type="array" required>
+      Array of payment destinations. Each object specifies a wallet address and
+      amount.
+      <Expandable title="properties">
+        <ResponseField name="walletAddress" type="string" required>
+          Recipient's wallet address (biller's crypto wallet)
+        </ResponseField>
+        <ResponseField name="amount" type="string" required>
+          Amount to send to this recipient (in USDC)
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="requireApproval" type="boolean">
+  Whether the batch transfer requires manual approval before execution. Set to
+  `false` for automatic processing.
+</ResponseField>
+
+**Response:**
+
+```json
+{
+  "id": "467e8eed-c6e2-4f78-9404-a82148c49e0e",
+  "type": "WALLET.TRANSFER.BATCH",
+  "status": "CREATED",
+  "chain": "POLYGON",
+  "currency": "usdc",
+  "contractAddress": "0x41E94Eb019C0762f9Bfcf9Fb1E58725BfB0e7582",
+  "source": {
+    "userId": "3b77cec8-1bb9-5ea0-91a1-e8c1411dd429",
+    "walletAddress": "0x63dAbB631bcE6d6090A4e6c5c7aB20d3D853C338",
+    "walletType": "INDIVIDUAL"
+  },
+  "destination": {
+    "batch": [
+      {
+        "amount": "10",
+        "walletAddress": "0xA4C951a7ca4138220a9D4611e7A058d4673e14c3"
+      },
+      {
+        "amount": "10",
+        "walletAddress": "0x0466DCD644Ae2Ee5d88CF0e1976c3ce237A0D760"
+      },
+      {
+        "amount": "10",
+        "walletAddress": "0x8356d234077d4b7c71E35c95B075ed4ba5FF7681"
+      }
+    ]
+  },
+  "receipt": {
+    "transactionHash": null,
+    "userOpHash": null
+  }
+}
+```
+
+✅ **Batch transfer created!**
+
+**Response Fields:**
+
+<ResponseField name="id" type="string">
+  Unique batch transfer ID. **Save this** to monitor the batch status and
+  retrieve transaction details.
+</ResponseField>
+
+<ResponseField name="type" type="string">
+  Transfer type. Always `WALLET.TRANSFER.BATCH` for batch transfers.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  Current batch status. Starts as `CREATED`, then progresses through: -
+  `CREATED` - Batch transfer initiated - `PENDING` - Being processed on
+  blockchain - `COMPLETED` - All payments successfully delivered - `FAILED` -
+  One or more payments failed (check individual statuses)
+</ResponseField>
+
+<ResponseField name="chain" type="string">
+  Blockchain network where the transfer is being executed.
+</ResponseField>
+
+<ResponseField name="currency" type="string">
+  Cryptocurrency being transferred.
+</ResponseField>
+
+<ResponseField name="contractAddress" type="string">
+  Smart contract address handling the USDC transfers on the blockchain.
+</ResponseField>
+
+<ResponseField name="source" type="object">
+  Source details showing the bill payer's wallet information.
+
+  <Expandable title="properties">
+    <ResponseField name="userId" type="string">
+      Bill payer's user ID
+    </ResponseField>
+    <ResponseField name="walletAddress" type="string">
+      Bill payer's wallet address sending the payments
+    </ResponseField>
+    <ResponseField name="walletType" type="string">
+      Type of wallet (e.g., "INDIVIDUAL")
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="destination" type="object">
+  Destination details showing all recipients in the batch.
+
+  <Expandable title="properties">
+    <ResponseField name="batch" type="array">
+      Array of all payment destinations with amounts
+      <Expandable title="properties">
+        <ResponseField name="amount" type="string">
+          Amount sent to this recipient
+        </ResponseField>
+        <ResponseField name="walletAddress" type="string">
+          Recipient's wallet address
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="receipt" type="object">
+  Transaction receipt information.
+
+  <Expandable title="properties">
+    <ResponseField name="transactionHash" type="string">
+      Blockchain transaction hash (populated when complete). Use this to verify
+      the transaction on a blockchain explorer like Polygonscan.
+    </ResponseField>
+    <ResponseField name="userOpHash" type="string">
+      User operation hash (for account abstraction wallets)
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+**Understanding the Batch Transfer:**
+
+In this example:
+
+- **Source:** User's wallet (`0x63dA...C338`) with 30+ USDC available
+- **Batch:** 3 billers receiving 10 USDC each
+- **Total:** 30 USDC distributed in a single blockchain transaction
+- **Cost Savings:** One transaction fee instead of three separate transactions
+
+<Info>
+  **Monitoring Batch Transfers:** Subscribe to `WALLET.TRANSFER.BATCH.UPDATE`
+  webhook events to receive real-time notifications as the batch progresses. You
+  can also poll the [Retrieve Batch
+  Transfer](https://docs.hifibridge.com/api-reference/crypto-transfer/retrieve-batch-transfer)
+  endpoint to check individual payment statuses within the batch.
+</Info>
+
+For a complete guide on batch transfers including advanced features like approval workflows and error handling, see our [Batch Transfers Guide](/docs/features/batch-transfers).
+
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## 🎉 Congratulations!
+
+You've successfully built an automated bill payment system! By following this recipe, you can now:
+
+- ✅ Generate API keys and authenticate with HIFI
+- ✅ Onboard bill payers and complete KYC for USD operations
+- ✅ Create virtual accounts for collecting payments with automatic conversion
+- ✅ Execute batch transfers to pay multiple billers efficiently
+- ✅ Reduce operational overhead with consolidated transactions
+
+### Next Steps
+
+Ready to scale your bill payment service? Here's what to explore next:
+
+- **[Webhooks](/docs/webhooks)** - Set up real-time notifications for deposit detection, conversion completion, and batch transfer status
+- **[Batch Transfers Guide](/docs/features/batch-transfers)** - Deep dive into advanced batch features like approval workflows and failure handling
+- **[Settlement Rules](/docs/features/settlement-rules)** - Automate payment distribution with scheduled batch transfers
+- **[Virtual Accounts Guide](/docs/virtual-accounts)** - Learn about monitoring deposits and handling multiple virtual accounts per user
+- **[Error Handling](/docs/api/errors)** - Implement robust error handling for failed payments and insufficient balances
+- **[API Reference](https://docs.hifibridge.com/api-reference)** - Explore all available endpoints and parameters for advanced features

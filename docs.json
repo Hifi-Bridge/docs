@@ -300,9 +300,9 @@
           {
             "group": "Recipes",
             "pages": [
-              "guides/recipes/cross-border",
               "guides/recipes/remittances",
-              "guides/recipes/bill-payments"
+              "guides/recipes/bill-payments",
+              "guides/recipes/cross-border-payments"
             ]
           }
         ]
@@ -590,10 +590,6 @@
       "destination": "/compliance/documents"
     },
     {
-      "source": "/docs/compliance/documents",
-      "destination": "/compliance/documents"
-    },
-    {
       "source": "/docs/compliance/documents/proof-of-address",
       "destination": "/compliance/documents/proof-of-address"
     },
@@ -646,14 +642,6 @@
       "destination": "/guides"
     },
     {
-      "source": "/docs/guides",
-      "destination": "/guides"
-    },
-    {
-      "source": "/docs",
-      "destination": "/"
-    },
-    {
       "source": "/docs",
       "destination": "/"
     },
@@ -680,10 +668,6 @@
     {
       "source": "/docs/rails/global-network",
       "destination": "/rails/global-network"
-    },
-    {
-      "source": "/docs/rails",
-      "destination": "/rails"
     },
     {
       "source": "/docs/rails",
@@ -728,10 +712,6 @@
     {
       "source": "/docs/references/business-industries/hospitality-food",
       "destination": "/references/business-industries/hospitality-food"
-    },
-    {
-      "source": "/docs/references/business-industries",
-      "destination": "/references/business-industries"
     },
     {
       "source": "/docs/references/business-industries",
