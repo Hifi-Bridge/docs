@@ -1,0 +1,1195 @@
+---
+title: "Remittances"
+---
+
+Build remittance products for users sending money home to family and friends. Support multiple currencies and geographic regions through our extensive network of offramp partners. Provide competitive exchange rates, fast settlement times, and transparent fee structures. Integrate KYC links and compliance workflows to ensure regulatory adherence across different jurisdictions.
+
+**⏱️ Time to complete:** 30-40 minutes
+
+**🎯 What you'll build:** A complete remittance flow where User A (in the US) sends $11 USD that converts to USDC, then offramps to User B's bank account in Mexico as MXN pesos.
+
+## Use Case Overview
+
+This recipe demonstrates a cross-border remittance payment where:
+
+- ✅ User A deposits USD from their US bank account
+- ✅ USD automatically converts to USDC stablecoin
+- ✅ USDC is sent and converted to MXN pesos
+- ✅ MXN is deposited to User B's Mexican bank account
+
+This flow enables fast, cost-effective international money transfers with transparent pricing.
+
+---
+
+## Prerequisites
+
+Before you start, make sure you have:
+
+- **API keys** from the Dashboard ([Get API keys](/docs/api/authentication))
+- **A tool for making API calls** (cURL, Postman, or similar)
+- **Basic understanding of REST APIs**
+- **Your sandbox endpoint:** `https://sandbox.hifibridge.com`
+
+<Note>
+  All examples in this guide use the sandbox environment. When you're ready for
+  production, simply replace the sandbox URL with the production endpoint and
+  use your production API keys.
+</Note>
+
+---
+
+## What you'll build
+
+Here's what we'll accomplish in this recipe:
+
+1. **Generate API Keys** - Set up authentication for HIFI API
+2. **Create User A** - Onboard the sender and complete KYC for USD rail
+3. **Add Virtual Account** - Set up account for USD deposits that convert to USDC
+4. **Create User B** - Onboard the recipient (or use existing user)
+5. **Execute Remittance** - Send USDC from User A → MXN to User B's bank account
+
+**Payment Flow:**
+
+```
+USD → User A Bank Account → USDC → User A Wallet → MXN → User B Bank Account
+```
+
+---
+
+## Generate API Keys
+
+Access to the HIFI API requires authentication via API keys. Generate your keys from the HIFI Dashboard before making any API calls.
+
+<AccordionGroup>
+  <Accordion title="Get Your API Keys">
+
+**Steps:**
+
+1. Navigate to [dashboard.hifibridge.com](https://dashboard.hifibridge.com/)
+2. Log in to your account
+3. Go to **Developer → API Keys**
+4. Click **Generate New Key**
+5. Select your environment: **Sandbox** (for testing) or **Production** (for live transactions)
+6. Copy the key immediately - it's only shown once
+
+**Important Security Notes:**
+
+- Store your API key securely (environment variables, secrets manager, etc.)
+- Never commit API keys to version control
+- Your key authenticates all HIFI API requests
+- If compromised, immediately revoke in the Dashboard and generate a new one
+
+<Warning>
+  **API keys are shown only once.** If you lose your key, you must revoke it and
+  generate a new one. There is no way to retrieve a lost key.
+</Warning>
+
+**Using Your API Key:**
+
+Include your API key in the `Authorization` header of all API requests:
+
+```bash
+--header 'authorization: Bearer YOUR_API_KEY'
+```
+
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Create User A (Sender)
+
+The sender needs a verified user account to access fiat rails and send remittances. Every user must accept HIFI's Terms of Service and complete KYC verification before they can move money between fiat and crypto.
+
+<Note>
+  **Complete Onboarding Guide:** For a comprehensive walkthrough of user
+  onboarding and KYC verification, see our [User Guide](/docs/users).
+</Note>
+
+### User Creation Flow
+
+Creating a user involves four steps:
+
+1. **Generate Terms of Service Link** - Get acceptance link for your customer
+2. **Create User** - Create the user account after TOS acceptance
+3. **Update KYC Information** - Provide required personal details
+4. **Submit KYC** - Submit for verification to unlock USD rail
+
+<AccordionGroup>
+  <Accordion title="Generate Terms of Service Link">
+
+Before creating a user, they must accept HIFI's Terms of Service. Generate a unique acceptance link using the [Generate Terms of Service Link](https://docs.hifibridge.com/v2/reference/post_v2-tos-link) endpoint.
+
+**Request:**
+
+```bash
+curl --request POST \
+  --url https://sandbox.hifibridge.com/v2/tos-link \
+  --header 'accept: application/json' \
+  --header 'authorization: Bearer YOUR_API_KEY' \
+  --header 'content-type: application/json' \
+  --data '
+{
+  "idempotencyKey": "c9c91801-d3a2-4a1c-aa2e-fcb2c473198c"
+}
+'
+```
+
+**Request Fields:**
+
+<ResponseField name="idempotencyKey" type="string" required>
+  A unique UUID that becomes your `signedAgreementId` after the user accepts the
+  terms. Generate this using any [UUID
+  generator](https://www.uuidgenerator.net/).
+</ResponseField>
+
+**Response:**
+
+```json
+{
+  "signedAgreementId": "c9c91801-d3a2-4a1c-aa2e-fcb2c473198c",
+  "url": "https://dashboard.hifibridge.com/accept-terms-of-service?sessionToken=536bb03a..."
+}
+```
+
+**Response Fields:**
+
+<ResponseField name="url" type="string">
+  The unique link where your user will review and accept HIFI's Terms of
+  Service.
+</ResponseField>
+
+<ResponseField name="signedAgreementId" type="string">
+  The agreement ID (same as your `idempotencyKey`). **Save this** - you'll need
+  it to create the user in the next step.
+</ResponseField>
+
+**What to do with this response:**
+
+1. **Direct your user to the `url`** - Present this link to your end user (via email, in your app, etc.)
+2. **Save the `signedAgreementId`** - You'll need this to create the user in the next step
+3. **Wait for acceptance** - The `signedAgreementId` becomes valid only after the user clicks "Accept"
+
+<Info>
+  **Real-time Notifications:** HIFI triggers the `TOS_LINK.UPDATE` webhook event
+  when the user accepts the terms, allowing you to proceed with user creation
+  immediately. [Learn about webhooks →](/docs/webhooks)
+</Info>
+
+  </Accordion>
+
+  <Accordion title="Create User">
+
+Once your user has accepted the Terms of Service, create the user account with the [Create User](https://docs.hifibridge.com/api-reference/user/create-a-user) endpoint.
+
+**Request:**
+
+```bash
+curl --request POST \
+  --url https://sandbox.hifibridge.com/v2/users \
+  --header 'accept: application/json' \
+  --header 'authorization: Bearer YOUR_API_KEY' \
+  --header 'content-type: application/json' \
+  --data '
+{
+  "type": "individual",
+  "firstName": "John",
+  "lastName": "Doe",
+  "email": "johndoe@gmail.com",
+  "dateOfBirth": "1990-01-01",
+  "address": {
+    "addressLine1": "123 Park Ave",
+    "city": "Kansas City",
+    "stateProvinceRegion": "KS",
+    "postalCode": "10001",
+    "country": "USA"
+  },
+  "signedAgreementId": "c9c91801-d3a2-4a1c-aa2e-fcb2c473198c",
+  "requestId": "705f1f8b-a080-467c-b683-174eca409928"
+}
+'
+```
+
+**Request Fields:**
+
+<ResponseField name="type" type="string" required>
+  User type. Use `individual` for personal accounts or `business` for business
+  accounts.
+</ResponseField>
+
+<ResponseField name="firstName" type="string" required>
+  User's first name.
+</ResponseField>
+
+<ResponseField name="lastName" type="string" required>
+  User's last name.
+</ResponseField>
+
+<ResponseField name="email" type="string" required>
+  User's email address.
+</ResponseField>
+
+<ResponseField name="dateOfBirth" type="string" required>
+  User's date of birth in YYYY-MM-DD format.
+</ResponseField>
+
+<ResponseField name="address" type="object" required>
+  User's residential address.
+
+  <Expandable title="properties">
+    <ResponseField name="addressLine1" type="string" required>
+      Street address
+    </ResponseField>
+    <ResponseField name="city" type="string" required>
+      City
+    </ResponseField>
+    <ResponseField name="stateProvinceRegion" type="string" required>
+      State, province, or region code
+    </ResponseField>
+    <ResponseField name="postalCode" type="string" required>
+      Postal/ZIP code
+    </ResponseField>
+    <ResponseField name="country" type="string" required>
+      Country code (ISO 3166-1 alpha-3)
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="signedAgreementId" type="string" required>
+  The `signedAgreementId` from the Terms of Service acceptance.
+</ResponseField>
+
+<ResponseField name="requestId" type="string" required>
+  Unique identifier (UUID) for this request to ensure idempotency.
+</ResponseField>
+
+**Response:**
+
+```json
+{
+  "id": "3b77cec8-1bb9-5ea0-91a1-e8c1411dd429",
+  "type": "individual",
+  "email": "johndoe@gmail.com",
+  "name": "John Doe",
+  "wallets": {
+    "INDIVIDUAL": {
+      "ETHEREUM": {
+        "address": "0x062f27D749Db9AdE709FaCF753e71618a0d64eF7"
+      },
+      "POLYGON": {
+        "address": "0x63dAbB631bcE6d6090A4e6c5c7aB20d3D853C338"
+      }
+    }
+  }
+}
+```
+
+✅ **User created successfully!**
+
+**Response Fields:**
+
+<ResponseField name="id" type="string">
+  The unique user ID. **Save this** - you'll use it for all future operations
+  with this user.
+</ResponseField>
+
+<ResponseField name="wallets" type="object">
+  Automatically provisioned wallet addresses on supported blockchain networks.
+
+  <Expandable title="properties">
+    <ResponseField name="INDIVIDUAL" type="object">
+      <Expandable title="properties">
+        <ResponseField name="ETHEREUM" type="object">
+          <Expandable title="properties">
+            <ResponseField name="address" type="string">
+              Wallet address on the Ethereum network
+            </ResponseField>
+          </Expandable>
+        </ResponseField>
+        <ResponseField name="POLYGON" type="object">
+          <Expandable title="properties">
+            <ResponseField name="address" type="string">
+              Wallet address on the Polygon network
+            </ResponseField>
+          </Expandable>
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+**What you get:**
+
+- **User ID** (`3b77cec8-1bb9-5ea0-91a1-e8c1411dd429`) - Save this for all future operations
+- **Wallet addresses** - Pre-provisioned on multiple blockchains, ready to use immediately
+
+<Info>
+  **Automatic Wallet Provisioning:** Every user automatically receives wallet
+  addresses on supported blockchain networks (Polygon, Ethereum, etc.). These
+  wallets are fully functional immediately - no additional setup required.
+</Info>
+
+  </Accordion>
+
+  <Accordion title="Update KYC Information">
+
+Provide the required personal information for KYC verification using the [Update KYC](https://docs.hifibridge.com/v2/reference/post_v2-users-userid-kyc) endpoint.
+
+**Request:**
+
+```bash
+curl --request POST \
+  --url https://sandbox.hifibridge.com/v2/users/3b77cec8-1bb9-5ea0-91a1-e8c1411dd429/kyc \
+  --header 'accept: application/json' \
+  --header 'authorization: Bearer YOUR_API_KEY' \
+  --header 'content-type: application/json' \
+  --data '
+{
+  "firstName": "John",
+  "phone": "+11111111111",
+  "taxIdentificationNumber": "678898765",
+  "nationality": "USA"
+}
+'
+```
+
+**Request Fields:**
+
+<ResponseField name="firstName" type="string">
+  User's first name (can be used to update if needed).
+</ResponseField>
+
+<ResponseField name="phone" type="string" required>
+  User's phone number with country code (E.164 format).
+</ResponseField>
+
+<ResponseField name="taxIdentificationNumber" type="string" required>
+  Tax identification number (e.g., SSN for US users).
+</ResponseField>
+
+<ResponseField name="nationality" type="string" required>
+  User's nationality (ISO 3166-1 alpha-3 country code).
+</ResponseField>
+
+**Response:**
+
+```json
+{
+  "userId": "3b77cec8-1bb9-5ea0-91a1-e8c1411dd429",
+  "kycInfo": {
+    "type": "individual",
+    "firstName": "John",
+    "lastName": "Doe",
+    "nationality": "USA",
+    "email": "johndoe@gmail.com",
+    "phone": "+11111111111",
+    "address": {
+      "city": "Kansas City",
+      "country": "USA",
+      "postalCode": "10001",
+      "addressLine1": "123 Park Ave",
+      "stateProvinceRegion": "KS"
+    },
+    "dateOfBirth": "1990-01-01T00:00:00+00:00",
+    "taxIdentificationNumber": "678898765",
+    "documents": []
+  }
+}
+```
+
+✅ **Personal information updated!**
+
+<Note>
+  **Document Upload:** For a complete KYC submission in production, you'll also
+  need to upload identity documents (passport, driver's license, etc.). See the
+  [Quickstart Guide](/docs/quickstart) for detailed document upload
+  instructions. In sandbox, KYC may be automatically approved without documents.
+</Note>
+
+  </Accordion>
+
+  <Accordion title="Submit KYC for USD Rail">
+
+Submit the KYC application to unlock the USD rail using the [Submit KYC](https://docs.hifibridge.com/api-reference/kyc/submit-kyc) endpoint.
+
+**Request:**
+
+```bash
+curl --request POST \
+  --url https://sandbox.hifibridge.com/v2/users/3b77cec8-1bb9-5ea0-91a1-e8c1411dd429/kyc/submissions \
+  --header 'accept: application/json' \
+  --header 'authorization: Bearer YOUR_API_KEY' \
+  --header 'content-type: application/json' \
+  --data '
+{
+  "rails": "USD"
+}
+'
+```
+
+**Request Fields:**
+
+<ResponseField name="rails" type="string" required>
+  The currency rail to unlock. Use `USD` for US Dollar operations.
+</ResponseField>
+
+**Response:**
+
+```json
+{
+  "currency": "USD",
+  "status": "ACTIVE",
+  "reviewResult": {
+    "reviewAnswer": "APPROVED",
+    "reviewRejectType": "",
+    "rejectReasons": [],
+    "comment": ""
+  },
+  "details": {
+    "identity": {
+      "reviewAnswer": "APPROVED",
+      "documents": [
+        {
+          "id": "c00791d0-213a-480a-9e54-1c535673f10c",
+          "type": "PASSPORT",
+          "subType": "SINGLE_SIDE",
+          "reviewAnswer": "APPROVED"
+        }
+      ]
+    },
+    "questionnaire": {
+      "reviewAnswer": "APPROVED",
+      "details": []
+    },
+    "personalInfo": {
+      "reviewAnswer": "APPROVED",
+      "details": []
+    }
+  }
+}
+```
+
+✅ **KYC approved! USD rail is now active.**
+
+**Response Fields:**
+
+<ResponseField name="status" type="string">
+  Overall KYC status. `ACTIVE` means the USD rail is unlocked and the user can
+  now onramp and offramp USD.
+</ResponseField>
+
+<ResponseField name="reviewResult" type="object">
+  High-level review outcome.
+
+  <Expandable title="properties">
+    <ResponseField name="reviewAnswer" type="string">
+      Review decision: `APPROVED`, `REJECTED`, or `PENDING`
+    </ResponseField>
+    <ResponseField name="rejectReasons" type="array">
+      List of reasons for rejection, if applicable
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="details" type="object">
+  Detailed review results broken down by category.
+
+  <Expandable title="properties">
+    <ResponseField name="identity" type="object">
+      Review results for identity document verification
+    </ResponseField>
+    <ResponseField name="questionnaire" type="object">
+      Review results for KYC questionnaire responses
+    </ResponseField>
+    <ResponseField name="personalInfo" type="object">
+      Review results for personal information verification
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<Info>
+  **Sandbox Auto-Approval:** In sandbox, KYC applications are typically
+  automatically approved within minutes. In production, review typically takes
+  1-3 business days.
+</Info>
+
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Add Virtual Account (User A)
+
+Now that User A has passed KYC, create a **Virtual Account** for onramping. This is a bank account number automatically created by HIFI that User A can deposit USD into. When fiat arrives, it's automatically converted to USDC and sent to their wallet.
+
+<Note>
+  **Complete Virtual Account Guide:** For more details on virtual accounts and
+  onramping, see our [Virtual Accounts Guide](/docs/virtual-accounts).
+</Note>
+
+<AccordionGroup>
+  <Accordion title="Create Virtual Account">
+
+A Virtual Account enables User A to deposit USD from their bank, which automatically converts to USDC on Polygon.
+
+**Request:**
+
+```bash
+curl --request POST \
+  --url https://sandbox.hifibridge.com/v2/users/3b77cec8-1bb9-5ea0-91a1-e8c1411dd429/virtual-accounts \
+  --header 'accept: application/json' \
+  --header 'authorization: Bearer YOUR_API_KEY' \
+  --header 'content-type: application/json' \
+  --data '
+{
+  "sourceCurrency": "usd",
+  "destinationCurrency": "usdc",
+  "destinationChain": "POLYGON"
+}
+'
+```
+
+**Request Fields:**
+
+<ResponseField name="sourceCurrency" type="string" required>
+  Fiat currency to deposit. Use `usd` for US Dollars.
+</ResponseField>
+
+<ResponseField name="destinationCurrency" type="string" required>
+  Stablecoin to receive after conversion. Use `usdc` for USD Coin.
+</ResponseField>
+
+<ResponseField name="destinationChain" type="string" required>
+  Blockchain network for the stablecoin. Options: `POLYGON`, `ETHEREUM`
+</ResponseField>
+
+**Response:**
+
+```json
+{
+  "id": "c48d1dd1-b5cd-5bc7-b85e-df1b0f17c1c8",
+  "status": "activated",
+  "provider": "CROSS_RIVER",
+  "userId": "3b77cec8-1bb9-5ea0-91a1-e8c1411dd429",
+  "source": {
+    "paymentRails": ["ach", "wire", "rtp"],
+    "currency": "usd"
+  },
+  "destination": {
+    "chain": "POLYGON",
+    "currency": "usdc",
+    "walletAddress": "0x63dAbB631bcE6d6090A4e6c5c7aB20d3D853C338"
+  },
+  "depositInstructions": {
+    "bankName": "Cross River Bank",
+    "bankAddress": "885 Teaneck Road, Teaneck, NJ 07666",
+    "beneficiary": {
+      "name": "John Doe",
+      "address": "123 Park Ave, Kansas City, KS, 10001, US"
+    },
+    "ach": {
+      "routingNumber": "021214891",
+      "accountNumber": "372232122120"
+    },
+    "wire": {
+      "routingNumber": "021214891",
+      "accountNumber": "372232122120"
+    },
+    "instruction": "Please deposit USD to the bank account provided. Ensure that the beneficiary name matches the account holder name provided, or the payment may be rejected."
+  }
+}
+```
+
+✅ **Virtual account created!**
+
+**Response Fields:**
+
+<ResponseField name="id" type="string">
+  The unique virtual account ID. **Save this** for monitoring deposits.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  Account status. `activated` means it's ready to receive deposits.
+</ResponseField>
+
+<ResponseField name="source" type="object">
+  Source configuration for fiat deposits.
+
+  <Expandable title="properties">
+    <ResponseField name="paymentRails" type="array">
+      Supported payment methods: `ach`, `wire`, `rtp` (Real-Time Payments)
+    </ResponseField>
+    <ResponseField name="currency" type="string">
+      The fiat currency this account accepts
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="destination" type="object">
+  Destination configuration for crypto conversion.
+
+  <Expandable title="properties">
+    <ResponseField name="chain" type="string">
+      Blockchain where converted crypto will be sent
+    </ResponseField>
+    <ResponseField name="currency" type="string">
+      Stablecoin the user will receive
+    </ResponseField>
+    <ResponseField name="walletAddress" type="string">
+      User's wallet address where USDC will be deposited
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="depositInstructions" type="object">
+  **Most Important:** Bank account details User A needs to send money to.
+
+  <Expandable title="properties">
+    <ResponseField name="bankName" type="string">
+      Name of the bank holding the virtual account
+    </ResponseField>
+    <ResponseField name="bankAddress" type="string">
+      Physical address of the bank
+    </ResponseField>
+    <ResponseField name="beneficiary" type="object">
+      <Expandable title="properties">
+        <ResponseField name="name" type="string">
+          Beneficiary name (must match user's name)
+        </ResponseField>
+        <ResponseField name="address" type="string">
+          Beneficiary address
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+    <ResponseField name="ach" type="object">
+      <Expandable title="properties">
+        <ResponseField name="routingNumber" type="string">
+          ACH routing number
+        </ResponseField>
+        <ResponseField name="accountNumber" type="string">
+          Virtual account number for ACH deposits
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+    <ResponseField name="wire" type="object">
+      <Expandable title="properties">
+        <ResponseField name="routingNumber" type="string">
+          Wire routing number
+        </ResponseField>
+        <ResponseField name="accountNumber" type="string">
+          Virtual account number for wire deposits
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+    <ResponseField name="instruction" type="string">
+      Deposit instructions and compliance requirements
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<Info>
+  **How to Use:** Provide these deposit instructions to User A through your
+  app/website. When they send money to this account via their bank, HIFI
+  automatically detects the deposit, converts it to USDC, and sends it to their
+  wallet. For monitoring deposits, subscribe to `ONRAMP.CREATE` webhook events.
+</Info>
+
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Create User B (Recipient)
+
+The recipient (User B) needs a user account with a `mexicoGlobalNetwork` account to receive the remittance. Follow the same user creation flow as User A, but complete KYC for the `GLOBAL_NETWORK` rail instead of USD.
+
+<Note>
+  **Using an Existing User:** If User B already exists in your system, you can
+  skip user creation and just ensure they have an active `mexicoGlobalNetwork`
+  account. You'll need their `userId` and `accountId` for the remittance
+  transaction.
+</Note>
+
+### Required Information for User B
+
+To complete this recipe, you'll need:
+
+- **User B's `userId`** - From creating their user account
+- **User B's MXN `accountId`** - From adding their Mexican bank account
+
+For the complete flow of creating User B and adding their MXN bank account, follow the same steps as User A but:
+
+1. Submit KYC for the `GLOBAL_NETWORK` rail instead of USD
+2. Add a `mexicoGlobalNetwork` account (Mexican bank account) instead of a Virtual Account
+
+For detailed instructions on adding offramp accounts, see our [Offramp Guide](/docs/transfers/offramps).
+
+---
+
+## Execute Remittance Transaction
+
+Now you can send the remittance from User A to User B. Create an **offramp** transaction that converts USDC to MXN and sends it to User B's Mexican bank account.
+
+This is a two-step process:
+
+1. **Create offramp request** - Get a quote for the conversion
+2. **Accept the quote** - Execute the remittance
+
+<Note>
+  **Complete Offramp Guide:** For more details on offramps and cross-border
+  transfers, see our [Offramp Transfer Guide](/docs/transfers/offramps).
+</Note>
+
+<AccordionGroup>
+  <Accordion title="Create Offramp Request">
+
+Create an offramp request to get a quote for converting 11 USDC to MXN using the [Create an offramp](https://docs.hifibridge.com/api-reference/offramp/create-an-offramp) endpoint.
+
+**Request:**
+
+```bash
+curl --request POST \
+  --url https://sandbox.hifibridge.com/v2/offramps \
+  --header 'accept: application/json' \
+  --header 'authorization: Bearer YOUR_API_KEY' \
+  --header 'content-type: application/json' \
+  --data '
+{
+  "requestId": "1c74a5f7-0dd6-4e81-bb31-5b1857e5fc3e",
+  "purposeOfPayment": "payment_for_services",
+  "supportingDocumentType": "billing_document",
+  "source": {
+    "amount": 11,
+    "currency": "usdc",
+    "chain": "POLYGON",
+    "userId": "3b77cec8-1bb9-5ea0-91a1-e8c1411dd429"
+  },
+  "destination": {
+    "currency": "mxn",
+    "accountId": "64fbf048-378d-409a-a11b-cfa5a3d5cf6d",
+    "userId": "64e9b060-4c28-53f0-ab35-9e516f3dfb45"
+  }
+}
+'
+```
+
+**Request Fields:**
+
+<ResponseField name="requestId" type="string" required>
+  Unique identifier (UUID) for this offramp request to ensure idempotency.
+</ResponseField>
+
+<ResponseField name="purposeOfPayment" type="string">
+  Purpose of the payment for compliance. Common values: `payment_for_services`,
+  `family_support`, `gift`, `salary`, etc.
+</ResponseField>
+
+<ResponseField name="supportingDocumentType" type="string">
+  Type of supporting document if required. Options: `billing_document`,
+  `invoice`, `contract`, etc.
+</ResponseField>
+
+<ResponseField name="supportingDocumentUrl" type="string">
+  URL to the supporting document if required by the destination country's
+  regulations.
+</ResponseField>
+
+<ResponseField name="description" type="string">
+  Optional description of the payment.
+</ResponseField>
+
+<ResponseField name="source" type="object" required>
+  Source of the offramp (crypto side - User A).
+
+  <Expandable title="properties">
+    <ResponseField name="amount" type="number" required>
+      Amount of USDC to convert from User A's wallet
+    </ResponseField>
+    <ResponseField name="currency" type="string" required>
+      Source cryptocurrency (e.g., `usdc`, `usdt`)
+    </ResponseField>
+    <ResponseField name="chain" type="string" required>
+      Blockchain network (e.g., `POLYGON`, `ETHEREUM`)
+    </ResponseField>
+    <ResponseField name="userId" type="string" required>
+      User A's user ID (the sender)
+    </ResponseField>
+    <ResponseField name="externalWalletId" type="string">
+      Optional external wallet ID if using a wallet outside HIFI's custody
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="destination" type="object" required>
+  Destination of the offramp (fiat side - User B).
+
+  <Expandable title="properties">
+    <ResponseField name="currency" type="string" required>
+      Destination fiat currency (e.g., `mxn` for Mexican Pesos)
+    </ResponseField>
+    <ResponseField name="accountId" type="string" required>
+      User B's bank account ID where MXN will be deposited
+    </ResponseField>
+    <ResponseField name="userId" type="string" required>
+      User B's user ID (the recipient)
+    </ResponseField>
+    <ResponseField name="amount" type="number">
+      Optional: Specify destination amount if you want to send an exact fiat
+      amount
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="developerFee" type="array">
+  Optional: Developer fees to collect on the transaction.
+
+  <Expandable title="properties">
+    <ResponseField name="fees" type="array">
+      <Expandable title="properties">
+        <ResponseField name="type" type="string">
+          Fee type: `PERCENTAGE` or `FLAT`
+        </ResponseField>
+        <ResponseField name="value" type="string">
+          Fee value (percentage or flat amount)
+        </ResponseField>
+        <ResponseField name="walletAddress" type="string">
+          Wallet address to receive the fee
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+**Response:**
+
+```json
+{
+  "id": "e1821e0a-ba62-4022-83b8-aab9866ee0a1",
+  "type": "OFFRAMP",
+  "status": "OPEN_QUOTE",
+  "source": {
+    "userId": "3b77cec8-1bb9-5ea0-91a1-e8c1411dd429",
+    "name": "John Doe",
+    "email": "johndoe@gmail.com",
+    "chain": "POLYGON",
+    "currency": "usdc",
+    "amount": 11,
+    "walletAddress": "0x63dAbB631bcE6d6090A4e6c5c7aB20d3D853C338"
+  },
+  "destination": {
+    "userId": "64e9b060-4c28-53f0-ab35-9e516f3dfb45",
+    "name": "Jane Doe",
+    "email": "janedoe@gmail.com",
+    "accountId": "64fbf048-378d-409a-a11b-cfa5a3d5cf6d",
+    "currency": "mxn",
+    "amount": 201.26
+  },
+  "quoteInformation": {
+    "sendGross": {
+      "amount": "11.000000",
+      "currency": "usdc"
+    },
+    "sendNet": {
+      "amount": "10.710000",
+      "currency": "usdc"
+    },
+    "taxFee": {
+      "amount": "0.187000",
+      "currency": "usdc"
+    },
+    "railFee": {
+      "amount": "0.110000",
+      "currency": "usdc"
+    },
+    "receiveGross": {
+      "amount": "201.26",
+      "currency": "mxn"
+    },
+    "receiveNet": {
+      "amount": "201.26",
+      "currency": "mxn"
+    },
+    "rate": "18.296364",
+    "expiresAt": "2025-11-12T23:25:23.151+00:00"
+  }
+}
+```
+
+✅ **Offramp quote created!**
+
+**Response Fields:**
+
+<ResponseField name="id" type="string">
+  Unique offramp transaction ID. **Save this** - you'll need it to accept the
+  quote and monitor status.
+</ResponseField>
+
+<ResponseField name="type" type="string">
+  Transfer type. Always `OFFRAMP` for remittance transactions.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  Current status. `OPEN_QUOTE` means you have an active quote waiting to be
+  accepted.
+</ResponseField>
+
+<ResponseField name="source" type="object">
+  Source details showing User A's wallet and amount being sent.
+
+  <Expandable title="properties">
+    <ResponseField name="userId" type="string">
+      User A's ID
+    </ResponseField>
+    <ResponseField name="name" type="string">
+      User A's name
+    </ResponseField>
+    <ResponseField name="chain" type="string">
+      Blockchain network
+    </ResponseField>
+    <ResponseField name="currency" type="string">
+      Source cryptocurrency
+    </ResponseField>
+    <ResponseField name="amount" type="number">
+      Amount of crypto being converted
+    </ResponseField>
+    <ResponseField name="walletAddress" type="string">
+      User A's wallet address
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="destination" type="object">
+  Destination details showing User B's bank account and amount they'll receive.
+
+  <Expandable title="properties">
+    <ResponseField name="userId" type="string">
+      User B's ID
+    </ResponseField>
+    <ResponseField name="name" type="string">
+      User B's name
+    </ResponseField>
+    <ResponseField name="accountId" type="string">
+      User B's bank account ID
+    </ResponseField>
+    <ResponseField name="currency" type="string">
+      Destination fiat currency
+    </ResponseField>
+    <ResponseField name="amount" type="number">
+      Amount of fiat User B will receive (in MXN)
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="quoteInformation" type="object">
+  **Critical:** Detailed breakdown of the conversion including exchange rate,
+  fees, and amounts.
+
+  <Expandable title="properties">
+    <ResponseField name="sendGross" type="object">
+      <Expandable title="properties">
+        <ResponseField name="amount" type="string">
+          Total USDC amount before fees
+        </ResponseField>
+        <ResponseField name="currency" type="string">
+          Currency code
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+    <ResponseField name="sendNet" type="object">
+      <Expandable title="properties">
+        <ResponseField name="amount" type="string">
+          USDC amount after deducting fees
+        </ResponseField>
+        <ResponseField name="currency" type="string">
+          Currency code
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+    <ResponseField name="taxFee" type="object">
+      <Expandable title="properties">
+        <ResponseField name="amount" type="string">
+          Tax fee amount
+        </ResponseField>
+        <ResponseField name="currency" type="string">
+          Fee currency
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+    <ResponseField name="railFee" type="object">
+      <Expandable title="properties">
+        <ResponseField name="amount" type="string">
+          Payment rail processing fee
+        </ResponseField>
+        <ResponseField name="currency" type="string">
+          Fee currency
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+    <ResponseField name="receiveGross" type="object">
+      <Expandable title="properties">
+        <ResponseField name="amount" type="string">
+          Total MXN amount before destination fees
+        </ResponseField>
+        <ResponseField name="currency" type="string">
+          Currency code
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+    <ResponseField name="receiveNet" type="object">
+      <Expandable title="properties">
+        <ResponseField name="amount" type="string">
+          Final MXN amount User B will receive
+        </ResponseField>
+        <ResponseField name="currency" type="string">
+          Currency code
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+    <ResponseField name="rate" type="string">
+      Exchange rate (USDC to MXN). In this example: 1 USDC ≈ 18.30 MXN
+    </ResponseField>
+    <ResponseField name="expiresAt" type="string">
+      Quote expiration timestamp (ISO 8601 format)
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+**Understanding the Quote:**
+
+In this example:
+
+- User A sends **11 USDC**
+- After fees (tax: 0.187 USDC, rail: 0.110 USDC), **10.71 USDC** is converted
+- At a rate of **18.30 MXN per USDC**
+- User B receives **201.26 MXN** in their bank account
+
+<Warning>
+  **Quote Expiration:** Quotes typically expire after 15-30 minutes to protect
+  against exchange rate volatility. If your quote expires before acceptance,
+  create a new offramp request for a fresh quote with updated rates.
+</Warning>
+
+  </Accordion>
+
+  <Accordion title="Accept Quote and Execute Remittance">
+
+After reviewing the quote and fees, accept it to execute the remittance using the [Accept Quote](https://docs.hifibridge.com/api-reference/offramp/accept-quote) endpoint.
+
+**Request:**
+
+```bash
+curl --request POST \
+  --url https://sandbox.hifibridge.com/v2/offramps/e1821e0a-ba62-4022-83b8-aab9866ee0a1/quote/accept \
+  --header 'accept: application/json' \
+  --header 'authorization: Bearer YOUR_API_KEY'
+```
+
+**Response:**
+
+```json
+{
+  "id": "e1821e0a-ba62-4022-83b8-aab9866ee0a1",
+  "type": "OFFRAMP",
+  "status": "CRYPTO_INITIATED",
+  "source": {
+    "userId": "3b77cec8-1bb9-5ea0-91a1-e8c1411dd429",
+    "name": "John Doe",
+    "email": "johndoe@gmail.com",
+    "chain": "POLYGON",
+    "currency": "usdc",
+    "amount": 11,
+    "walletAddress": "0x63dAbB631bcE6d6090A4e6c5c7aB20d3D853C338"
+  },
+  "destination": {
+    "userId": "64e9b060-4c28-53f0-ab35-9e516f3dfb45",
+    "name": "Jane Doe",
+    "email": "janedoe@gmail.com",
+    "accountId": "64fbf048-378d-409a-a11b-cfa5a3d5cf6d",
+    "currency": "mxn",
+    "amount": 201.26
+  },
+  "quoteInformation": {
+    "sendGross": {
+      "amount": "11.000000",
+      "currency": "usdc"
+    },
+    "sendNet": {
+      "amount": "10.710000",
+      "currency": "usdc"
+    },
+    "taxFee": {
+      "amount": "0.187000",
+      "currency": "usdc"
+    },
+    "railFee": {
+      "amount": "0.110000",
+      "currency": "usdc"
+    },
+    "receiveGross": {
+      "amount": "201.26",
+      "currency": "mxn"
+    },
+    "receiveNet": {
+      "amount": "201.26",
+      "currency": "mxn"
+    },
+    "rate": "18.296364",
+    "expiresAt": "2025-11-12T23:25:23.151+00:00"
+  }
+}
+```
+
+✅ **Quote accepted! Remittance is processing.**
+
+The status has changed from `OPEN_QUOTE` to `CRYPTO_INITIATED`, meaning the transaction is now being executed.
+
+**Remittance Status Progression:**
+
+1. `OPEN_QUOTE` - Quote generated, waiting for acceptance
+2. `CRYPTO_INITIATED` - Processing crypto conversion
+3. `CRYPTO_PENDING` - Waiting for blockchain confirmation
+4. `FIAT_PENDING` - Converting to MXN and initiating bank transfer
+5. `COMPLETED` - MXN deposited to User B's bank account
+
+**Monitoring Remittance Status:**
+
+Track the remittance progress using:
+
+- **Polling:** Call [Retrieve an offramp](https://docs.hifibridge.com/api-reference/offramp/retrieve-an-offramp) with the transaction ID (`e1821e0a-ba62-4022-83b8-aab9866ee0a1`)
+- **Webhooks:** Subscribe to `OFFRAMP.UPDATE` events for real-time status notifications
+
+**Settlement Times:**
+
+- **Sandbox:** Instant simulation for testing
+- **Production:** Typically 1-3 business days depending on the destination country and payment rail
+
+<Info>
+  **User Notifications:** Consider implementing webhook handlers to send
+  notifications to both User A (sender) and User B (recipient) as the remittance
+  progresses through each status. This provides transparency and builds trust in
+  your remittance product.
+</Info>
+
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## 🎉 Congratulations!
+
+You've successfully completed a cross-border remittance transaction! By following this recipe, you can now:
+
+- ✅ Generate API keys and authenticate with HIFI
+- ✅ Onboard users and complete KYC for multiple currency rails
+- ✅ Create virtual accounts for fiat-to-crypto conversion
+- ✅ Execute cross-border remittances with competitive exchange rates
+- ✅ Provide transparent fee structures and quote expiration
+
+### Next Steps
+
+Ready to build a full remittance product? Here's what to explore next:
+
+- **[Webhooks](/docs/webhooks)** - Set up real-time notifications for transaction status updates and user engagement
+- **[Offramp Guide](/docs/transfers/offramps)** - Deep dive into offramp transactions and compliance requirements
+- **[Error Handling](/docs/api/errors)** - Implement robust error handling for failed transactions and expired quotes
+- **[API Reference](https://docs.hifibridge.com/api-reference)** - Explore all available endpoints and parameters for advanced features

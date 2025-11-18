@@ -168,7 +168,7 @@
               "quickstart",
               "sandbox",
               "postman",
-              "dashboard/index"
+              "dashboard"
             ]
           },
           {
@@ -179,7 +179,7 @@
               {
                 "group": "KYC",
                 "pages": [
-                  "kyc/index",
+                  "kyc",
                   "kyc/kyc-requirements",
                   "kyc/kyc-status",
                   "kyc/kyb-status"
@@ -188,7 +188,7 @@
               {
                 "group": "Rails",
                 "pages": [
-                  "rails/index",
+                  "rails",
                   "rails/usd",
                   "rails/global-network",
                   "rails/africa"
@@ -214,7 +214,7 @@
               {
                 "group": "Webhooks",
                 "pages": [
-                  "webhooks/index",
+                  "webhooks",
                   "webhooks/user-events",
                   "webhooks/kyc-events",
                   "webhooks/wallet-events",
@@ -286,6 +286,23 @@
               "references/account-purposes",
               "references/export-categories",
               "references/product-service-categories"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Guides",
+        "pages": [
+          {
+            "group": "Get started",
+            "pages": ["guides", "quickstart"]
+          },
+          {
+            "group": "Recipes",
+            "pages": [
+              "guides/cross-border",
+              "guides/remittances",
+              "guides/bill-payments"
             ]
           }
         ]
@@ -573,7 +590,7 @@
       "destination": "/compliance/documents"
     },
     {
-      "source": "/docs/compliance/documents/index",
+      "source": "/docs/compliance/documents",
       "destination": "/compliance/documents"
     },
     {
@@ -590,10 +607,6 @@
     },
     {
       "source": "/docs/dashboard",
-      "destination": "/dashboard"
-    },
-    {
-      "source": "/docs/dashboard/index",
       "destination": "/dashboard"
     },
     {
@@ -633,7 +646,7 @@
       "destination": "/guides"
     },
     {
-      "source": "/docs/guides/index",
+      "source": "/docs/guides",
       "destination": "/guides"
     },
     {
@@ -641,7 +654,7 @@
       "destination": "/"
     },
     {
-      "source": "/docs/index",
+      "source": "/docs",
       "destination": "/"
     },
     {
@@ -669,7 +682,7 @@
       "destination": "/rails"
     },
     {
-      "source": "/docs/rails/index",
+      "source": "/docs/rails",
       "destination": "/rails"
     },
     {
@@ -717,7 +730,7 @@
       "destination": "/references/business-industries"
     },
     {
-      "source": "/docs/references/business-industries/index",
+      "source": "/docs/references/business-industries",
       "destination": "/references/business-industries"
     },
     {
@@ -805,10 +818,6 @@
       "destination": "/users"
     },
     {
-      "source": "/docs/users/index",
-      "destination": "/users"
-    },
-    {
       "source": "/docs/users/kyc",
       "destination": "/users/kyc"
     },
@@ -825,19 +834,11 @@
       "destination": "/wallets"
     },
     {
-      "source": "/docs/wallets/index",
-      "destination": "/wallets"
-    },
-    {
       "source": "/docs/webhooks/account-events",
       "destination": "/webhooks/account-events"
     },
     {
       "source": "/docs/webhooks",
-      "destination": "/webhooks"
-    },
-    {
-      "source": "/docs/webhooks/index",
       "destination": "/webhooks"
     },
     {
