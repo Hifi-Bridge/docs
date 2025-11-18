@@ -295,14 +295,14 @@
         "pages": [
           {
             "group": "Get started",
-            "pages": ["guides", "quickstart"]
+            "pages": ["guides", "guides/quickstart"]
           },
           {
             "group": "Recipes",
             "pages": [
-              "guides/cross-border",
-              "guides/remittances",
-              "guides/bill-payments"
+              "guides/recipes/cross-border",
+              "guides/recipes/remittances",
+              "guides/recipes/bill-payments"
             ]
           }
         ]
@@ -666,8 +666,12 @@
       "destination": "/postman"
     },
     {
+      "source": "/quickstart",
+      "destination": "/guides/quickstart"
+    },
+    {
       "source": "/docs/quickstart",
-      "destination": "/quickstart"
+      "destination": "/guides/quickstart"
     },
     {
       "source": "/docs/rails/africa",
