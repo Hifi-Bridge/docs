@@ -1,0 +1,1276 @@
+---
+title: "Global Payments"
+---
+
+Enable businesses to send money internationally through stablecoins with instant settlement. Leverage HIFI's global network to reach recipients in multiple countries with low fees and transparent exchange rates.
+
+**⏱️ Time to complete:** 35-45 minutes
+
+**🎯 What you'll build:** A complete cross-border payment flow where a US business pays a Hong Kong supplier, converting USD → USDC → HKD with instant settlement and competitive rates.
+
+## Use Case Overview
+
+This recipe demonstrates an international B2B payment where:
+
+- ✅ US business deposits USD from their bank account
+- ✅ USD automatically converts to USDC stablecoin
+- ✅ USDC transfers instantly across borders
+- ✅ HKD is deposited to supplier's Hong Kong bank account
+
+This flow enables fast, cost-effective international business payments with transparent pricing and instant settlement.
+
+---
+
+## Prerequisites
+
+Before you start, make sure you have:
+
+- **API keys** from the Dashboard ([Get API keys](/docs/api/authentication))
+- **A tool for making API calls** (cURL, Postman, or similar)
+- **Basic understanding of REST APIs**
+- **Your sandbox endpoint:** `https://sandbox.hifibridge.com`
+
+<Note>
+  All examples in this guide use the sandbox environment. When you're ready for
+  production, simply replace the sandbox URL with the production endpoint and
+  use your production API keys.
+</Note>
+
+---
+
+## What you'll build
+
+Here's what we'll accomplish in this recipe:
+
+1. **Generate API Keys** - Set up authentication for HIFI API
+2. **Create Business A (Payer)** - Onboard US business and complete KYB for USD rail
+3. **Add Virtual Account** - Set up account for USD deposits that convert to USDC
+4. **Create Business B (Payee)** - Onboard Hong Kong supplier (or use existing business)
+5. **Execute Payment** - Send USDC from Business A → HKD to Business B's bank account
+
+**Payment Flow:**
+
+```
+USD → Business A Bank Account → USDC → Business A Wallet → HKD → Business B Bank Account
+```
+
+---
+
+## Generate API Keys
+
+Access to the HIFI API requires authentication via API keys. Generate your keys from the HIFI Dashboard before making any API calls.
+
+<AccordionGroup>
+  <Accordion title="Get Your API Keys">
+
+**Steps:**
+
+1. Navigate to [dashboard.hifibridge.com](https://dashboard.hifibridge.com/)
+2. Log in to your account
+3. Go to **Developer → API Keys**
+4. Click **Generate New Key**
+5. Select your environment: **Sandbox** (for testing) or **Production** (for live transactions)
+6. Copy the key immediately - it's only shown once
+
+**Important Security Notes:**
+
+- Store your API key securely (environment variables, secrets manager, etc.)
+- Never commit API keys to version control
+- Your key authenticates all HIFI API requests
+- If compromised, immediately revoke in the Dashboard and generate a new one
+
+<Warning>
+  **API keys are shown only once.** If you lose your key, you must revoke it and
+  generate a new one. There is no way to retrieve a lost key.
+</Warning>
+
+**Using Your API Key:**
+
+Include your API key in the `Authorization` header of all API requests:
+
+```bash
+--header 'authorization: Bearer YOUR_API_KEY'
+```
+
+For a complete guide on API authentication, see our [Authentication Documentation](/docs/api/authentication).
+
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Create Business A (US Payer)
+
+The paying business needs a verified business account to access fiat rails and send international payments. Every business must accept HIFI's Terms of Service and complete KYB (Know Your Business) verification before they can move money between fiat and crypto.
+
+<Note>
+  **Complete Business Onboarding Guide:** For a comprehensive walkthrough of
+  business onboarding and KYB verification, see our [Business User
+  Guide](/docs/users).
+</Note>
+
+### Business Creation Flow
+
+Creating a business user involves four steps:
+
+1. **Generate Terms of Service Link** - Get acceptance link for your business
+2. **Create Business User** - Create the business account after TOS acceptance
+3. **Update KYB Information** - Provide required business details and UBO information
+4. **Submit KYB** - Submit for verification to unlock USD rail
+
+<AccordionGroup>
+  <Accordion title="Generate Terms of Service Link">
+
+Before creating a business user, they must accept HIFI's Terms of Service. Generate a unique acceptance link using the [Generate Terms of Service Link](https://docs.hifibridge.com/v2/reference/post_v2-tos-link) endpoint.
+
+**Request:**
+
+```bash
+curl --request POST \
+  --url https://sandbox.hifibridge.com/v2/tos-link \
+  --header 'accept: application/json' \
+  --header 'authorization: Bearer YOUR_API_KEY' \
+  --header 'content-type: application/json' \
+  --data '
+{
+  "idempotencyKey": "96bc39ba-c6c6-412a-9452-e95a35d3f533"
+}
+'
+```
+
+**Request Fields:**
+
+<ResponseField name="idempotencyKey" type="string" required>
+  A unique UUID that becomes your `signedAgreementId` after the business accepts
+  the terms. Generate this using any [UUID
+  generator](https://www.uuidgenerator.net/).
+</ResponseField>
+
+<ResponseField name="templateId" type="string">
+  Optional template ID for custom Terms of Service templates.
+</ResponseField>
+
+<ResponseField name="redirectUrl" type="string">
+  Optional URL to redirect users after they accept the terms.
+</ResponseField>
+
+**Response:**
+
+```json
+{
+  "url": "https://dashboard.hifibridge.com/accept-terms-of-service?sessionToken=a29d65a3...",
+  "signedAgreementId": "96bc39ba-c6c6-412a-9452-e95a35d3f533"
+}
+```
+
+**Response Fields:**
+
+<ResponseField name="url" type="string">
+  The unique link where the business will review and accept HIFI's Terms of
+  Service.
+</ResponseField>
+
+<ResponseField name="signedAgreementId" type="string">
+  The agreement ID (same as your `idempotencyKey`). **Save this** - you'll need
+  it to create the business user in the next step.
+</ResponseField>
+
+**What to do with this response:**
+
+1. **Direct the business to the `url`** - Send this link via email or embed in your application
+2. **Save the `signedAgreementId`** - You'll need this to create the business user
+3. **Wait for acceptance** - The `signedAgreementId` becomes valid only after they click "Accept"
+
+<Info>
+  **Real-time Notifications:** HIFI triggers the `TOS_LINK.UPDATE` webhook event
+  when the business accepts the terms, allowing you to proceed with user
+  creation immediately. [Learn about webhooks →](/docs/webhooks)
+</Info>
+
+  </Accordion>
+
+  <Accordion title="Create Business User">
+
+Once the business has accepted the Terms of Service, create the business user account with the [Create User](https://docs.hifibridge.com/api-reference/user/create-a-user) endpoint.
+
+**Request:**
+
+```bash
+curl --request POST \
+  --url https://sandbox.hifibridge.com/v2/users \
+  --header 'accept: application/json' \
+  --header 'authorization: Bearer YOUR_API_KEY' \
+  --header 'content-type: application/json' \
+  --data '
+{
+  "requestId": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
+  "type": "business",
+  "chains": ["POLYGON"],
+  "email": "ustestbusiness@gmail.com",
+  "dateOfBirth": "2023-12-25",
+  "address": {
+    "addressLine1": "4550 Market Street",
+    "city": "Philadelphia",
+    "stateProvinceRegion": "PA",
+    "postalCode": "19104",
+    "country": "USA"
+  },
+  "ipAddress": "127.0.0.1",
+  "signedAgreementId": "96bc39ba-c6c6-412a-9452-e95a35d3f533",
+  "businessName": "US Test Business",
+  "ultimateBeneficialOwners": [
+    {
+      "firstName": "John",
+      "lastName": "Doe",
+      "dateOfBirth": "1980-01-01",
+      "hasControl": true,
+      "isSigner": true
+    }
+  ]
+}
+'
+```
+
+**Request Fields:**
+
+<ResponseField name="requestId" type="string" required>
+  Unique identifier (UUID) for this request to ensure idempotency.
+</ResponseField>
+
+<ResponseField name="type" type="string" required>
+  User type. Use `business` for business accounts.
+</ResponseField>
+
+<ResponseField name="chains" type="array">
+  Blockchain networks to provision wallets on. Options: `POLYGON`, `ETHEREUM`
+</ResponseField>
+
+<ResponseField name="email" type="string" required>
+  Business email address.
+</ResponseField>
+
+<ResponseField name="dateOfBirth" type="string">
+  Date associated with the business registration (YYYY-MM-DD format).
+</ResponseField>
+
+<ResponseField name="address" type="object" required>
+  Business address.
+
+  <Expandable title="properties">
+    <ResponseField name="addressLine1" type="string" required>
+      Street address
+    </ResponseField>
+    <ResponseField name="addressLine2" type="string">
+      Additional address information (suite, floor, etc.)
+    </ResponseField>
+    <ResponseField name="city" type="string" required>
+      City
+    </ResponseField>
+    <ResponseField name="stateProvinceRegion" type="string" required>
+      State, province, or region code
+    </ResponseField>
+    <ResponseField name="postalCode" type="string" required>
+      Postal/ZIP code
+    </ResponseField>
+    <ResponseField name="country" type="string" required>
+      Country code (ISO 3166-1 alpha-3)
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="ipAddress" type="string">
+  IP address of the business representative creating the account.
+</ResponseField>
+
+<ResponseField name="signedAgreementId" type="string" required>
+  The `signedAgreementId` from the Terms of Service acceptance.
+</ResponseField>
+
+<ResponseField name="businessName" type="string" required>
+  Legal name of the business.
+</ResponseField>
+
+<ResponseField name="ultimateBeneficialOwners" type="array" required>
+  Array of Ultimate Beneficial Owners (UBOs) who own or control the business.
+
+  <Expandable title="properties">
+    <ResponseField name="firstName" type="string" required>
+      UBO's first name
+    </ResponseField>
+    <ResponseField name="lastName" type="string" required>
+      UBO's last name
+    </ResponseField>
+    <ResponseField name="dateOfBirth" type="string" required>
+      UBO's date of birth (YYYY-MM-DD)
+    </ResponseField>
+    <ResponseField name="hasControl" type="boolean" required>
+      Whether this UBO has control over the business
+    </ResponseField>
+    <ResponseField name="isSigner" type="boolean" required>
+      Whether this UBO is authorized to sign on behalf of the business
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+**Response:**
+
+```json
+{
+  "id": "94dcd5c2-4508-593d-9302-fd7a5444eb20",
+  "type": "business",
+  "email": "ustestbusiness@gmail.com",
+  "name": "US Test Business",
+  "wallets": {
+    "INDIVIDUAL": {
+      "POLYGON": {
+        "address": "0x0466DCD644Ae2Ee5d88CF0e1976c3ce237A0D760"
+      },
+      "ETHEREUM": {
+        "address": "0x6e3D1de74422a9259578302Fd1e9eb203EACB2E8"
+      }
+    }
+  }
+}
+```
+
+✅ **Business user created successfully!**
+
+**Response Fields:**
+
+<ResponseField name="id" type="string">
+  The unique business user ID. **Save this** - you'll use it for all future
+  operations with this business.
+</ResponseField>
+
+<ResponseField name="wallets" type="object">
+  Automatically provisioned wallet addresses on supported blockchain networks.
+
+  <Expandable title="properties">
+    <ResponseField name="INDIVIDUAL" type="object">
+      <Expandable title="properties">
+        <ResponseField name="POLYGON" type="object">
+          <Expandable title="properties">
+            <ResponseField name="address" type="string">
+              Wallet address on the Polygon network
+            </ResponseField>
+          </Expandable>
+        </ResponseField>
+        <ResponseField name="ETHEREUM" type="object">
+          <Expandable title="properties">
+            <ResponseField name="address" type="string">
+              Wallet address on the Ethereum network
+            </ResponseField>
+          </Expandable>
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+**What you get:**
+
+- **Business User ID** (`94dcd5c2-4508-593d-9302-fd7a5444eb20`) - Save this for all future operations
+- **Wallet addresses** - Pre-provisioned on multiple blockchains, ready for instant transfers
+
+<Info>
+  **Automatic Wallet Provisioning:** Every business user automatically receives
+  wallet addresses on supported blockchain networks. These wallets are fully
+  functional immediately - no additional setup required.
+</Info>
+
+  </Accordion>
+
+  <Accordion title="Update KYB Information">
+
+Provide the required business information for KYB (Know Your Business) verification using the [Update KYC](https://docs.hifibridge.com/v2/reference/post_v2-users-userid-kyc) endpoint.
+
+<Note>
+  **KYB vs KYC:** While the endpoint is named "KYC," it handles both individual
+  (KYC) and business (KYB) verification. For businesses, you'll provide company
+  details, tax information, and Ultimate Beneficial Owner (UBO) documentation.
+</Note>
+
+**Request:**
+
+```bash
+curl --request POST \
+  --url https://sandbox.hifibridge.com/v2/users/94dcd5c2-4508-593d-9302-fd7a5444eb20/kyc \
+  --header 'accept: application/json' \
+  --header 'authorization: Bearer YOUR_API_KEY' \
+  --header 'content-type: application/json' \
+  --data '
+{
+  "firstName": "US Test Business",
+  "nationality": "USA",
+  "taxIdentificationNumber": "678898765"
+}
+'
+```
+
+**Request Fields:**
+
+<ResponseField name="firstName" type="string">
+  Business name (can be used for additional identification).
+</ResponseField>
+
+<ResponseField name="nationality" type="string" required>
+  Country where the business is registered (ISO 3166-1 alpha-3 country code).
+</ResponseField>
+
+<ResponseField name="taxIdentificationNumber" type="string" required>
+  Business tax identification number (e.g., EIN for US businesses).
+</ResponseField>
+
+**Response:**
+
+The response includes comprehensive business information including UBO details, business structure, compliance questionnaires, and uploaded documents. The full response structure includes:
+
+- Basic business information (name, email, address, tax details)
+- Ultimate Beneficial Owners with their personal information and documents
+- Business formation documents
+- Compliance screening information
+- Uploaded verification documents
+
+✅ **Business information updated!**
+
+<Note>
+  **Document Upload:** For a complete KYB submission in production, you'll need
+  to upload various business documents including: incorporation articles,
+  business registration, proof of address, and UBO identification documents. See
+  the [Business User Guide](/docs/users) for detailed document requirements. In
+  sandbox, KYB may be automatically approved with minimal documentation.
+</Note>
+
+  </Accordion>
+
+  <Accordion title="Submit KYB for USD Rail">
+
+Submit the KYB application to unlock the USD rail using the [Submit KYC](https://docs.hifibridge.com/api-reference/kyc/submit-kyc) endpoint.
+
+**Request:**
+
+```bash
+curl --request POST \
+  --url https://sandbox.hifibridge.com/v2/users/94dcd5c2-4508-593d-9302-fd7a5444eb20/kyc/submissions \
+  --header 'accept: application/json' \
+  --header 'authorization: Bearer YOUR_API_KEY' \
+  --header 'content-type: application/json' \
+  --data '
+{
+  "rails": "USD"
+}
+'
+```
+
+**Request Fields:**
+
+<ResponseField name="rails" type="string" required>
+  The currency rail to unlock. Use `USD` for US Dollar operations.
+</ResponseField>
+
+**Response:**
+
+```json
+{
+  "USD": {
+    "status": "CREATED",
+    "message": "Your KYC application has been successfully created. We will review it shortly."
+  }
+}
+```
+
+✅ **KYB application submitted!**
+
+**Response Fields:**
+
+<ResponseField name="USD" type="object">
+  Status information for the USD rail submission.
+
+  <Expandable title="properties">
+    <ResponseField name="status" type="string">
+      Current KYB status. Possible values: - `CREATED` - Application submitted -
+      `PENDING` - Under review - `ACTIVE` - Approved, rail is unlocked -
+      `REJECTED` - Not approved
+    </ResponseField>
+    <ResponseField name="message" type="string">
+      Status message explaining the current state
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+**KYB Review Process:**
+
+1. **Status starts as `CREATED`** (immediate)
+2. **Transitions to `PENDING`** (within minutes in sandbox)
+3. **Final status: `ACTIVE` or `REJECTED`** (typically automatic in sandbox, 3-7 business days in production)
+
+<Info>
+  **Business Verification Timeline:** Business KYB verification typically takes
+  longer than individual KYC due to additional compliance requirements. In
+  production, expect 3-7 business days for review. Monitor the status using the
+  [Retrieve KYC
+  Status](https://docs.hifibridge.com/api-reference/kyc/retrieve-kyc-status)
+  endpoint or subscribe to `KYC.STATUS_UPDATE` webhook events.
+</Info>
+
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Add Virtual Account (Business A)
+
+Now that Business A has passed KYB, create a **Virtual Account** for onramping. This is a bank account number automatically created by HIFI that the business can deposit USD into. When fiat arrives, it's automatically converted to USDC and sent to their wallet.
+
+<Note>
+  **Complete Virtual Account Guide:** For more details on virtual accounts and
+  onramping, see our [Virtual Accounts Guide](/docs/virtual-accounts).
+</Note>
+
+<AccordionGroup>
+  <Accordion title="Create Virtual Account">
+
+A Virtual Account enables Business A to deposit USD from their bank, which automatically converts to USDC on Polygon for international payment distribution.
+
+**Request:**
+
+```bash
+curl --request POST \
+  --url https://sandbox.hifibridge.com/v2/users/94dcd5c2-4508-593d-9302-fd7a5444eb20/virtual-accounts \
+  --header 'accept: application/json' \
+  --header 'authorization: Bearer YOUR_API_KEY' \
+  --header 'content-type: application/json' \
+  --data '
+{
+  "sourceCurrency": "usd",
+  "destinationCurrency": "usdc",
+  "destinationChain": "POLYGON"
+}
+'
+```
+
+**Request Fields:**
+
+<ResponseField name="sourceCurrency" type="string" required>
+  Fiat currency to deposit. Use `usd` for US Dollars.
+</ResponseField>
+
+<ResponseField name="destinationCurrency" type="string" required>
+  Stablecoin to receive after conversion. Use `usdc` for USD Coin.
+</ResponseField>
+
+<ResponseField name="destinationChain" type="string" required>
+  Blockchain network for the stablecoin. Options: `POLYGON`, `ETHEREUM`
+</ResponseField>
+
+<ResponseField name="externalWalletId" type="string">
+  Optional external wallet ID if using a wallet outside HIFI's custody.
+</ResponseField>
+
+**Response:**
+
+```json
+{
+  "message": "Virtual account created successfully",
+  "accountInfo": {
+    "id": "c3d1b830-a57c-54d8-a103-df4e0713ff82",
+    "createdAt": "2025-11-13T20:15:03.187Z",
+    "updatedAt": "2025-11-13T20:15:03.187Z",
+    "provider": "CROSS_RIVER",
+    "userId": "94dcd5c2-4508-593d-9302-fd7a5444eb20",
+    "source": {
+      "paymentRail": ["ach", "wire", "rtp"],
+      "currency": "usd"
+    },
+    "destination": {
+      "chain": "POLYGON",
+      "currency": "usdc",
+      "walletAddress": "0x0466DCD644Ae2Ee5d88CF0e1976c3ce237A0D760",
+      "externalWalletId": null
+    },
+    "status": "activated",
+    "microDeposits": {
+      "count": 0,
+      "data": []
+    },
+    "depositInstructions": {
+      "bankName": "Cross River Bank",
+      "bankAddress": "885 Teaneck Road, Teaneck, NJ 07666",
+      "beneficiary": {
+        "name": "US Test Business",
+        "address": "1234 Walnut Street, Suite 1200, Philadelphia, PA, 19107, US"
+      },
+      "ach": {
+        "routingNumber": "021214891",
+        "accountNumber": "388125286772"
+      },
+      "wire": {
+        "routingNumber": "021214891",
+        "accountNumber": "388125286772"
+      },
+      "rtp": {
+        "routingNumber": null,
+        "accountNumber": null
+      },
+      "reference": null,
+      "depositBy": null,
+      "instruction": "Please deposit usd to the bank account provided. Please ensure that the beneficiary name matches the account holder name provided, or the payment may be rejected."
+    },
+    "settlementRuleId": null
+  }
+}
+```
+
+✅ **Virtual account created!**
+
+**Response Fields:**
+
+<ResponseField name="accountInfo.id" type="string">
+  The unique virtual account ID. **Save this** for monitoring deposits.
+</ResponseField>
+
+<ResponseField name="accountInfo.status" type="string">
+  Account status. `activated` means it's ready to receive deposits.
+</ResponseField>
+
+<ResponseField name="accountInfo.provider" type="string">
+  Banking partner providing the virtual account infrastructure.
+</ResponseField>
+
+<ResponseField name="accountInfo.source" type="object">
+  Source configuration for fiat deposits.
+
+  <Expandable title="properties">
+    <ResponseField name="paymentRail" type="array">
+      Supported payment methods: `ach`, `wire`, `rtp` (Real-Time Payments)
+    </ResponseField>
+    <ResponseField name="currency" type="string">
+      The fiat currency this account accepts
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="accountInfo.destination" type="object">
+  Destination configuration for crypto conversion.
+
+  <Expandable title="properties">
+    <ResponseField name="chain" type="string">
+      Blockchain where converted crypto will be sent
+    </ResponseField>
+    <ResponseField name="currency" type="string">
+      Stablecoin the business will receive
+    </ResponseField>
+    <ResponseField name="walletAddress" type="string">
+      Business's wallet address where USDC will be deposited
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="accountInfo.depositInstructions" type="object">
+  **Most Important:** Bank account details Business A needs to send money to.
+
+  <Expandable title="properties">
+    <ResponseField name="bankName" type="string">
+      Name of the bank holding the virtual account
+    </ResponseField>
+    <ResponseField name="bankAddress" type="string">
+      Physical address of the bank
+    </ResponseField>
+    <ResponseField name="beneficiary" type="object">
+      <Expandable title="properties">
+        <ResponseField name="name" type="string">
+          Beneficiary name (must match business name)
+        </ResponseField>
+        <ResponseField name="address" type="string">
+          Beneficiary address
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+    <ResponseField name="ach" type="object">
+      <Expandable title="properties">
+        <ResponseField name="routingNumber" type="string">
+          ACH routing number
+        </ResponseField>
+        <ResponseField name="accountNumber" type="string">
+          Virtual account number for ACH deposits
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+    <ResponseField name="wire" type="object">
+      <Expandable title="properties">
+        <ResponseField name="routingNumber" type="string">
+          Wire routing number
+        </ResponseField>
+        <ResponseField name="accountNumber" type="string">
+          Virtual account number for wire deposits
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+    <ResponseField name="instruction" type="string">
+      Deposit instructions and compliance requirements
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<Info>
+  **How to Use:** Provide these deposit instructions to Business A. When they
+  send money to this account via wire transfer or ACH, HIFI automatically
+  detects the deposit, converts it to USDC, and sends it to their wallet. The
+  USDC is then available for international payments. For monitoring deposits,
+  subscribe to `ONRAMP.CREATE` webhook events.
+</Info>
+
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Create Business B (HK Payee)
+
+The recipient business (Business B in Hong Kong) needs a business account with an HKD bank account to receive the payment. Follow the same business creation flow as Business A, but complete KYB for the appropriate Hong Kong rail.
+
+<Note>
+  **Using an Existing Business:** If Business B already exists in your system,
+  you can skip business creation and just ensure they have an active Hong Kong
+  bank account. You'll need their `userId` and `accountId` for the payment
+  transaction.
+</Note>
+
+### Required Information
+
+To complete this recipe, you'll need:
+
+- **Business B's `userId`** - From creating their business account
+- **Business B's HKD `accountId`** - From adding their Hong Kong bank account
+
+For the complete flow of creating Business B and adding their HKD bank account, follow the same steps as Business A but:
+
+1. Use Hong Kong business information and address details
+2. Submit KYB for the Hong Kong rail
+3. Add an **Offramp Account** (Hong Kong bank account) instead of a Virtual Account
+
+For detailed instructions on adding offramp accounts for international recipients, see our [Offramp Guide](/docs/transfers/offramps).
+
+---
+
+## Execute Payment
+
+Now you can send the international payment from Business A (US) to Business B (Hong Kong). Create an **offramp** transaction that converts USDC to HKD and sends it to Business B's Hong Kong bank account.
+
+This is a two-step process:
+
+1. **Create offramp request** - Get a quote for the conversion
+2. **Accept the quote** - Execute the payment
+
+<Note>
+  **Complete Offramp Guide:** For more details on offramps and cross-border
+  transfers, see our [Offramp Transfer Guide](/docs/transfers/offramps).
+</Note>
+
+<AccordionGroup>
+  <Accordion title="Create Offramp Request">
+
+Create an offramp request to get a quote for converting 10 USDC to HKD using the [Create an offramp](https://docs.hifibridge.com/api-reference/offramp/create-an-offramp) endpoint.
+
+**Request:**
+
+```bash
+curl --request POST \
+  --url https://sandbox.hifibridge.com/v2/offramps \
+  --header 'accept: application/json' \
+  --header 'authorization: Bearer YOUR_API_KEY' \
+  --header 'content-type: application/json' \
+  --data '
+{
+  "requestId": "e6c2e4fc-83d2-4e3b-9836-7ff57f2709be",
+  "purposeOfPayment": "payment_for_services",
+  "supportingDocumentType": "billing_document",
+  "description": "Payment for supplier services",
+  "source": {
+    "amount": 10,
+    "currency": "usdc",
+    "chain": "POLYGON",
+    "userId": "94dcd5c2-4508-593d-9302-fd7a5444eb20"
+  },
+  "destination": {
+    "currency": "hkd",
+    "accountId": "556d4f54-2514-4d10-ac93-c2aff03d2de5",
+    "userId": "e06caa8a-4c0f-58d7-95a5-baf676e1e39a",
+    "paymentReference": "Invoice #12345"
+  }
+}
+'
+```
+
+**Request Fields:**
+
+<ResponseField name="requestId" type="string" required>
+  Unique identifier (UUID) for this offramp request to ensure idempotency.
+</ResponseField>
+
+<ResponseField name="purposeOfPayment" type="string">
+  Purpose of the payment for compliance. Common values for B2B:
+  `payment_for_services`, `payment_for_goods`, `invoice_payment`,
+  `contract_payment`, etc.
+</ResponseField>
+
+<ResponseField name="supportingDocumentType" type="string">
+  Type of supporting document if required. Options: `billing_document`,
+  `invoice`, `contract`, `purchase_order`, etc.
+</ResponseField>
+
+<ResponseField name="supportingDocumentUrl" type="string">
+  URL to the supporting document if required by regulations.
+</ResponseField>
+
+<ResponseField name="description" type="string">
+  Description of the payment (e.g., invoice number, contract reference).
+</ResponseField>
+
+<ResponseField name="source" type="object" required>
+  Source of the offramp (crypto side - Business A).
+
+  <Expandable title="properties">
+    <ResponseField name="amount" type="number" required>
+      Amount of USDC to convert from Business A's wallet
+    </ResponseField>
+    <ResponseField name="currency" type="string" required>
+      Source cryptocurrency (e.g., `usdc`, `usdt`)
+    </ResponseField>
+    <ResponseField name="chain" type="string" required>
+      Blockchain network (e.g., `POLYGON`, `ETHEREUM`)
+    </ResponseField>
+    <ResponseField name="userId" type="string" required>
+      Business A's user ID (the payer)
+    </ResponseField>
+    <ResponseField name="externalWalletId" type="string">
+      Optional external wallet ID if using a wallet outside HIFI's custody
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="destination" type="object" required>
+  Destination of the offramp (fiat side - Business B).
+
+  <Expandable title="properties">
+    <ResponseField name="currency" type="string" required>
+      Destination fiat currency (e.g., `hkd` for Hong Kong Dollars)
+    </ResponseField>
+    <ResponseField name="accountId" type="string" required>
+      Business B's bank account ID where HKD will be deposited
+    </ResponseField>
+    <ResponseField name="userId" type="string" required>
+      Business B's user ID (the recipient)
+    </ResponseField>
+    <ResponseField name="amount" type="number">
+      Optional: Specify destination amount if you want to send an exact fiat
+      amount
+    </ResponseField>
+    <ResponseField name="paymentReference" type="string">
+      Payment reference text (e.g., invoice number, order ID) that will appear on
+      the recipient's bank statement
+    </ResponseField>
+    <ResponseField name="wireMessage" type="string">
+      Message for wire transfers
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="developerFee" type="array">
+  Optional: Developer fees to collect on the transaction.
+
+  <Expandable title="properties">
+    <ResponseField name="fees" type="array">
+      <Expandable title="properties">
+        <ResponseField name="type" type="string">
+          Fee type: `PERCENTAGE` or `FLAT`
+        </ResponseField>
+        <ResponseField name="value" type="string">
+          Fee value (percentage or flat amount)
+        </ResponseField>
+        <ResponseField name="walletAddress" type="string">
+          Wallet address to receive the fee
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+**Response:**
+
+```json
+{
+  "transferType": "OFFRAMP",
+  "transferDetails": {
+    "id": "63b7f9de-31e9-4726-bf5c-b4f21a6af796",
+    "requestId": "e6c2e4fc-83d2-4e3b-9836-7ff57f2709be",
+    "createdAt": "2025-11-17T14:36:15.277Z",
+    "updatedAt": "2025-11-17T14:36:16.377Z",
+    "status": "OPEN_QUOTE",
+    "failedReason": null,
+    "error": null,
+    "errorDetails": null,
+    "source": {
+      "userId": "94dcd5c2-4508-593d-9302-fd7a5444eb20",
+      "chain": "POLYGON",
+      "currency": "usdc",
+      "amount": 10,
+      "walletAddress": "0x0466DCD644Ae2Ee5d88CF0e1976c3ce237A0D760",
+      "user": {
+        "email": "ustestbusiness@gmail.com",
+        "lastName": null,
+        "firstName": null,
+        "businessName": "US Test Business"
+      }
+    },
+    "destination": {
+      "userId": "e06caa8a-4c0f-58d7-95a5-baf676e1e39a",
+      "amount": 75.63,
+      "currency": "hkd",
+      "user": {
+        "email": "hkgtestbusiness@gmail.com",
+        "lastName": null,
+        "firstName": null,
+        "businessName": "HKG Test Business"
+      },
+      "accountId": "556d4f54-2514-4d10-ac93-c2aff03d2de5",
+      "paymentReference": "Invoice #12345"
+    },
+    "receipt": {},
+    "quoteInformation": {
+      "sendGross": {
+        "amount": "10.000000",
+        "currency": "usdc"
+      },
+      "sendNet": {
+        "amount": "9.730000",
+        "currency": "usdc"
+      },
+      "taxFee": {
+        "amount": "0.170000",
+        "currency": "usdc"
+      },
+      "railFee": {
+        "amount": "0.100000",
+        "currency": "usdc"
+      },
+      "receiveGross": {
+        "amount": "75.63",
+        "currency": "hkd"
+      },
+      "receiveNet": {
+        "amount": "75.63",
+        "currency": "hkd"
+      },
+      "rate": "7.563000",
+      "expiresAt": "2025-11-17T14:37:14.946+00:00"
+    },
+    "depositInformation": []
+  }
+}
+```
+
+✅ **Offramp quote created!**
+
+**Response Fields:**
+
+<ResponseField name="transferDetails.id" type="string">
+  Unique offramp transaction ID. **Save this** - you'll need it to accept the
+  quote and monitor status.
+</ResponseField>
+
+<ResponseField name="transferDetails.type" type="string">
+  Transfer type. Always `OFFRAMP` for cross-border payment transactions.
+</ResponseField>
+
+<ResponseField name="transferDetails.status" type="string">
+  Current status. `OPEN_QUOTE` means you have an active quote waiting to be
+  accepted.
+</ResponseField>
+
+<ResponseField name="transferDetails.source" type="object">
+  Source details showing Business A's wallet and amount being sent.
+
+  <Expandable title="properties">
+    <ResponseField name="userId" type="string">
+      Business A's ID
+    </ResponseField>
+    <ResponseField name="businessName" type="string">
+      Business A's name
+    </ResponseField>
+    <ResponseField name="chain" type="string">
+      Blockchain network
+    </ResponseField>
+    <ResponseField name="currency" type="string">
+      Source cryptocurrency
+    </ResponseField>
+    <ResponseField name="amount" type="number">
+      Amount of crypto being converted
+    </ResponseField>
+    <ResponseField name="walletAddress" type="string">
+      Business A's wallet address
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="transferDetails.destination" type="object">
+  Destination details showing Business B's bank account and amount they'll
+  receive.
+
+  <Expandable title="properties">
+    <ResponseField name="userId" type="string">
+      Business B's ID
+    </ResponseField>
+    <ResponseField name="businessName" type="string">
+      Business B's name
+    </ResponseField>
+    <ResponseField name="accountId" type="string">
+      Business B's bank account ID
+    </ResponseField>
+    <ResponseField name="currency" type="string">
+      Destination fiat currency
+    </ResponseField>
+    <ResponseField name="amount" type="number">
+      Amount of fiat Business B will receive (in HKD)
+    </ResponseField>
+    <ResponseField name="paymentReference" type="string">
+      Payment reference that will appear on bank statement
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="transferDetails.quoteInformation" type="object">
+  **Critical:** Detailed breakdown of the conversion including exchange rate,
+  fees, and amounts.
+
+  <Expandable title="properties">
+    <ResponseField name="sendGross" type="object">
+      <Expandable title="properties">
+        <ResponseField name="amount" type="string">
+          Total USDC amount before fees
+        </ResponseField>
+        <ResponseField name="currency" type="string">
+          Currency code
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+    <ResponseField name="sendNet" type="object">
+      <Expandable title="properties">
+        <ResponseField name="amount" type="string">
+          USDC amount after deducting fees
+        </ResponseField>
+        <ResponseField name="currency" type="string">
+          Currency code
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+    <ResponseField name="taxFee" type="object">
+      <Expandable title="properties">
+        <ResponseField name="amount" type="string">
+          Tax fee amount
+        </ResponseField>
+        <ResponseField name="currency" type="string">
+          Fee currency
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+    <ResponseField name="railFee" type="object">
+      <Expandable title="properties">
+        <ResponseField name="amount" type="string">
+          Payment rail processing fee
+        </ResponseField>
+        <ResponseField name="currency" type="string">
+          Fee currency
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+    <ResponseField name="receiveGross" type="object">
+      <Expandable title="properties">
+        <ResponseField name="amount" type="string">
+          Total HKD amount before destination fees
+        </ResponseField>
+        <ResponseField name="currency" type="string">
+          Currency code
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+    <ResponseField name="receiveNet" type="object">
+      <Expandable title="properties">
+        <ResponseField name="amount" type="string">
+          Final HKD amount Business B will receive
+        </ResponseField>
+        <ResponseField name="currency" type="string">
+          Currency code
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+    <ResponseField name="rate" type="string">
+      Exchange rate (USDC to HKD). In this example: 1 USDC ≈ 7.56 HKD
+    </ResponseField>
+    <ResponseField name="expiresAt" type="string">
+      Quote expiration timestamp (ISO 8601 format)
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+**Understanding the Quote:**
+
+In this example:
+
+- Business A sends **10 USDC**
+- After fees (tax: 0.170 USDC, rail: 0.100 USDC), **9.73 USDC** is converted
+- At a rate of **7.56 HKD per USDC**
+- Business B receives **75.63 HKD** in their Hong Kong bank account
+
+<Warning>
+  **Quote Expiration:** Quotes typically expire after 15-30 minutes to protect
+  against exchange rate volatility. If your quote expires before acceptance,
+  create a new offramp request for a fresh quote with updated rates.
+</Warning>
+
+  </Accordion>
+
+  <Accordion title="Accept Quote and Execute Payment">
+
+After reviewing the quote, exchange rate, and fees, accept it to execute the cross-border payment using the [Accept Quote](https://docs.hifibridge.com/api-reference/offramp/accept-quote) endpoint.
+
+**Request:**
+
+```bash
+curl --request POST \
+  --url https://sandbox.hifibridge.com/v2/offramps/63b7f9de-31e9-4726-bf5c-b4f21a6af796/quote/accept \
+  --header 'accept: application/json' \
+  --header 'authorization: Bearer YOUR_API_KEY'
+```
+
+**Response:**
+
+```json
+{
+  "transferType": "OFFRAMP",
+  "transferDetails": {
+    "id": "63b7f9de-31e9-4726-bf5c-b4f21a6af796",
+    "requestId": "e6c2e4fc-83d2-4e3b-9836-7ff57f2709be",
+    "createdAt": "2025-11-17T14:36:15.277Z",
+    "updatedAt": "2025-11-17T14:36:16.377Z",
+    "status": "CRYPTO_INITIATED",
+    "failedReason": null,
+    "error": null,
+    "errorDetails": null,
+    "source": {
+      "userId": "94dcd5c2-4508-593d-9302-fd7a5444eb20",
+      "chain": "POLYGON",
+      "currency": "usdc",
+      "amount": 10,
+      "walletAddress": "0x0466DCD644Ae2Ee5d88CF0e1976c3ce237A0D760",
+      "user": {
+        "email": "ustestbusiness@gmail.com",
+        "lastName": null,
+        "firstName": null,
+        "businessName": "US Test Business"
+      }
+    },
+    "destination": {
+      "userId": "e06caa8a-4c0f-58d7-95a5-baf676e1e39a",
+      "amount": 75.63,
+      "currency": "hkd",
+      "user": {
+        "email": "hkgtestbusiness@gmail.com",
+        "lastName": null,
+        "firstName": null,
+        "businessName": "HKG Test Business"
+      },
+      "accountId": "556d4f54-2514-4d10-ac93-c2aff03d2de5",
+      "paymentReference": "Invoice #12345"
+    },
+    "receipt": {},
+    "quoteInformation": {
+      "sendGross": {
+        "amount": "10.000000",
+        "currency": "usdc"
+      },
+      "sendNet": {
+        "amount": "9.730000",
+        "currency": "usdc"
+      },
+      "taxFee": {
+        "amount": "0.170000",
+        "currency": "usdc"
+      },
+      "railFee": {
+        "amount": "0.100000",
+        "currency": "usdc"
+      },
+      "receiveGross": {
+        "amount": "75.63",
+        "currency": "hkd"
+      },
+      "receiveNet": {
+        "amount": "75.63",
+        "currency": "hkd"
+      },
+      "rate": "7.563000",
+      "expiresAt": "2025-11-17T14:37:14.946+00:00"
+    },
+    "depositInformation": []
+  }
+}
+```
+
+✅ **Quote accepted! Cross-border payment is processing.**
+
+The status has changed from `OPEN_QUOTE` to `CRYPTO_INITIATED`, meaning the transaction is now being executed.
+
+**Cross-Border Payment Status Progression:**
+
+1. `OPEN_QUOTE` - Quote generated, waiting for acceptance
+2. `CRYPTO_INITIATED` - Processing crypto conversion
+3. `CRYPTO_PENDING` - Waiting for blockchain confirmation
+4. `FIAT_PENDING` - Converting to HKD and initiating bank transfer
+5. `COMPLETED` - HKD deposited to Business B's Hong Kong bank account
+
+**Monitoring Payment Status:**
+
+Track the payment progress using:
+
+- **Polling:** Call [Retrieve an offramp](https://docs.hifibridge.com/api-reference/offramp/retrieve-an-offramp) with the transaction ID (`63b7f9de-31e9-4726-bf5c-b4f21a6af796`)
+- **Webhooks:** Subscribe to `OFFRAMP.UPDATE` events for real-time status notifications
+
+**Settlement Times:**
+
+- **Sandbox:** Instant simulation for testing
+- **Production:** Typically 1-3 business days depending on the destination country's banking system and payment rail
+
+<Info>
+  **Business Payment Notifications:** Consider implementing webhook handlers to
+  send notifications to both Business A (payer) and Business B (recipient) as
+  the payment progresses. Include transaction details, exchange rates, and
+  expected settlement times to provide transparency and improve cash flow
+  management.
+</Info>
+
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## 🎉 Congratulations!
+
+You've successfully completed a cross-border business payment! By following this recipe, you can now:
+
+- ✅ Generate API keys and authenticate with HIFI
+- ✅ Onboard businesses and complete KYB for multiple currency rails
+- ✅ Create virtual accounts for fiat-to-crypto conversion
+- ✅ Execute international payments with instant settlement via stablecoins
+- ✅ Provide transparent fee structures and competitive exchange rates
+
+### Next Steps
+
+Ready to build a full cross-border payment platform? Here's what to explore next:
+
+- **[Webhooks](/docs/webhooks)** - Set up real-time notifications for payment status updates and settlement confirmations
+- **[Rails Overview](/docs/rails)** - Explore additional currency corridors to expand your global payment coverage
+- **[Offramp Guide](/docs/transfers/offramps)** - Deep dive into offramp transactions, compliance requirements, and settlement rules
+- **[Business User Guide](/docs/users)** - Learn about KYB requirements, UBO verification, and business document management
+- **[Error Handling](/docs/api/errors)** - Implement robust error handling for failed transactions, expired quotes, and compliance issues
+- **[API Reference](https://docs.hifibridge.com/api-reference)** - Explore all available endpoints and parameters for advanced features

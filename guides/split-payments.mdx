@@ -1,23 +1,26 @@
 ---
-title: "Bill Payments"
+title: "Split Payments"
 ---
 
-Facilitate automated bill payment services for utilities, subscriptions, and other recurring expenses. Use virtual accounts to collect payments from users and route funds to billers automatically. Support batch transfers to process multiple payments efficiently, reducing operational overhead while ensuring timely settlements.
+Facilitate split payment services where a single payment is divided among multiple recipients. Perfect for splitting bills, shared expenses, or distributing funds to multiple stakeholders efficiently.
 
 **⏱️ Time to complete:** 25-35 minutes
 
-**🎯 What you'll build:** An automated bill payment system where users deposit USD into a virtual account, funds convert to USDC, then batch transfers pay multiple billers (utilities, subscriptions, etc.) in a single transaction.
+**🎯 What you'll build:** A split payment system where users deposit USD into a virtual account, funds convert to USDC, then split payments are distributed to multiple recipients. This guide covers two approaches: settlement rules for configured automatic splits, and batch transfers for on-demand splits.
 
 ## Use Case Overview
 
-This recipe demonstrates an automated bill payment flow where:
+This recipe demonstrates a split payment flow where:
 
 - ✅ Users deposit USD into dedicated virtual accounts
 - ✅ USD automatically converts to USDC stablecoin
-- ✅ Batch transfers distribute payments to multiple billers
+- ✅ Payments are split among multiple recipients using one of two methods
 - ✅ Operational overhead is minimized through automation
 
-This flow enables scalable bill payment services with reduced processing costs and timely settlements.
+This flow enables scalable split payment services with reduced processing costs and efficient fund distribution. Choose the method that best fits your use case:
+
+- **Settlement Rules (Option 1)**: Configure split percentages or amounts once, then every deposit automatically splits according to your rules. Perfect for recurring splits with fixed recipients and ratios.
+- **Batch Transfers (Option 2)**: Manually initiate split payments on-demand with full control over amounts and recipients. Perfect for bill payments or dynamic splits that vary per transaction.
 
 ---
 
@@ -43,14 +46,22 @@ Before you start, make sure you have:
 Here's what we'll accomplish in this recipe:
 
 1. **Generate API Keys** - Set up authentication for HIFI API
-2. **Create User** - Onboard a bill payer and complete KYC for USD rail
+2. **Create User** - Onboard a user and complete KYC for USD rail
 3. **Add Virtual Account** - Set up account for collecting USD payments that convert to USDC
-4. **Execute Batch Transfer** - Pay multiple billers in a single transaction
+4. **Choose Your Split Method:**
+   - **Option 1: Settlement Rules** - Configure automatic split payment distribution
+   - **Option 2: Batch Transfers** - Execute on-demand split payments
 
-**Payment Flow:**
+**Payment Flow (Option 1 - Settlement Rules):**
 
 ```
-USD → User Bank Account → Virtual Account → USDC → Batch Transfer → Multiple Billers
+USD → User Bank Account → Virtual Account → USDC → Settlement Rule → Automatic Split to Multiple Recipients
+```
+
+**Payment Flow (Option 2 - Batch Transfers):**
+
+```
+USD → User Bank Account → Virtual Account → USDC → Batch Transfer → Multiple Recipients
 ```
 
 ---
@@ -98,9 +109,9 @@ For a complete guide on API authentication, see our [Authentication Documentatio
 
 ---
 
-## Create User (Bill Payer)
+## Create User
 
-Create a verified user account for the bill payer. Every user must accept HIFI's Terms of Service and complete KYC verification before they can access fiat rails and make payments.
+Create a verified user account for the person making the split payment. Every user must accept HIFI's Terms of Service and complete KYC verification before they can access fiat rails and make payments.
 
 <Note>
   **Complete Onboarding Guide:** For a comprehensive walkthrough of user
@@ -521,19 +532,20 @@ curl --request POST \
 
 ## Add Virtual Account
 
-Now that the user has passed KYC, create a **Virtual Account** for collecting bill payments. This is a bank account number automatically created by HIFI that users can deposit USD into. When fiat arrives, it's automatically converted to USDC and sent to their wallet, ready for batch distribution to billers.
+Now that the user has passed KYC, create a **Virtual Account** for collecting the payment to be split. This is a bank account number automatically created by HIFI that users can deposit USD into. When fiat arrives, it's automatically converted to USDC and ready for distribution.
 
 <Note>
-  **Virtual Account for Bill Payments:** Each virtual account comes with unique
+  **Virtual Account for Split Payments:** Each virtual account comes with unique
   ACH/wire/RTP details you can surface in your app. When deposits arrive, HIFI
-  detects the funds, applies your conversion settings (e.g., USD → USDC), and
-  makes them available for scheduled or batch payouts to billers.
+  detects the funds and applies your conversion settings (e.g., USD → USDC). You
+  can then use settlement rules for automatic splitting or batch transfers for
+  on-demand splitting.
 </Note>
 
 <AccordionGroup>
   <Accordion title="Create Virtual Account">
 
-A Virtual Account enables users to deposit USD from their bank, which automatically converts to USDC on Polygon for bill payment distribution.
+A Virtual Account enables users to deposit USD from their bank, which automatically converts to USDC on Polygon for split payment distribution.
 
 **Request:**
 
@@ -697,9 +709,9 @@ curl --request POST \
 <Info>
   **How to Use:** Provide these deposit instructions to your users through your
   app/website. When they send money to this account via their bank, HIFI
-  automatically detects the deposit, converts it to USDC, and sends it to their
-  wallet. The USDC is then available for batch bill payments. For monitoring
-  deposits, subscribe to `ONRAMP.CREATE` webhook events.
+  automatically detects the deposit and converts it to USDC. You can then split
+  the payment using settlement rules (automatic) or batch transfers (on-demand).
+  For monitoring deposits, subscribe to `ONRAMP.CREATE` webhook events.
 </Info>
 
 For a complete guide on virtual accounts and onramping, see our [Virtual Accounts Guide](/docs/virtual-accounts).
@@ -709,23 +721,235 @@ For a complete guide on virtual accounts and onramping, see our [Virtual Account
 
 ---
 
-## Execute Batch Transfer
+## Option 1: Split Payments with Settlement Rules
 
-With deposits flowing into the virtual account and converting to USDC, create a **batch transfer** to pay multiple billers at once. Send one request containing every destination wallet address and amount; HIFI processes the entire batch and returns itemized statuses for your records.
+Settlement rules automatically distribute funds to multiple recipients whenever a deposit arrives at the virtual account. Configure the split percentages or amounts once, and every deposit will automatically split according to your rules.
 
 <Note>
-  **Batch Transfer Benefits:** Batch transfers reduce operational overhead by
-  consolidating multiple payments into a single transaction. This is ideal for
-  bill payment services where you need to distribute funds to multiple
-  utilities, subscription services, or other billers on a regular schedule.
+  **When to Use Settlement Rules:** Use settlement rules when you have: - Fixed
+  recipient lists that don't change frequently - Consistent split ratios (e.g.,
+  always split 50/50 or 33/33/34) - Recurring split payments that should happen
+  automatically - Set-and-forget split configurations Perfect for shared
+  expenses, recurring bill splits, or fixed revenue sharing.
+</Note>
+
+<AccordionGroup>
+  <Accordion title="Create Settlement Rule">
+
+Create a settlement rule that defines how to split payments among multiple recipients. Each rule in the array sends a portion of the payment to a different wallet address.
+
+**Request:**
+
+```bash
+curl --request POST \
+  --url https://sandbox.hifibridge.com/v2/virtual-accounts/settlement-rules \
+  --header 'accept: application/json' \
+  --header 'authorization: Bearer YOUR_API_KEY' \
+  --header 'content-type: application/json' \
+  --data '
+{
+  "requestId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "chain": "POLYGON",
+  "includeHIFIFee": false,
+  "rules": [
+    {
+      "type": "PERCENTAGE",
+      "calculationModel": "FIXED",
+      "value": 0.3333,
+      "walletAddress": "0xA4C951a7ca4138220a9D4611e7A058d4673e14c3"
+    },
+    {
+      "type": "PERCENTAGE",
+      "calculationModel": "FIXED",
+      "value": 0.3333,
+      "walletAddress": "0x0466DCD644Ae2Ee5d88CF0e1976c3ce237A0D760"
+    },
+    {
+      "type": "PERCENTAGE",
+      "calculationModel": "FIXED",
+      "value": 0.3334,
+      "walletAddress": "0x8356d234077d4b7c71E35c95B075ed4ba5FF7681"
+    }
+  ]
+}
+'
+```
+
+**Request Fields:**
+
+<ResponseField name="requestId" type="string" required>
+  Unique identifier (UUID) for this request to ensure idempotency.
+</ResponseField>
+
+<ResponseField name="chain" type="string" required>
+  Blockchain network for the settlement rule. Must match the virtual account's
+  destination chain (e.g., `POLYGON`, `ETHEREUM`, `BASE`, `SOLANA`).
+</ResponseField>
+
+<ResponseField name="includeHIFIFee" type="boolean">
+  Whether to include HIFI's platform fee in the calculation. Defaults to
+  `false`. Contact HIFI support if you want to include HIFI's fee.
+</ResponseField>
+
+<ResponseField name="rules" type="array" required>
+  Array of settlement rules. Each rule defines a portion of the payment to send to a recipient wallet.
+
+  <Expandable title="Rule Object Fields">
+    <ResponseField name="type" type="string" required>
+      Fee type. Use `PERCENTAGE` to split by percentage or `FIXED` for a fixed amount per recipient.
+    </ResponseField>
+    <ResponseField name="calculationModel" type="string" required>
+      Calculation model. Use `FIXED` for a single rate or `TIERED` for amount-based tiers.
+    </ResponseField>
+    <ResponseField name="value" type="number" nullable>
+      Fee value. For percentage splits, use a decimal (e.g., `0.3333` for 33.33%). For fixed amounts, use the flat amount. Required for `FIXED` calculation model.
+    </ResponseField>
+    <ResponseField name="tiers" type="array" nullable>
+      Array of tier configurations for tiered calculations. Omit for fixed calculations.
+    </ResponseField>
+    <ResponseField name="walletAddress" type="string" required>
+      Recipient wallet address to receive this portion of the split payment.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+**Response:**
+
+```json
+{
+  "id": "15c786fb-de7a-520c-a4b3-f312d4a122d2",
+  "chain": "POLYGON",
+  "includeHIFIFee": false,
+  "rules": [
+    {
+      "type": "PERCENTAGE",
+      "calculationModel": "FIXED",
+      "value": 0.3333,
+      "tiers": null,
+      "walletAddress": "0xA4C951a7ca4138220a9D4611e7A058d4673e14c3"
+    },
+    {
+      "type": "PERCENTAGE",
+      "calculationModel": "FIXED",
+      "value": 0.3333,
+      "tiers": null,
+      "walletAddress": "0x0466DCD644Ae2Ee5d88CF0e1976c3ce237A0D760"
+    },
+    {
+      "type": "PERCENTAGE",
+      "calculationModel": "FIXED",
+      "value": 0.3334,
+      "tiers": null,
+      "walletAddress": "0x8356d234077d4b7c71E35c95B075ed4ba5FF7681"
+    }
+  ]
+}
+```
+
+✅ **Settlement rule created!**
+
+**Response Fields:**
+
+<ResponseField name="id" type="string">
+  The unique settlement rule ID. **Save this** - you'll need it to apply the
+  rule to the virtual account.
+</ResponseField>
+
+<ResponseField name="chain" type="string">
+  Blockchain network the rule is configured for. Must match your virtual
+  account's destination chain.
+</ResponseField>
+
+<ResponseField name="rules" type="array">
+  Array of rules defining how the payment is split among recipients.
+</ResponseField>
+
+<Info>
+  **Split Payment Example:** In this example, we're splitting payments equally
+  among three recipients (33.33%, 33.33%, 33.34%). You can adjust the
+  percentages to split unevenly, or use fixed amounts if you prefer. The
+  remaining amount after all rules are applied goes to the user's wallet.
+</Info>
+
+  </Accordion>
+
+  <Accordion title="Apply Settlement Rule to Virtual Account">
+
+After creating the settlement rule, apply it to the virtual account. Once applied, every deposit will automatically be split according to the rule.
+
+**Request:**
+
+```bash
+curl --request POST \
+  --url https://sandbox.hifibridge.com/v2/users/3b77cec8-1bb9-5ea0-91a1-e8c1411dd429/virtual-accounts/c48d1dd1-b5cd-5bc7-b85e-df1b0f17c1c8/settlement-rules/15c786fb-de7a-520c-a4b3-f312d4a122d2 \
+  --header 'accept: application/json' \
+  --header 'authorization: Bearer YOUR_API_KEY'
+```
+
+**Path Parameters:**
+
+<ResponseField name="userId" type="string" required>
+  The user ID who owns the virtual account.
+</ResponseField>
+
+<ResponseField name="accountId" type="string" required>
+  The virtual account ID to apply the rule to.
+</ResponseField>
+
+<ResponseField name="ruleId" type="string" required>
+  The settlement rule ID from the create response.
+</ResponseField>
+
+**Response:**
+
+```json
+{
+  "success": true
+}
+```
+
+✅ **Settlement rule applied!**
+
+<Warning>
+  **Chain Compatibility:** The settlement rule must be created on the same
+  blockchain network as the virtual account's destination chain. For example, a
+  virtual account configured for POLYGON can only use settlement rules created
+  on POLYGON.
+</Warning>
+
+<Info>
+  **Automatic Split Payments:** Once the settlement rule is applied, every
+  deposit to this virtual account will automatically be split according to your
+  rules. No manual intervention required! Monitor split payments by subscribing
+  to `ONRAMP.CREATE` and `ONRAMP.UPDATE` webhook events.
+</Info>
+
+For a complete guide on settlement rules including tiered pricing and advanced configurations, see our [Settlement Rules Guide](/docs/features/settlement-rules).
+
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Option 2: Split Payments with Batch Transfers
+
+Batch transfers let you manually initiate split payments with full control over amounts and recipients for each transaction. You decide when to split and can customize the distribution for each payment.
+
+<Note>
+  **When to Use Batch Transfers:** Use batch transfers when you need: -
+  On-demand split payments that vary per transaction - Dynamic recipient lists
+  that change based on the payment - Conditional logic before splitting (e.g.,
+  verify amounts, check balances) - Bill payments where amounts differ each time
+  - One-time or irregular split payments Perfect for bill payment services,
+  dynamic revenue sharing, or variable expense splits.
 </Note>
 
 <AccordionGroup>
   <Accordion title="Create Batch Transfer">
 
-Create a batch transfer to pay multiple billers in a single transaction using the [Create Batch Transfer](https://docs.hifibridge.com/api-reference/crypto-transfer/create-batch-transfer) endpoint.
+Create a batch transfer to split a payment among multiple recipients in a single transaction using the [Create Batch Transfer](https://docs.hifibridge.com/api-reference/crypto-transfer/create-batch-transfer) endpoint.
 
-In this example, we'll pay three different billers (utilities, subscriptions, etc.) with 10 USDC each from the user's wallet.
+In this example, we'll split a payment to three different recipients with 10 USDC each from the user's wallet.
 
 **Request:**
 
@@ -780,11 +1004,11 @@ curl --request POST \
 </ResponseField>
 
 <ResponseField name="source" type="object" required>
-  Source of the batch transfer (the bill payer).
+  Source of the batch transfer (the user making the split payment).
 
   <Expandable title="properties">
     <ResponseField name="userId" type="string" required>
-      The user ID sending the payments (bill payer's account)
+      The user ID sending the payments (split payment initiator's account)
     </ResponseField>
   </Expandable>
 </ResponseField>
@@ -798,7 +1022,7 @@ curl --request POST \
       amount.
       <Expandable title="properties">
         <ResponseField name="walletAddress" type="string" required>
-          Recipient's wallet address (biller's crypto wallet)
+          Recipient's wallet address (recipient's crypto wallet)
         </ResponseField>
         <ResponseField name="amount" type="string" required>
           Amount to send to this recipient (in USDC)
@@ -884,14 +1108,14 @@ curl --request POST \
 </ResponseField>
 
 <ResponseField name="source" type="object">
-  Source details showing the bill payer's wallet information.
+  Source details showing the user's wallet information.
 
   <Expandable title="properties">
     <ResponseField name="userId" type="string">
-      Bill payer's user ID
+      User ID of the person making the split payment
     </ResponseField>
     <ResponseField name="walletAddress" type="string">
-      Bill payer's wallet address sending the payments
+      User's wallet address sending the payments
     </ResponseField>
     <ResponseField name="walletType" type="string">
       Type of wallet (e.g., "INDIVIDUAL")
@@ -936,7 +1160,7 @@ curl --request POST \
 In this example:
 
 - **Source:** User's wallet (`0x63dA...C338`) with 30+ USDC available
-- **Batch:** 3 billers receiving 10 USDC each
+- **Batch:** 3 recipients receiving 10 USDC each
 - **Total:** 30 USDC distributed in a single blockchain transaction
 - **Cost Savings:** One transaction fee instead of three separate transactions
 
@@ -957,21 +1181,22 @@ For a complete guide on batch transfers including advanced features like approva
 
 ## 🎉 Congratulations!
 
-You've successfully built an automated bill payment system! By following this recipe, you can now:
+You've successfully built a split payment system! By following this recipe, you can now:
 
 - ✅ Generate API keys and authenticate with HIFI
-- ✅ Onboard bill payers and complete KYC for USD operations
+- ✅ Onboard users and complete KYC for USD operations
 - ✅ Create virtual accounts for collecting payments with automatic conversion
-- ✅ Execute batch transfers to pay multiple billers efficiently
-- ✅ Reduce operational overhead with consolidated transactions
+- ✅ Configure settlement rules for automatic split payments (Option 1)
+- ✅ Execute batch transfers for on-demand split payments (Option 2)
+- ✅ Choose the right method based on your use case
+- ✅ Reduce operational overhead with automated or consolidated transactions
 
 ### Next Steps
 
-Ready to scale your bill payment service? Here's what to explore next:
+Ready to scale your split payment service? Here's what to explore next:
 
-- **[Webhooks](/docs/webhooks)** - Set up real-time notifications for deposit detection, conversion completion, and batch transfer status
-- **[Batch Transfers Guide](/docs/features/batch-transfers)** - Deep dive into advanced batch features like approval workflows and failure handling
-- **[Settlement Rules](/docs/features/settlement-rules)** - Automate payment distribution with scheduled batch transfers
+- **[Settlement Rules Guide](/docs/features/settlement-rules)** - Deep dive into advanced settlement rule features like tiered pricing, fixed amounts, and multiple rule configurations
+- **[Batch Transfers Guide](/docs/features/batch-transfers)** - Learn about batch transfers with approval workflows, failure handling, and advanced features
+- **[Webhooks](/docs/webhooks)** - Set up real-time notifications for deposit detection, conversion completion, and split payment distribution
 - **[Virtual Accounts Guide](/docs/virtual-accounts)** - Learn about monitoring deposits and handling multiple virtual accounts per user
-- **[Error Handling](/docs/api/errors)** - Implement robust error handling for failed payments and insufficient balances
 - **[API Reference](https://docs.hifibridge.com/api-reference)** - Explore all available endpoints and parameters for advanced features

@@ -162,14 +162,8 @@
         "tab": "Docs",
         "pages": [
           {
-            "group": "Get started",
-            "pages": [
-              "overview",
-              "quickstart",
-              "sandbox",
-              "postman",
-              "dashboard"
-            ]
+            "group": "Introduction",
+            "pages": ["overview", "sandbox", "postman", "dashboard"]
           },
           {
             "group": "Core concepts",
@@ -295,14 +289,14 @@
         "pages": [
           {
             "group": "Get started",
-            "pages": ["guides", "guides/quickstart"]
+            "pages": ["quickstart"]
           },
           {
             "group": "Recipes",
             "pages": [
-              "guides/recipes/remittances",
-              "guides/recipes/bill-payments",
-              "guides/recipes/cross-border-payments"
+              "guides/remittances",
+              "guides/global-payments",
+              "guides/split-payments"
             ]
           }
         ]
@@ -313,15 +307,15 @@
       },
       {
         "tab": "API Reference",
-        "openapi": "https://production.hifibridge.com/api/v2/openapi.json",
+        "openapi": "openapi.json",
         "pages": [
           {
-            "group": "Get started",
+            "group": "Overview",
             "pages": ["api/authentication", "api/responses", "api/errors"]
           },
           {
             "group": "Endpoints",
-            "openapi": "https://production.hifibridge.com/api/v2/openapi.json",
+            "openapi": "openapi.json",
             "pages": [
               {
                 "group": "Common",
@@ -528,10 +522,6 @@
     {
       "source": "/docs/transfers/features/settlement-rules",
       "destination": "/features/settlement-rules"
-    },
-    {
-      "source": "/guides/quickstart",
-      "destination": "/quickstart"
     },
     {
       "source": "/docs/api/postman",
