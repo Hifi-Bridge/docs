@@ -295,7 +295,7 @@
             "group": "Recipes",
             "pages": [
               "guides/remittances",
-              "guides/global-payments",
+              "guides/global-transfers",
               "guides/split-payments"
             ]
           }
