@@ -162,14 +162,8 @@
         "tab": "Docs",
         "pages": [
           {
-            "group": "Get started",
-            "pages": [
-              "overview",
-              "quickstart",
-              "sandbox",
-              "postman",
-              "dashboard/index"
-            ]
+            "group": "Introduction",
+            "pages": ["overview", "sandbox", "postman", "dashboard"]
           },
           {
             "group": "Core concepts",
@@ -179,7 +173,7 @@
               {
                 "group": "KYC",
                 "pages": [
-                  "kyc/index",
+                  "kyc",
                   "kyc/kyc-requirements",
                   "kyc/kyc-status",
                   "kyc/kyb-status"
@@ -188,7 +182,7 @@
               {
                 "group": "Rails",
                 "pages": [
-                  "rails/index",
+                  "rails",
                   "rails/usd",
                   "rails/global-network",
                   "rails/africa"
@@ -214,7 +208,7 @@
               {
                 "group": "Webhooks",
                 "pages": [
-                  "webhooks/index",
+                  "webhooks",
                   "webhooks/user-events",
                   "webhooks/kyc-events",
                   "webhooks/wallet-events",
@@ -291,20 +285,37 @@
         ]
       },
       {
+        "tab": "Guides",
+        "pages": [
+          {
+            "group": "Get started",
+            "pages": ["guides/quickstart"]
+          },
+          {
+            "group": "Recipes",
+            "pages": [
+              "guides/remittances",
+              "guides/global-transfers",
+              "guides/split-payments"
+            ]
+          }
+        ]
+      },
+      {
         "tab": "Postman",
         "href": "https://www.postman.com/hifi-developers/workspace/hifi-developers/collection/36482019-965415fa-8dd5-4d2c-a4ca-068478dce9d9?action=share&source=copy-link&creator=34328055"
       },
       {
         "tab": "API Reference",
-        "openapi": "https://production.hifibridge.com/api/v2/openapi.json",
+        "openapi": "openapi.json",
         "pages": [
           {
-            "group": "Get started",
+            "group": "Overview",
             "pages": ["api/authentication", "api/responses", "api/errors"]
           },
           {
             "group": "Endpoints",
-            "openapi": "https://production.hifibridge.com/api/v2/openapi.json",
+            "openapi": "openapi.json",
             "pages": [
               {
                 "group": "Common",
@@ -513,10 +524,6 @@
       "destination": "/features/settlement-rules"
     },
     {
-      "source": "/guides/quickstart",
-      "destination": "/quickstart"
-    },
-    {
       "source": "/docs/api/postman",
       "destination": "/postman"
     },
@@ -573,10 +580,6 @@
       "destination": "/compliance/documents"
     },
     {
-      "source": "/docs/compliance/documents/index",
-      "destination": "/compliance/documents"
-    },
-    {
       "source": "/docs/compliance/documents/proof-of-address",
       "destination": "/compliance/documents/proof-of-address"
     },
@@ -590,10 +593,6 @@
     },
     {
       "source": "/docs/dashboard",
-      "destination": "/dashboard"
-    },
-    {
-      "source": "/docs/dashboard/index",
       "destination": "/dashboard"
     },
     {
@@ -633,15 +632,7 @@
       "destination": "/guides"
     },
     {
-      "source": "/docs/guides/index",
-      "destination": "/guides"
-    },
-    {
       "source": "/docs",
-      "destination": "/"
-    },
-    {
-      "source": "/docs/index",
       "destination": "/"
     },
     {
@@ -653,8 +644,12 @@
       "destination": "/postman"
     },
     {
+      "source": "/quickstart",
+      "destination": "/guides/quickstart"
+    },
+    {
       "source": "/docs/quickstart",
-      "destination": "/quickstart"
+      "destination": "/guides/quickstart"
     },
     {
       "source": "/docs/rails/africa",
@@ -666,10 +661,6 @@
     },
     {
       "source": "/docs/rails",
-      "destination": "/rails"
-    },
-    {
-      "source": "/docs/rails/index",
       "destination": "/rails"
     },
     {
@@ -714,10 +705,6 @@
     },
     {
       "source": "/docs/references/business-industries",
-      "destination": "/references/business-industries"
-    },
-    {
-      "source": "/docs/references/business-industries/index",
       "destination": "/references/business-industries"
     },
     {
@@ -805,10 +792,6 @@
       "destination": "/users"
     },
     {
-      "source": "/docs/users/index",
-      "destination": "/users"
-    },
-    {
       "source": "/docs/users/kyc",
       "destination": "/users/kyc"
     },
@@ -825,19 +808,11 @@
       "destination": "/wallets"
     },
     {
-      "source": "/docs/wallets/index",
-      "destination": "/wallets"
-    },
-    {
       "source": "/docs/webhooks/account-events",
       "destination": "/webhooks/account-events"
     },
     {
       "source": "/docs/webhooks",
-      "destination": "/webhooks"
-    },
-    {
-      "source": "/docs/webhooks/index",
       "destination": "/webhooks"
     },
     {
