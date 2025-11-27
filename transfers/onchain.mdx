@@ -9,10 +9,10 @@ sidebarTitle: "Onchain"
 
 HIFI supports two types of wallet transfers:
 
-| Type                | Description                                              | Best For                                    |
-| :------------------ | :------------------------------------------------------- | :------------------------------------------ |
-| **Single Transfer** | Send to one recipient                                    | Individual payments, one-time transactions  |
-| **Batch Transfer**  | Send to up to 50 recipients in a single transaction      | Payroll, airdrops, bulk distributions       |
+| Type                | Description                                         | Best For                                   |
+| :------------------ | :-------------------------------------------------- | :----------------------------------------- |
+| **Single Transfer** | Send to one recipient                               | Individual payments, one-time transactions |
+| **Batch Transfer**  | Send to up to 50 recipients in a single transaction | Payroll, airdrops, bulk distributions      |
 
 ## Creating Single Transfers
 
@@ -54,11 +54,8 @@ curl -X POST "https://sandbox.hifibridge.com/v2/wallets/transfers" \
     "requestId": "b51fb3bb-8a48-5cfa-cc2g-c86g2589cdd7"
   }'
 ```
-</CodeGroup>
 
-<Warning>
-**External Wallet Registration:** Before sending to external wallet addresses, you must register them using the [External Wallets API](https://docs.hifibridge.com/api-reference/wallet/add-external-wallets-to-a-user). Unregistered addresses will cause the transfer to fail.
-</Warning>
+</CodeGroup>
 
 The response contains the transfer details:
 
@@ -98,11 +95,14 @@ The response contains the transfer details:
 </Accordion>
 
 <ResponseField name="transferDetails.id" type="string">
-  Unique transfer ID. Use this to check status using the [Retrieve a crypto transfer](https://docs.hifibridge.com/api-reference/crypto-transfer/retrieve-a-crypto-transfer) endpoint.
+  Unique transfer ID. Use this to check status using the [Retrieve a crypto
+  transfer](https://docs.hifibridge.com/api-reference/crypto-transfer/retrieve-a-crypto-transfer)
+  endpoint.
 </ResponseField>
 
 <ResponseField name="transferDetails.status" type="string">
-  Transfer status. Progression: `CREATED` → `INITIATED` → `PENDING` → `COMPLETED`. See [Transaction Status](#transaction-status) for details.
+  Transfer status. Progression: `CREATED` → `INITIATED` → `PENDING` →
+  `COMPLETED`. See [Transaction Status](#transaction-status) for details.
 </ResponseField>
 
 <ResponseField name="transferDetails.source" type="object">
@@ -110,7 +110,8 @@ The response contains the transfer details:
 </ResponseField>
 
 <ResponseField name="transferDetails.destination" type="object">
-  Details about the recipient including wallet address and user information (if HIFI user).
+  Details about the recipient including wallet address and user information (if
+  HIFI user).
 </ResponseField>
 
 <ResponseField name="transferDetails.amount" type="number">
@@ -118,11 +119,14 @@ The response contains the transfer details:
 </ResponseField>
 
 <ResponseField name="transferDetails.receipt" type="object">
-  Blockchain transaction receipt. Contains `transactionHash` and `userOpHash` once the transfer is confirmed on-chain.
+  Blockchain transaction receipt. Contains `transactionHash` and `userOpHash`
+  once the transfer is confirmed on-chain.
 </ResponseField>
 
 <Info>
-For detailed response field documentation, see the [Create Crypto Transfer](https://docs.hifibridge.com/api-reference/crypto-transfer/create-a-crypto-transfer) API reference.
+  For detailed response field documentation, see the [Create Crypto
+  Transfer](https://docs.hifibridge.com/api-reference/crypto-transfer/create-a-crypto-transfer)
+  API reference.
 </Info>
 
 ## Creating Batch Transfers
@@ -154,7 +158,9 @@ curl -X POST "https://sandbox.hifibridge.com/v2/wallets/transfers/batch" \
 ```
 
 <Warning>
-**External Wallet Registration:** External wallet addresses in batch transfers must be registered before use. Register them using the [External Wallets API](https://docs.hifibridge.com/api-reference/wallet/add-external-wallets-to-a-user).
+  **External Wallet Registration:** External wallet addresses in batch transfers
+  must be registered before use. Register them using the [External Wallets
+  API](https://docs.hifibridge.com/api-reference/wallet/add-external-wallets-to-a-user).
 </Warning>
 
 Let's take a look at the response:
@@ -202,11 +208,15 @@ Let's take a look at the response:
 </Accordion>
 
 <ResponseField name="transferDetails.id" type="string">
-  Unique batch transfer ID. Use this to check status using the [Retrieve a crypto transfer](https://docs.hifibridge.com/api-reference/crypto-transfer/retrieve-a-crypto-transfer) endpoint.
+  Unique batch transfer ID. Use this to check status using the [Retrieve a
+  crypto
+  transfer](https://docs.hifibridge.com/api-reference/crypto-transfer/retrieve-a-crypto-transfer)
+  endpoint.
 </ResponseField>
 
 <ResponseField name="transferDetails.status" type="string">
-  Batch transfer status. Progression: `CREATED` → `INITIATED` → `PENDING` → `COMPLETED`. See [Transaction Status](#transaction-status) for details.
+  Batch transfer status. Progression: `CREATED` → `INITIATED` → `PENDING` →
+  `COMPLETED`. See [Transaction Status](#transaction-status) for details.
 </ResponseField>
 
 <ResponseField name="transferDetails.source" type="object">
@@ -214,35 +224,41 @@ Let's take a look at the response:
 </ResponseField>
 
 <ResponseField name="transferDetails.destination.batch" type="array">
-  Array of destination recipients. Each item contains `amount`, optional `userId` (for HIFI users), and `walletAddress`.
+  Array of destination recipients. Each item contains `amount`, optional
+  `userId` (for HIFI users), and `walletAddress`.
 </ResponseField>
 
 <ResponseField name="transferDetails.receipt" type="object">
-  Blockchain transaction receipt. Contains `transactionHash` and `userOpHash` once the transfer is confirmed on-chain.
+  Blockchain transaction receipt. Contains `transactionHash` and `userOpHash`
+  once the transfer is confirmed on-chain.
 </ResponseField>
 
 <Info>
-For detailed field documentation, see the [Create Batch Transfer](https://docs.hifibridge.com/api-reference/crypto-transfer/create-a-batch-transfer) API reference.
+  For detailed field documentation, see the [Create Batch
+  Transfer](https://docs.hifibridge.com/api-reference/crypto-transfer/create-a-batch-transfer)
+  API reference.
 </Info>
 
 ## Transaction Status
 
 Wallet transfers progress through several statuses:
 
-| Status              | Description                                                       |
-| :------------------ | :---------------------------------------------------------------- |
-| **NOT_INITIATED**   | Transfer not submitted due to validation error                    |
-| **CREATED**         | Transfer request created and awaiting processing                  |
-| **INITIATED**       | Transfer submitted to blockchain                                  |
-| **PENDING**         | Transaction awaiting on-chain confirmation                        |
-| **COMPLETED**       | Transfer successfully confirmed on-chain                          |
-| **FAILED**          | Transfer failed (check `failedReason` for details)                |
-| **UNKNOWN**         | Transfer status could not be determined                           |
+| Status            | Description                                        |
+| :---------------- | :------------------------------------------------- |
+| **NOT_INITIATED** | Transfer not submitted due to validation error     |
+| **CREATED**       | Transfer request created and awaiting processing   |
+| **INITIATED**     | Transfer submitted to blockchain                   |
+| **PENDING**       | Transaction awaiting on-chain confirmation         |
+| **COMPLETED**     | Transfer successfully confirmed on-chain           |
+| **FAILED**        | Transfer failed (check `failedReason` for details) |
+| **UNKNOWN**       | Transfer status could not be determined            |
 
 ## Tracking Transfers
 
 <Note>
-**Status Updates:** Subscribe to `WALLET.TRANSFER.UPDATE` webhook events to receive real-time status notifications. See [Webhooks](/docs/webhooks/wallet) for setup instructions.
+  **Status Updates:** Subscribe to `WALLET.TRANSFER.UPDATE` webhook events to
+  receive real-time status notifications. See [Webhooks](/docs/webhooks/wallet)
+  for setup instructions.
 </Note>
 
 Monitor transfer status using the [Retrieve Crypto Transfer](https://docs.hifibridge.com/api-reference/crypto-transfer/retrieve-a-crypto-transfer) endpoint. The response structure matches the create endpoint shown above.
@@ -265,7 +281,9 @@ For organizations requiring multi-party authorization, all transfers support an 
     Set `requireApproval: true` when creating a transfer.
   </Step>
   <Step title="Review pending transfer">
-    The transfer enters `PENDING_APPROVAL` status. Dashboard admins are notified via email and webhook to approve or reject the transfer. Any admin can make the decision.
+    The transfer enters `PENDING_APPROVAL` status. Dashboard admins are notified
+    via email and webhook to approve or reject the transfer. Any admin can make
+    the decision.
   </Step>
   <Step title="Execution or rejection">
     If approved, the transfer is executed. If rejected, it's cancelled.
@@ -322,7 +340,8 @@ When approval is required, the response includes approval details:
 </Accordion>
 
 <ResponseField name="transferDetails.status" type="string">
-  Transfer status. When `requireApproval: true` is set, the status will be `PENDING_APPROVAL` until approved.
+  Transfer status. When `requireApproval: true` is set, the status will be
+  `PENDING_APPROVAL` until approved.
 </ResponseField>
 
 <ResponseField name="transferDetails.receipt.approval" type="object">
@@ -340,11 +359,13 @@ When approval is required, the response includes approval details:
     <ResponseField name="votes" type="array">
       Array of approval votes. Each vote contains `approverId`, `vote` (APPROVE/REJECT), optional `comment`, and `createdAt`.
     </ResponseField>
+
   </Expandable>
 </ResponseField>
 
 <Note>
-**Configuring Approvers:** Manage your team roles in the HIFI Dashboard. Members can create transfers, but only admins can approve.
+  **Configuring Approvers:** Manage your team roles in the HIFI Dashboard.
+  Members can create transfers, but only admins can approve.
 </Note>
 
 ## Key Concepts
@@ -358,14 +379,13 @@ When approval is required, the response includes approval details:
     </Warning>
   </Accordion>
 
-  <Accordion title="Batch Transfer Limits">
-    Batch transfers have the following constraints:
-    - **Maximum recipients:** 50 per batch
-    - **Supported chains:** Currently POLYGON only
-    - **Supported currencies:** USDC, USDT
-    
-    If you need to send to more than 50 recipients, create multiple batches.
-  </Accordion>
+{" "}
+<Accordion title="Batch Transfer Limits">
+  Batch transfers have the following constraints: - **Maximum recipients:** 50
+  per batch - **Supported chains:** Currently POLYGON only - **Supported
+  currencies:** USDC, USDT If you need to send to more than 50 recipients,
+  create multiple batches.
+</Accordion>
 
   <Accordion title="Transaction Receipts">
     The `receipt` object provides blockchain verification:
