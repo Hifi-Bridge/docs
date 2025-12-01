@@ -2,18 +2,15 @@
 title: "Fiat Accounts"
 ---
 
-The **Fiat Account Rail** (`fiat_account`) is a custodial fiat account offering for end users. It enables users to deposit fiat currency into a personal account via SWIFT and then hold or send that balance. For example, an end user might SWIFT in $100 into their HIFI fiat account. Later, they could send $40 to a beneficiary's bank account (e.g., a payroll payout to an employee) via SWIFT.
+**Fiat Accounts** are a custodial fiat account offering. They enable users to deposit fiat currency into a personal account via domestic rails (WIRE, ACH) or international SWIFT and then hold or send that balance to beneficiaries at a later date.
 
-<Warning>
-  **Rail Unlock Required:** Users must unlock the `fiat_account` rail before they can create fiat accounts. This is a separate rail from the USD Rail and requires its own KYC/KYB verification. See [Rails Overview](/docs/rails) for more information about unlocking rails.
-</Warning>
 
 ## Unlocking the Fiat Account Rail
 
-Before users can create fiat accounts, they must unlock the `fiat_account` rail. This requires completing KYC (for individuals) or KYB (for businesses) verification specific to this rail.
+Before users can create fiat accounts, they must unlock this feature. This requires completing KYC (for individuals) or KYB (for businesses) verification specific to this feature.
 
 <Info>
-  The Fiat Account Rail is independent from other rails. Unlocking the USD Rail, Global Network Rail, or Africa Rail does not automatically unlock the Fiat Account Rail. Each rail requires separate verification.
+  The Fiat Account feature is independent from other kyc/kyb rail submissions. Unlocking the USD Rail, Global Network Rail, or Africa Rail does not automatically unlock the ability for a user to create a fiat account.
 </Info>
 
 ## How Fiat Accounts Work
@@ -25,7 +22,7 @@ Fiat accounts provide a custodial solution for holding and managing fiat currenc
     Generate a fiat account for the user to hold fiat currency.
   </Step>
   <Step title="Deposit fiat">
-    Users can deposit funds via SWIFT transfers into their fiat account.
+    Users can deposit funds via domestic rails (WIRE, ACH) or international SWIFT into their fiat account.
   </Step>
   <Step title="Manage balance">
     Users can hold funds in their fiat account or send payouts to beneficiaries via SWIFT.
@@ -36,12 +33,14 @@ Fiat accounts provide a custodial solution for holding and managing fiat currenc
 
 ### Currently Available
 
-- **SWIFT Deposits**: Users can receive fiat currency via SWIFT transfers into their fiat account
+- **Domestic Deposits (WIRE, ACH)**: Users can receive fiat currency via domestic rails (WIRE, ACH) into their fiat account
+- **International SWIFT Deposits**: Users can receive fiat currency via international SWIFT transfers into their fiat account
 - **SWIFT Payouts**: Users can send funds from their fiat account to beneficiary bank accounts via SWIFT
 
 ### Coming Soon
 
 - **Domestic (US) Payouts**: Support for domestic US bank transfers will be available soon
+- **Visa Direct Payouts**: Support for Visa Direct payouts will be available soon
 
 ### In Development
 
