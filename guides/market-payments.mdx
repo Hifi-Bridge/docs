@@ -779,23 +779,23 @@ curl --request POST \
 **Request Fields:**
 
 <ResponseField name="requestId" type="string" required>
-  Unique identifier (UUID) for this transfer request to ensure idempotency
+  Unique identifier (UUID) for this transfer request to ensure idempotency.
 </ResponseField>
 
 <ResponseField name="currency" type="string" required>
-  Source cryptocurrency (e.g., **usdc**, **usdt**)
+  Source cryptocurrency (e.g., **usdc**, **usdt**).
 </ResponseField>
 
 <ResponseField name="amount" type="number" required>
-  Amount of USDC to send from User A's wallet
+  Amount of USDC to send from User A's wallet.
 </ResponseField>
 
 <ResponseField name="chain" type="string" required>
-  Blockchain network (e.g., POLYGON, ETHEREUM)
+  Blockchain network (e.g., POLYGON, ETHEREUM).
 </ResponseField>
 
 <ResponseField name="source" type="object" required>
-  Source of the transfer (User A)
+  Source of the transfer (User A).
   <Expandable title="properties">
     <ResponseField name="userId" type="string" required>
       User A’s user ID (sender)
@@ -896,18 +896,18 @@ Destination of the transfer (Business B)
             Business B’s user ID
         </ResponseField>
         <ResponseField name="walletAddress" type="string">
-            Business B’s wallet address. This address was provisioned upon creating the user.
+            Business B’s wallet address. This address was provisioned upon creating the user
         </ResponseField>
     </Expandable>
 
 </ResponseField>
 
 <ResponseField name="transferDetails.amount" type="number">
-  Amount of USDC being transferred
+  Amount of USDC being transferred.
 </ResponseField>
 
 <ResponseField name="transferDetails.approval" type="object">
-  Transfer approval details
+  Transfer approval details.
   <Expandable title="properties">
     <ResponseField name="approval.id" type="string">
       Unique transfer approval ID
@@ -954,6 +954,8 @@ In order to execute the offramp and complete this recipe, follow these steps:
 3. Confirm status is `OPEN_QUOTE` and save `transferDetails.id` to track and accept the quote.
 4. Accept the quote via `POST /v2/offramps/{id}/quote/accept` to convert stablecoins to fiat and initiate payout.
 5. Monitor statuses through crypto and fiat phases (e.g., `CRYPTO_INITIATED` → completion) using the receipt fields or webhooks.
+
+For detailed instructions on creating an offramp transaction, see our [Offramp Guide](/docs/transfers/offramps).
 
 ---
 

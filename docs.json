@@ -296,6 +296,7 @@
             "pages": [
               "guides/remittances",
               "guides/global-transfers",
+              "guides/market-payments",
               "guides/split-payments"
             ]
           }
