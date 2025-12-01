@@ -5,16 +5,12 @@ title: "Overview"
 Unlocking a **Rail** enables a user's access to specific payment networks and geographic regions. Each rail provides a specialized connection to specific markets and payment methods, enabling pay-ins (onramps) and pay-outs (offramps) for users and businesses.
 
 ## Available Rails
-HIFI supports three rails:
+HIFI supports four rails:
 
 - **USD Rail** – enables payins and payouts to the US
 - **Global Network Rail** – enables payouts to multiple regions
 - **Africa Rail** – enables payins and payouts to multiple countries
-
-<Info>
-**South America onramps are currently inactive**, but support will return soon.
-</Info>
-
+- **Fiat Account Rail** – enables custodial fiat accounts for holding and sending funds
 
 ## USD Rail
 
@@ -69,3 +65,20 @@ The Africa Rail enables payins and payouts to various African countries with loc
 - Zambia (ZMB)
 
 Learn more: [Africa Rail](/docs/rails/africa)
+
+## Fiat Account Rail
+
+The Fiat Account Rail (`fiat_account`) enables custodial fiat accounts for end users. Users can deposit fiat currency via SWIFT, hold balances, and send payouts to beneficiaries.
+
+**Payment Methods:**
+
+- SWIFT (deposits and payouts)
+
+**Features:**
+
+- Custodial fiat account holding
+- SWIFT deposits and payouts
+- Domestic (US) payouts (coming soon)
+- Stablecoin conversion (in development)
+
+Learn more: [Fiat Accounts](/docs/accounts/fiat-accounts)

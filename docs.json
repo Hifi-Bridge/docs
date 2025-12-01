@@ -192,7 +192,8 @@
                 "group": "Accounts",
                 "pages": [
                   "accounts/virtual-accounts",
-                  "accounts/offramp-accounts"
+                  "accounts/offramp-accounts",
+                  "accounts/fiat-accounts"
                 ]
               },
               {

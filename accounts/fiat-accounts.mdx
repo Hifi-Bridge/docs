@@ -1,0 +1,62 @@
+---
+title: "Fiat Accounts"
+---
+
+The **Fiat Account Rail** (`fiat_account`) is a custodial fiat account offering for end users. It enables users to deposit fiat currency into a personal account via SWIFT and then hold or send that balance. For example, an end user might SWIFT in $100 into their HIFI fiat account. Later, they could send $40 to a beneficiary's bank account (e.g., a payroll payout to an employee) via SWIFT.
+
+<Warning>
+  **Rail Unlock Required:** Users must unlock the `fiat_account` rail before they can create fiat accounts. This is a separate rail from the USD Rail and requires its own KYC/KYB verification. See [Rails Overview](/docs/rails) for more information about unlocking rails.
+</Warning>
+
+## Unlocking the Fiat Account Rail
+
+Before users can create fiat accounts, they must unlock the `fiat_account` rail. This requires completing KYC (for individuals) or KYB (for businesses) verification specific to this rail.
+
+<Info>
+  The Fiat Account Rail is independent from other rails. Unlocking the USD Rail, Global Network Rail, or Africa Rail does not automatically unlock the Fiat Account Rail. Each rail requires separate verification.
+</Info>
+
+## How Fiat Accounts Work
+
+Fiat accounts provide a custodial solution for holding and managing fiat currency:
+
+<Steps>
+  <Step title="Create the account">
+    Generate a fiat account for the user to hold fiat currency.
+  </Step>
+  <Step title="Deposit fiat">
+    Users can deposit funds via SWIFT transfers into their fiat account.
+  </Step>
+  <Step title="Manage balance">
+    Users can hold funds in their fiat account or send payouts to beneficiaries via SWIFT.
+  </Step>
+</Steps>
+
+## Available Features
+
+### Currently Available
+
+- **SWIFT Deposits**: Users can receive fiat currency via SWIFT transfers into their fiat account
+- **SWIFT Payouts**: Users can send funds from their fiat account to beneficiary bank accounts via SWIFT
+
+### Coming Soon
+
+- **Domestic (US) Payouts**: Support for domestic US bank transfers will be available soon
+
+### In Development
+
+- **Stablecoin Conversion**: The ability to convert fiat balances to stablecoins is currently in development
+
+## Use Cases
+
+Fiat accounts are ideal for:
+
+- **Payroll Disbursements**: Send payments to employees or contractors
+- **Business Payouts**: Distribute funds to vendors, partners, or beneficiaries
+- **Fiat Custody**: Hold fiat currency in a secure custodial account
+- **International Transfers**: Send money globally via SWIFT
+
+<Info>
+  Fiat accounts provide a secure way to hold and manage fiat currency before converting to stablecoins or sending payouts. The stablecoin conversion feature is currently in development and will be available in a future release.
+</Info>
+
