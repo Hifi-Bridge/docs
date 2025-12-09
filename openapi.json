@@ -24165,7 +24165,7 @@
           }
         ]
       },
-      "patch": {
+      "post": {
         "summary": "PATCH /v2/reporting/metrics/:id",
         "description": "",
         "tags": [
