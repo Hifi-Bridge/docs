@@ -24,23 +24,6 @@ This flow enables scalable split payment services with reduced processing costs 
 
 ---
 
-## Prerequisites
-
-Before you start, make sure you have:
-
-- **API keys** from the Dashboard ([Get API keys](/docs/api/authentication))
-- **A tool for making API calls** (cURL, Postman, or similar)
-- **Basic understanding of REST APIs**
-- **Your sandbox endpoint:** `https://sandbox.hifibridge.com`
-
-<Note>
-  All examples in this guide use the sandbox environment. When you're ready for
-  production, simply replace the sandbox URL with the production endpoint and
-  use your production API keys.
-</Note>
-
----
-
 ## What you'll build
 
 Here's what we'll accomplish in this recipe:
@@ -64,45 +47,28 @@ USD → User Bank Account → Virtual Account → USDC → Settlement Rule → A
 USD → User Bank Account → Virtual Account → USDC → Batch Transfer → Multiple Recipients
 ```
 
+<Note>
+  All examples in this guide use the sandbox environment. When you're ready for
+  production, simply replace the sandbox URL with the production endpoint and
+  use your production API keys.
+</Note>
+
 ---
 
 ## Generate API Keys
 
-Access to the HIFI API requires authentication via API keys. Generate your keys from the HIFI Dashboard before making any API calls.
+Access to the HIFI API requires authentication via API keys. Generate your keys from the HIFI Dashboard before making any API calls. Be sure to copy the key immediately as it’s only shown once.
+
+For a complete guide on API authentication, see our [Authentication Documentation](/docs/api/authentication).
 
 <AccordionGroup>
-  <Accordion title="Get Your API Keys">
-
-**Steps:**
-
-1. Navigate to [dashboard.hifibridge.com](https://dashboard.hifibridge.com/)
-2. Log in to your account
-3. Go to **Developer → API Keys**
-4. Click **Generate New Key**
-5. Select your environment: **Sandbox** (for testing) or **Production** (for live transactions)
-6. Copy the key immediately - it's only shown once
-
-**Important Security Notes:**
-
-- Store your API key securely (environment variables, secrets manager, etc.)
-- Never commit API keys to version control
-- Your key authenticates all HIFI API requests
-- If compromised, immediately revoke in the Dashboard and generate a new one
-
-<Warning>
-  **API keys are shown only once.** If you lose your key, you must revoke it and
-  generate a new one. There is no way to retrieve a lost key.
-</Warning>
-
-**Using Your API Key:**
+  <Accordion title="Using Your API Key">
 
 Include your API key in the `Authorization` header of all API requests:
 
 ```bash
 --header 'authorization: Bearer YOUR_API_KEY'
 ```
-
-For a complete guide on API authentication, see our [Authentication Documentation](/docs/api/authentication).
 
   </Accordion>
 </AccordionGroup>
@@ -118,19 +84,8 @@ Create a verified user account for the person making the split payment. Every us
   onboarding and KYC verification, see our [User Guide](/docs/users).
 </Note>
 
-### User Creation Flow
-
-Creating a user involves four steps:
-
-1. **Generate Terms of Service Link** - Get acceptance link for your customer
-2. **Create User** - Create the user account after TOS acceptance
-3. **Update KYC Information** - Provide required personal details
-4. **Submit KYC** - Submit for verification to unlock USD rail
-
 <AccordionGroup>
   <Accordion title="Generate Terms of Service Link">
-
-Before creating a user, they must accept HIFI's Terms of Service. Generate a unique acceptance link using the [Generate Terms of Service Link](https://docs.hifibridge.com/v2/reference/post_v2-tos-link) endpoint.
 
 **Request:**
 
@@ -147,14 +102,6 @@ curl --request POST \
 '
 ```
 
-**Request Fields:**
-
-<ResponseField name="idempotencyKey" type="string" required>
-  A unique UUID that becomes your `signedAgreementId` after the user accepts the
-  terms. Generate this using any [UUID
-  generator](https://www.uuidgenerator.net/).
-</ResponseField>
-
 **Response:**
 
 ```json
@@ -164,35 +111,9 @@ curl --request POST \
 }
 ```
 
-**Response Fields:**
-
-<ResponseField name="url" type="string">
-  The unique link where your user will review and accept HIFI's Terms of
-  Service.
-</ResponseField>
-
-<ResponseField name="signedAgreementId" type="string">
-  The agreement ID (same as your `idempotencyKey`). **Save this** - you'll need
-  it to create the user in the next step.
-</ResponseField>
-
-**What to do with this response:**
-
-1. **Direct your user to the `url`** - Present this link to your end user (via email, in your app, etc.)
-2. **Save the `signedAgreementId`** - You'll need this to create the user in the next step
-3. **Wait for acceptance** - The `signedAgreementId` becomes valid only after the user clicks "Accept"
-
-<Info>
-  **Real-time Notifications:** HIFI triggers the `TOS_LINK.UPDATE` webhook event
-  when the user accepts the terms, allowing you to proceed with user creation
-  immediately. [Learn about webhooks →](/docs/webhooks)
-</Info>
-
   </Accordion>
 
   <Accordion title="Create User">
-
-Once your user has accepted the Terms of Service, create the user account with the [Create User](https://docs.hifibridge.com/api-reference/user/create-a-user) endpoint.
 
 **Request:**
 
@@ -222,59 +143,6 @@ curl --request POST \
 '
 ```
 
-**Request Fields:**
-
-<ResponseField name="type" type="string" required>
-  User type. Use `individual` for personal accounts or `business` for business
-  accounts.
-</ResponseField>
-
-<ResponseField name="firstName" type="string" required>
-  User's first name.
-</ResponseField>
-
-<ResponseField name="lastName" type="string" required>
-  User's last name.
-</ResponseField>
-
-<ResponseField name="email" type="string" required>
-  User's email address.
-</ResponseField>
-
-<ResponseField name="dateOfBirth" type="string" required>
-  User's date of birth in YYYY-MM-DD format.
-</ResponseField>
-
-<ResponseField name="address" type="object" required>
-  User's residential address.
-
-  <Expandable title="properties">
-    <ResponseField name="addressLine1" type="string" required>
-      Street address
-    </ResponseField>
-    <ResponseField name="city" type="string" required>
-      City
-    </ResponseField>
-    <ResponseField name="stateProvinceRegion" type="string" required>
-      State, province, or region code
-    </ResponseField>
-    <ResponseField name="postalCode" type="string" required>
-      Postal/ZIP code
-    </ResponseField>
-    <ResponseField name="country" type="string" required>
-      Country code (ISO 3166-1 alpha-3)
-    </ResponseField>
-  </Expandable>
-</ResponseField>
-
-<ResponseField name="signedAgreementId" type="string" required>
-  The `signedAgreementId` from the Terms of Service acceptance.
-</ResponseField>
-
-<ResponseField name="requestId" type="string" required>
-  Unique identifier (UUID) for this request to ensure idempotency.
-</ResponseField>
-
 **Response:**
 
 ```json
@@ -296,56 +164,9 @@ curl --request POST \
 }
 ```
 
-✅ **User created successfully!**
-
-**Response Fields:**
-
-<ResponseField name="id" type="string">
-  The unique user ID. **Save this** - you'll use it for all future operations
-  with this user.
-</ResponseField>
-
-<ResponseField name="wallets" type="object">
-  Automatically provisioned wallet addresses on supported blockchain networks.
-
-  <Expandable title="properties">
-    <ResponseField name="INDIVIDUAL" type="object">
-      <Expandable title="properties">
-        <ResponseField name="ETHEREUM" type="object">
-          <Expandable title="properties">
-            <ResponseField name="address" type="string">
-              Wallet address on the Ethereum network
-            </ResponseField>
-          </Expandable>
-        </ResponseField>
-        <ResponseField name="POLYGON" type="object">
-          <Expandable title="properties">
-            <ResponseField name="address" type="string">
-              Wallet address on the Polygon network
-            </ResponseField>
-          </Expandable>
-        </ResponseField>
-      </Expandable>
-    </ResponseField>
-  </Expandable>
-</ResponseField>
-
-**What you get:**
-
-- **User ID** (`3b77cec8-1bb9-5ea0-91a1-e8c1411dd429`) - Save this for all future operations
-- **Wallet addresses** - Pre-provisioned on multiple blockchains, ready to use immediately
-
-<Info>
-  **Automatic Wallet Provisioning:** Every user automatically receives wallet
-  addresses on supported blockchain networks (Polygon, Ethereum, etc.). These
-  wallets are fully functional immediately - no additional setup required.
-</Info>
-
   </Accordion>
 
   <Accordion title="Update KYC Information">
-
-Provide the required personal information for KYC verification using the [Update KYC](https://docs.hifibridge.com/v2/reference/post_v2-users-userid-kyc) endpoint.
 
 **Request:**
 
@@ -364,24 +185,6 @@ curl --request POST \
 }
 '
 ```
-
-**Request Fields:**
-
-<ResponseField name="firstName" type="string">
-  User's first name (can be used to update if needed).
-</ResponseField>
-
-<ResponseField name="phone" type="string" required>
-  User's phone number with country code (E.164 format).
-</ResponseField>
-
-<ResponseField name="taxIdentificationNumber" type="string" required>
-  Tax identification number (e.g., SSN for US users).
-</ResponseField>
-
-<ResponseField name="nationality" type="string" required>
-  User's nationality (ISO 3166-1 alpha-3 country code).
-</ResponseField>
 
 **Response:**
 
@@ -409,20 +212,9 @@ curl --request POST \
 }
 ```
 
-✅ **Personal information updated!**
-
-<Note>
-  **Document Upload:** For a complete KYC submission in production, you'll also
-  need to upload identity documents (passport, driver's license, etc.). See the
-  [Quickstart Guide](/docs/quickstart) for detailed document upload
-  instructions.
-</Note>
-
   </Accordion>
 
   <Accordion title="Submit KYC for USD Rail">
-
-Submit the KYC application to unlock the USD rail using the [Submit KYC](https://docs.hifibridge.com/api-reference/kyc/submit-kyc) endpoint.
 
 **Request:**
 
@@ -438,12 +230,6 @@ curl --request POST \
 }
 '
 ```
-
-**Request Fields:**
-
-<ResponseField name="rails" type="string" required>
-  The currency rail to unlock. Use `USD` for US Dollar operations.
-</ResponseField>
 
 **Response:**
 
@@ -481,50 +267,6 @@ curl --request POST \
 }
 ```
 
-✅ **KYC approved! USD rail is now active.**
-
-**Response Fields:**
-
-<ResponseField name="status" type="string">
-  Overall KYC status. `ACTIVE` means the USD rail is unlocked and the user can
-  now onramp and offramp USD.
-</ResponseField>
-
-<ResponseField name="reviewResult" type="object">
-  High-level review outcome.
-
-  <Expandable title="properties">
-    <ResponseField name="reviewAnswer" type="string">
-      Review decision: `APPROVED`, `REJECTED`, or `PENDING`
-    </ResponseField>
-    <ResponseField name="rejectReasons" type="array">
-      List of reasons for rejection, if applicable
-    </ResponseField>
-  </Expandable>
-</ResponseField>
-
-<ResponseField name="details" type="object">
-  Detailed review results broken down by category.
-
-  <Expandable title="properties">
-    <ResponseField name="identity" type="object">
-      Review results for identity document verification
-    </ResponseField>
-    <ResponseField name="questionnaire" type="object">
-      Review results for KYC questionnaire responses
-    </ResponseField>
-    <ResponseField name="personalInfo" type="object">
-      Review results for personal information verification
-    </ResponseField>
-  </Expandable>
-</ResponseField>
-
-<Info>
-  **Sandbox Auto-Approval:** In sandbox, KYC applications are typically
-  automatically approved within minutes. In production, review typically takes
-  1-3 business days.
-</Info>
-
   </Accordion>
 </AccordionGroup>
 
@@ -545,8 +287,6 @@ Now that the user has passed KYC, create a **Virtual Account** for collecting th
 <AccordionGroup>
   <Accordion title="Create Virtual Account">
 
-A Virtual Account enables users to deposit USD from their bank, which automatically converts to USDC on Polygon for split payment distribution.
-
 **Request:**
 
 ```bash
@@ -563,20 +303,6 @@ curl --request POST \
 }
 '
 ```
-
-**Request Fields:**
-
-<ResponseField name="sourceCurrency" type="string" required>
-  Fiat currency to deposit. Use `usd` for US Dollars.
-</ResponseField>
-
-<ResponseField name="destinationCurrency" type="string" required>
-  Stablecoin to receive after conversion. Use `usdc` for USD Coin.
-</ResponseField>
-
-<ResponseField name="destinationChain" type="string" required>
-  Blockchain network for the stablecoin. Options: `POLYGON`, `ETHEREUM`
-</ResponseField>
 
 **Response:**
 
@@ -614,107 +340,6 @@ curl --request POST \
   }
 }
 ```
-
-✅ **Virtual account created!**
-
-**Response Fields:**
-
-<ResponseField name="id" type="string">
-  The unique virtual account ID. **Save this** for monitoring deposits.
-</ResponseField>
-
-<ResponseField name="status" type="string">
-  Account status. `activated` means it's ready to receive deposits.
-</ResponseField>
-
-<ResponseField name="provider" type="string">
-  Banking partner providing the virtual account infrastructure.
-</ResponseField>
-
-<ResponseField name="source" type="object">
-  Source configuration for fiat deposits.
-
-  <Expandable title="properties">
-    <ResponseField name="paymentRails" type="array">
-      Supported payment methods: `ach`, `wire`, `rtp` (Real-Time Payments)
-    </ResponseField>
-    <ResponseField name="currency" type="string">
-      The fiat currency this account accepts
-    </ResponseField>
-  </Expandable>
-</ResponseField>
-
-<ResponseField name="destination" type="object">
-  Destination configuration for crypto conversion.
-
-  <Expandable title="properties">
-    <ResponseField name="chain" type="string">
-      Blockchain where converted crypto will be sent
-    </ResponseField>
-    <ResponseField name="currency" type="string">
-      Stablecoin the user will receive
-    </ResponseField>
-    <ResponseField name="walletAddress" type="string">
-      User's wallet address where USDC will be deposited
-    </ResponseField>
-  </Expandable>
-</ResponseField>
-
-<ResponseField name="depositInstructions" type="object">
-  **Most Important:** Bank account details users need to send money to.
-
-  <Expandable title="properties">
-    <ResponseField name="bankName" type="string">
-      Name of the bank holding the virtual account
-    </ResponseField>
-    <ResponseField name="bankAddress" type="string">
-      Physical address of the bank
-    </ResponseField>
-    <ResponseField name="beneficiary" type="object">
-      <Expandable title="properties">
-        <ResponseField name="name" type="string">
-          Beneficiary name (must match user's name)
-        </ResponseField>
-        <ResponseField name="address" type="string">
-          Beneficiary address
-        </ResponseField>
-      </Expandable>
-    </ResponseField>
-    <ResponseField name="ach" type="object">
-      <Expandable title="properties">
-        <ResponseField name="routingNumber" type="string">
-          ACH routing number
-        </ResponseField>
-        <ResponseField name="accountNumber" type="string">
-          Virtual account number for ACH deposits
-        </ResponseField>
-      </Expandable>
-    </ResponseField>
-    <ResponseField name="wire" type="object">
-      <Expandable title="properties">
-        <ResponseField name="routingNumber" type="string">
-          Wire routing number
-        </ResponseField>
-        <ResponseField name="accountNumber" type="string">
-          Virtual account number for wire deposits
-        </ResponseField>
-      </Expandable>
-    </ResponseField>
-    <ResponseField name="instruction" type="string">
-      Deposit instructions and compliance requirements
-    </ResponseField>
-  </Expandable>
-</ResponseField>
-
-<Info>
-  **How to Use:** Provide these deposit instructions to your users through your
-  app/website. When they send money to this account via their bank, HIFI
-  automatically detects the deposit and converts it to USDC. You can then split
-  the payment using settlement rules (automatic) or batch transfers (on-demand).
-  For monitoring deposits, subscribe to `ONRAMP.CREATE` webhook events.
-</Info>
-
-For a complete guide on virtual accounts and onramping, see our [Virtual Accounts Guide](/docs/virtual-accounts).
 
   </Accordion>
 </AccordionGroup>
