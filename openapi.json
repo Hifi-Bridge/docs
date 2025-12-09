@@ -71,6 +71,10 @@
     {
       "name": "File",
       "description": "File endpoints"
+    },
+    {
+      "name": "Reporting",
+      "description": "Reporting and metrics endpoints"
     }
   ],
   "components": {
@@ -621,7 +625,9 @@
             "usd-hka",
             "usd-chn",
             "cny",
-            "hkd"
+            "hkd",
+            "sgd",
+            "usd-sgp"
           ]
         },
         "required": true
@@ -977,6 +983,12 @@
                 },
                 {
                   "$ref": "#/components/schemas/CreateChinaGlobalNetworkAccountBusiness"
+                },
+                {
+                  "$ref": "#/components/schemas/CreateSingaporeGlobalNetworkAccountIndividual"
+                },
+                {
+                  "$ref": "#/components/schemas/CreateSingaporeGlobalNetworkAccountBusiness"
                 },
                 {
                   "$ref": "#/components/schemas/CreateAfricaOnrampAccount"
@@ -1340,6 +1352,63 @@
           }
         }
       },
+      "CreateMetricBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/CreateMetricRequest"
+            },
+            "examples": {
+              "CreateMetricRequestExample": {
+                "$ref": "#/components/examples/CreateMetricRequestExample"
+              },
+              "CreateMetricRequestWithBreakdownsExample": {
+                "$ref": "#/components/examples/CreateMetricRequestWithBreakdownsExample"
+              }
+            }
+          }
+        }
+      },
+      "UpdateMetricBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/UpdateMetricRequest"
+            },
+            "examples": {
+              "UpdateMetricRequestNameExample": {
+                "$ref": "#/components/examples/UpdateMetricRequestNameExample"
+              },
+              "UpdateMetricRequestParamsExample": {
+                "$ref": "#/components/examples/UpdateMetricRequestParamsExample"
+              }
+            }
+          }
+        }
+      },
+      "PreviewMetricBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/PreviewMetricRequest"
+            },
+            "examples": {
+              "PreviewMetricRequestGrossVolumeExample": {
+                "$ref": "#/components/examples/PreviewMetricRequestGrossVolumeExample"
+              },
+              "PreviewMetricRequestGrossVolumeMonthlyExample": {
+                "$ref": "#/components/examples/PreviewMetricRequestGrossVolumeMonthlyExample"
+              },
+              "PreviewMetricRequestTransfersWithBreakdownsExample": {
+                "$ref": "#/components/examples/PreviewMetricRequestTransfersWithBreakdownsExample"
+              }
+            }
+          }
+        }
+      },
       "CreateFiatTransferBody": {
         "required": true,
         "content": {
@@ -1679,11 +1748,30 @@
         }
       },
       "NotFoundResponse": {
-        "description": "Not Found",
+        "description": "Resource not found",
         "content": {
           "application/json": {
             "schema": {
-              "$ref": "#/components/schemas/NotFound"
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "error"
+                  ]
+                },
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
             }
           }
         }
@@ -2416,6 +2504,189 @@
           }
         }
       },
+      "TemplateListResponse": {
+        "description": "Success",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/TemplateListResponse"
+            },
+            "examples": {
+              "TemplateListExample": {
+                "$ref": "#/components/examples/TemplateListExample"
+              }
+            }
+          }
+        }
+      },
+      "TemplateResponse": {
+        "description": "Success",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/TemplateResponse"
+            },
+            "examples": {
+              "TemplateExample": {
+                "$ref": "#/components/examples/TemplateExample"
+              }
+            }
+          }
+        }
+      },
+      "ParamOptionsResponse": {
+        "description": "Success",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ParamOptionsResponse"
+            },
+            "examples": {
+              "ParamOptionsUserIdsExample": {
+                "$ref": "#/components/examples/ParamOptionsUserIdsExample"
+              },
+              "ParamOptionsTransactionDirectionsExample": {
+                "$ref": "#/components/examples/ParamOptionsTransactionDirectionsExample"
+              }
+            }
+          }
+        }
+      },
+      "MetricResponse": {
+        "description": "Success",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/MetricResponse"
+            },
+            "examples": {
+              "MetricResponseExample": {
+                "$ref": "#/components/examples/MetricResponseExample"
+              }
+            }
+          }
+        }
+      },
+      "MetricListResponse": {
+        "description": "Success",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/MetricListResponse"
+            },
+            "examples": {
+              "MetricListExample": {
+                "$ref": "#/components/examples/MetricListExample"
+              }
+            }
+          }
+        }
+      },
+      "CreateMetricResponse": {
+        "description": "Metric created successfully",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/MetricResponse"
+            },
+            "examples": {
+              "CreateMetricResponseExample": {
+                "$ref": "#/components/examples/CreateMetricResponseExample"
+              }
+            }
+          }
+        }
+      },
+      "UpdateMetricResponse": {
+        "description": "Metric updated successfully",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/MetricResponse"
+            },
+            "examples": {
+              "UpdateMetricResponseExample": {
+                "$ref": "#/components/examples/UpdateMetricResponseExample"
+              }
+            }
+          }
+        }
+      },
+      "DeleteMetricResponse": {
+        "description": "Metric deleted successfully",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/MetricResponse"
+            },
+            "examples": {
+              "DeleteMetricResponseExample": {
+                "$ref": "#/components/examples/DeleteMetricResponseExample"
+              }
+            }
+          }
+        }
+      },
+      "MetricCalculationResponse": {
+        "description": "Metric calculation results",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/MetricCalculationResponse"
+            },
+            "examples": {
+              "PreviewMetricResponseGrossVolumeNoBreakdownsExample": {
+                "$ref": "#/components/examples/PreviewMetricResponseGrossVolumeNoBreakdownsExample"
+              },
+              "PreviewMetricResponseGrossVolumeMonthlyExample": {
+                "$ref": "#/components/examples/PreviewMetricResponseGrossVolumeMonthlyExample"
+              },
+              "PreviewMetricResponseTransfersWithBreakdownsExample": {
+                "$ref": "#/components/examples/PreviewMetricResponseTransfersWithBreakdownsExample"
+              },
+              "MetricResultsNewCustomersExample": {
+                "$ref": "#/components/examples/MetricResultsNewCustomersExample"
+              },
+              "MetricResultsGrossVolumeExample": {
+                "$ref": "#/components/examples/MetricResultsGrossVolumeExample"
+              }
+            }
+          }
+        }
+      },
+      "BadRequestResponse": {
+        "description": "Bad request - validation error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "error"
+                  ]
+                },
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "details": {
+                      "type": "object",
+                      "description": "Field-specific validation errors"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
       "FiatToFiatRecordResponse": {
         "description": "Success",
         "content": {
@@ -2587,7 +2858,8 @@
           "nigeriaGlobalNetwork",
           "mexicoGlobalNetwork",
           "hongKongGlobalNetwork",
-          "chinaGlobalNetwork"
+          "chinaGlobalNetwork",
+          "singaporeGlobalNetwork"
         ]
       },
       "CreateAccount": {
@@ -2658,6 +2930,11 @@
             "type": "object",
             "description": "Hong Kong Global Network account.",
             "$ref": "#/components/schemas/HongKongGlobalNetworkAccount"
+          },
+          "singaporeGlobalNetwork": {
+            "type": "object",
+            "description": "Singapore Global Network account.",
+            "$ref": "#/components/schemas/SingaporeGlobalNetworkAccount"
           }
         },
         "required": [
@@ -3061,10 +3338,26 @@
               "usd"
             ],
             "description": "The currency for the account"
+          },
+          "bankCode": {
+            "type": "string",
+            "description": "Bank code. Only required when transferType is chats or fps."
+          },
+          "transferType": {
+            "type": "string",
+            "enum": [
+              "chats",
+              "fps",
+              "swift"
+            ],
+            "description": "Transfer type of the account. `swift` is the default transfer type if not provided."
           }
         },
         "required": [
-          "currency"
+          "currency",
+          "bankName",
+          "accountNumber",
+          "swiftCode"
         ]
       },
       "CreateChinaGlobalNetworkAccountIndividual": {
@@ -3158,6 +3451,105 @@
             "enum": [
               "usd",
               "cny"
+            ],
+            "description": "The currency for the account"
+          }
+        },
+        "required": [
+          "currency"
+        ]
+      },
+      "CreateSingaporeGlobalNetworkAccountIndividual": {
+        "type": "object",
+        "title": "Singapore Global Network Individual Account",
+        "properties": {
+          "rail": {
+            "type": "string",
+            "enum": [
+              "offramp"
+            ]
+          },
+          "type": {
+            "type": "string",
+            "description": "The type of account to create. The value of this field should match the acount info object field submitted. eg. if the type is `us`, only the `us` account object should be filled.\n",
+            "enum": [
+              "singaporeGlobalNetwork"
+            ]
+          },
+          "accountHolder": {
+            "type": "object",
+            "description": "account holder information.",
+            "$ref": "#/components/schemas/GlobalNetworkIndividualAccountHolder"
+          },
+          "singaporeGlobalNetwork": {
+            "type": "object",
+            "description": "Singapore Global Network account.",
+            "$ref": "#/components/schemas/SingaporeGlobalNetworkAccount"
+          }
+        },
+        "required": [
+          "rail",
+          "type",
+          "accountHolder",
+          "singaporeGlobalNetwork"
+        ]
+      },
+      "CreateSingaporeGlobalNetworkAccountBusiness": {
+        "type": "object",
+        "title": "Singapore Global Network Business Account",
+        "properties": {
+          "rail": {
+            "type": "string",
+            "enum": [
+              "offramp"
+            ]
+          },
+          "type": {
+            "type": "string",
+            "description": "The type of account to create. The value of this field should match the acount info object field submitted. eg. if the type is `us`, only the `us` account object should be filled.\n",
+            "enum": [
+              "singaporeGlobalNetwork"
+            ]
+          },
+          "accountHolder": {
+            "type": "object",
+            "description": "account holder information.",
+            "$ref": "#/components/schemas/GlobalNetworkBusinessAccountHolder"
+          },
+          "singaporeGlobalNetwork": {
+            "type": "object",
+            "description": "Singapore Global Network account.",
+            "$ref": "#/components/schemas/SingaporeGlobalNetworkAccount"
+          }
+        },
+        "required": [
+          "rail",
+          "type",
+          "accountHolder",
+          "singaporeGlobalNetwork"
+        ]
+      },
+      "SingaporeGlobalNetworkAccount": {
+        "type": "object",
+        "title": "Singapore Global Network Account",
+        "properties": {
+          "bankName": {
+            "type": "string",
+            "description": "Bank name for the account"
+          },
+          "accountNumber": {
+            "type": "string",
+            "description": "Bank account number"
+          },
+          "swiftCode": {
+            "type": "string",
+            "description": "Bank code"
+          },
+          "currency": {
+            "type": "string",
+            "enum": [
+              "usd",
+              "sgd"
             ],
             "description": "The currency for the account"
           }
@@ -3691,9 +4083,10 @@
             "type": "string",
             "enum": [
               "ach",
-              "wire"
+              "wire",
+              "swift"
             ],
-            "description": "The type of transfer this account facilitates. `rtp` and `swift` will come shortly.\n"
+            "description": "The type of transfer this account facilitates. `rtp` will come shortly.\n"
           },
           "accountType": {
             "type": "string",
@@ -4350,6 +4743,12 @@
           "bankName": {
             "type": "string"
           },
+          "isValid": {
+            "type": "boolean"
+          },
+          "reason": {
+            "type": "string"
+          },
           "rail": {
             "type": "object",
             "properties": {
@@ -4468,6 +4867,14 @@
           },
           "accountHolder": {
             "$ref": "#/components/schemas/UsAccountHolder"
+          },
+          "isValid": {
+            "type": "boolean",
+            "description": "Indicates if the account is valid"
+          },
+          "reason": {
+            "type": "string",
+            "description": "Reason for invalidity, if applicable"
           },
           "us": {
             "type": "object",
@@ -10508,6 +10915,10 @@
           "wireMessage": {
             "type": "string",
             "description": "a message to include when offramping through WIRE transfer. \n\nit can be at most 4 lines, each with a max length of 35 char according to the Fedwire standard.\n"
+          },
+          "swiftReference": {
+            "type": "string",
+            "description": "A reference message to include when offramping through SWIFT transfer that is mainly use to indicate the purpose of payment. \n\nit can be at most 12 characters.\n"
           }
         },
         "required": [
@@ -11371,7 +11782,118 @@
           "currency": {
             "type": "string",
             "enum": [
-              "usd"
+              "usd",
+              "cny"
+            ],
+            "description": "fiat currency"
+          },
+          "accountId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "account that is receiving the fiat currency"
+          },
+          "userId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "user who is receiving the fiat"
+          },
+          "paymentReference": {
+            "type": "string",
+            "description": "a reference message to include when offramping.\n"
+          }
+        },
+        "required": [
+          "currency",
+          "accountId"
+        ]
+      },
+      "CreateSingaporeGlobalNetworkOfframp": {
+        "type": "object",
+        "title": "Offramp Global Network (SGP)",
+        "properties": {
+          "requestId": {
+            "type": "string",
+            "description": "unique identifier for the request (recommend using uuid v4)"
+          },
+          "purposeOfPayment": {
+            "type": "string",
+            "enum": [
+              "invoice_payments",
+              "payment_for_services",
+              "payment_for_software",
+              "payment_for_imported_goods",
+              "travel_services",
+              "transfer_to_own_account",
+              "repayment_of_loans",
+              "payroll",
+              "payment_of_property_rental",
+              "information_service_charges",
+              "advertising_and_public_relations",
+              "royalty_and_ip_fees",
+              "financial_service_fees",
+              "advisory_and_consulting_fees",
+              "representative_office_expenses",
+              "tax_payment",
+              "transportation_fees",
+              "construction_costs",
+              "insurance_premium",
+              "offline_goods_trade",
+              "insurance_claims",
+              "remittance_to_family_or_friends",
+              "education_expenses",
+              "medical_treatment",
+              "donations",
+              "mutual_fund_investment",
+              "currency_exchange",
+              "advance_payment_for_goods",
+              "merchant_settlement",
+              "repatriation_fund_settlement"
+            ]
+          },
+          "description": {
+            "type": "string"
+          },
+          "source": {
+            "type": "object",
+            "description": "offramp source",
+            "$ref": "#/components/schemas/OfframpSource"
+          },
+          "destination": {
+            "type": "object",
+            "description": "offramp destination",
+            "$ref": "#/components/schemas/SingaporeOfframpDestination"
+          },
+          "fee": {
+            "type": "object",
+            "description": "custom offramp fee, omit if no fee is charged",
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OfframpFee"
+              }
+            ]
+          }
+        },
+        "required": [
+          "requestId",
+          "source",
+          "destination"
+        ]
+      },
+      "SingaporeOfframpDestination": {
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "number",
+            "format": "float",
+            "minimum": 0,
+            "description": "amount of fiat currency to receive"
+          },
+          "currency": {
+            "type": "string",
+            "enum": [
+              "usd",
+              "sgd"
             ],
             "description": "fiat currency"
           },
@@ -12039,7 +12561,9 @@
               "usd-hka",
               "usd-chn",
               "cny",
-              "hkd"
+              "hkd",
+              "sgd",
+              "usd-sgp"
             ],
             "description": "target currency"
           },
@@ -15697,6 +16221,581 @@
           "nextCursor": {
             "type": "string",
             "description": "The `createdAt` timestamp of the last record in the current page. Pass this as `createdBefore` in the next request to retrieve the next page of results."
+          }
+        }
+      },
+      "MetricCalculationResponse": {
+        "type": "object",
+        "description": "Response from metric calculation endpoints. The structure of `data` array items\nvaries based on the `breakdowns` parameter in the request.\n\n**Base structure (no breakdowns):**\n- Each item has: `periodStart`, plus metric-specific fields (e.g., `grossVolume`, `transferCount`)\n\n**With breakdowns:**\n- Each item includes breakdown dimension fields (e.g., `transactionDirection`, `transferStatus`, `userId`)\n- Field names match the breakdown dimension names from the request\n\n**Example without breakdowns:**\n```json\n{\n  \"status\": \"success\",\n  \"data\": [\n    { \"periodStart\": \"2025-01-01T00:00:00Z\", \"grossVolume\": 1000.50 },\n    { \"periodStart\": \"2025-01-02T00:00:00Z\", \"grossVolume\": 2000.75 }\n  ],\n  \"metadata\": { ... }\n}\n```\n\n**Example with breakdowns: [\"transactionDirection\"]:**\n```json\n{\n  \"status\": \"success\",\n  \"data\": [\n    { \"periodStart\": \"2025-01-01T00:00:00Z\", \"transactionDirection\": \"onramp\", \"grossVolume\": 500.25 },\n    { \"periodStart\": \"2025-01-01T00:00:00Z\", \"transactionDirection\": \"offramp\", \"grossVolume\": 500.25 }\n  ],\n  \"metadata\": { ... }\n}\n```\n",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "success"
+            ],
+            "description": "Response status"
+          },
+          "data": {
+            "type": "array",
+            "description": "Array of metric calculation results. Each object structure depends on:\n1. The metric template (determines metric value fields)\n2. The breakdowns parameter (adds dimension fields)\n",
+            "items": {
+              "type": "object",
+              "description": "Metric result row. Contains:\n- `periodStart` (always present): ISO 8601 timestamp\n- Metric-specific fields (e.g., `grossVolume`, `transferCount`, `newCustomerCount`)\n- Breakdown dimension fields (if breakdowns specified): field names match breakdown dimension names\n\nAdditional properties may be present based on:\n- Metric template (adds template-specific value fields)\n- Breakdown dimensions (adds dimension fields matching breakdown names)\n",
+              "properties": {
+                "periodStart": {
+                  "type": "string",
+                  "format": "date-time",
+                  "description": "Start of the calculation period"
+                },
+                "grossVolume": {
+                  "type": "number",
+                  "description": "Gross volume amount (for GROSS_VOLUME template)"
+                },
+                "grossVolumeUsd": {
+                  "type": "number",
+                  "description": "Gross volume in USD (for GROSS_VOLUME template)"
+                },
+                "transferCount": {
+                  "type": "number",
+                  "description": "Number of transfers (for TRANSFERS template)"
+                },
+                "newCustomerCount": {
+                  "type": "number",
+                  "description": "Number of new customers (for NEW_CUSTOMERS template)"
+                },
+                "transactionDirection": {
+                  "type": "string",
+                  "enum": [
+                    "onramp",
+                    "offramp",
+                    "crypto_to_crypto"
+                  ],
+                  "description": "Transaction direction (present if \"transactionDirection\" in breakdowns)"
+                },
+                "transferStatus": {
+                  "type": "string",
+                  "enum": [
+                    "COMPLETED",
+                    "FAILED",
+                    "PENDING",
+                    "CANCELLED"
+                  ],
+                  "description": "Transfer status (present if \"transferStatus\" in breakdowns)"
+                },
+                "userId": {
+                  "type": "string",
+                  "format": "uuid",
+                  "description": "User ID (present if \"userId\" in breakdowns)"
+                }
+              },
+              "additionalProperties": true
+            }
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/MetricCalculationMetadata"
+          }
+        }
+      },
+      "MetricCalculationMetadata": {
+        "type": "object",
+        "description": "Metadata about the metric calculation",
+        "properties": {
+          "template": {
+            "type": "string",
+            "enum": [
+              "GROSS_VOLUME",
+              "TRANSFERS",
+              "NEW_CUSTOMERS"
+            ],
+            "description": "The metric template used"
+          },
+          "recordCount": {
+            "type": "integer",
+            "description": "Actual number of records returned"
+          },
+          "projectedRowCount": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Projected total row count (null if no breakdowns)"
+          },
+          "filledCount": {
+            "type": "integer",
+            "description": "Number of time periods filled with zero values"
+          },
+          "calculationInterval": {
+            "type": "string",
+            "enum": [
+              "day",
+              "week",
+              "month",
+              "quarter",
+              "year"
+            ],
+            "description": "The calculation interval used"
+          },
+          "dateRange": {
+            "type": "object",
+            "properties": {
+              "start": {
+                "type": "string",
+                "format": "date",
+                "description": "Start date (ISO 8601)"
+              },
+              "end": {
+                "type": "string",
+                "format": "date",
+                "description": "End date (ISO 8601)"
+              }
+            }
+          },
+          "filters": {
+            "type": "object",
+            "description": "Information about filters that were applied",
+            "additionalProperties": true
+          },
+          "breakdowns": {
+            "type": "object",
+            "nullable": true,
+            "description": "Breakdown metadata (null if no breakdowns specified)",
+            "properties": {
+              "dimensions": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "transactionDirection",
+                    "transferStatus",
+                    "userId"
+                  ]
+                },
+                "description": "List of breakdown dimensions used"
+              },
+              "dimensionCounts": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "integer"
+                },
+                "description": "Count of unique values per breakdown dimension.\nKeys match breakdown dimension names.\n"
+              }
+            }
+          },
+          "metric": {
+            "type": "string",
+            "nullable": true,
+            "description": "Metric name (only present for saved metrics, not previews)"
+          }
+        }
+      },
+      "Metric": {
+        "type": "object",
+        "description": "A saved metric definition",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique metric identifier"
+          },
+          "profileId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Profile ID that owns this metric"
+          },
+          "template": {
+            "type": "string",
+            "enum": [
+              "GROSS_VOLUME",
+              "TRANSFERS",
+              "NEW_CUSTOMERS"
+            ],
+            "description": "Metric template name"
+          },
+          "name": {
+            "type": "string",
+            "description": "User-defined metric name"
+          },
+          "params": {
+            "$ref": "#/components/schemas/MetricParams"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Creation timestamp"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Last update timestamp"
+          }
+        },
+        "required": [
+          "id",
+          "profileId",
+          "template",
+          "name",
+          "params",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "MetricParams": {
+        "type": "object",
+        "description": "Metric parameters. Structure varies by template, but common fields include:\n- Date range filters\n- Calculation interval\n- Breakdown dimensions\n- Template-specific filters\n\nAdditional properties may be present based on the metric template.\nEach template may define template-specific parameters.\n",
+        "properties": {
+          "createdAfter": {
+            "type": "string",
+            "format": "date",
+            "description": "Filter transactions created after this date (ISO 8601)"
+          },
+          "createdBefore": {
+            "type": "string",
+            "format": "date",
+            "description": "Filter transactions created before this date (ISO 8601)"
+          },
+          "calculationInterval": {
+            "type": "string",
+            "enum": [
+              "day",
+              "week",
+              "month",
+              "quarter",
+              "year"
+            ],
+            "description": "Time interval for aggregation"
+          },
+          "userIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Filter by specific user IDs"
+          },
+          "transactionDirections": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "onramp",
+                "offramp",
+                "crypto_to_crypto"
+              ]
+            },
+            "description": "Filter by transaction directions"
+          },
+          "transferStatuses": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "COMPLETED",
+                "FAILED",
+                "PENDING",
+                "CANCELLED"
+              ]
+            },
+            "description": "Filter by transfer statuses (for TRANSFERS template)"
+          },
+          "breakdowns": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "transactionDirection",
+                "transferStatus",
+                "userId"
+              ]
+            },
+            "maxItems": 2,
+            "description": "Dimensions to group results by. Maximum 2 breakdowns allowed.\nField names in response data will match these dimension names.\n"
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 500,
+            "default": 500,
+            "description": "Maximum number of records to return"
+          }
+        },
+        "additionalProperties": true
+      },
+      "CreateMetricRequest": {
+        "type": "object",
+        "description": "Request to create a new saved metric",
+        "properties": {
+          "template": {
+            "type": "string",
+            "enum": [
+              "GROSS_VOLUME",
+              "TRANSFERS",
+              "NEW_CUSTOMERS"
+            ],
+            "description": "Metric template name"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
+            "description": "User-defined metric name"
+          },
+          "params": {
+            "$ref": "#/components/schemas/MetricParams"
+          }
+        },
+        "required": [
+          "template",
+          "name",
+          "params"
+        ]
+      },
+      "UpdateMetricRequest": {
+        "type": "object",
+        "description": "Request to update an existing metric",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
+            "description": "Updated metric name"
+          },
+          "params": {
+            "$ref": "#/components/schemas/MetricParams",
+            "description": "Updated metric parameters"
+          }
+        }
+      },
+      "PreviewMetricRequest": {
+        "type": "object",
+        "description": "Request to preview a metric calculation without saving",
+        "properties": {
+          "template": {
+            "type": "string",
+            "enum": [
+              "GROSS_VOLUME",
+              "TRANSFERS",
+              "NEW_CUSTOMERS"
+            ],
+            "description": "Metric template name"
+          },
+          "params": {
+            "$ref": "#/components/schemas/MetricParams"
+          }
+        },
+        "required": [
+          "template",
+          "params"
+        ]
+      },
+      "MetricTemplate": {
+        "type": "object",
+        "description": "A metric template definition",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Template identifier"
+          },
+          "displayName": {
+            "type": "string",
+            "description": "Human-readable template name"
+          },
+          "description": {
+            "type": "string",
+            "description": "Template description"
+          },
+          "params": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MetricParamDefinition"
+            },
+            "description": "Available parameters for this template"
+          },
+          "supportsBreakdowns": {
+            "type": "boolean",
+            "description": "Whether this template supports breakdown dimensions"
+          },
+          "breakdownOptions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Available breakdown dimensions for this template"
+          }
+        }
+      },
+      "MetricParamDefinition": {
+        "type": "object",
+        "description": "Definition of a metric parameter",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Parameter name"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "date",
+              "string",
+              "array",
+              "enum",
+              "integer"
+            ],
+            "description": "Parameter data type"
+          },
+          "required": {
+            "type": "boolean",
+            "description": "Whether this parameter is required"
+          },
+          "description": {
+            "type": "string",
+            "description": "Parameter description"
+          },
+          "options": {
+            "type": "array",
+            "description": "Available options (for enum/array types)"
+          },
+          "constraints": {
+            "type": "object",
+            "description": "Validation constraints (e.g., min, max, maxItems)"
+          }
+        }
+      },
+      "ParamOptionsResponse": {
+        "type": "object",
+        "description": "Paginated list of parameter options",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "success"
+            ]
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "description": "Option value and label",
+              "properties": {
+                "value": {
+                  "description": "Option value (type varies by parameter)"
+                },
+                "label": {
+                  "type": "string",
+                  "description": "Human-readable option label"
+                }
+              }
+            }
+          },
+          "metadata": {
+            "type": "object",
+            "properties": {
+              "count": {
+                "type": "integer",
+                "description": "Total number of options"
+              },
+              "page": {
+                "type": "integer",
+                "description": "Current page number"
+              },
+              "limit": {
+                "type": "integer",
+                "description": "Items per page"
+              },
+              "totalPages": {
+                "type": "integer",
+                "description": "Total number of pages"
+              }
+            }
+          }
+        }
+      },
+      "MetricResponse": {
+        "type": "object",
+        "description": "Single metric response",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "success"
+            ]
+          },
+          "data": {
+            "$ref": "#/components/schemas/Metric"
+          },
+          "metadata": {
+            "type": "object"
+          }
+        }
+      },
+      "MetricListResponse": {
+        "type": "object",
+        "description": "List of metrics response",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "success"
+            ]
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Metric"
+            }
+          },
+          "metadata": {
+            "type": "object",
+            "properties": {
+              "count": {
+                "type": "integer"
+              },
+              "profileId": {
+                "type": "string",
+                "format": "uuid"
+              }
+            }
+          }
+        }
+      },
+      "TemplateResponse": {
+        "type": "object",
+        "description": "Single template response",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "success"
+            ]
+          },
+          "data": {
+            "$ref": "#/components/schemas/MetricTemplate"
+          },
+          "metadata": {
+            "type": "object"
+          }
+        }
+      },
+      "TemplateListResponse": {
+        "type": "object",
+        "description": "List of templates response",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "success"
+            ]
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MetricTemplate"
+            }
+          },
+          "metadata": {
+            "type": "object",
+            "properties": {
+              "count": {
+                "type": "integer"
+              }
+            }
           }
         }
       },
@@ -19567,6 +20666,1278 @@
           "nextCursor": "2025-02-03T17:15:31.927121+00:00"
         }
       },
+      "TemplateListExample": {
+        "summary": "List of all metric templates",
+        "value": {
+          "status": "success",
+          "data": [
+            {
+              "template": "GROSS_VOLUME",
+              "displayName": "Gross Volume",
+              "description": "Total combined USD-equivalent value of completed Onramp and Offramp transactions.",
+              "supportedParams": [
+                {
+                  "name": "createdAfter",
+                  "type": "date",
+                  "required": true,
+                  "multiple": false,
+                  "constraints": {
+                    "minDate": "2024-07-01",
+                    "maxDate": "2025-12-08"
+                  }
+                },
+                {
+                  "name": "createdBefore",
+                  "type": "date",
+                  "required": true,
+                  "multiple": false,
+                  "constraints": {
+                    "maxDate": "2025-12-08"
+                  }
+                },
+                {
+                  "name": "calculationInterval",
+                  "type": "enum",
+                  "required": true,
+                  "multiple": false,
+                  "options": [
+                    "day",
+                    "week",
+                    "month"
+                  ]
+                },
+                {
+                  "name": "transactionDirections",
+                  "type": "enum",
+                  "required": false,
+                  "multiple": true,
+                  "options": [
+                    "onramp",
+                    "offramp",
+                    "onchain"
+                  ]
+                },
+                {
+                  "name": "userIds",
+                  "type": "uuid",
+                  "required": false,
+                  "multiple": true,
+                  "optionsCount": 1000,
+                  "optionsTruncated": true,
+                  "optionsEndpoint": "/reporting/params/userIds/options"
+                },
+                {
+                  "name": "breakdowns",
+                  "type": "enum",
+                  "required": false,
+                  "multiple": true,
+                  "constraints": {
+                    "maxCount": 2
+                  }
+                },
+                {
+                  "name": "limit",
+                  "type": "number",
+                  "required": false,
+                  "multiple": false,
+                  "constraints": {
+                    "min": 1,
+                    "max": 10000
+                  }
+                }
+              ],
+              "rules": [
+                "createdBefore must be after createdAfter"
+              ],
+              "breakdownOptions": [
+                "transactionDirection",
+                "userId"
+              ]
+            },
+            {
+              "template": "TRANSFERS",
+              "displayName": "Transfers",
+              "description": "Aggregated count of transactions grouped by status and direction over time.",
+              "supportedParams": [
+                {
+                  "name": "createdAfter",
+                  "type": "date",
+                  "required": true,
+                  "multiple": false,
+                  "constraints": {
+                    "minDate": "2024-07-01",
+                    "maxDate": "2025-12-08"
+                  }
+                },
+                {
+                  "name": "createdBefore",
+                  "type": "date",
+                  "required": true,
+                  "multiple": false,
+                  "constraints": {
+                    "maxDate": "2025-12-08"
+                  }
+                },
+                {
+                  "name": "calculationInterval",
+                  "type": "enum",
+                  "required": true,
+                  "multiple": false,
+                  "options": [
+                    "day",
+                    "week",
+                    "month"
+                  ]
+                },
+                {
+                  "name": "transactionDirections",
+                  "type": "enum",
+                  "required": false,
+                  "multiple": true,
+                  "options": [
+                    "onramp",
+                    "offramp",
+                    "onchain"
+                  ]
+                },
+                {
+                  "name": "transferStatuses",
+                  "type": "enum",
+                  "required": false,
+                  "multiple": true,
+                  "options": [
+                    "AWAITING_FUNDS",
+                    "FIAT_INITIATED",
+                    "FIAT_PENDING",
+                    "FIAT_PROCESSED",
+                    "CRYPTO_INITIATED",
+                    "CRYPTO_PENDING",
+                    "FIAT_FAILED",
+                    "CRYPTO_FAILED",
+                    "QUOTE_FAILED",
+                    "NOT_INITIATED",
+                    "FIAT_RETURNED",
+                    "COMPLETED",
+                    "PENDING_APPROVAL",
+                    "INITIATED",
+                    "PENDING",
+                    "FAILED",
+                    "REJECTED"
+                  ]
+                },
+                {
+                  "name": "userIds",
+                  "type": "uuid",
+                  "required": false,
+                  "multiple": true,
+                  "optionsCount": 1000,
+                  "optionsTruncated": true,
+                  "optionsEndpoint": "/reporting/params/userIds/options"
+                },
+                {
+                  "name": "breakdowns",
+                  "type": "enum",
+                  "required": false,
+                  "multiple": true,
+                  "constraints": {
+                    "maxCount": 2
+                  }
+                },
+                {
+                  "name": "limit",
+                  "type": "number",
+                  "required": false,
+                  "multiple": false,
+                  "constraints": {
+                    "min": 1,
+                    "max": 10000
+                  }
+                }
+              ],
+              "rules": [
+                "createdBefore must be after createdAfter"
+              ],
+              "breakdownOptions": [
+                "transactionDirection",
+                "transferStatus",
+                "userId"
+              ]
+            },
+            {
+              "template": "NEW_CUSTOMERS",
+              "displayName": "New Customers",
+              "description": "Count of new unique end-users onboarded within the time period.",
+              "supportedParams": [
+                {
+                  "name": "createdAfter",
+                  "type": "date",
+                  "required": true,
+                  "multiple": false,
+                  "constraints": {
+                    "minDate": "2024-07-01",
+                    "maxDate": "2025-12-08"
+                  }
+                },
+                {
+                  "name": "createdBefore",
+                  "type": "date",
+                  "required": true,
+                  "multiple": false,
+                  "constraints": {
+                    "maxDate": "2025-12-08"
+                  }
+                },
+                {
+                  "name": "calculationInterval",
+                  "type": "enum",
+                  "required": true,
+                  "multiple": false,
+                  "options": [
+                    "day",
+                    "week",
+                    "month"
+                  ]
+                },
+                {
+                  "name": "limit",
+                  "type": "number",
+                  "required": false,
+                  "multiple": false,
+                  "constraints": {
+                    "min": 1,
+                    "max": 10000
+                  }
+                }
+              ],
+              "rules": [
+                "createdBefore must be after createdAfter"
+              ],
+              "breakdownOptions": null
+            }
+          ],
+          "metadata": {
+            "count": 3
+          }
+        }
+      },
+      "TemplateExample": {
+        "summary": "Single metric template (GROSS_VOLUME)",
+        "value": {
+          "status": "success",
+          "data": {
+            "template": "GROSS_VOLUME",
+            "displayName": "Gross Volume",
+            "description": "Total combined USD-equivalent value of completed Onramp and Offramp transactions.",
+            "supportedParams": [
+              {
+                "name": "createdAfter",
+                "type": "date",
+                "required": true,
+                "multiple": false,
+                "constraints": {
+                  "minDate": "2024-07-01",
+                  "maxDate": "2025-12-08"
+                }
+              },
+              {
+                "name": "createdBefore",
+                "type": "date",
+                "required": true,
+                "multiple": false,
+                "constraints": {
+                  "maxDate": "2025-12-08"
+                }
+              },
+              {
+                "name": "calculationInterval",
+                "type": "enum",
+                "required": true,
+                "multiple": false,
+                "options": [
+                  "day",
+                  "week",
+                  "month"
+                ]
+              },
+              {
+                "name": "transactionDirections",
+                "type": "enum",
+                "required": false,
+                "multiple": true,
+                "options": [
+                  "onramp",
+                  "offramp",
+                  "onchain"
+                ]
+              },
+              {
+                "name": "userIds",
+                "type": "uuid",
+                "required": false,
+                "multiple": true,
+                "optionsCount": 1000,
+                "optionsTruncated": true,
+                "optionsEndpoint": "/reporting/params/userIds/options"
+              },
+              {
+                "name": "breakdowns",
+                "type": "enum",
+                "required": false,
+                "multiple": true,
+                "constraints": {
+                  "maxCount": 2
+                }
+              },
+              {
+                "name": "limit",
+                "type": "number",
+                "required": false,
+                "multiple": false,
+                "constraints": {
+                  "min": 1,
+                  "max": 10000
+                }
+              }
+            ],
+            "rules": [
+              "createdBefore must be after createdAfter"
+            ],
+            "breakdownOptions": [
+              "transactionDirection",
+              "userId"
+            ]
+          },
+          "metadata": {}
+        }
+      },
+      "ParamOptionsUserIdsExample": {
+        "summary": "User IDs parameter options (paginated)",
+        "value": {
+          "status": "success",
+          "data": [
+            "f6a78498-0994-5bea-b5ab-7d40a231217a",
+            "c92f87e6-eaac-59a3-898f-d8c847553f5f",
+            "fb0b02ed-6bcc-5724-8269-dcaeb6474be2",
+            "b56ac719-efc3-5e40-b99f-2daf85d519dc",
+            "2bbbda5d-0464-5748-801a-dae6ae3dbad9"
+          ],
+          "metadata": {
+            "count": 5,
+            "page": 1,
+            "limit": 5,
+            "total": 1000,
+            "totalPages": 200,
+            "hasMore": true
+          }
+        }
+      },
+      "ParamOptionsTransactionDirectionsExample": {
+        "summary": "Transaction directions parameter options",
+        "value": {
+          "status": "success",
+          "data": [
+            "onramp",
+            "offramp",
+            "onchain"
+          ],
+          "metadata": {
+            "count": 3,
+            "page": 1,
+            "limit": 10,
+            "total": 3,
+            "totalPages": 1,
+            "hasMore": false
+          }
+        }
+      },
+      "MetricResponseExample": {
+        "summary": "Single saved metric",
+        "value": {
+          "status": "success",
+          "data": {
+            "id": "1154d700-bd7d-41d5-8676-87b541baa86e",
+            "profileId": "e4c758d7-5475-4505-ba15-e129db0a441f",
+            "template": "TRANSFERS",
+            "name": "Monthly Transfer Analysis",
+            "params": {
+              "createdAfter": "2025-01-01",
+              "createdBefore": "2025-12-01",
+              "calculationInterval": "month"
+            },
+            "createdAt": "2025-12-08T22:28:03.922Z",
+            "updatedAt": "2025-12-08T22:28:03.922Z"
+          },
+          "metadata": {}
+        }
+      },
+      "MetricListExample": {
+        "summary": "List of saved metrics",
+        "value": {
+          "status": "success",
+          "data": [
+            {
+              "id": "1154d700-bd7d-41d5-8676-87b541baa86e",
+              "profileId": "e4c758d7-5475-4505-ba15-e129db0a441f",
+              "template": "TRANSFERS",
+              "name": "Monthly Transfer Analysis",
+              "params": {
+                "createdAfter": "2025-01-01",
+                "createdBefore": "2025-12-01",
+                "calculationInterval": "month"
+              },
+              "createdAt": "2025-12-08T22:28:03.922Z",
+              "updatedAt": "2025-12-08T22:28:03.922Z"
+            },
+            {
+              "id": "d2872dce-d2d1-41ae-87a9-f773adbf97ca",
+              "profileId": "e4c758d7-5475-4505-ba15-e129db0a441f",
+              "template": "TRANSFERS",
+              "name": "Monthly Transfer Analysis",
+              "params": {
+                "breakdowns": [
+                  "transactionDirection"
+                ],
+                "createdAfter": "2025-01-01",
+                "createdBefore": "2025-12-01",
+                "transferStatuses": [
+                  "COMPLETED"
+                ],
+                "calculationInterval": "month",
+                "transactionDirections": [
+                  "onramp",
+                  "offramp"
+                ]
+              },
+              "createdAt": "2025-12-08T22:26:45.765Z",
+              "updatedAt": "2025-12-08T22:26:45.765Z"
+            },
+            {
+              "id": "9106f8e2-188f-4854-99fc-cb21ef6b998d",
+              "profileId": "e4c758d7-5475-4505-ba15-e129db0a441f",
+              "template": "GROSS_VOLUME",
+              "name": "Daily Revenue Report",
+              "params": {
+                "createdAfter": "2025-11-01",
+                "createdBefore": "2025-11-07",
+                "calculationInterval": "day",
+                "transactionDirections": [
+                  "onramp",
+                  "offramp"
+                ]
+              },
+              "createdAt": "2025-12-08T22:26:13.659Z",
+              "updatedAt": "2025-12-08T22:26:13.659Z"
+            }
+          ],
+          "metadata": {
+            "count": 12,
+            "profileId": "e4c758d7-5475-4505-ba15-e129db0a441f"
+          }
+        }
+      },
+      "CreateMetricRequestExample": {
+        "summary": "Create metric request (GROSS_VOLUME)",
+        "value": {
+          "template": "GROSS_VOLUME",
+          "name": "Daily Revenue Report",
+          "params": {
+            "createdAfter": "2025-11-01",
+            "createdBefore": "2025-11-07",
+            "calculationInterval": "day",
+            "transactionDirections": [
+              "onramp",
+              "offramp"
+            ]
+          }
+        }
+      },
+      "CreateMetricRequestWithBreakdownsExample": {
+        "summary": "Create metric request (TRANSFERS with breakdowns)",
+        "value": {
+          "template": "TRANSFERS",
+          "name": "Monthly Transfer Analysis",
+          "params": {
+            "createdAfter": "2025-01-01",
+            "createdBefore": "2025-12-01",
+            "calculationInterval": "month",
+            "transactionDirections": [
+              "onramp",
+              "offramp"
+            ],
+            "transferStatuses": [
+              "COMPLETED"
+            ],
+            "breakdowns": [
+              "transactionDirection"
+            ]
+          }
+        }
+      },
+      "CreateMetricResponseExample": {
+        "summary": "Created metric response",
+        "value": {
+          "status": "success",
+          "data": {
+            "id": "9106f8e2-188f-4854-99fc-cb21ef6b998d",
+            "profileId": "e4c758d7-5475-4505-ba15-e129db0a441f",
+            "template": "GROSS_VOLUME",
+            "name": "Daily Revenue Report",
+            "params": {
+              "createdAfter": "2025-11-01",
+              "createdBefore": "2025-11-07",
+              "calculationInterval": "day",
+              "transactionDirections": [
+                "onramp",
+                "offramp"
+              ]
+            },
+            "createdAt": "2025-12-08T22:26:13.659Z",
+            "updatedAt": "2025-12-08T22:26:13.659Z"
+          },
+          "metadata": {}
+        }
+      },
+      "UpdateMetricRequestNameExample": {
+        "summary": "Update metric name",
+        "value": {
+          "name": "An Updated Report Title"
+        }
+      },
+      "UpdateMetricRequestParamsExample": {
+        "summary": "Update metric parameters",
+        "value": {
+          "params": {
+            "calculationInterval": "week"
+          }
+        }
+      },
+      "UpdateMetricResponseExample": {
+        "summary": "Updated metric response",
+        "value": {
+          "status": "success",
+          "data": {
+            "id": "1154d700-bd7d-41d5-8676-87b541baa86e",
+            "profileId": "e4c758d7-5475-4505-ba15-e129db0a441f",
+            "template": "TRANSFERS",
+            "name": "An Updated Report Title",
+            "params": {
+              "createdAfter": "2025-01-01",
+              "createdBefore": "2025-12-01",
+              "calculationInterval": "week"
+            },
+            "createdAt": "2025-12-08T22:28:03.922Z",
+            "updatedAt": "2025-12-08T22:33:04.112Z"
+          },
+          "metadata": {}
+        }
+      },
+      "DeleteMetricResponseExample": {
+        "summary": "Deleted metric response",
+        "value": {
+          "status": "success",
+          "data": {
+            "id": "1154d700-bd7d-41d5-8676-87b541baa86e",
+            "profileId": "e4c758d7-5475-4505-ba15-e129db0a441f",
+            "template": "TRANSFERS",
+            "name": "An Updated Report Title",
+            "params": {
+              "createdAfter": "2025-01-01",
+              "createdBefore": "2025-12-01",
+              "calculationInterval": "week"
+            },
+            "createdAt": "2025-12-08T22:28:03.922Z",
+            "updatedAt": "2025-12-08T22:33:04.112Z"
+          },
+          "metadata": {}
+        }
+      },
+      "PreviewMetricRequestGrossVolumeExample": {
+        "summary": "Preview GROSS_VOLUME metric (no breakdowns)",
+        "value": {
+          "template": "GROSS_VOLUME",
+          "params": {
+            "createdAfter": "2025-11-01",
+            "createdBefore": "2025-11-07",
+            "calculationInterval": "day",
+            "transactionDirections": [
+              "onramp",
+              "offramp"
+            ]
+          }
+        }
+      },
+      "PreviewMetricResponseGrossVolumeNoBreakdownsExample": {
+        "summary": "GROSS_VOLUME calculation result (no breakdowns)",
+        "value": {
+          "status": "success",
+          "data": [
+            {
+              "periodStart": "2025-11-06",
+              "grossVolume": 0
+            },
+            {
+              "periodStart": "2025-11-05",
+              "grossVolume": 0
+            },
+            {
+              "periodStart": "2025-11-04",
+              "grossVolume": 0
+            },
+            {
+              "periodStart": "2025-11-03",
+              "grossVolume": 0
+            },
+            {
+              "periodStart": "2025-11-02",
+              "grossVolume": 0
+            },
+            {
+              "periodStart": "2025-11-01",
+              "grossVolume": 0
+            }
+          ],
+          "metadata": {
+            "template": "GROSS_VOLUME",
+            "recordCount": 6,
+            "projectedRowCount": null,
+            "filledCount": 6,
+            "calculationInterval": "day",
+            "dateRange": {
+              "start": "2025-11-01",
+              "end": "2025-11-07"
+            },
+            "filters": {
+              "createdAfter": {
+                "applied": "subset",
+                "specified": true,
+                "values": "2025-11-01"
+              },
+              "createdBefore": {
+                "applied": "subset",
+                "specified": true,
+                "values": "2025-11-07"
+              },
+              "calculationInterval": {
+                "applied": "subset",
+                "specified": true,
+                "values": "day"
+              },
+              "transactionDirections": {
+                "applied": "subset",
+                "specified": true,
+                "count": 2,
+                "values": [
+                  "onramp",
+                  "offramp"
+                ]
+              },
+              "userIds": {
+                "applied": "all",
+                "specified": false,
+                "count": 1000,
+                "note": "1000 total (list omitted for brevity)"
+              }
+            },
+            "breakdowns": null
+          }
+        }
+      },
+      "PreviewMetricRequestGrossVolumeMonthlyExample": {
+        "summary": "Preview GROSS_VOLUME metric (monthly interval)",
+        "value": {
+          "template": "GROSS_VOLUME",
+          "params": {
+            "createdAfter": "2025-01-01",
+            "createdBefore": "2025-12-01",
+            "calculationInterval": "month",
+            "transactionDirections": [
+              "onramp",
+              "offramp"
+            ]
+          }
+        }
+      },
+      "PreviewMetricResponseGrossVolumeMonthlyExample": {
+        "summary": "GROSS_VOLUME calculation result (monthly, with data)",
+        "value": {
+          "status": "success",
+          "data": [
+            {
+              "periodStart": "2025-11-01",
+              "grossVolume": 191
+            },
+            {
+              "periodStart": "2025-10-01",
+              "grossVolume": 124.05
+            },
+            {
+              "periodStart": "2025-09-01",
+              "grossVolume": 6707.86
+            },
+            {
+              "periodStart": "2025-08-01",
+              "grossVolume": 3066672.14
+            },
+            {
+              "periodStart": "2025-07-01",
+              "grossVolume": 199916.7
+            },
+            {
+              "periodStart": "2025-06-01",
+              "grossVolume": 24791
+            },
+            {
+              "periodStart": "2025-05-01",
+              "grossVolume": 57653
+            },
+            {
+              "periodStart": "2025-04-01",
+              "grossVolume": 54354.2
+            },
+            {
+              "periodStart": "2025-03-01",
+              "grossVolume": 0
+            },
+            {
+              "periodStart": "2025-02-01",
+              "grossVolume": 0
+            },
+            {
+              "periodStart": "2025-01-01",
+              "grossVolume": 0
+            },
+            {
+              "periodStart": "2024-12-01",
+              "grossVolume": 0
+            }
+          ],
+          "metadata": {
+            "template": "GROSS_VOLUME",
+            "recordCount": 12,
+            "projectedRowCount": null,
+            "filledCount": 4,
+            "calculationInterval": "month",
+            "dateRange": {
+              "start": "2025-01-01",
+              "end": "2025-12-01"
+            },
+            "filters": {
+              "createdAfter": {
+                "applied": "subset",
+                "specified": true,
+                "values": "2025-01-01"
+              },
+              "createdBefore": {
+                "applied": "subset",
+                "specified": true,
+                "values": "2025-12-01"
+              },
+              "calculationInterval": {
+                "applied": "subset",
+                "specified": true,
+                "values": "month"
+              },
+              "transactionDirections": {
+                "applied": "subset",
+                "specified": true,
+                "count": 2,
+                "values": [
+                  "onramp",
+                  "offramp"
+                ]
+              },
+              "userIds": {
+                "applied": "all",
+                "specified": false,
+                "count": 1000,
+                "note": "1000 total (list omitted for brevity)"
+              }
+            },
+            "breakdowns": null
+          }
+        }
+      },
+      "PreviewMetricRequestTransfersWithBreakdownsExample": {
+        "summary": "Preview TRANSFERS metric (with multiple breakdowns)",
+        "value": {
+          "template": "TRANSFERS",
+          "params": {
+            "createdAfter": "2025-11-01",
+            "createdBefore": "2025-11-07",
+            "calculationInterval": "day",
+            "transactionDirections": [
+              "onramp",
+              "offramp"
+            ],
+            "transferStatuses": [
+              "COMPLETED",
+              "FAILED"
+            ],
+            "breakdowns": [
+              "transactionDirection",
+              "transferStatus"
+            ]
+          }
+        }
+      },
+      "PreviewMetricResponseTransfersWithBreakdownsExample": {
+        "summary": "TRANSFERS calculation result (with breakdowns)",
+        "value": {
+          "status": "success",
+          "data": [
+            {
+              "periodStart": "2025-11-06",
+              "transactionDirection": "offramp",
+              "transferStatus": "FAILED",
+              "transferCount": 0
+            },
+            {
+              "periodStart": "2025-11-06",
+              "transactionDirection": "offramp",
+              "transferStatus": "COMPLETED",
+              "transferCount": 0
+            },
+            {
+              "periodStart": "2025-11-06",
+              "transactionDirection": "onramp",
+              "transferStatus": "FAILED",
+              "transferCount": 0
+            },
+            {
+              "periodStart": "2025-11-06",
+              "transactionDirection": "onramp",
+              "transferStatus": "COMPLETED",
+              "transferCount": 0
+            },
+            {
+              "periodStart": "2025-11-05",
+              "transactionDirection": "offramp",
+              "transferStatus": "FAILED",
+              "transferCount": 0
+            },
+            {
+              "periodStart": "2025-11-05",
+              "transactionDirection": "offramp",
+              "transferStatus": "COMPLETED",
+              "transferCount": 0
+            },
+            {
+              "periodStart": "2025-11-05",
+              "transactionDirection": "onramp",
+              "transferStatus": "FAILED",
+              "transferCount": 0
+            },
+            {
+              "periodStart": "2025-11-05",
+              "transactionDirection": "onramp",
+              "transferStatus": "COMPLETED",
+              "transferCount": 0
+            },
+            {
+              "periodStart": "2025-11-04",
+              "transactionDirection": "offramp",
+              "transferStatus": "FAILED",
+              "transferCount": 0
+            },
+            {
+              "periodStart": "2025-11-04",
+              "transactionDirection": "offramp",
+              "transferStatus": "COMPLETED",
+              "transferCount": 0
+            },
+            {
+              "periodStart": "2025-11-04",
+              "transactionDirection": "onramp",
+              "transferStatus": "FAILED",
+              "transferCount": 0
+            },
+            {
+              "periodStart": "2025-11-04",
+              "transactionDirection": "onramp",
+              "transferStatus": "COMPLETED",
+              "transferCount": 0
+            },
+            {
+              "periodStart": "2025-11-03",
+              "transactionDirection": "offramp",
+              "transferStatus": "FAILED",
+              "transferCount": 0
+            },
+            {
+              "periodStart": "2025-11-03",
+              "transactionDirection": "offramp",
+              "transferStatus": "COMPLETED",
+              "transferCount": 0
+            },
+            {
+              "periodStart": "2025-11-03",
+              "transactionDirection": "onramp",
+              "transferStatus": "FAILED",
+              "transferCount": 0
+            },
+            {
+              "periodStart": "2025-11-03",
+              "transactionDirection": "onramp",
+              "transferStatus": "COMPLETED",
+              "transferCount": 0
+            },
+            {
+              "periodStart": "2025-11-02",
+              "transactionDirection": "offramp",
+              "transferStatus": "FAILED",
+              "transferCount": 0
+            },
+            {
+              "periodStart": "2025-11-02",
+              "transactionDirection": "offramp",
+              "transferStatus": "COMPLETED",
+              "transferCount": 0
+            },
+            {
+              "periodStart": "2025-11-02",
+              "transactionDirection": "onramp",
+              "transferStatus": "FAILED",
+              "transferCount": 0
+            },
+            {
+              "periodStart": "2025-11-02",
+              "transactionDirection": "onramp",
+              "transferStatus": "COMPLETED",
+              "transferCount": 0
+            },
+            {
+              "periodStart": "2025-11-01",
+              "transactionDirection": "offramp",
+              "transferStatus": "FAILED",
+              "transferCount": 0
+            },
+            {
+              "periodStart": "2025-11-01",
+              "transactionDirection": "offramp",
+              "transferStatus": "COMPLETED",
+              "transferCount": 0
+            },
+            {
+              "periodStart": "2025-11-01",
+              "transactionDirection": "onramp",
+              "transferStatus": "FAILED",
+              "transferCount": 0
+            },
+            {
+              "periodStart": "2025-11-01",
+              "transactionDirection": "onramp",
+              "transferStatus": "COMPLETED",
+              "transferCount": 0
+            }
+          ],
+          "metadata": {
+            "template": "TRANSFERS",
+            "recordCount": 24,
+            "projectedRowCount": 180,
+            "filledCount": 24,
+            "calculationInterval": "day",
+            "dateRange": {
+              "start": "2025-11-01",
+              "end": "2025-11-07"
+            },
+            "filters": {
+              "createdAfter": {
+                "applied": "subset",
+                "specified": true,
+                "values": "2025-11-01"
+              },
+              "createdBefore": {
+                "applied": "subset",
+                "specified": true,
+                "values": "2025-11-07"
+              },
+              "calculationInterval": {
+                "applied": "subset",
+                "specified": true,
+                "values": "day"
+              },
+              "transactionDirections": {
+                "applied": "subset",
+                "specified": true,
+                "count": 2,
+                "values": [
+                  "onramp",
+                  "offramp"
+                ]
+              },
+              "transferStatuses": {
+                "applied": "subset",
+                "specified": true,
+                "count": 2,
+                "values": [
+                  "COMPLETED",
+                  "FAILED"
+                ]
+              },
+              "userIds": {
+                "applied": "all",
+                "specified": false,
+                "count": 1000,
+                "note": "1000 total (list omitted for brevity)"
+              },
+              "breakdowns": {
+                "applied": "subset",
+                "specified": true,
+                "count": 2,
+                "values": [
+                  "transactionDirection",
+                  "transferStatus"
+                ]
+              }
+            },
+            "breakdowns": {
+              "dimensions": [
+                "transactionDirection",
+                "transferStatus"
+              ],
+              "dimensionCounts": {
+                "transactionDirection": 3,
+                "transferStatus": 10
+              }
+            }
+          }
+        }
+      },
+      "MetricResultsNewCustomersExample": {
+        "summary": "NEW_CUSTOMERS metric results (no breakdowns)",
+        "value": {
+          "status": "success",
+          "data": [
+            {
+              "periodStart": "2025-12-01",
+              "newCustomerCount": 0
+            },
+            {
+              "periodStart": "2025-11-30",
+              "newCustomerCount": 4
+            },
+            {
+              "periodStart": "2025-11-29",
+              "newCustomerCount": 4
+            },
+            {
+              "periodStart": "2025-11-28",
+              "newCustomerCount": 0
+            },
+            {
+              "periodStart": "2025-11-27",
+              "newCustomerCount": 0
+            },
+            {
+              "periodStart": "2025-11-26",
+              "newCustomerCount": 0
+            },
+            {
+              "periodStart": "2025-11-25",
+              "newCustomerCount": 0
+            },
+            {
+              "periodStart": "2025-11-24",
+              "newCustomerCount": 0
+            },
+            {
+              "periodStart": "2025-11-23",
+              "newCustomerCount": 0
+            },
+            {
+              "periodStart": "2025-11-22",
+              "newCustomerCount": 0
+            },
+            {
+              "periodStart": "2025-11-21",
+              "newCustomerCount": 25
+            },
+            {
+              "periodStart": "2025-11-20",
+              "newCustomerCount": 0
+            },
+            {
+              "periodStart": "2025-11-19",
+              "newCustomerCount": 0
+            },
+            {
+              "periodStart": "2025-11-18",
+              "newCustomerCount": 0
+            },
+            {
+              "periodStart": "2025-11-17",
+              "newCustomerCount": 0
+            },
+            {
+              "periodStart": "2025-11-16",
+              "newCustomerCount": 0
+            },
+            {
+              "periodStart": "2025-11-15",
+              "newCustomerCount": 0
+            },
+            {
+              "periodStart": "2025-11-14",
+              "newCustomerCount": 0
+            },
+            {
+              "periodStart": "2025-11-13",
+              "newCustomerCount": 3
+            },
+            {
+              "periodStart": "2025-11-12",
+              "newCustomerCount": 14
+            },
+            {
+              "periodStart": "2025-11-11",
+              "newCustomerCount": 4
+            },
+            {
+              "periodStart": "2025-11-10",
+              "newCustomerCount": 49
+            },
+            {
+              "periodStart": "2025-11-09",
+              "newCustomerCount": 4
+            },
+            {
+              "periodStart": "2025-11-08",
+              "newCustomerCount": 1
+            },
+            {
+              "periodStart": "2025-11-07",
+              "newCustomerCount": 6
+            },
+            {
+              "periodStart": "2025-11-06",
+              "newCustomerCount": 0
+            },
+            {
+              "periodStart": "2025-11-05",
+              "newCustomerCount": 4
+            },
+            {
+              "periodStart": "2025-11-04",
+              "newCustomerCount": 3
+            },
+            {
+              "periodStart": "2025-11-03",
+              "newCustomerCount": 0
+            },
+            {
+              "periodStart": "2025-11-01",
+              "newCustomerCount": 0
+            }
+          ],
+          "metadata": {
+            "template": "NEW_CUSTOMERS",
+            "recordCount": 335,
+            "projectedRowCount": null,
+            "filledCount": 135,
+            "calculationInterval": "day",
+            "dateRange": {
+              "start": "2025-01-01",
+              "end": "2025-12-01"
+            },
+            "filters": {
+              "createdAfter": {
+                "applied": "subset",
+                "specified": true,
+                "values": "2025-01-01"
+              },
+              "createdBefore": {
+                "applied": "subset",
+                "specified": true,
+                "values": "2025-12-01"
+              },
+              "calculationInterval": {
+                "applied": "subset",
+                "specified": true,
+                "values": "day"
+              }
+            },
+            "breakdowns": null,
+            "metric": "testname123"
+          }
+        }
+      },
+      "MetricResultsGrossVolumeExample": {
+        "summary": "GROSS_VOLUME metric results (no breakdowns, with metric name)",
+        "value": {
+          "status": "success",
+          "data": [
+            {
+              "periodStart": "2025-11-06",
+              "grossVolume": 0
+            },
+            {
+              "periodStart": "2025-11-05",
+              "grossVolume": 0
+            },
+            {
+              "periodStart": "2025-11-04",
+              "grossVolume": 0
+            },
+            {
+              "periodStart": "2025-11-03",
+              "grossVolume": 0
+            },
+            {
+              "periodStart": "2025-11-02",
+              "grossVolume": 0
+            },
+            {
+              "periodStart": "2025-11-01",
+              "grossVolume": 0
+            }
+          ],
+          "metadata": {
+            "template": "GROSS_VOLUME",
+            "recordCount": 6,
+            "projectedRowCount": null,
+            "filledCount": 6,
+            "calculationInterval": "day",
+            "dateRange": {
+              "start": "2025-11-01",
+              "end": "2025-11-07"
+            },
+            "filters": {
+              "createdAfter": {
+                "applied": "subset",
+                "specified": true,
+                "values": "2025-11-01"
+              },
+              "createdBefore": {
+                "applied": "subset",
+                "specified": true,
+                "values": "2025-11-07"
+              },
+              "calculationInterval": {
+                "applied": "subset",
+                "specified": true,
+                "values": "day"
+              },
+              "transactionDirections": {
+                "applied": "subset",
+                "specified": true,
+                "count": 2,
+                "values": [
+                  "onramp",
+                  "offramp"
+                ]
+              },
+              "userIds": {
+                "applied": "all",
+                "specified": false,
+                "count": 1000,
+                "note": "1000 total (list omitted for brevity)"
+              }
+            },
+            "breakdowns": null,
+            "metric": "Daily Revenue Report"
+          }
+        }
+      },
       "ToSLinkObjectExample": {
         "summary": "ToS Link Object",
         "value": {
@@ -21602,6 +23973,339 @@
             "$ref": "#/components/responses/InternalServerErrorResponse"
           }
         }
+      }
+    },
+    "/v2/reporting/templates": {
+      "get": {
+        "summary": "GET /v2/reporting/templates",
+        "description": "",
+        "tags": [
+          "Reporting"
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/TemplateListResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        }
+      }
+    },
+    "/v2/reporting/templates/{name}": {
+      "get": {
+        "summary": "GET /v2/reporting/templates/:name",
+        "description": "",
+        "tags": [
+          "Reporting"
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/TemplateResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        },
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "name parameter"
+          }
+        ]
+      }
+    },
+    "/v2/reporting/params/{name}/options": {
+      "get": {
+        "summary": "GET /v2/reporting/params/:name/options",
+        "description": "",
+        "tags": [
+          "Reporting"
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ParamOptionsResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        },
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "name parameter"
+          }
+        ]
+      }
+    },
+    "/v2/reporting/metrics": {
+      "post": {
+        "summary": "POST /v2/reporting/metrics",
+        "description": "",
+        "tags": [
+          "Reporting"
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/CreateMetricResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        },
+        "requestBody": {
+          "$ref": "#/components/requestBodies/CreateMetricBody"
+        }
+      },
+      "get": {
+        "summary": "GET /v2/reporting/metrics",
+        "description": "",
+        "tags": [
+          "Reporting"
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/MetricListResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        }
+      }
+    },
+    "/v2/reporting/metrics/{id}": {
+      "get": {
+        "summary": "GET /v2/reporting/metrics/:id",
+        "description": "",
+        "tags": [
+          "Reporting"
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/MetricResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "id parameter"
+          }
+        ]
+      },
+      "patch": {
+        "summary": "PATCH /v2/reporting/metrics/:id",
+        "description": "",
+        "tags": [
+          "Reporting"
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/UpdateMetricResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "id parameter"
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/UpdateMetricBody"
+        }
+      },
+      "delete": {
+        "summary": "DELETE /v2/reporting/metrics/:id",
+        "description": "",
+        "tags": [
+          "Reporting"
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/DeleteMetricResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "id parameter"
+          }
+        ]
+      }
+    },
+    "/v2/reporting/metrics/preview": {
+      "post": {
+        "summary": "POST /v2/reporting/metrics/preview",
+        "description": "",
+        "tags": [
+          "Reporting"
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/MetricCalculationResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        },
+        "requestBody": {
+          "$ref": "#/components/requestBodies/PreviewMetricBody"
+        }
+      }
+    },
+    "/v2/reporting/metrics/{id}/results": {
+      "get": {
+        "summary": "GET /v2/reporting/metrics/:id/results",
+        "description": "",
+        "tags": [
+          "Reporting"
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/MetricCalculationResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "id parameter"
+          }
+        ]
       }
     },
     "/v2/transfer-approvals": {
