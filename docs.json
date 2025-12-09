@@ -460,6 +460,21 @@
                   "DELETE /v2/virtual-accounts/settlement-rules/{ruleId}",
                   "DELETE /v2/users/{userId}/virtual-accounts/{accountId}/settlement-rules"
                 ]
+              },
+              {
+                "group": "Reporting",
+                "pages": [
+                  "GET /v2/reporting/templates",
+                  "GET /v2/reporting/templates/{name}",
+                  "GET /v2/reporting/params/{name}/options",
+                  "POST /v2/reporting/metrics",
+                  "GET /v2/reporting/metrics",
+                  "GET /v2/reporting/metrics/{id}",
+                  "POST /v2/reporting/metrics/{id}",
+                  "DELETE /v2/reporting/metrics/{id}",
+                  "POST /v2/reporting/metrics/preview",
+                  "GET /v2/reporting/metrics/{id}/results"
+                ]
               }
             ]
           }
