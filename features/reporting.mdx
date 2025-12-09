@@ -1,0 +1,462 @@
+---
+title: "Reporting"
+---
+
+**Reporting** enables you to generate comprehensive metrics and reports for your payment operations. Create custom metrics based on templates, filter by various parameters, and break down data by dimensions like transaction direction, transfer status, or user.
+
+## How Reporting Works
+
+<Steps>
+  <Step title="Explore templates">
+    Browse available metric templates to find the right one for your use case.
+  </Step>
+  <Step title="Configure parameters">
+    Set date ranges, filters, and optional breakdown dimensions for your metric.
+  </Step>
+  <Step title="Preview results">
+    Test your metric configuration with a preview before saving.
+  </Step>
+  <Step title="Create saved metric">
+    Save the metric for recurring use and access results via API.
+  </Step>
+</Steps>
+
+## Available Templates
+
+The Reporting API provides three metric templates:
+
+### GROSS_VOLUME
+
+Track total transaction volume over time. Returns `grossVolume` and `grossVolumeUsd` values.
+
+**Use cases:**
+
+- Daily/weekly/monthly volume reports
+- Revenue tracking
+- Volume trends analysis
+
+### TRANSFERS
+
+Count the number of transfers within a time period. Returns `transferCount` values.
+
+**Use cases:**
+
+- Transaction volume metrics
+- Activity monitoring
+- Transfer success rates (with breakdowns)
+
+### NEW_CUSTOMERS
+
+Count new customers acquired within a time period. Returns `newCustomerCount` values.
+
+**Use cases:**
+
+- Customer acquisition tracking
+- Growth metrics
+- Onboarding analytics
+
+## Getting Started
+
+### Step 1: List Available Templates
+
+First, explore what templates are available:
+
+**Request:**
+
+```bash
+curl -X GET "https://sandbox.hifibridge.com/v2/reporting/templates" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+**Response:**
+
+```json
+{
+  "status": "success",
+  "data": [
+    {
+      "name": "GROSS_VOLUME",
+      "displayName": "Gross Volume",
+      "description": "Total transaction volume over time",
+      "supportsBreakdowns": true,
+      "breakdownOptions": ["transactionDirection", "transferStatus", "userId"],
+      "params": [...]
+    },
+    {
+      "name": "TRANSFERS",
+      "displayName": "Transfers",
+      "description": "Number of transfers",
+      "supportsBreakdowns": true,
+      "breakdownOptions": ["transactionDirection", "transferStatus", "userId"],
+      "params": [...]
+    },
+    {
+      "name": "NEW_CUSTOMERS",
+      "displayName": "New Customers",
+      "description": "Number of new customers",
+      "supportsBreakdowns": false,
+      "breakdownOptions": [],
+      "params": [...]
+    }
+  ]
+}
+```
+
+### Step 2: Get Template Details
+
+Get detailed information about a specific template, including available parameters:
+
+**Request:**
+
+```bash
+curl -X GET "https://sandbox.hifibridge.com/v2/reporting/templates/GROSS_VOLUME" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+### Step 3: Get Parameter Options
+
+For parameters that accept specific values (like user IDs or transaction directions), fetch available options:
+
+**Request:**
+
+```bash
+curl -X GET "https://sandbox.hifibridge.com/v2/reporting/params/userIds/options" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+**Response:**
+
+```json
+{
+  "status": "success",
+  "data": {
+    "options": ["usr_abc123", "usr_def456", "usr_ghi789"]
+  }
+}
+```
+
+### Step 4: Preview a Metric
+
+Before creating a saved metric, preview the results:
+
+**Request:**
+
+```bash
+curl -X POST "https://sandbox.hifibridge.com/v2/reporting/metrics/preview" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "template": "GROSS_VOLUME",
+    "params": {
+      "startDate": "2025-01-01",
+      "endDate": "2025-01-31",
+      "calculationInterval": "day",
+      "breakdowns": ["transactionDirection"]
+    }
+  }'
+```
+
+**Response:**
+
+```json
+{
+  "status": "success",
+  "data": [
+    {
+      "periodStart": "2025-01-01T00:00:00Z",
+      "transactionDirection": "onramp",
+      "grossVolume": 50000.0,
+      "grossVolumeUsd": 50000.0
+    },
+    {
+      "periodStart": "2025-01-01T00:00:00Z",
+      "transactionDirection": "offramp",
+      "grossVolume": 30000.0,
+      "grossVolumeUsd": 30000.0
+    }
+  ],
+  "metadata": {
+    "template": "GROSS_VOLUME",
+    "calculationInterval": "day",
+    "dateRange": {
+      "start": "2025-01-01",
+      "end": "2025-01-31"
+    },
+    "breakdowns": {
+      "dimensions": ["transactionDirection"],
+      "dimensionCounts": {
+        "transactionDirection": 2
+      }
+    }
+  }
+}
+```
+
+### Step 5: Create a Saved Metric
+
+Once you're satisfied with the preview, create a saved metric:
+
+**Request:**
+
+```bash
+curl -X POST "https://sandbox.hifibridge.com/v2/reporting/metrics" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "template": "GROSS_VOLUME",
+    "name": "Monthly Volume Report",
+    "params": {
+      "startDate": "2025-01-01",
+      "endDate": "2025-01-31",
+      "calculationInterval": "day",
+      "breakdowns": ["transactionDirection"]
+    }
+  }'
+```
+
+**Response:**
+
+```json
+{
+  "status": "success",
+  "data": {
+    "id": "mtr_abc123",
+    "name": "Monthly Volume Report",
+    "template": "GROSS_VOLUME",
+    "params": {
+      "startDate": "2025-01-01",
+      "endDate": "2025-01-31",
+      "calculationInterval": "day",
+      "breakdowns": ["transactionDirection"]
+    },
+    "createdAt": "2025-12-10T10:00:00Z",
+    "updatedAt": "2025-12-10T10:00:00Z"
+  }
+}
+```
+
+### Step 6: Retrieve Metric Results
+
+Get results from a saved metric:
+
+**Request:**
+
+```bash
+curl -X GET "https://sandbox.hifibridge.com/v2/reporting/metrics/mtr_abc123/results" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+## Metric Parameters
+
+### Date Range
+
+All metrics require a date range:
+
+- **startDate** (required): Start date in ISO 8601 format (YYYY-MM-DD)
+- **endDate** (required): End date in ISO 8601 format (YYYY-MM-DD)
+
+### Calculation Interval
+
+Specify how to aggregate data over time:
+
+- `day` - Daily aggregation
+- `week` - Weekly aggregation
+- `month` - Monthly aggregation
+- `quarter` - Quarterly aggregation
+- `year` - Yearly aggregation
+
+### Filters
+
+Filter metrics by specific criteria:
+
+- **userIds** (array): Filter by specific user IDs
+- **transactionDirections** (array): Filter by transaction type (`onramp`, `offramp`, `crypto_to_crypto`)
+- **transferStatuses** (array): Filter by transfer status (`COMPLETED`, `FAILED`, `PENDING`, `CANCELLED`)
+
+### Breakdowns
+
+Break down metrics by dimensions to get more granular insights:
+
+- **transactionDirection** - Group by transaction type
+- **transferStatus** - Group by transfer status
+- **userId** - Group by individual users
+
+<Note>
+  Not all templates support breakdowns. Check the template's
+  `supportsBreakdowns` property and `breakdownOptions` array.
+</Note>
+
+## Example Use Cases
+
+### Daily Volume Report
+
+Track daily gross volume with breakdown by transaction direction:
+
+```bash
+curl -X POST "https://sandbox.hifibridge.com/v2/reporting/metrics" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "template": "GROSS_VOLUME",
+    "name": "Daily Volume by Direction",
+    "params": {
+      "startDate": "2025-01-01",
+      "endDate": "2025-01-31",
+      "calculationInterval": "day",
+      "breakdowns": ["transactionDirection"]
+    }
+  }'
+```
+
+### User-Specific Transfer Counts
+
+Count transfers for specific users:
+
+```bash
+curl -X POST "https://sandbox.hifibridge.com/v2/reporting/metrics" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "template": "TRANSFERS",
+    "name": "User Transfer Activity",
+    "params": {
+      "startDate": "2025-01-01",
+      "endDate": "2025-01-31",
+      "calculationInterval": "week",
+      "userIds": ["usr_abc123", "usr_def456"],
+      "breakdowns": ["userId", "transferStatus"]
+    }
+  }'
+```
+
+### Monthly New Customer Tracking
+
+Track new customer acquisition monthly:
+
+```bash
+curl -X POST "https://sandbox.hifibridge.com/v2/reporting/metrics" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "template": "NEW_CUSTOMERS",
+    "name": "Monthly New Customers",
+    "params": {
+      "startDate": "2025-01-01",
+      "endDate": "2025-12-31",
+      "calculationInterval": "month"
+    }
+  }'
+```
+
+## Managing Saved Metrics
+
+### List All Metrics
+
+Get all your saved metrics:
+
+```bash
+curl -X GET "https://sandbox.hifibridge.com/v2/reporting/metrics" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+### Get Metric Details
+
+Retrieve details about a specific metric:
+
+```bash
+curl -X GET "https://sandbox.hifibridge.com/v2/reporting/metrics/mtr_abc123" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+### Update a Metric
+
+Update a metric's name or parameters:
+
+```bash
+curl -X POST "https://sandbox.hifibridge.com/v2/reporting/metrics/mtr_abc123" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Updated Metric Name",
+    "params": {
+      "startDate": "2025-02-01",
+      "endDate": "2025-02-28",
+      "calculationInterval": "day"
+    }
+  }'
+```
+
+### Delete a Metric
+
+Remove a saved metric:
+
+```bash
+curl -X DELETE "https://sandbox.hifibridge.com/v2/reporting/metrics/mtr_abc123" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+## Key Concepts
+
+<AccordionGroup>
+  <Accordion title="Templates vs Saved Metrics">
+    **Templates** are predefined metric types (GROSS_VOLUME, TRANSFERS, NEW_CUSTOMERS) that define what data is calculated.
+    
+    **Saved Metrics** are instances of templates with specific parameters (date ranges, filters, breakdowns) that you've configured and saved for reuse.
+    
+    You can preview any template with parameters without saving, or create saved metrics for recurring reports.
+  </Accordion>
+
+{" "}
+<Accordion title="Breakdowns">
+  Breakdowns add dimensions to your metrics, allowing you to see data grouped by
+  categories like transaction direction or user. For example, without
+  breakdowns, you get total volume per day. With `transactionDirection`
+  breakdown, you get separate rows for onramp and offramp volume per day. Each
+  breakdown dimension adds a field to the result rows, so multiple breakdowns
+  create a multi-dimensional view of your data.
+</Accordion>
+
+{" "}
+<Accordion title="Calculation Intervals">
+  The calculation interval determines how data is aggregated over time: -
+  **day**: One row per day - **week**: One row per week (starts on Monday) -
+  **month**: One row per calendar month - **quarter**: One row per quarter -
+  **year**: One row per year Choose the interval that matches your reporting
+  needs. Daily intervals provide the most granular view, while yearly intervals
+  give high-level trends.
+</Accordion>
+
+  <Accordion title="Preview Before Saving">
+    Always use the preview endpoint (`/v2/reporting/metrics/preview`) to test your metric configuration before creating a saved metric. This helps you:
+    
+    - Verify filters and parameters work as expected
+    - Check data availability for your date range
+    - Ensure breakdowns produce the desired structure
+    - Validate calculation intervals
+    
+    Preview results match what you'll get from saved metrics, but don't persist the configuration.
+  </Accordion>
+</AccordionGroup>
+
+## Dashboard Integration
+
+The Reporting feature is also available in the HIFI Dashboard, where you can:
+
+- Visualize metrics with charts and graphs
+- Create custom dashboards
+- Schedule automated reports
+- Export data to CSV or other formats
+
+Access the Reporting section in your Dashboard to get started with visual reporting.
+
+## Getting Help
+
+- 📧 **Email:** support@hifi.com
+- 💬 **Slack:** Message us in our shared Slack channel
+
+## Related Resources
+
+- [API Reference: Reporting](/api-reference/reporting) - Complete endpoint documentation
+- [Dashboard](/dashboard) - Visual reporting interface
+- [Transfers](/transfers/onramps) - Understanding transfer types
+- [Users](/users) - User management
