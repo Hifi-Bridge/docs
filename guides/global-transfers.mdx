@@ -21,23 +21,6 @@ This flow enables fast, cost-effective international business payments with tran
 
 ---
 
-## Prerequisites
-
-Before you start, make sure you have:
-
-- **API keys** from the Dashboard ([Get API keys](/docs/api/authentication))
-- **A tool for making API calls** (cURL, Postman, or similar)
-- **Basic understanding of REST APIs**
-- **Your sandbox endpoint:** `https://sandbox.hifibridge.com`
-
-<Note>
-  All examples in this guide use the sandbox environment. When you're ready for
-  production, simply replace the sandbox URL with the production endpoint and
-  use your production API keys.
-</Note>
-
----
-
 ## What you'll build
 
 Here's what we'll accomplish in this recipe:
@@ -54,45 +37,28 @@ Here's what we'll accomplish in this recipe:
 USD → Business A Bank Account → USDC → Business A Wallet → HKD → Business B Bank Account
 ```
 
+<Note>
+  All examples in this guide use the sandbox environment. When you're ready for
+  production, simply replace the sandbox URL with the production endpoint and
+  use your production API keys.
+</Note>
+
 ---
 
 ## Generate API Keys
 
-Access to the HIFI API requires authentication via API keys. Generate your keys from the HIFI Dashboard before making any API calls.
+Access to the HIFI API requires authentication via API keys. Generate your keys from the HIFI Dashboard before making any API calls. Be sure to copy the key immediately as it’s only shown once.
+
+For a complete guide on API authentication, see our [Authentication Documentation](/docs/api/authentication).
 
 <AccordionGroup>
-  <Accordion title="Get Your API Keys">
-
-**Steps:**
-
-1. Navigate to [dashboard.hifibridge.com](https://dashboard.hifibridge.com/)
-2. Log in to your account
-3. Go to **Developer → API Keys**
-4. Click **Generate New Key**
-5. Select your environment: **Sandbox** (for testing) or **Production** (for live transactions)
-6. Copy the key immediately - it's only shown once
-
-**Important Security Notes:**
-
-- Store your API key securely (environment variables, secrets manager, etc.)
-- Never commit API keys to version control
-- Your key authenticates all HIFI API requests
-- If compromised, immediately revoke in the Dashboard and generate a new one
-
-<Warning>
-  **API keys are shown only once.** If you lose your key, you must revoke it and
-  generate a new one. There is no way to retrieve a lost key.
-</Warning>
-
-**Using Your API Key:**
+  <Accordion title="Using Your API Key">
 
 Include your API key in the `Authorization` header of all API requests:
 
 ```bash
 --header 'authorization: Bearer YOUR_API_KEY'
 ```
-
-For a complete guide on API authentication, see our [Authentication Documentation](/docs/api/authentication).
 
   </Accordion>
 </AccordionGroup>
@@ -109,19 +75,8 @@ The paying business needs a verified business account to access fiat rails and s
   Guide](/docs/users).
 </Note>
 
-### Business Creation Flow
-
-Creating a business user involves four steps:
-
-1. **Generate Terms of Service Link** - Get acceptance link for your business
-2. **Create Business User** - Create the business account after TOS acceptance
-3. **Update KYB Information** - Provide required business details and UBO information
-4. **Submit KYB** - Submit for verification to unlock USD rail
-
 <AccordionGroup>
   <Accordion title="Generate Terms of Service Link">
-
-Before creating a business user, they must accept HIFI's Terms of Service. Generate a unique acceptance link using the [Generate Terms of Service Link](https://docs.hifibridge.com/v2/reference/post_v2-tos-link) endpoint.
 
 **Request:**
 
@@ -138,22 +93,6 @@ curl --request POST \
 '
 ```
 
-**Request Fields:**
-
-<ResponseField name="idempotencyKey" type="string" required>
-  A unique UUID that becomes your `signedAgreementId` after the business accepts
-  the terms. Generate this using any [UUID
-  generator](https://www.uuidgenerator.net/).
-</ResponseField>
-
-<ResponseField name="templateId" type="string">
-  Optional template ID for custom Terms of Service templates.
-</ResponseField>
-
-<ResponseField name="redirectUrl" type="string">
-  Optional URL to redirect users after they accept the terms.
-</ResponseField>
-
 **Response:**
 
 ```json
@@ -163,35 +102,15 @@ curl --request POST \
 }
 ```
 
-**Response Fields:**
-
-<ResponseField name="url" type="string">
-  The unique link where the business will review and accept HIFI's Terms of
-  Service.
-</ResponseField>
-
-<ResponseField name="signedAgreementId" type="string">
-  The agreement ID (same as your `idempotencyKey`). **Save this** - you'll need
-  it to create the business user in the next step.
-</ResponseField>
-
 **What to do with this response:**
 
 1. **Direct the business to the `url`** - Send this link via email or embed in your application
 2. **Save the `signedAgreementId`** - You'll need this to create the business user
 3. **Wait for acceptance** - The `signedAgreementId` becomes valid only after they click "Accept"
 
-<Info>
-  **Real-time Notifications:** HIFI triggers the `TOS_LINK.UPDATE` webhook event
-  when the business accepts the terms, allowing you to proceed with user
-  creation immediately. [Learn about webhooks →](/docs/webhooks)
-</Info>
-
   </Accordion>
 
   <Accordion title="Create Business User">
-
-Once the business has accepted the Terms of Service, create the business user account with the [Create User](https://docs.hifibridge.com/api-reference/user/create-a-user) endpoint.
 
 **Request:**
 
@@ -231,87 +150,6 @@ curl --request POST \
 '
 ```
 
-**Request Fields:**
-
-<ResponseField name="requestId" type="string" required>
-  Unique identifier (UUID) for this request to ensure idempotency.
-</ResponseField>
-
-<ResponseField name="type" type="string" required>
-  User type. Use `business` for business accounts.
-</ResponseField>
-
-<ResponseField name="chains" type="array">
-  Blockchain networks to provision wallets on. Options: `POLYGON`, `ETHEREUM`
-</ResponseField>
-
-<ResponseField name="email" type="string" required>
-  Business email address.
-</ResponseField>
-
-<ResponseField name="dateOfBirth" type="string">
-  Date associated with the business registration (YYYY-MM-DD format).
-</ResponseField>
-
-<ResponseField name="address" type="object" required>
-  Business address.
-
-  <Expandable title="properties">
-    <ResponseField name="addressLine1" type="string" required>
-      Street address
-    </ResponseField>
-    <ResponseField name="addressLine2" type="string">
-      Additional address information (suite, floor, etc.)
-    </ResponseField>
-    <ResponseField name="city" type="string" required>
-      City
-    </ResponseField>
-    <ResponseField name="stateProvinceRegion" type="string" required>
-      State, province, or region code
-    </ResponseField>
-    <ResponseField name="postalCode" type="string" required>
-      Postal/ZIP code
-    </ResponseField>
-    <ResponseField name="country" type="string" required>
-      Country code (ISO 3166-1 alpha-3)
-    </ResponseField>
-  </Expandable>
-</ResponseField>
-
-<ResponseField name="ipAddress" type="string">
-  IP address of the business representative creating the account.
-</ResponseField>
-
-<ResponseField name="signedAgreementId" type="string" required>
-  The `signedAgreementId` from the Terms of Service acceptance.
-</ResponseField>
-
-<ResponseField name="businessName" type="string" required>
-  Legal name of the business.
-</ResponseField>
-
-<ResponseField name="ultimateBeneficialOwners" type="array" required>
-  Array of Ultimate Beneficial Owners (UBOs) who own or control the business.
-
-  <Expandable title="properties">
-    <ResponseField name="firstName" type="string" required>
-      UBO's first name
-    </ResponseField>
-    <ResponseField name="lastName" type="string" required>
-      UBO's last name
-    </ResponseField>
-    <ResponseField name="dateOfBirth" type="string" required>
-      UBO's date of birth (YYYY-MM-DD)
-    </ResponseField>
-    <ResponseField name="hasControl" type="boolean" required>
-      Whether this UBO has control over the business
-    </ResponseField>
-    <ResponseField name="isSigner" type="boolean" required>
-      Whether this UBO is authorized to sign on behalf of the business
-    </ResponseField>
-  </Expandable>
-</ResponseField>
-
 **Response:**
 
 ```json
@@ -333,62 +171,9 @@ curl --request POST \
 }
 ```
 
-✅ **Business user created successfully!**
-
-**Response Fields:**
-
-<ResponseField name="id" type="string">
-  The unique business user ID. **Save this** - you'll use it for all future
-  operations with this business.
-</ResponseField>
-
-<ResponseField name="wallets" type="object">
-  Automatically provisioned wallet addresses on supported blockchain networks.
-
-  <Expandable title="properties">
-    <ResponseField name="INDIVIDUAL" type="object">
-      <Expandable title="properties">
-        <ResponseField name="POLYGON" type="object">
-          <Expandable title="properties">
-            <ResponseField name="address" type="string">
-              Wallet address on the Polygon network
-            </ResponseField>
-          </Expandable>
-        </ResponseField>
-        <ResponseField name="ETHEREUM" type="object">
-          <Expandable title="properties">
-            <ResponseField name="address" type="string">
-              Wallet address on the Ethereum network
-            </ResponseField>
-          </Expandable>
-        </ResponseField>
-      </Expandable>
-    </ResponseField>
-  </Expandable>
-</ResponseField>
-
-**What you get:**
-
-- **Business User ID** (`94dcd5c2-4508-593d-9302-fd7a5444eb20`) - Save this for all future operations
-- **Wallet addresses** - Pre-provisioned on multiple blockchains, ready for instant transfers
-
-<Info>
-  **Automatic Wallet Provisioning:** Every business user automatically receives
-  wallet addresses on supported blockchain networks. These wallets are fully
-  functional immediately - no additional setup required.
-</Info>
-
   </Accordion>
 
   <Accordion title="Update KYB Information">
-
-Provide the required business information for KYB (Know Your Business) verification using the [Update KYC](https://docs.hifibridge.com/v2/reference/post_v2-users-userid-kyc) endpoint.
-
-<Note>
-  **KYB vs KYC:** While the endpoint is named "KYC," it handles both individual
-  (KYC) and business (KYB) verification. For businesses, you'll provide company
-  details, tax information, and Ultimate Beneficial Owner (UBO) documentation.
-</Note>
 
 **Request:**
 
@@ -407,51 +192,13 @@ curl --request POST \
 '
 ```
 
-**Request Fields:**
-
-<ResponseField name="firstName" type="string">
-  Business name (can be used for additional identification).
-</ResponseField>
-
-<ResponseField name="nationality" type="string" required>
-  Country where the business is registered (ISO 3166-1 alpha-3 country code).
-</ResponseField>
-
-<ResponseField name="taxIdentificationNumber" type="string" required>
-  Business tax identification number (e.g., EIN for US businesses).
-</ResponseField>
-
 **Response:**
 
-The response includes comprehensive business information including UBO details, business structure, compliance questionnaires, and uploaded documents. The full response structure includes:
-
-- Basic business information (name, email, address, tax details)
-- Ultimate Beneficial Owners with their personal information and documents
-- Business formation documents
-- Compliance screening information
-- Uploaded verification documents
-
-✅ **Business information updated!**
-
-<Note>
-  **Document Upload:** For a complete KYB submission in production, you'll need
-  to upload various business documents including: incorporation articles,
-  business registration, proof of address, and UBO identification documents. See
-  the [Business User Guide](/docs/users) for detailed document requirements. In
-  sandbox, KYB may be automatically approved with minimal documentation.
-</Note>
-
-<Note>
-  **UBO Document Upload:** UBO (Ultimate Beneficial Owner) details are handled via a 
-  separate **Add a UBO** endpoint. After you create a UBO, save the uboId from the response 
-  and use it when calling the **Add Documents** endpoint so the files are attached to that specific UBO.
-</Note>
+The response includes comprehensive business information including UBO details, business structure, compliance questionnaires, and uploaded documents.
 
   </Accordion>
 
   <Accordion title="Submit KYB for USD Rail">
-
-Submit the KYB application to unlock the USD rail using the [Submit KYC](https://docs.hifibridge.com/api-reference/kyc/submit-kyc) endpoint.
 
 **Request:**
 
@@ -468,12 +215,6 @@ curl --request POST \
 '
 ```
 
-**Request Fields:**
-
-<ResponseField name="rails" type="string" required>
-  The currency rail to unlock. Use `USD` for US Dollar operations.
-</ResponseField>
-
 **Response:**
 
 ```json
@@ -484,40 +225,6 @@ curl --request POST \
   }
 }
 ```
-
-✅ **KYB application submitted!**
-
-**Response Fields:**
-
-<ResponseField name="USD" type="object">
-  Status information for the USD rail submission.
-
-  <Expandable title="properties">
-    <ResponseField name="status" type="string">
-      Current KYB status. Possible values: - `CREATED` - Application submitted -
-      `PENDING` - Under review - `ACTIVE` - Approved, rail is unlocked -
-      `REJECTED` - Not approved
-    </ResponseField>
-    <ResponseField name="message" type="string">
-      Status message explaining the current state
-    </ResponseField>
-  </Expandable>
-</ResponseField>
-
-**KYB Review Process:**
-
-1. **Status starts as `CREATED`** (immediate)
-2. **Transitions to `PENDING`** (within minutes in sandbox)
-3. **Final status: `ACTIVE` or `REJECTED`** (typically automatic in sandbox, 3-7 business days in production)
-
-<Info>
-  **Business Verification Timeline:** Business KYB verification typically takes
-  longer than individual KYC due to additional compliance requirements. In
-  production, expect 3-7 business days for review. Monitor the status using the
-  [Retrieve KYC
-  Status](https://docs.hifibridge.com/api-reference/kyc/retrieve-kyc-status)
-  endpoint or subscribe to `KYC.STATUS_UPDATE` webhook events.
-</Info>
 
   </Accordion>
 </AccordionGroup>
@@ -536,8 +243,6 @@ Now that Business A has passed KYB, create a **Virtual Account** for onramping. 
 <AccordionGroup>
   <Accordion title="Create Virtual Account">
 
-A Virtual Account enables Business A to deposit USD from their bank, which automatically converts to USDC on Polygon for international payment distribution.
-
 **Request:**
 
 ```bash
@@ -554,24 +259,6 @@ curl --request POST \
 }
 '
 ```
-
-**Request Fields:**
-
-<ResponseField name="sourceCurrency" type="string" required>
-  Fiat currency to deposit. Use `usd` for US Dollars.
-</ResponseField>
-
-<ResponseField name="destinationCurrency" type="string" required>
-  Stablecoin to receive after conversion. Use `usdc` for USD Coin.
-</ResponseField>
-
-<ResponseField name="destinationChain" type="string" required>
-  Blockchain network for the stablecoin. Options: `POLYGON`, `ETHEREUM`
-</ResponseField>
-
-<ResponseField name="externalWalletId" type="string">
-  Optional external wallet ID if using a wallet outside HIFI's custody.
-</ResponseField>
 
 **Response:**
 
@@ -626,105 +313,6 @@ curl --request POST \
   }
 }
 ```
-
-✅ **Virtual account created!**
-
-**Response Fields:**
-
-<ResponseField name="accountInfo.id" type="string">
-  The unique virtual account ID. **Save this** for monitoring deposits.
-</ResponseField>
-
-<ResponseField name="accountInfo.status" type="string">
-  Account status. `activated` means it's ready to receive deposits.
-</ResponseField>
-
-<ResponseField name="accountInfo.provider" type="string">
-  Banking partner providing the virtual account infrastructure.
-</ResponseField>
-
-<ResponseField name="accountInfo.source" type="object">
-  Source configuration for fiat deposits.
-
-  <Expandable title="properties">
-    <ResponseField name="paymentRail" type="array">
-      Supported payment methods: `ach`, `wire`, `rtp` (Real-Time Payments)
-    </ResponseField>
-    <ResponseField name="currency" type="string">
-      The fiat currency this account accepts
-    </ResponseField>
-  </Expandable>
-</ResponseField>
-
-<ResponseField name="accountInfo.destination" type="object">
-  Destination configuration for crypto conversion.
-
-  <Expandable title="properties">
-    <ResponseField name="chain" type="string">
-      Blockchain where converted crypto will be sent
-    </ResponseField>
-    <ResponseField name="currency" type="string">
-      Stablecoin the business will receive
-    </ResponseField>
-    <ResponseField name="walletAddress" type="string">
-      Business's wallet address where USDC will be deposited
-    </ResponseField>
-  </Expandable>
-</ResponseField>
-
-<ResponseField name="accountInfo.depositInstructions" type="object">
-  **Most Important:** Bank account details Business A needs to send money to.
-
-  <Expandable title="properties">
-    <ResponseField name="bankName" type="string">
-      Name of the bank holding the virtual account
-    </ResponseField>
-    <ResponseField name="bankAddress" type="string">
-      Physical address of the bank
-    </ResponseField>
-    <ResponseField name="beneficiary" type="object">
-      <Expandable title="properties">
-        <ResponseField name="name" type="string">
-          Beneficiary name (must match business name)
-        </ResponseField>
-        <ResponseField name="address" type="string">
-          Beneficiary address
-        </ResponseField>
-      </Expandable>
-    </ResponseField>
-    <ResponseField name="ach" type="object">
-      <Expandable title="properties">
-        <ResponseField name="routingNumber" type="string">
-          ACH routing number
-        </ResponseField>
-        <ResponseField name="accountNumber" type="string">
-          Virtual account number for ACH deposits
-        </ResponseField>
-      </Expandable>
-    </ResponseField>
-    <ResponseField name="wire" type="object">
-      <Expandable title="properties">
-        <ResponseField name="routingNumber" type="string">
-          Wire routing number
-        </ResponseField>
-        <ResponseField name="accountNumber" type="string">
-          Virtual account number for wire deposits
-        </ResponseField>
-      </Expandable>
-    </ResponseField>
-    <ResponseField name="instruction" type="string">
-      Deposit instructions and compliance requirements
-    </ResponseField>
-  </Expandable>
-</ResponseField>
-
-<Info>
-  **How to Use:** Provide these deposit instructions to Business A. When they
-  send money to this account via wire transfer or ACH, HIFI automatically
-  detects the deposit, converts it to USDC, and sends it to their wallet. The
-  USDC is then available for international payments. For monitoring deposits,
-  subscribe to `ONRAMP.CREATE` webhook events.
-</Info>
 
   </Accordion>
 </AccordionGroup>
