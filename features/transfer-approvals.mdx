@@ -5,7 +5,9 @@ title: "Transfer Approvals"
 **Transfer approvals** provide multi-party authorization for transfers, adding security and compliance controls to your organization's transaction workflow. Require approval before executing high-value or sensitive transfers.
 
 <Info>
-Transfer approvals apply to on-chain stablecoin transfers (wallet transfers, batch transfers, and bridging) only. Onramps and offramps do not support approval workflows.
+  Transfer approvals apply to on-chain stablecoin transfers (wallet transfers,
+  batch transfers, and bridging) only. Onramps and offramps do not support
+  approval workflows.
 </Info>
 
 ## How Transfer Approvals Work
@@ -35,6 +37,7 @@ Transfer approvals work differently depending on where transfers are initiated:
 ### Dashboard Approvals
 
 When transfers are created in the HIFI Dashboard:
+
 - **Members** can initiate wallet transfers
 - **Member-initiated transfers** require Admin approval before execution
 - **Admin-initiated transfers** execute without approval
@@ -43,6 +46,7 @@ When transfers are created in the HIFI Dashboard:
 ### API Approvals
 
 When using the API:
+
 - Include `requireApproval: true` when creating transfers
 - Transfers enter approval workflow until approved or rejected
 - Supported on wallet transfers, batch transfers, and bridging
@@ -103,14 +107,15 @@ curl -X POST "https://sandbox.hifi.com/v2/wallets/transfers" \
 
 The `requireApproval` parameter works with:
 
-| Endpoint                              | Transfer Type                                    |
-| :------------------------------------ | :----------------------------------------------- |
-| `POST /v2/wallets/transfers`          | Single wallet transfers                          |
-| `POST /v2/wallets/transfers/batches`  | Batch transfers (up to 50 recipients)            |
-| `POST /v2/wallets/bridges`            | Cross-chain bridging transfers                   |
+| Endpoint                             | Transfer Type                         |
+| :----------------------------------- | :------------------------------------ |
+| `POST /v2/wallets/transfers`         | Single wallet transfers               |
+| `POST /v2/wallets/transfers/batches` | Batch transfers (up to 50 recipients) |
+| `POST /v2/wallets/bridges`           | Cross-chain bridging transfers        |
 
 <Info>
-**Bridging Note:** For bridging transfers, quotes are generated **after** approval. This prevents quotes from expiring while awaiting review.
+  **Bridging Note:** For bridging transfers, quotes are generated **after**
+  approval. This prevents quotes from expiring while awaiting review.
 </Info>
 
 ## Listing Pending Approvals
@@ -231,16 +236,19 @@ Rejected transfers are cancelled and will not execute.
 
 Transfers with `requireApproval: true` follow this status progression:
 
-| Status                  | Description                                               |
-| :---------------------- | :-------------------------------------------------------- |
-| **PENDING_APPROVAL**    | Transfer awaiting admin approval                          |
-| **APPROVED**            | Transfer approved and proceeding to execution             |
-| **REJECTED**            | Transfer rejected and cancelled                           |
+| Status               | Description                                   |
+| :------------------- | :-------------------------------------------- |
+| **PENDING_APPROVAL** | Transfer awaiting admin approval              |
+| **APPROVED**         | Transfer approved and proceeding to execution |
+| **REJECTED**         | Transfer rejected and cancelled               |
 
 After approval, transfers move to normal execution statuses (`CREATED`, `INITIATED`, `PENDING`, `COMPLETED`).
 
 <Note>
-**Status Updates:** Subscribe to `TRANSFER.APPROVAL.PENDING`, `TRANSFER.APPROVAL.APPROVED`, and `TRANSFER.APPROVAL.REJECTED` webhook events to receive real-time approval notifications. See [Webhooks](/docs/webhooks) for setup instructions.
+  **Status Updates:** Subscribe to `TRANSFER.APPROVAL.PENDING`,
+  `TRANSFER.APPROVAL.APPROVED`, and `TRANSFER.APPROVAL.REJECTED` webhook events
+  to receive real-time approval notifications. See [Webhooks](/docs/webhooks)
+  for setup instructions.
 </Note>
 
 ## Notifications
@@ -248,10 +256,12 @@ After approval, transfers move to normal execution statuses (`CREATED`, `INITIAT
 ### Email Notifications
 
 **Admins receive notifications when:**
+
 - A transfer requires approval (Member-initiated)
 - A transfer needs their review
 
 **Members receive notifications when:**
+
 - Their transfer request is approved
 - Their transfer request is rejected (with reason if provided)
 
@@ -259,11 +269,11 @@ After approval, transfers move to normal execution statuses (`CREATED`, `INITIAT
 
 Subscribe to approval events for automated workflows:
 
-| Event Type                          | Description                                  |
-| :---------------------------------- | :------------------------------------------- |
-| **TRANSFER.APPROVAL.PENDING**       | Transfer created, awaiting approval          |
-| **TRANSFER.APPROVAL.APPROVED**      | Transfer approved, proceeding to execution   |
-| **TRANSFER.APPROVAL.REJECTED**      | Transfer rejected and cancelled              |
+| Event Type                     | Description                                |
+| :----------------------------- | :----------------------------------------- |
+| **TRANSFER.APPROVAL.PENDING**  | Transfer created, awaiting approval        |
+| **TRANSFER.APPROVAL.APPROVED** | Transfer approved, proceeding to execution |
+| **TRANSFER.APPROVAL.REJECTED** | Transfer rejected and cancelled            |
 
 ## Sample Code
 
@@ -299,6 +309,7 @@ Here's a complete approval workflow implementation:
     }
     ```
     If the transfer is flagged for approval, notify approvers (e.g., by email or internal notification).
+
   </Step>
 
   <Step title="List Pending Approvals (for Admin Review)">
@@ -379,8 +390,8 @@ Here's a complete approval workflow implementation:
 
 ## Related Resources
 
-- [Wallet Transfers](/docs/transfers/onchain) - Single wallet transfers
+- [Wallet Transfers](/docs/transactions/transfers) - Single wallet transfers
 - [Batch Transfers](/docs/features/batch-transfers) - Multiple recipient transfers
-- [Bridging](/docs/transfers/bridging) - Cross-chain transfers
+- [Bridging](/docs/transactions/bridging) - Cross-chain transfers
 - [Webhooks](/docs/webhooks) - Real-time approval notifications
 - [API Reference](https://docs.hifibridge.com/api-reference/transfer-approval/list-transfer-approvals) - Complete endpoint documentation

@@ -22377,8 +22377,8 @@
     },
     "/v2/reporting/templates": {
       "get": {
-        "summary": "GET /v2/reporting/templates",
-        "description": "",
+        "summary": "Get Available Metric Templates",
+        "description": "Retrieves a list of all available metric templates (e.g., GROSS_VOLUME, TRANSFERS). Templates define the logic, supported parameters, and breakdown options available for building reports.",
         "tags": ["Reporting"],
         "responses": {
           "200": {
@@ -22401,8 +22401,8 @@
     },
     "/v2/reporting/templates/{name}": {
       "get": {
-        "summary": "GET /v2/reporting/templates/:name",
-        "description": "",
+        "summary": "Get Template Details",
+        "description": "Returns the specific definition for a template, including its description, the list of fields you can pass as parameters, and the dimensions available for breakdowns.",
         "tags": ["Reporting"],
         "responses": {
           "200": {
@@ -22429,15 +22429,15 @@
             "schema": {
               "type": "string"
             },
-            "description": "name parameter"
+            "description": "The name of the metric template (e.g., GROSS_VOLUME, TRANSFERS, NEW_CUSTOMERS)"
           }
         ]
       }
     },
     "/v2/reporting/params/{name}/options": {
       "get": {
-        "summary": "GET /v2/reporting/params/:name/options",
-        "description": "",
+        "summary": "Get Parameter Options",
+        "description": "Fetches valid options for specific parameters (e.g., transactionDirections, transferStatuses) to help validate input or populate UI dropdowns. Supports pagination via query parameters.",
         "tags": ["Reporting"],
         "responses": {
           "200": {
@@ -22464,18 +22464,39 @@
             "schema": {
               "type": "string"
             },
-            "description": "name parameter"
+            "description": "The name of the parameter (e.g., transactionDirections, transferStatuses, userIds)"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Page number for pagination (defaults to 1)"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000
+            },
+            "description": "Number of items per page (defaults to 100, max 1000)"
           }
         ]
       }
     },
     "/v2/reporting/metrics": {
       "post": {
-        "summary": "POST /v2/reporting/metrics",
-        "description": "",
+        "summary": "Create Saved Metric",
+        "description": "Creates and saves a new metric configuration to the database. This does not execute the report, but stores the parameters for future use.",
         "tags": ["Reporting"],
         "responses": {
-          "200": {
+          "201": {
             "$ref": "#/components/responses/CreateMetricResponse"
           },
           "400": {
@@ -22496,8 +22517,8 @@
         }
       },
       "get": {
-        "summary": "GET /v2/reporting/metrics",
-        "description": "",
+        "summary": "List Saved Metrics",
+        "description": "Retrieves all saved metric configurations associated with the authenticated profile.",
         "tags": ["Reporting"],
         "responses": {
           "200": {
@@ -22520,8 +22541,8 @@
     },
     "/v2/reporting/metrics/{id}": {
       "get": {
-        "summary": "GET /v2/reporting/metrics/:id",
-        "description": "",
+        "summary": "Get Metric Details",
+        "description": "Retrieves the configuration details of a specific saved metric by its UUID.",
         "tags": ["Reporting"],
         "responses": {
           "200": {
@@ -22549,13 +22570,13 @@
               "type": "string",
               "format": "uuid"
             },
-            "description": "id parameter"
+            "description": "The UUID of the saved metric"
           }
         ]
       },
       "post": {
-        "summary": "PATCH /v2/reporting/metrics/:id",
-        "description": "",
+        "summary": "Update Saved Metric",
+        "description": "Updates the name or parameters of an existing metric configuration. Supports partial updates.",
         "tags": ["Reporting"],
         "responses": {
           "200": {
@@ -22583,7 +22604,7 @@
               "type": "string",
               "format": "uuid"
             },
-            "description": "id parameter"
+            "description": "The UUID of the saved metric to update"
           }
         ],
         "requestBody": {
@@ -22591,8 +22612,8 @@
         }
       },
       "delete": {
-        "summary": "DELETE /v2/reporting/metrics/:id",
-        "description": "",
+        "summary": "Delete Saved Metric",
+        "description": "Permanently removes a saved metric configuration from the profile.",
         "tags": ["Reporting"],
         "responses": {
           "200": {
@@ -22620,15 +22641,15 @@
               "type": "string",
               "format": "uuid"
             },
-            "description": "id parameter"
+            "description": "The UUID of the saved metric to delete"
           }
         ]
       }
     },
     "/v2/reporting/metrics/preview": {
       "post": {
-        "summary": "POST /v2/reporting/metrics/preview",
-        "description": "",
+        "summary": "Preview Metric Results",
+        "description": "Executes a metric calculation on the fly without saving it to the database. Useful for testing parameters or ad-hoc analysis.",
         "tags": ["Reporting"],
         "responses": {
           "200": {
@@ -22654,8 +22675,8 @@
     },
     "/v2/reporting/metrics/{id}/results": {
       "get": {
-        "summary": "GET /v2/reporting/metrics/:id/results",
-        "description": "",
+        "summary": "Execute Saved Metric",
+        "description": "Runs the calculation for an existing saved metric and returns the dataset.",
         "tags": ["Reporting"],
         "responses": {
           "200": {
@@ -22683,7 +22704,7 @@
               "type": "string",
               "format": "uuid"
             },
-            "description": "id parameter"
+            "description": "The UUID of the saved metric to execute"
           }
         ]
       }

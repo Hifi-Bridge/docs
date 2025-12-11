@@ -13,11 +13,10 @@ Bridging follows a straightforward process:
     Specify source chain, destination chain, and amount to bridge.
   </Step>
   <Step title="Processing">
-    HIFI executes the cross-chain operations (burn on source, mint on destination).
+    HIFI executes the cross-chain operations (burn on source, mint on
+    destination).
   </Step>
-  <Step title="Completion">
-    Stablecoins arrive on the destination chain.
-  </Step>
+  <Step title="Completion">Stablecoins arrive on the destination chain.</Step>
 </Steps>
 
 ## Creating Bridge Requests
@@ -111,11 +110,15 @@ The response contains the bridge request details:
 </Accordion>
 
 <ResponseField name="transferDetails.id" type="string">
-  Unique bridge ID. Use this to check status using the [Retrieve Bridge](https://docs.hifibridge.com/api-reference/cross-chain-bridge/retrieve-a-bridging-request) endpoint.
+  Unique bridge ID. Use this to check status using the [Retrieve
+  Bridge](https://docs.hifibridge.com/api-reference/cross-chain-bridge/retrieve-a-bridging-request)
+  endpoint.
 </ResponseField>
 
 <ResponseField name="transferDetails.status" type="string">
-  Bridge status. Progression: `CREATED` → `SOURCE_INITIATED` → `SOURCE_PROCESSED` → `DESTINATION_INITIATED` → `COMPLETED`. See [Transaction Status](#transaction-status) for details.
+  Bridge status. Progression: `CREATED` → `SOURCE_INITIATED` →
+  `SOURCE_PROCESSED` → `DESTINATION_INITIATED` → `COMPLETED`. See [Transaction
+  Status](#transaction-status) for details.
 </ResponseField>
 
 <ResponseField name="transferDetails.source" type="object">
@@ -131,15 +134,19 @@ The response contains the bridge request details:
 </ResponseField>
 
 <ResponseField name="transferDetails.quoteInformation" type="object">
-  Bridge quote details including amounts and rate. For same-asset bridges, the rate is always "1".
+  Bridge quote details including amounts and rate. For same-asset bridges, the
+  rate is always "1".
 </ResponseField>
 
 <ResponseField name="transferDetails.receipt" type="object">
-  Transaction receipt. Contains `transactionHash` and `operations` (approve, burn, mint) once bridge operations are executed on-chain.
+  Transaction receipt. Contains `transactionHash` and `operations` (approve,
+  burn, mint) once bridge operations are executed on-chain.
 </ResponseField>
 
 <Info>
-For detailed field documentation, see the [Create Bridge](https://docs.hifibridge.com/api-reference/bridge/create-a-bridge) API reference.
+  For detailed field documentation, see the [Create
+  Bridge](https://docs.hifibridge.com/api-reference/bridge/create-a-bridge) API
+  reference.
 </Info>
 
 ## Transaction Status
@@ -148,35 +155,37 @@ Bridge transactions progress through several phases:
 
 ### Source Chain Phase
 
-| Status                  | Description                                                       |
-| :---------------------- | :---------------------------------------------------------------- |
-| **CREATED**             | Bridge request created and awaiting processing                    |
-| **SOURCE_INITIATED**    | Burning tokens on source chain                                    |
-| **SOURCE_PENDING**      | Waiting for source chain confirmation                             |
-| **SOURCE_PROCESSED**    | Tokens successfully burned on source chain                        |
-| **SOURCE_FAILED**       | Source chain operation failed                                     |
+| Status               | Description                                    |
+| :------------------- | :--------------------------------------------- |
+| **CREATED**          | Bridge request created and awaiting processing |
+| **SOURCE_INITIATED** | Burning tokens on source chain                 |
+| **SOURCE_PENDING**   | Waiting for source chain confirmation          |
+| **SOURCE_PROCESSED** | Tokens successfully burned on source chain     |
+| **SOURCE_FAILED**    | Source chain operation failed                  |
 
 ### Destination Chain Phase
 
-| Status                  | Description                                                       |
-| :---------------------- | :---------------------------------------------------------------- |
-| **DESTINATION_INITIATED** | Minting tokens on destination chain                             |
-| **DESTINATION_PENDING**   | Waiting for destination chain confirmation                      |
-| **COMPLETED**             | Tokens successfully minted on destination chain                 |
-| **DESTINATION_FAILED**    | Destination chain operation failed                              |
+| Status                    | Description                                     |
+| :------------------------ | :---------------------------------------------- |
+| **DESTINATION_INITIATED** | Minting tokens on destination chain             |
+| **DESTINATION_PENDING**   | Waiting for destination chain confirmation      |
+| **COMPLETED**             | Tokens successfully minted on destination chain |
+| **DESTINATION_FAILED**    | Destination chain operation failed              |
 
 ### Other Statuses
 
-| Status              | Description                                                       |
-| :------------------ | :---------------------------------------------------------------- |
-| **NOT_INITIATED**   | Bridge not submitted due to validation error                      |
-| **QUOTE_FAILED**    | Quote expired (bridges typically don't use quotes)                |
-| **UNKNOWN**         | Status could not be determined                                    |
+| Status            | Description                                        |
+| :---------------- | :------------------------------------------------- |
+| **NOT_INITIATED** | Bridge not submitted due to validation error       |
+| **QUOTE_FAILED**  | Quote expired (bridges typically don't use quotes) |
+| **UNKNOWN**       | Status could not be determined                     |
 
 ## Tracking Bridges
 
 <Note>
-**Status Updates:** Subscribe to `WALLET.BRIDGE.CREATE` and `WALLET.BRIDGE.UPDATE` webhook events to receive real-time status notifications. See [Webhooks](/docs/webhooks) for setup instructions.
+  **Status Updates:** Subscribe to `WALLET.BRIDGE.CREATE` and
+  `WALLET.BRIDGE.UPDATE` webhook events to receive real-time status
+  notifications. See [Webhooks](/docs/webhooks) for setup instructions.
 </Note>
 
 Monitor bridge status using the [Retrieve Bridge](https://docs.hifibridge.com/api-reference/bridge/retrieve-a-bridge) endpoint.
@@ -225,44 +234,50 @@ When the bridge is completed, the response includes all operation hashes:
 </Accordion>
 
 <ResponseField name="transferDetails.status" type="string">
-  Bridge status. `COMPLETED` means tokens have been successfully minted on the destination chain.
+  Bridge status. `COMPLETED` means tokens have been successfully minted on the
+  destination chain.
 </ResponseField>
 
 <ResponseField name="transferDetails.receipt.operations" type="object">
-  Blockchain operations that were executed during the bridge. Each operation (approve, burn, mint) contains `transactionHash`, `userOpHash`, and `chain` for verification on block explorers.
+  Blockchain operations that were executed during the bridge. Each operation
+  (approve, burn, mint) contains `transactionHash`, `userOpHash`, and `chain`
+  for verification on block explorers.
 </ResponseField>
 
 ## Bridge Operations
 
 Bridging involves three blockchain operations tracked in the `receipt.operations` object:
 
-| Operation   | Description                                                       | Chain         |
-| :---------- | :---------------------------------------------------------------- | :------------ |
-| **Approve** | Authorizes bridge contract to spend your tokens                   | Source chain  |
-| **Burn**    | Destroys tokens on the source chain                               | Source chain  |
-| **Mint**    | Creates equivalent tokens on the destination chain                | Destination   |
+| Operation   | Description                                        | Chain        |
+| :---------- | :------------------------------------------------- | :----------- |
+| **Approve** | Authorizes bridge contract to spend your tokens    | Source chain |
+| **Burn**    | Destroys tokens on the source chain                | Source chain |
+| **Mint**    | Creates equivalent tokens on the destination chain | Destination  |
 
 Each operation includes:
+
 - `transactionHash` - Blockchain transaction hash (view on block explorer)
 - `userOpHash` - User operation hash for account abstraction wallets
 - `chain` - Which blockchain the operation occurred on
 
 <Info>
-**Processing Time:** Bridge operations typically complete within 2-5 minutes depending on network congestion. Use the transaction hashes to track progress on block explorers.
+  **Processing Time:** Bridge operations typically complete within 2-5 minutes
+  depending on network congestion. Use the transaction hashes to track progress
+  on block explorers.
 </Info>
 
 ## Supported Routes
 
 Currently supported bridging routes:
 
-| Source Chain        | Destination Chains                                    |
-| :------------------ | :---------------------------------------------------- |
-| **Polygon**         | Ethereum, Base, Optimism, Arbitrum, Solana            |
-| **Ethereum**        | Polygon, Base, Optimism, Arbitrum, Solana             |
-| **Solana**          | Polygon, Ethereum, Base, Optimism, Arbitrum           |
-| **Base**            | Polygon, Ethereum, Solana, Optimism, Arbitrum         |
-| **Optimism**        | Polygon, Ethereum, Solana, Base, Arbitrum             |
-| **Arbitrum**        | Polygon, Ethereum, Solana, Base, Optimism             |
+| Source Chain | Destination Chains                            |
+| :----------- | :-------------------------------------------- |
+| **Polygon**  | Ethereum, Base, Optimism, Arbitrum, Solana    |
+| **Ethereum** | Polygon, Base, Optimism, Arbitrum, Solana     |
+| **Solana**   | Polygon, Ethereum, Base, Optimism, Arbitrum   |
+| **Base**     | Polygon, Ethereum, Solana, Optimism, Arbitrum |
+| **Optimism** | Polygon, Ethereum, Solana, Base, Arbitrum     |
+| **Arbitrum** | Polygon, Ethereum, Solana, Base, Optimism     |
 
 **Supported currencies:** USDC, USDT
 
@@ -329,11 +344,12 @@ Currently supported bridging routes:
     ```
   </Step>
 
-  <Step title="Monitor progress">
-    Poll the retrieve endpoint or subscribe to `WALLET.BRIDGE.UPDATE` webhooks. Track through statuses:
-    1. SOURCE_INITIATED → SOURCE_PENDING → SOURCE_PROCESSED
-    2. DESTINATION_INITIATED → DESTINATION_PENDING → COMPLETED
-  </Step>
+{" "}
+<Step title="Monitor progress">
+  Poll the retrieve endpoint or subscribe to `WALLET.BRIDGE.UPDATE` webhooks.
+  Track through statuses: 1. SOURCE_INITIATED → SOURCE_PENDING →
+  SOURCE_PROCESSED 2. DESTINATION_INITIATED → DESTINATION_PENDING → COMPLETED
+</Step>
 
   <Step title="Verify on block explorers">
     Once COMPLETED, use transaction hashes from `receipt.operations` to verify:
@@ -369,9 +385,11 @@ Currently supported bridging routes:
     ```
   </Step>
 
-  <Step title="Review pending bridge">
-    The bridge enters `PENDING_APPROVAL` status. Dashboard admins are notified to approve or reject via email and webhook.
-  </Step>
+{" "}
+<Step title="Review pending bridge">
+  The bridge enters `PENDING_APPROVAL` status. Dashboard admins are notified to
+  approve or reject via email and webhook.
+</Step>
 
   <Step title="Execution or rejection">
     If approved, the bridge proceeds through normal processing. If rejected, it's cancelled.
@@ -385,7 +403,7 @@ Currently supported bridging routes:
 
 ## Related Resources
 
-- [Wallet Transfers](/docs/transfers/onchain) - Same-chain transfers
+- [Wallet Transfers](/docs/transactions/transfers) - Same-chain transfers
 - [Wallets](/docs/wallets) - Understand wallet addresses and balances
 - [Webhooks](/docs/webhooks) - Real-time bridge status notifications
 - [API Reference](https://docs.hifibridge.com/api-reference/bridge/create-a-bridge) - Complete endpoint documentation
