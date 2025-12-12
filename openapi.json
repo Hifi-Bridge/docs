@@ -2480,8 +2480,8 @@
               "ParamOptionsUserIdsExample": {
                 "$ref": "#/components/examples/ParamOptionsUserIdsExample"
               },
-              "ParamOptionsTransactionDirectionsExample": {
-                "$ref": "#/components/examples/ParamOptionsTransactionDirectionsExample"
+              "ParamOptionsTransactionTypesExample": {
+                "$ref": "#/components/examples/ParamOptionsTransactionTypesExample"
               }
             }
           }
@@ -2579,8 +2579,8 @@
               "PreviewMetricResponseTransfersWithBreakdownsExample": {
                 "$ref": "#/components/examples/PreviewMetricResponseTransfersWithBreakdownsExample"
               },
-              "MetricResultsNewCustomersExample": {
-                "$ref": "#/components/examples/MetricResultsNewCustomersExample"
+              "MetricResultsNewUsersExample": {
+                "$ref": "#/components/examples/MetricResultsNewUsersExample"
               },
               "MetricResultsGrossVolumeExample": {
                 "$ref": "#/components/examples/MetricResultsGrossVolumeExample"
@@ -15058,7 +15058,7 @@
       },
       "MetricCalculationResponse": {
         "type": "object",
-        "description": "Response from metric calculation endpoints. The structure of `data` array items\nvaries based on the `breakdowns` parameter in the request.\n\n**Base structure (no breakdowns):**\n- Each item has: `periodStart`, plus metric-specific fields (e.g., `grossVolume`, `transferCount`)\n\n**With breakdowns:**\n- Each item includes breakdown dimension fields (e.g., `transactionDirection`, `transferStatus`, `userId`)\n- Field names match the breakdown dimension names from the request\n\n**Example without breakdowns:**\n```json\n{\n  \"status\": \"success\",\n  \"data\": [\n    { \"periodStart\": \"2025-01-01T00:00:00Z\", \"grossVolume\": 1000.50 },\n    { \"periodStart\": \"2025-01-02T00:00:00Z\", \"grossVolume\": 2000.75 }\n  ],\n  \"metadata\": { ... }\n}\n```\n\n**Example with breakdowns: [\"transactionDirection\"]:**\n```json\n{\n  \"status\": \"success\",\n  \"data\": [\n    { \"periodStart\": \"2025-01-01T00:00:00Z\", \"transactionDirection\": \"onramp\", \"grossVolume\": 500.25 },\n    { \"periodStart\": \"2025-01-01T00:00:00Z\", \"transactionDirection\": \"offramp\", \"grossVolume\": 500.25 }\n  ],\n  \"metadata\": { ... }\n}\n```\n",
+        "description": "Response from metric calculation endpoints. The structure of `data` array items\nvaries based on the `breakdowns` parameter in the request.\n\n**Base structure (no breakdowns):**\n- Each item has: `periodStart`, plus metric-specific fields (e.g., `grossVolume`, `transactionCount`)\n\n**With breakdowns:**\n- Each item includes breakdown dimension fields (e.g., `transactionType`, `transactionStatus`, `userId`)\n- Field names match the breakdown dimension names from the request\n\n**Example without breakdowns:**\n```json\n{\n  \"status\": \"success\",\n  \"data\": [\n    { \"periodStart\": \"2025-01-01T00:00:00Z\", \"grossVolume\": 1000.50 },\n    { \"periodStart\": \"2025-01-02T00:00:00Z\", \"grossVolume\": 2000.75 }\n  ],\n  \"metadata\": { ... }\n}\n```\n\n**Example with breakdowns: [\"transactionType\"]:**\n```json\n{\n  \"status\": \"success\",\n  \"data\": [\n    { \"periodStart\": \"2025-01-01T00:00:00Z\", \"transactionType\": \"onramp\", \"grossVolume\": 500.25 },\n    { \"periodStart\": \"2025-01-01T00:00:00Z\", \"transactionType\": \"offramp\", \"grossVolume\": 500.25 }\n  ],\n  \"metadata\": { ... }\n}\n```\n",
         "properties": {
           "status": {
             "type": "string",
@@ -15070,7 +15070,7 @@
             "description": "Array of metric calculation results. Each object structure depends on:\n1. The metric template (determines metric value fields)\n2. The breakdowns parameter (adds dimension fields)\n",
             "items": {
               "type": "object",
-              "description": "Metric result row. Contains:\n- `periodStart` (always present): ISO 8601 timestamp\n- Metric-specific fields (e.g., `grossVolume`, `transferCount`, `newCustomerCount`)\n- Breakdown dimension fields (if breakdowns specified): field names match breakdown dimension names\n\nAdditional properties may be present based on:\n- Metric template (adds template-specific value fields)\n- Breakdown dimensions (adds dimension fields matching breakdown names)\n",
+              "description": "Metric result row. Contains:\n- `periodStart` (always present): ISO 8601 timestamp\n- Metric-specific fields (e.g., `grossVolume`, `transactionCount`, `newUserCount`)\n- Breakdown dimension fields (if breakdowns specified): field names match breakdown dimension names\n\nAdditional properties may be present based on:\n- Metric template (adds template-specific value fields)\n- Breakdown dimensions (adds dimension fields matching breakdown names)\n",
               "properties": {
                 "periodStart": {
                   "type": "string",
@@ -15085,23 +15085,40 @@
                   "type": "number",
                   "description": "Gross volume in USD (for GROSS_VOLUME template)"
                 },
-                "transferCount": {
+                "transactionCount": {
                   "type": "number",
-                  "description": "Number of transfers (for TRANSFERS template)"
+                  "description": "Number of transactions (for TRANSACTION_COUNT template)"
                 },
-                "newCustomerCount": {
+                "newUserCount": {
                   "type": "number",
-                  "description": "Number of new customers (for NEW_CUSTOMERS template)"
+                  "description": "Number of new users (for NEW_USERS template)"
                 },
-                "transactionDirection": {
+                "transactionType": {
                   "type": "string",
-                  "enum": ["onramp", "offramp", "crypto_to_crypto"],
-                  "description": "Transaction direction (present if \"transactionDirection\" in breakdowns)"
+                  "enum": ["onramp", "offramp", "transfer"],
+                  "description": "Transaction type (present if \"transactionType\" in breakdowns)"
                 },
-                "transferStatus": {
+                "transactionStatus": {
                   "type": "string",
-                  "enum": ["COMPLETED", "FAILED", "PENDING", "CANCELLED"],
-                  "description": "Transfer status (present if \"transferStatus\" in breakdowns)"
+                  "enum": [
+                    "AWAITING_FUNDS",
+                    "COMPLETED",
+                    "CRYPTO_FAILED",
+                    "CRYPTO_INITIATED",
+                    "CRYPTO_PENDING",
+                    "FAILED",
+                    "FIAT_FAILED",
+                    "FIAT_INITIATED",
+                    "FIAT_PENDING",
+                    "FIAT_PROCESSED",
+                    "FIAT_RETURNED",
+                    "INITIATED",
+                    "NOT_INITIATED",
+                    "PENDING",
+                    "QUOTE_FAILED",
+                    "REJECTED"
+                  ],
+                  "description": "Transaction status (present if \"transactionStatus\" in breakdowns)"
                 },
                 "userId": {
                   "type": "string",
@@ -15123,7 +15140,7 @@
         "properties": {
           "template": {
             "type": "string",
-            "enum": ["GROSS_VOLUME", "TRANSFERS", "NEW_CUSTOMERS"],
+            "enum": ["GROSS_VOLUME", "TRANSACTION_COUNT", "NEW_USERS"],
             "description": "The metric template used"
           },
           "recordCount": {
@@ -15173,7 +15190,7 @@
                 "type": "array",
                 "items": {
                   "type": "string",
-                  "enum": ["transactionDirection", "transferStatus", "userId"]
+                  "enum": ["transactionType", "transactionStatus", "userId"]
                 },
                 "description": "List of breakdown dimensions used"
               },
@@ -15209,7 +15226,7 @@
           },
           "template": {
             "type": "string",
-            "enum": ["GROSS_VOLUME", "TRANSFERS", "NEW_CUSTOMERS"],
+            "enum": ["GROSS_VOLUME", "TRANSACTION_COUNT", "NEW_USERS"],
             "description": "Metric template name"
           },
           "name": {
@@ -15267,27 +15284,44 @@
             },
             "description": "Filter by specific user IDs"
           },
-          "transactionDirections": {
+          "transactionTypes": {
             "type": "array",
             "items": {
               "type": "string",
-              "enum": ["onramp", "offramp", "crypto_to_crypto"]
+              "enum": ["onramp", "offramp", "transfer"]
             },
-            "description": "Filter by transaction directions"
+            "description": "Filter by transaction types"
           },
-          "transferStatuses": {
+          "transactionStatuses": {
             "type": "array",
             "items": {
               "type": "string",
-              "enum": ["COMPLETED", "FAILED", "PENDING", "CANCELLED"]
-            },
-            "description": "Filter by transfer statuses (for TRANSFERS template)"
+              "enum": [
+                "AWAITING_FUNDS",
+                "COMPLETED",
+                "CRYPTO_FAILED",
+                "CRYPTO_INITIATED",
+                "CRYPTO_PENDING",
+                "FAILED",
+                "FIAT_FAILED",
+                "FIAT_INITIATED",
+                "FIAT_PENDING",
+                "FIAT_PROCESSED",
+                "FIAT_RETURNED",
+                "INITIATED",
+                "NOT_INITIATED",
+                "PENDING",
+                "QUOTE_FAILED",
+                "REJECTED"
+              ],
+              "description": "Filter by transaction statuses (for TRANSACTION_COUNT template)"
+            }
           },
           "breakdowns": {
             "type": "array",
             "items": {
               "type": "string",
-              "enum": ["transactionDirection", "transferStatus", "userId"]
+              "enum": ["transactionType", "transactionStatus", "userId"]
             },
             "maxItems": 2,
             "description": "Dimensions to group results by. Maximum 2 breakdowns allowed.\nField names in response data will match these dimension names.\n"
@@ -15308,7 +15342,7 @@
         "properties": {
           "template": {
             "type": "string",
-            "enum": ["GROSS_VOLUME", "TRANSFERS", "NEW_CUSTOMERS"],
+            "enum": ["GROSS_VOLUME", "TRANSACTION_COUNT", "NEW_USERS"],
             "description": "Metric template name"
           },
           "name": {
@@ -15345,7 +15379,7 @@
         "properties": {
           "template": {
             "type": "string",
-            "enum": ["GROSS_VOLUME", "TRANSFERS", "NEW_CUSTOMERS"],
+            "enum": ["GROSS_VOLUME", "TRANSACTION_COUNT", "NEW_USERS"],
             "description": "Metric template name"
           },
           "params": {
@@ -19328,11 +19362,11 @@
                   "options": ["day", "week", "month"]
                 },
                 {
-                  "name": "transactionDirections",
+                  "name": "transactionTypes",
                   "type": "enum",
                   "required": false,
                   "multiple": true,
-                  "options": ["onramp", "offramp", "onchain"]
+                  "options": ["onramp", "offramp", "transfer"]
                 },
                 {
                   "name": "userIds",
@@ -19364,12 +19398,12 @@
                 }
               ],
               "rules": ["createdBefore must be after createdAfter"],
-              "breakdownOptions": ["transactionDirection", "userId"]
+              "breakdownOptions": ["transactionType", "userId"]
             },
             {
-              "template": "TRANSFERS",
-              "displayName": "Transfers",
-              "description": "Aggregated count of transactions grouped by status and direction over time.",
+              "template": "TRANSACTION_COUNT",
+              "displayName": "Transaction Count",
+              "description": "Aggregated count of transactions grouped by status and type over time.",
               "supportedParams": [
                 {
                   "name": "createdAfter",
@@ -19398,14 +19432,14 @@
                   "options": ["day", "week", "month"]
                 },
                 {
-                  "name": "transactionDirections",
+                  "name": "transactionTypes",
                   "type": "enum",
                   "required": false,
                   "multiple": true,
-                  "options": ["onramp", "offramp", "onchain"]
+                  "options": ["onramp", "offramp", "transfer"]
                 },
                 {
-                  "name": "transferStatuses",
+                  "name": "transactionStatuses",
                   "type": "enum",
                   "required": false,
                   "multiple": true,
@@ -19460,14 +19494,14 @@
               ],
               "rules": ["createdBefore must be after createdAfter"],
               "breakdownOptions": [
-                "transactionDirection",
-                "transferStatus",
+                "transactionType",
+                "transactionStatus",
                 "userId"
               ]
             },
             {
-              "template": "NEW_CUSTOMERS",
-              "displayName": "New Customers",
+              "template": "NEW_USERS",
+              "displayName": "New Users",
               "description": "Count of new unique end-users onboarded within the time period.",
               "supportedParams": [
                 {
@@ -19552,11 +19586,11 @@
                 "options": ["day", "week", "month"]
               },
               {
-                "name": "transactionDirections",
+                "name": "transactionTypes",
                 "type": "enum",
                 "required": false,
                 "multiple": true,
-                "options": ["onramp", "offramp", "onchain"]
+                "options": ["onramp", "offramp", "transfer"]
               },
               {
                 "name": "userIds",
@@ -19588,7 +19622,7 @@
               }
             ],
             "rules": ["createdBefore must be after createdAfter"],
-            "breakdownOptions": ["transactionDirection", "userId"]
+            "breakdownOptions": ["transactionType", "userId"]
           },
           "metadata": {}
         }
@@ -19614,11 +19648,11 @@
           }
         }
       },
-      "ParamOptionsTransactionDirectionsExample": {
-        "summary": "Transaction directions parameter options",
+      "ParamOptionsTransactionTypesExample": {
+        "summary": "Transaction types parameter options",
         "value": {
           "status": "success",
-          "data": ["onramp", "offramp", "onchain"],
+          "data": ["onramp", "offramp", "transfer"],
           "metadata": {
             "count": 3,
             "page": 1,
@@ -19636,7 +19670,7 @@
           "data": {
             "id": "1154d700-bd7d-41d5-8676-87b541baa86e",
             "profileId": "e4c758d7-5475-4505-ba15-e129db0a441f",
-            "template": "TRANSFERS",
+            "template": "TRANSACTION_COUNT",
             "name": "Monthly Transfer Analysis",
             "params": {
               "createdAfter": "2025-01-01",
@@ -19657,7 +19691,7 @@
             {
               "id": "1154d700-bd7d-41d5-8676-87b541baa86e",
               "profileId": "e4c758d7-5475-4505-ba15-e129db0a441f",
-              "template": "TRANSFERS",
+              "template": "TRANSACTION_COUNT",
               "name": "Monthly Transfer Analysis",
               "params": {
                 "createdAfter": "2025-01-01",
@@ -19670,15 +19704,15 @@
             {
               "id": "d2872dce-d2d1-41ae-87a9-f773adbf97ca",
               "profileId": "e4c758d7-5475-4505-ba15-e129db0a441f",
-              "template": "TRANSFERS",
+              "template": "TRANSACTION_COUNT",
               "name": "Monthly Transfer Analysis",
               "params": {
-                "breakdowns": ["transactionDirection"],
+                "breakdowns": ["transactionType"],
                 "createdAfter": "2025-01-01",
                 "createdBefore": "2025-12-01",
-                "transferStatuses": ["COMPLETED"],
+                "transactionStatuses": ["COMPLETED"],
                 "calculationInterval": "month",
-                "transactionDirections": ["onramp", "offramp"]
+                "transactionTypes": ["onramp", "offramp"]
               },
               "createdAt": "2025-12-08T22:26:45.765Z",
               "updatedAt": "2025-12-08T22:26:45.765Z"
@@ -19692,7 +19726,7 @@
                 "createdAfter": "2025-11-01",
                 "createdBefore": "2025-11-07",
                 "calculationInterval": "day",
-                "transactionDirections": ["onramp", "offramp"]
+                "transactionTypes": ["onramp", "offramp"]
               },
               "createdAt": "2025-12-08T22:26:13.659Z",
               "updatedAt": "2025-12-08T22:26:13.659Z"
@@ -19713,22 +19747,22 @@
             "createdAfter": "2025-11-01",
             "createdBefore": "2025-11-07",
             "calculationInterval": "day",
-            "transactionDirections": ["onramp", "offramp"]
+            "transactionTypes": ["onramp", "offramp"]
           }
         }
       },
       "CreateMetricRequestWithBreakdownsExample": {
-        "summary": "Create metric request (TRANSFERS with breakdowns)",
+        "summary": "Create metric request (TRANSACTION_COUNT with breakdowns)",
         "value": {
-          "template": "TRANSFERS",
+          "template": "TRANSACTION_COUNT",
           "name": "Monthly Transfer Analysis",
           "params": {
             "createdAfter": "2025-01-01",
             "createdBefore": "2025-12-01",
             "calculationInterval": "month",
-            "transactionDirections": ["onramp", "offramp"],
-            "transferStatuses": ["COMPLETED"],
-            "breakdowns": ["transactionDirection"]
+            "transactionTypes": ["onramp", "offramp"],
+            "transactionStatuses": ["COMPLETED"],
+            "breakdowns": ["transactionType"]
           }
         }
       },
@@ -19745,7 +19779,7 @@
               "createdAfter": "2025-11-01",
               "createdBefore": "2025-11-07",
               "calculationInterval": "day",
-              "transactionDirections": ["onramp", "offramp"]
+              "transactionTypes": ["onramp", "offramp"]
             },
             "createdAt": "2025-12-08T22:26:13.659Z",
             "updatedAt": "2025-12-08T22:26:13.659Z"
@@ -19774,7 +19808,7 @@
           "data": {
             "id": "1154d700-bd7d-41d5-8676-87b541baa86e",
             "profileId": "e4c758d7-5475-4505-ba15-e129db0a441f",
-            "template": "TRANSFERS",
+            "template": "TRANSACTION_COUNT",
             "name": "An Updated Report Title",
             "params": {
               "createdAfter": "2025-01-01",
@@ -19794,7 +19828,7 @@
           "data": {
             "id": "1154d700-bd7d-41d5-8676-87b541baa86e",
             "profileId": "e4c758d7-5475-4505-ba15-e129db0a441f",
-            "template": "TRANSFERS",
+            "template": "TRANSACTION_COUNT",
             "name": "An Updated Report Title",
             "params": {
               "createdAfter": "2025-01-01",
@@ -19815,7 +19849,7 @@
             "createdAfter": "2025-11-01",
             "createdBefore": "2025-11-07",
             "calculationInterval": "day",
-            "transactionDirections": ["onramp", "offramp"]
+            "transactionTypes": ["onramp", "offramp"]
           }
         }
       },
@@ -19875,7 +19909,7 @@
                 "specified": true,
                 "values": "day"
               },
-              "transactionDirections": {
+              "transactionTypes": {
                 "applied": "subset",
                 "specified": true,
                 "count": 2,
@@ -19900,7 +19934,7 @@
             "createdAfter": "2025-01-01",
             "createdBefore": "2025-12-01",
             "calculationInterval": "month",
-            "transactionDirections": ["onramp", "offramp"]
+            "transactionTypes": ["onramp", "offramp"]
           }
         }
       },
@@ -19984,7 +20018,7 @@
                 "specified": true,
                 "values": "month"
               },
-              "transactionDirections": {
+              "transactionTypes": {
                 "applied": "subset",
                 "specified": true,
                 "count": 2,
@@ -20002,171 +20036,171 @@
         }
       },
       "PreviewMetricRequestTransfersWithBreakdownsExample": {
-        "summary": "Preview TRANSFERS metric (with multiple breakdowns)",
+        "summary": "Preview TRANSACTION_COUNT metric (with multiple breakdowns)",
         "value": {
-          "template": "TRANSFERS",
+          "template": "TRANSACTION_COUNT",
           "params": {
             "createdAfter": "2025-11-01",
             "createdBefore": "2025-11-07",
             "calculationInterval": "day",
-            "transactionDirections": ["onramp", "offramp"],
-            "transferStatuses": ["COMPLETED", "FAILED"],
-            "breakdowns": ["transactionDirection", "transferStatus"]
+            "transactionTypes": ["onramp", "offramp"],
+            "transactionStatuses": ["COMPLETED", "FAILED"],
+            "breakdowns": ["transactionType", "transactionStatus"]
           }
         }
       },
       "PreviewMetricResponseTransfersWithBreakdownsExample": {
-        "summary": "TRANSFERS calculation result (with breakdowns)",
+        "summary": "TRANSACTION_COUNT calculation result (with breakdowns)",
         "value": {
           "status": "success",
           "data": [
             {
               "periodStart": "2025-11-06",
-              "transactionDirection": "offramp",
-              "transferStatus": "FAILED",
-              "transferCount": 0
+              "transactionType": "offramp",
+              "transactionStatus": "FAILED",
+              "transactionCount": 0
             },
             {
               "periodStart": "2025-11-06",
-              "transactionDirection": "offramp",
-              "transferStatus": "COMPLETED",
-              "transferCount": 0
+              "transactionType": "offramp",
+              "transactionStatus": "COMPLETED",
+              "transactionCount": 0
             },
             {
               "periodStart": "2025-11-06",
-              "transactionDirection": "onramp",
-              "transferStatus": "FAILED",
-              "transferCount": 0
+              "transactionType": "onramp",
+              "transactionStatus": "FAILED",
+              "transactionCount": 0
             },
             {
               "periodStart": "2025-11-06",
-              "transactionDirection": "onramp",
-              "transferStatus": "COMPLETED",
-              "transferCount": 0
+              "transactionType": "onramp",
+              "transactionStatus": "COMPLETED",
+              "transactionCount": 0
             },
             {
               "periodStart": "2025-11-05",
-              "transactionDirection": "offramp",
-              "transferStatus": "FAILED",
-              "transferCount": 0
+              "transactionType": "offramp",
+              "transactionStatus": "FAILED",
+              "transactionCount": 0
             },
             {
               "periodStart": "2025-11-05",
-              "transactionDirection": "offramp",
-              "transferStatus": "COMPLETED",
-              "transferCount": 0
+              "transactionType": "offramp",
+              "transactionStatus": "COMPLETED",
+              "transactionCount": 0
             },
             {
               "periodStart": "2025-11-05",
-              "transactionDirection": "onramp",
-              "transferStatus": "FAILED",
-              "transferCount": 0
+              "transactionType": "onramp",
+              "transactionStatus": "FAILED",
+              "transactionCount": 0
             },
             {
               "periodStart": "2025-11-05",
-              "transactionDirection": "onramp",
-              "transferStatus": "COMPLETED",
-              "transferCount": 0
+              "transactionType": "onramp",
+              "transactionStatus": "COMPLETED",
+              "transactionCount": 0
             },
             {
               "periodStart": "2025-11-04",
-              "transactionDirection": "offramp",
-              "transferStatus": "FAILED",
-              "transferCount": 0
+              "transactionType": "offramp",
+              "transactionStatus": "FAILED",
+              "transactionCount": 0
             },
             {
               "periodStart": "2025-11-04",
-              "transactionDirection": "offramp",
-              "transferStatus": "COMPLETED",
-              "transferCount": 0
+              "transactionType": "offramp",
+              "transactionStatus": "COMPLETED",
+              "transactionCount": 0
             },
             {
               "periodStart": "2025-11-04",
-              "transactionDirection": "onramp",
-              "transferStatus": "FAILED",
-              "transferCount": 0
+              "transactionType": "onramp",
+              "transactionStatus": "FAILED",
+              "transactionCount": 0
             },
             {
               "periodStart": "2025-11-04",
-              "transactionDirection": "onramp",
-              "transferStatus": "COMPLETED",
-              "transferCount": 0
+              "transactionType": "onramp",
+              "transactionStatus": "COMPLETED",
+              "transactionCount": 0
             },
             {
               "periodStart": "2025-11-03",
-              "transactionDirection": "offramp",
-              "transferStatus": "FAILED",
-              "transferCount": 0
+              "transactionType": "offramp",
+              "transactionStatus": "FAILED",
+              "transactionCount": 0
             },
             {
               "periodStart": "2025-11-03",
-              "transactionDirection": "offramp",
-              "transferStatus": "COMPLETED",
-              "transferCount": 0
+              "transactionType": "offramp",
+              "transactionStatus": "COMPLETED",
+              "transactionCount": 0
             },
             {
               "periodStart": "2025-11-03",
-              "transactionDirection": "onramp",
-              "transferStatus": "FAILED",
-              "transferCount": 0
+              "transactionType": "onramp",
+              "transactionStatus": "FAILED",
+              "transactionCount": 0
             },
             {
               "periodStart": "2025-11-03",
-              "transactionDirection": "onramp",
-              "transferStatus": "COMPLETED",
-              "transferCount": 0
+              "transactionType": "onramp",
+              "transactionStatus": "COMPLETED",
+              "transactionCount": 0
             },
             {
               "periodStart": "2025-11-02",
-              "transactionDirection": "offramp",
-              "transferStatus": "FAILED",
-              "transferCount": 0
+              "transactionType": "offramp",
+              "transactionStatus": "FAILED",
+              "transactionCount": 0
             },
             {
               "periodStart": "2025-11-02",
-              "transactionDirection": "offramp",
-              "transferStatus": "COMPLETED",
-              "transferCount": 0
+              "transactionType": "offramp",
+              "transactionStatus": "COMPLETED",
+              "transactionCount": 0
             },
             {
               "periodStart": "2025-11-02",
-              "transactionDirection": "onramp",
-              "transferStatus": "FAILED",
-              "transferCount": 0
+              "transactionType": "onramp",
+              "transactionStatus": "FAILED",
+              "transactionCount": 0
             },
             {
               "periodStart": "2025-11-02",
-              "transactionDirection": "onramp",
-              "transferStatus": "COMPLETED",
-              "transferCount": 0
+              "transactionType": "onramp",
+              "transactionStatus": "COMPLETED",
+              "transactionCount": 0
             },
             {
               "periodStart": "2025-11-01",
-              "transactionDirection": "offramp",
-              "transferStatus": "FAILED",
-              "transferCount": 0
+              "transactionType": "offramp",
+              "transactionStatus": "FAILED",
+              "transactionCount": 0
             },
             {
               "periodStart": "2025-11-01",
-              "transactionDirection": "offramp",
-              "transferStatus": "COMPLETED",
-              "transferCount": 0
+              "transactionType": "offramp",
+              "transactionStatus": "COMPLETED",
+              "transactionCount": 0
             },
             {
               "periodStart": "2025-11-01",
-              "transactionDirection": "onramp",
-              "transferStatus": "FAILED",
-              "transferCount": 0
+              "transactionType": "onramp",
+              "transactionStatus": "FAILED",
+              "transactionCount": 0
             },
             {
               "periodStart": "2025-11-01",
-              "transactionDirection": "onramp",
-              "transferStatus": "COMPLETED",
-              "transferCount": 0
+              "transactionType": "onramp",
+              "transactionStatus": "COMPLETED",
+              "transactionCount": 0
             }
           ],
           "metadata": {
-            "template": "TRANSFERS",
+            "template": "TRANSACTION_COUNT",
             "recordCount": 24,
             "projectedRowCount": 180,
             "filledCount": 24,
@@ -20191,13 +20225,13 @@
                 "specified": true,
                 "values": "day"
               },
-              "transactionDirections": {
+              "transactionTypes": {
                 "applied": "subset",
                 "specified": true,
                 "count": 2,
                 "values": ["onramp", "offramp"]
               },
-              "transferStatuses": {
+              "transactionStatuses": {
                 "applied": "subset",
                 "specified": true,
                 "count": 2,
@@ -20213,147 +20247,147 @@
                 "applied": "subset",
                 "specified": true,
                 "count": 2,
-                "values": ["transactionDirection", "transferStatus"]
+                "values": ["transactionType", "transactionStatus"]
               }
             },
             "breakdowns": {
-              "dimensions": ["transactionDirection", "transferStatus"],
+              "dimensions": ["transactionType", "transactionStatus"],
               "dimensionCounts": {
-                "transactionDirection": 3,
-                "transferStatus": 10
+                "transactionType": 3,
+                "transactionStatus": 10
               }
             }
           }
         }
       },
-      "MetricResultsNewCustomersExample": {
-        "summary": "NEW_CUSTOMERS metric results (no breakdowns)",
+      "MetricResultsNewUsersExample": {
+        "summary": "NEW_USERS metric results (no breakdowns)",
         "value": {
           "status": "success",
           "data": [
             {
               "periodStart": "2025-12-01",
-              "newCustomerCount": 0
+              "newUserCount": 0
             },
             {
               "periodStart": "2025-11-30",
-              "newCustomerCount": 4
+              "newUserCount": 4
             },
             {
               "periodStart": "2025-11-29",
-              "newCustomerCount": 4
+              "newUserCount": 4
             },
             {
               "periodStart": "2025-11-28",
-              "newCustomerCount": 0
+              "newUserCount": 0
             },
             {
               "periodStart": "2025-11-27",
-              "newCustomerCount": 0
+              "newUserCount": 0
             },
             {
               "periodStart": "2025-11-26",
-              "newCustomerCount": 0
+              "newUserCount": 0
             },
             {
               "periodStart": "2025-11-25",
-              "newCustomerCount": 0
+              "newUserCount": 0
             },
             {
               "periodStart": "2025-11-24",
-              "newCustomerCount": 0
+              "newUserCount": 0
             },
             {
               "periodStart": "2025-11-23",
-              "newCustomerCount": 0
+              "newUserCount": 0
             },
             {
               "periodStart": "2025-11-22",
-              "newCustomerCount": 0
+              "newUserCount": 0
             },
             {
               "periodStart": "2025-11-21",
-              "newCustomerCount": 25
+              "newUserCount": 25
             },
             {
               "periodStart": "2025-11-20",
-              "newCustomerCount": 0
+              "newUserCount": 0
             },
             {
               "periodStart": "2025-11-19",
-              "newCustomerCount": 0
+              "newUserCount": 0
             },
             {
               "periodStart": "2025-11-18",
-              "newCustomerCount": 0
+              "newUserCount": 0
             },
             {
               "periodStart": "2025-11-17",
-              "newCustomerCount": 0
+              "newUserCount": 0
             },
             {
               "periodStart": "2025-11-16",
-              "newCustomerCount": 0
+              "newUserCount": 0
             },
             {
               "periodStart": "2025-11-15",
-              "newCustomerCount": 0
+              "newUserCount": 0
             },
             {
               "periodStart": "2025-11-14",
-              "newCustomerCount": 0
+              "newUserCount": 0
             },
             {
               "periodStart": "2025-11-13",
-              "newCustomerCount": 3
+              "newUserCount": 3
             },
             {
               "periodStart": "2025-11-12",
-              "newCustomerCount": 14
+              "newUserCount": 14
             },
             {
               "periodStart": "2025-11-11",
-              "newCustomerCount": 4
+              "newUserCount": 4
             },
             {
               "periodStart": "2025-11-10",
-              "newCustomerCount": 49
+              "newUserCount": 49
             },
             {
               "periodStart": "2025-11-09",
-              "newCustomerCount": 4
+              "newUserCount": 4
             },
             {
               "periodStart": "2025-11-08",
-              "newCustomerCount": 1
+              "newUserCount": 1
             },
             {
               "periodStart": "2025-11-07",
-              "newCustomerCount": 6
+              "newUserCount": 6
             },
             {
               "periodStart": "2025-11-06",
-              "newCustomerCount": 0
+              "newUserCount": 0
             },
             {
               "periodStart": "2025-11-05",
-              "newCustomerCount": 4
+              "newUserCount": 4
             },
             {
               "periodStart": "2025-11-04",
-              "newCustomerCount": 3
+              "newUserCount": 3
             },
             {
               "periodStart": "2025-11-03",
-              "newCustomerCount": 0
+              "newUserCount": 0
             },
             {
               "periodStart": "2025-11-01",
-              "newCustomerCount": 0
+              "newUserCount": 0
             }
           ],
           "metadata": {
-            "template": "NEW_CUSTOMERS",
+            "template": "NEW_USERS",
             "recordCount": 335,
             "projectedRowCount": null,
             "filledCount": 135,
@@ -20440,7 +20474,7 @@
                 "specified": true,
                 "values": "day"
               },
-              "transactionDirections": {
+              "transactionTypes": {
                 "applied": "subset",
                 "specified": true,
                 "count": 2,
@@ -22378,7 +22412,7 @@
     "/v2/reporting/templates": {
       "get": {
         "summary": "Get Available Metric Templates",
-        "description": "Retrieves a list of all available metric templates (e.g., GROSS_VOLUME, TRANSFERS). Templates define the logic, supported parameters, and breakdown options available for building reports.",
+        "description": "Retrieves a list of all available metric templates (e.g., GROSS_VOLUME, TRANSACTION_COUNT). Templates define the logic, supported parameters, and breakdown options available for building reports.",
         "tags": ["Reporting"],
         "responses": {
           "200": {
@@ -22429,7 +22463,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "The name of the metric template (e.g., GROSS_VOLUME, TRANSFERS, NEW_CUSTOMERS)"
+            "description": "The name of the metric template (e.g., GROSS_VOLUME, TRANSACTION_COUNT, NEW_USERS)"
           }
         ]
       }
@@ -22437,7 +22471,7 @@
     "/v2/reporting/params/{name}/options": {
       "get": {
         "summary": "Get Parameter Options",
-        "description": "Fetches valid options for specific parameters (e.g., transactionDirections, transferStatuses) to help validate input or populate UI dropdowns. Supports pagination via query parameters.",
+        "description": "Fetches valid options for specific parameters (e.g., transactionTypes, transactionStatuses) to help validate input or populate UI dropdowns. Supports pagination via query parameters.",
         "tags": ["Reporting"],
         "responses": {
           "200": {
@@ -22464,7 +22498,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "The name of the parameter (e.g., transactionDirections, transferStatuses, userIds)"
+            "description": "The name of the parameter (e.g., transactionTypes, transactionStatuses, userIds)"
           },
           {
             "name": "page",
@@ -22576,7 +22610,7 @@
       },
       "post": {
         "summary": "Update Saved Metric",
-        "description": "Updates the name or parameters of an existing metric configuration. Supports partial updates.",
+        "description": "Updates the name, description, or parameters of an existing metric configuration. Supports partial updates.",
         "tags": ["Reporting"],
         "responses": {
           "200": {
