@@ -34,7 +34,9 @@ Register webhook endpoints in the HIFI Dashboard:
 3. Save to receive your webhook secret
 
 <Info>
-**Webhook Secret:** After registration, you'll receive a public key used to verify webhook signatures. Store this securely - you'll need it to validate incoming requests.
+  **Webhook Secret:** After registration, you'll receive a public key used to
+  verify webhook signatures. Store this securely - you'll need it to validate
+  incoming requests.
 </Info>
 
 ## Event Structure
@@ -72,7 +74,8 @@ All webhook events follow a consistent structure:
 </ResponseField>
 
 <ResponseField name="eventCategory" type="string">
-  Broad category describing the domain of the event (e.g., USER, WALLET, ONRAMP, OFFRAMP).
+  Broad category describing the domain of the event (e.g., USER, WALLET, ONRAMP,
+  OFFRAMP).
 </ResponseField>
 
 <ResponseField name="eventType" type="string">
@@ -84,7 +87,8 @@ All webhook events follow a consistent structure:
 </ResponseField>
 
 <ResponseField name="data" type="object">
-  Object containing details and payload for this event (structure varies by event type).
+  Object containing details and payload for this event (structure varies by
+  event type).
 </ResponseField>
 
 <ResponseField name="createdAt" type="string">
@@ -98,7 +102,6 @@ All webhook events follow a consistent structure:
 <ResponseField name="version" type="string">
   Version of the webhook/event payload schema (e.g., v2).
 </ResponseField>
-
 
 ## Event Types
 
@@ -131,30 +134,30 @@ Webhooks include a JWT token in the `Authorization` header. Verify this token us
 from flask import Flask, request, jsonify
 import jwt
 
-app = Flask(__name__)
+app = Flask(**name**)
 webhook_public_key = '''-----BEGIN PUBLIC KEY-----
 your_webhook_public_key_here
 -----END PUBLIC KEY-----'''
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
-    auth_header = request.headers.get('Authorization')
-    if not auth_header:
-        return 'Authorization header is missing', 401
+auth_header = request.headers.get('Authorization')
+if not auth_header:
+return 'Authorization header is missing', 401
 
     jwt_token = auth_header.split(' ')[1]
 
     try:
         decoded = jwt.decode(jwt_token, webhook_public_key, algorithms=['RS256'])
         print('Token is valid. Decoded payload:', decoded)
-        
+
         # Process the event
         event_type = decoded.get('eventType')
         event_data = decoded.get('data')
-        
+
         # Your application logic here
         handle_event(event_type, event_data)
-        
+
         return '', 200
     except jwt.ExpiredSignatureError:
         print('Token has expired')
@@ -164,16 +167,15 @@ def webhook():
         return 'Token verification failed', 401
 
 def handle_event(event_type, data):
-    if event_type == 'WALLET.TRANSFER.UPDATE':
-        # Update transaction status in your database
-        pass
-    elif event_type == 'USER.KYC.UPDATE':
-        # Notify user of KYC status change
-        pass
+if event_type == 'WALLET.TRANSFER.UPDATE': # Update transaction status in your database
+pass
+elif event_type == 'USER.KYC.UPDATE': # Notify user of KYC status change
+pass
 
-if __name__ == '__main__':
-    app.run(port=3000)
-```
+if **name** == '**main**':
+app.run(port=3000)
+
+````
 
 ```javascript Node.js
 const express = require("express");
@@ -199,13 +201,13 @@ app.post("/webhook", (req, res) => {
       algorithms: ["RS256"],
     });
     console.log("Token is valid. Decoded payload:", decoded);
-    
+
     // Process the event
     const { eventType, data } = decoded;
-    
+
     // Your application logic here
     handleEvent(eventType, data);
-    
+
     res.status(200).send("");
   } catch (error) {
     if (error.name === "TokenExpiredError") {
@@ -229,7 +231,8 @@ function handleEvent(eventType, data) {
 app.listen(3000, () => {
   console.log("Webhook server running on port 3000");
 });
-```
+````
+
 </CodeGroup>
 
 ## Retry Behavior
@@ -246,17 +249,21 @@ HIFI automatically retries failed webhook deliveries to ensure reliability.
 ### Retry Conditions
 
 **HIFI retries when:**
+
 - Your endpoint returns a 5xx error
 - Connection timeout occurs
 - Network error prevents delivery
 
 **HIFI does not retry when:**
+
 - Your endpoint returns a 4xx error (indicates a permanent failure)
 - Your webhook endpoint is disabled or deleted
 - 24 hours have elapsed since the original event
 
 <Warning>
-**Endpoint availability matters:** If your endpoint is disabled when HIFI attempts a retry, future retries for that event are prevented. Re-enable your endpoint before the next retry attempt to continue receiving retries.
+  **Endpoint availability matters:** If your endpoint is disabled when HIFI
+  attempts a retry, future retries for that event are prevented. Re-enable your
+  endpoint before the next retry attempt to continue receiving retries.
 </Warning>
 
 ## Best Practices
@@ -314,14 +321,13 @@ HIFI automatically retries failed webhook deliveries to ensure reliability.
     ```
   </Accordion>
 
-  <Accordion title="Monitor webhook health">
-    Track webhook delivery success rates and response times. Set up alerts for:
-    - High failure rates
-    - Slow response times
-    - Signature verification failures
-    
-    This helps identify issues early before retries are exhausted.
-  </Accordion>
+{" "}
+
+<Accordion title="Monitor webhook health">
+  Track webhook delivery success rates and response times. Set up alerts for: -
+  High failure rates - Slow response times - Signature verification failures
+  This helps identify issues early before retries are exhausted.
+</Accordion>
 
   <Accordion title="Test with sandbox">
     Use the HIFI sandbox environment to test your webhook integration:
@@ -339,7 +345,7 @@ HIFI automatically retries failed webhook deliveries to ensure reliability.
 
 ## Related Resources
 
-- [Wallet Transfers](/docs/transfers/onchain) - Track transfer events
-- [Onramps](/docs/transfers/onramps) - Monitor onramp events
-- [Offramps](/docs/transfers/offramps) - Track offramp events
+- [Wallet Transfers](/docs/transactions/transfers) - Track transfer events
+- [Onramps](/docs/transactions/onramps) - Monitor onramp events
+- [Offramps](/docs/transactions/offramps) - Track offramp events
 - [Users](/docs/users) - Monitor user and KYC events

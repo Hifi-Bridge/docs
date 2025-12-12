@@ -545,7 +545,8 @@ Destination of the transfer (Business B)
       Unique transfer approval ID
     </ResponseField>
     <ResponseField name="approval.status" type="string">
-      Approval status. **PENDING** means you have an active transfer approval waiting to be accepted
+      Approval status. **PENDING** means you have an active transfer approval
+      waiting to be accepted
     </ResponseField>
   </Expandable>
 </ResponseField>
@@ -587,7 +588,7 @@ In order to execute the offramp and complete this recipe, follow these steps:
 4. Accept the quote via `POST /v2/offramps/{id}/quote/accept` to convert stablecoins to fiat and initiate payout.
 5. Monitor statuses through crypto and fiat phases (e.g., `CRYPTO_INITIATED` → completion) using the receipt fields or webhooks.
 
-For detailed instructions on creating an offramp transaction, see our [Offramp Guide](/docs/transfers/offramps).
+For detailed instructions on creating an offramp transaction, see our [Offramp Guide](/docs/transactions/offramps).
 
 ---
 
@@ -606,8 +607,8 @@ You've successfully completed a marketplace payment! By following this recipe, y
 Ready to build a full marketplace payment platform? Here's what to explore next:
 
 - **[Webhooks](/docs/webhooks)** - Set up real-time notifications for transaction status updates and user engagement
-- **[Offramp Guide](/docs/transfers/offramps)** - Deep dive into offramp transactions and compliance requirements
-- **[Onchain Transfers](/docs/transfers/onchain)** - Learn how to initiate and track onchain wallet-to-wallet transfers
+- **[Offramp Guide](/docs/transactions/offramps)** - Deep dive into offramp transactions and compliance requirements
+- **[Onchain Transfers](/docs/transactions/transfers)** - Learn how to initiate and track onchain wallet-to-wallet transfers
 - **[Transfer Approvals](/docs/features/transfer-approvals)** - Configure optional approvals for higher-control transfer workflows
 - **[Error Handling](/docs/api/errors)** - Implement robust error handling for failed transactions and expired quotes
 - **[API Reference](https://docs.hifibridge.com/api-reference)** - Explore all available endpoints and parameters for advanced features

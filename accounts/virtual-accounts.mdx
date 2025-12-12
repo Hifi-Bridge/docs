@@ -279,7 +279,7 @@ curl -X GET "https://sandbox.hifibridge.com/v2/onramps?userId=usr_abc123" \
 </ResponseField>
 
 <ResponseField name="transferDetails.status" type="string">
-  Onramp status. See [Onramps](/docs/transfers/onramps) for complete status
+  Onramp status. See [Onramps](/docs/transactions/onramps) for complete status
   documentation.
 </ResponseField>
 
@@ -493,7 +493,7 @@ Deposits to this virtual account will be converted to USDC and sent directly to 
   </Step>
 
   <Step title="Send to external wallet">
-    Send funds to any external address using the [Wallet Transfer API](/docs/transfers/onchain):
+    Send funds to any external address using the [Wallet Transfer API](/docs/transactions/transfer):
     ```bash
     curl -X POST "https://sandbox.hifibridge.com/v2/wallets/transfers" \
       -H "Authorization: Bearer YOUR_API_KEY" \
@@ -523,6 +523,6 @@ Deposits to this virtual account will be converted to USDC and sent directly to 
 
 - [Quickstart Guide](/docs/quickstart) - Step-by-step tutorial including virtual account setup
 - [Users](/docs/users) - Understand user creation and KYC requirements
-- [Onramps](/docs/transfers/onramps) - Alternative onramp methods for non-USD currencies
+- [Onramps](/docs/transactions/onramps) - Alternative onramp methods for non-USD currencies
 - [Webhooks](/docs/webhooks) - Subscribe to account and onramp events
 - [API Reference](https://docs.hifibridge.com/api-reference/virtual-account/create-a-virtual-account) - Complete endpoint documentation

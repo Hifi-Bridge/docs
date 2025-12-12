@@ -163,7 +163,7 @@
         "pages": [
           {
             "group": "Introduction",
-            "pages": ["overview", "sandbox", "postman", "dashboard"]
+            "pages": ["overview", "sandbox", "dashboard"]
           },
           {
             "group": "Core concepts",
@@ -196,13 +196,13 @@
                 ]
               },
               {
-                "group": "Transfers",
+                "group": "Transactions",
                 "pages": [
-                  "transfers/onchain",
-                  "transfers/onramps",
-                  "transfers/offramps",
-                  "transfers/bridging",
-                  "transfers/swaps"
+                  "transactions/transfers",
+                  "transactions/onramps",
+                  "transactions/offramps",
+                  "transactions/bridging",
+                  "transactions/swaps"
                 ]
               },
               {
@@ -230,7 +230,8 @@
               "features/batch-transfers",
               "features/transfer-approvals",
               "features/developer-fees",
-              "features/settlement-rules"
+              "features/settlement-rules",
+              "features/reporting"
             ]
           },
           {
@@ -303,12 +304,12 @@
         ]
       },
       {
-        "tab": "Postman",
-        "href": "https://www.postman.com/hifi-developers/workspace/hifi-developers/collection/36482019-965415fa-8dd5-4d2c-a4ca-068478dce9d9?action=share&source=copy-link&creator=34328055"
+        "tab": "Changelog",
+        "pages": ["changelog"]
       },
       {
         "tab": "API Reference",
-        "openapi": "https://production.hifibridge.com/api/v2/openapi.json",
+        "openapi": "openapi.json",
         "pages": [
           {
             "group": "Overview",
@@ -316,7 +317,7 @@
           },
           {
             "group": "Endpoints",
-            "openapi": "https://production.hifibridge.com/api/v2/openapi.json",
+            "openapi": "openapi.json",
             "pages": [
               {
                 "group": "Common",
@@ -513,7 +514,27 @@
     },
     {
       "source": "/docs/transfers/wallets",
-      "destination": "/transfers/onchain"
+      "destination": "/transactions/transfer"
+    },
+    {
+      "source": "/transfers/onchain",
+      "destination": "/transactions/transfer"
+    },
+    {
+      "source": "/transfers/onramps",
+      "destination": "/transactions/onramps"
+    },
+    {
+      "source": "/transfers/offramps",
+      "destination": "/transactions/offramps"
+    },
+    {
+      "source": "/transfers/bridging",
+      "destination": "/transactions/bridging"
+    },
+    {
+      "source": "/transfers/swaps",
+      "destination": "/transactions/swaps"
     },
     {
       "source": "/docs/users/features/kyc-link",
@@ -785,23 +806,23 @@
     },
     {
       "source": "/docs/transfers/bridging",
-      "destination": "/transfers/bridging"
+      "destination": "/transactions/bridging"
     },
     {
       "source": "/docs/transfers/offramps",
-      "destination": "/transfers/offramps"
+      "destination": "/transactions/offramps"
     },
     {
       "source": "/docs/transfers/onchain",
-      "destination": "/transfers/onchain"
+      "destination": "/transactions/transfer"
     },
     {
       "source": "/docs/transfers/onramps",
-      "destination": "/transfers/onramps"
+      "destination": "/transactions/onramps"
     },
     {
       "source": "/docs/transfers/swaps",
-      "destination": "/transfers/swaps"
+      "destination": "/transactions/swaps"
     },
     {
       "source": "/docs/users",
