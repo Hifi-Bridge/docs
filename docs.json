@@ -216,6 +216,11 @@
                   "webhooks/onramp-events",
                   "webhooks/offramp-events"
                 ]
+              },
+              {
+                "group": "Reporting",
+                "tag": "NEW",
+                "pages": ["reporting/metrics"]
               }
             ]
           },
@@ -230,8 +235,7 @@
               "features/batch-transfers",
               "features/transfer-approvals",
               "features/developer-fees",
-              "features/settlement-rules",
-              "features/reporting"
+              "features/settlement-rules"
             ]
           },
           {
@@ -289,8 +293,8 @@
         "tab": "Guides",
         "pages": [
           {
-            "group": "Get started",
-            "pages": ["guides/quickstart"]
+            "group": "Guides",
+            "pages": ["guides/quickstart", "guides/reporting"]
           },
           {
             "group": "Recipes",
