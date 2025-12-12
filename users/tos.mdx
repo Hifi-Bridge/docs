@@ -1,10 +1,107 @@
 ---
-title: "ToS Links"
+title: "Terms of Service"
 ---
 
-**Terms of Service (ToS) Links** enable you to collect user consent for data processing before creating HIFI accounts. Users must accept HIFI's terms before you can create their user account.
+Users must accept HIFI's terms before you can create their account. You have **two options** for collecting this consent:
 
-## How ToS Links Work
+1. **Use HIFI's ToS Link** - Generate a ToS link and have users accept via HIFI-hosted pages (redirect or embedded)
+2. **Reference HIFI's Terms in Your Privacy Policy** - Include HIFI's terms by reference in your own ToS/privacy policy and collect acceptance through your existing flow
+
+Choose the approach that best fits your application architecture and user experience.
+
+## Option 1: Reference Terms
+
+If you already have a terms of service or privacy policy acceptance flow, you can reference HIFI's terms within it. This approach lets you keep users in your own onboarding flow while still generating the required signed agreement ID in the background.
+
+### How It Works
+
+1. **Include HIFI's terms by reference** in your privacy policy or terms of service
+2. **Collect acceptance** through your existing flow (checkbox, button, etc.)
+3. **Generate signed agreement ID in the background** when user accepts
+4. **Create user account** with the generated `signedAgreementId`
+
+### Implementation
+
+Add a reference to HIFI's terms in your privacy policy:
+
+```markdown
+## Third-Party Services
+
+We use HIFI to process financial transactions. By using our service,
+you also agree to HIFI's [Terms & Conditions](https://www.hifi.com/terms-conditions)
+and [Privacy Policy](https://www.hifi.com/privacy-policy).
+```
+
+When the user accepts your privacy policy (which includes HIFI's terms by reference), generate a signed agreement ID in the background:
+
+```javascript
+import { v4 as uuidv4 } from "uuid";
+
+async function handlePrivacyPolicyAcceptance() {
+  // Generate a UUID that will serve as the signedAgreementId
+  const signedAgreementId = uuidv4();
+
+  // Generate ToS link in the background to create the signed agreement
+  const response = await fetch("https://sandbox.hifi.com/v2/tos-link", {
+    method: "POST",
+    headers: {
+      Authorization: "Bearer YOUR_API_KEY",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      idempotencyKey: signedAgreementId,
+    }),
+  });
+
+  const { url, signedAgreementId: agreementId } = await response.json();
+
+  // Extract session token from URL
+  const urlParams = new URLSearchParams(new URL(url).search);
+  const sessionToken = urlParams.get("sessionToken");
+
+  // Accept ToS programmatically in the background
+  await fetch(`https://sandbox.hifi.com/v2/tos/${sessionToken}`, {
+    method: "POST",
+    headers: {
+      Authorization: "Bearer YOUR_API_KEY",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      sessionToken: sessionToken,
+    }),
+  });
+
+  // Store signedAgreementId for user creation
+  return agreementId;
+}
+```
+
+Then create the user account with the `signedAgreementId`:
+
+```bash
+curl -X POST "https://sandbox.hifi.com/v2/users" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "signedAgreementId": "a4f8b3c2-1d5e-4a7b-9c8d-3e2f1a0b9c8d",
+    "email": "user@example.com",
+    "firstName": "Jane",
+    "lastName": "Doe"
+  }'
+```
+
+<Note>
+  When using this approach, you still need to generate a signed agreement ID,
+  but you can do it in the background without redirecting users to a HIFI-hosted
+  ToS page. The user never sees the ToS link - you handle the acceptance
+  programmatically.
+</Note>
+
+## Option 2: Use ToS Link
+
+**Terms of Service (ToS) Links** enable you to collect user consent through HIFI-hosted pages. This approach provides explicit proof of consent and is useful when you want HIFI to handle the ToS presentation.
+
+### How ToS Links Work
 
 <Steps>
   <Step title="Generate ToS link">
@@ -22,9 +119,9 @@ title: "ToS Links"
   </Step>
 </Steps>
 
-## Implementation Options
+### Implementation Options
 
-You can implement ToS acceptance in two ways depending on your application flow:
+When using HIFI's ToS Link System, you can implement it in two ways depending on your application flow:
 
 ### Redirect Flow (Recommended)
 
@@ -130,9 +227,6 @@ Display ToS acceptance inline within your application. Best for embedded experie
         "lastName": "Doe"
       }'
     ```
-
-    <Warning>
-    </Warning>
 
   </Step>
 </Steps>
@@ -266,20 +360,6 @@ For applications where redirection isn't possible, display ToS acceptance inline
   </Step>
 </Steps>
 
-### Referencing Privacy Policy
-
-You can also reference HIFI's terms within your own privacy policy:
-
-```markdown
-## Third-Party Services
-
-We use HIFI to process financial transactions. By using our service,
-you also agree to HIFI's [Terms & Conditions](https://www.hifi.com/terms-conditions)
-and [Privacy Policy](https://www.hifi.com/privacy-policy).
-```
-
-Then require users to accept your privacy policy, which includes HIFI's terms by reference.
-
 ## Custom Templates
 
 White-label the ToS page with your branding:
@@ -315,12 +395,10 @@ curl -X POST "https://sandbox.hifi.com/v2/tos-link" \
 {" "}
 
 <Accordion title="Why ToS Is Required">
-  HIFI must collect explicit user consent to: 
-  - Process personal and financial data
-  - Comply with privacy regulations (GDPR, CCPA, etc.)
-  - Establish terms of service for financial operations
-  
-  Users cannot be created without accepting these terms.
+  HIFI must collect explicit user consent in order to process personal and
+  financial data, comply with privacy regulations such as GDPR and CCPA, and to
+  establish terms of service for financial operations. Users cannot be created
+  without accepting these terms.
 </Accordion>
 
 {" "}

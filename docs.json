@@ -168,7 +168,10 @@
           {
             "group": "Core concepts",
             "pages": [
-              "users",
+              {
+                "group": "Users",
+                "pages": ["users/overview", "users/tos"]
+              },
               "wallets",
               {
                 "group": "KYC",
@@ -227,10 +230,7 @@
           {
             "group": "Features",
             "pages": [
-              {
-                "group": "Onboarding",
-                "pages": ["features/tos-links", "features/kyc-links"]
-              },
+              "features/kyc-links",
               "features/exchange-rates",
               "features/batch-transfers",
               "features/transfer-approvals",
@@ -563,6 +563,10 @@
     {
       "source": "/docs/transfers/features/settlement-rules",
       "destination": "/features/settlement-rules"
+    },
+    {
+      "source": "/features/tos-links",
+      "destination": "/users/tos"
     },
     {
       "source": "/docs/api/postman",
