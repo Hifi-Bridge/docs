@@ -294,7 +294,13 @@
         "pages": [
           {
             "group": "Guides",
-            "pages": ["guides/quickstart", "guides/reporting"]
+            "pages": [
+              "guides/quickstart",
+              "guides/submit-kyc",
+              "guides/receive-money",
+              "guides/send-money",
+              "guides/reporting"
+            ]
           },
           {
             "group": "Recipes",

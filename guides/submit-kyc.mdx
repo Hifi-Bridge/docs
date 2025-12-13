@@ -1,0 +1,581 @@
+---
+title: "Submit KYC"
+---
+
+This guide shows you how to submit KYC (Know Your Customer) information programmatically using the HIFI API. Users must complete KYC verification to unlock **rails** (payment corridors that enable currency conversions between fiat and stablecoins).
+
+<Note>
+  **Recommended:** For most use cases, use [KYC Links](/docs/features/kyc-links)
+  for a hosted, user-friendly flow. This guide covers the programmatic API
+  approach for teams that need full control over the KYC collection process.
+</Note>
+
+## Prerequisites
+
+- **API keys** from the Dashboard ([Get API keys](/docs/api/authentication))
+- **A user created** in your HIFI account
+- **Sandbox endpoint:** `https://sandbox.hifibridge.com`
+
+<Note>
+  All examples use the sandbox environment. For production, replace the sandbox
+  URL with the production endpoint and use your production API keys.
+</Note>
+
+## Process Overview
+
+1. **Retrieve KYC Requirements** - Get required information for your target rail
+2. **Update KYC Information** - Provide personal information
+3. **Upload KYC Documents** - Submit identity verification documents
+4. **Submit KYC** - Submit the application for review
+5. **Check KYC Status** - Monitor approval status
+
+---
+
+## Retrieve KYC Requirements
+
+First, find out what information is needed for your target rail by calling the [Retrieve KYC Requirements](https://docs.hifibridge.com/v2/reference/get_v2-users-userid-kyc-requirements) endpoint.
+
+**Request:**
+
+```bash
+curl --request GET \
+     --url 'https://sandbox.hifibridge.com/v2/users/32051b2f-0798-55a7-9c42-b08da4192c97/kyc/requirements?rails=USD' \
+     --header 'accept: application/json' \
+     --header 'authorization: Bearer YOUR_API_KEY'
+```
+
+**Response:**
+
+```json
+{
+  "userId": "32051b2f-0798-55a7-9c42-b08da4192c97",
+  "rails": "USD",
+  "type": "individual",
+  "required": {
+    "firstName": "string",
+    "lastName": "string",
+    "email": "string",
+    "phone": "string",
+    "nationality": "string",
+    "dateOfBirth": "date",
+    "taxIdentificationNumber": "string",
+    "documents": {
+      "identity": {
+        "minCount": 1,
+        "acceptedDocTypes": [
+          "DRIVERS",
+          "ID_CARD",
+          "PASSPORT",
+          "RESIDENCE_PERMIT"
+        ]
+      }
+    }
+  },
+  "optional": {},
+  "invalid": {
+    "message": "fields are either missing or invalid",
+    "fields": {
+      "phone": "missing",
+      "nationality": "missing",
+      "taxIdentificationNumber": "missing"
+    },
+    "documents": {
+      "message": "The following document groups are not satisfied: identity",
+      "groups": {
+        "identity": {
+          "minCount": 1,
+          "acceptedDocTypes": [
+            "DRIVERS",
+            "ID_CARD",
+            "PASSPORT",
+            "RESIDENCE_PERMIT"
+          ]
+        }
+      }
+    }
+  }
+}
+```
+
+**Response Fields:**
+
+<ResponseField name="required" type="object">
+  All mandatory KYC fields needed for the rail. These must be provided
+  before submission.
+
+  <Expandable title="properties">
+    <ResponseField name="firstName" type="string">
+      User's first name
+    </ResponseField>
+    <ResponseField name="lastName" type="string">
+      User's last name
+    </ResponseField>
+    <ResponseField name="email" type="string">
+      User's email address
+    </ResponseField>
+    <ResponseField name="phone" type="string">
+      User's phone number
+    </ResponseField>
+    <ResponseField name="nationality" type="string">
+      User's nationality (country code)
+    </ResponseField>
+    <ResponseField name="dateOfBirth" type="date">
+      User's date of birth
+    </ResponseField>
+    <ResponseField name="taxIdentificationNumber" type="string">
+      Tax identification number (e.g., SSN for US users)
+    </ResponseField>
+    <ResponseField name="documents" type="object">
+      <Expandable title="properties">
+        <ResponseField name="identity" type="object">
+          <Expandable title="properties">
+            <ResponseField name="minCount" type="number">
+              Minimum number of identity documents required
+            </ResponseField>
+            <ResponseField name="acceptedDocTypes" type="array">
+              List of accepted document types (DRIVERS, ID_CARD, PASSPORT, etc.)
+            </ResponseField>
+          </Expandable>
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="optional" type="object">
+  Additional fields that aren't mandatory but may help with approval or enable
+  additional features.
+</ResponseField>
+
+<ResponseField name="invalid" type="object">
+  **Most Important Field:** Lists any missing or invalid data that must be
+  corrected before KYC submission.
+
+  <Expandable title="properties">
+    <ResponseField name="message" type="string">
+      Summary message about invalid or missing fields
+    </ResponseField>
+    <ResponseField name="fields" type="object">
+      <Expandable title="properties">
+        Key-value pairs where keys are field names and values indicate the issue
+        (e.g., "missing", "invalid")
+      </Expandable>
+    </ResponseField>
+    <ResponseField name="documents" type="object">
+      <Expandable title="properties">
+        <ResponseField name="message" type="string">
+          Summary message about document requirements
+        </ResponseField>
+        <ResponseField name="groups" type="object">
+          <Expandable title="properties">
+            Document groups that are not satisfied, with details about required
+            document types and counts
+          </Expandable>
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<Note>
+  **Rail-Specific Requirements:** Each rail has different KYC requirements based
+  on regulatory needs. Visit our [Rails page](/docs/rails) to learn about
+  available rails and their specific requirements.
+</Note>
+
+---
+
+## Update KYC Information
+
+Provide the missing personal information using the [Update KYC](https://docs.hifibridge.com/v2/reference/post_v2-users-userid-kyc) endpoint.
+
+**Request:**
+
+```bash
+curl --request POST \
+     --url https://sandbox.hifibridge.com/v2/users/32051b2f-0798-55a7-9c42-b08da4192c97/kyc \
+     --header 'accept: application/json' \
+     --header 'authorization: Bearer YOUR_API_KEY' \
+     --header 'content-type: application/json' \
+     --data '
+{
+  "phone": "+18573491112",
+  "taxIdentificationNumber": "725569852",
+  "nationality": "USA"
+}
+'
+```
+
+**Response:**
+
+```json
+{
+  "userId": "32051b2f-0798-55a7-9c42-b08da4192c97",
+  "kycInfo": {
+    "type": "individual",
+    "firstName": "John",
+    "lastName": "Doe",
+    "nationality": "USA",
+    "email": "john@hifibridge.com",
+    "phone": "+18573491112",
+    "address": {
+      "city": "New York",
+      "country": "USA",
+      "postalCode": "10010",
+      "addressLine1": "123 Main St",
+      "stateProvinceRegion": "NY"
+    },
+    "dateOfBirth": "1999-01-01T00:00:00+00:00",
+    "taxIdentificationNumber": "725569852",
+    "documents": []
+  }
+}
+```
+
+✅ **Personal information updated!** Notice the `documents` array is still empty - we'll upload those next.
+
+---
+
+## Upload KYC Documents
+
+Now we need to upload identity verification documents. This is a two-step process:
+
+1. **Upload the file** to get a `fileId`
+2. **Attach the file** to the user's KYC application
+
+### Upload a File
+
+First, upload the identity document (driver's license, passport, etc.) using the [Upload a File](https://docs.hifibridge.com/v2/reference/post_v2-files) endpoint.
+
+**Request:**
+
+```bash
+curl --request POST \
+     --url https://sandbox.hifibridge.com/v2/files \
+     --header 'accept: application/json' \
+     --header 'authorization: Bearer YOUR_API_KEY' \
+     --header 'content-type: multipart/form-data' \
+     --form 'file=@drivers_license_front.png'
+```
+
+**Response:**
+
+```json
+{
+  "id": "file_JzALYV2L1-4LBmaxZ6GCm",
+  "createdAt": "2025-09-25T22:05:16.764Z",
+  "fileName": "drivers_license_front.png",
+  "size": 17834,
+  "mimeType": "image/png"
+}
+```
+
+**Response Fields:**
+
+<ResponseField name="id" type="string" required>
+  The file ID. **Save this** - you'll use it in the next step to attach this
+  document to the user's KYC application.
+</ResponseField>
+
+<ResponseField name="fileName" type="string">
+  Original filename of the uploaded file.
+</ResponseField>
+
+<ResponseField name="size" type="number">
+  File size in bytes.
+</ResponseField>
+
+<ResponseField name="mimeType" type="string">
+  File type (e.g., image/png, image/jpeg, application/pdf).
+</ResponseField>
+
+### Add Documents to KYC
+
+Now attach the uploaded file(s) to the user's KYC application using the [Add Documents](https://docs.hifibridge.com/v2/reference/post_v2-users-userid-kyc-documents) endpoint.
+
+<Note>
+  **Driver's License Requirements:** Most identity documents require both front
+  and back images. For this example, we'll use the same file ID for both sides,
+  but in production you should upload and attach separate images.
+</Note>
+
+**Request:**
+
+```bash
+curl --request POST \
+     --url https://sandbox.hifibridge.com/v2/users/32051b2f-0798-55a7-9c42-b08da4192c97/kyc/documents \
+     --header 'accept: application/json' \
+     --header 'authorization: Bearer YOUR_API_KEY' \
+     --header 'content-type: application/json' \
+     --data '
+[
+  {
+    "type": "DRIVERS",
+    "subType": "FRONT_SIDE",
+    "issuedCountry": "USA",
+    "fileId": "file_JzALYV2L1-4LBmaxZ6GCm"
+  },
+  {
+    "type": "DRIVERS",
+    "subType": "BACK_SIDE",
+    "issuedCountry": "USA",
+    "fileId": "file_JzALYV2L1-4LBmaxZ6GCm"
+  }
+]
+'
+```
+
+**Request Fields:**
+
+<ResponseField name="type" type="string" required>
+  Document type. Options: `DRIVERS`, `ID_CARD`, `PASSPORT`, `RESIDENCE_PERMIT`
+</ResponseField>
+
+<ResponseField name="subType" type="string" required>
+  Which side of the document. Options: `FRONT_SIDE`, `BACK_SIDE` (passports
+  typically only need FRONT_SIDE)
+</ResponseField>
+
+<ResponseField name="issuedCountry" type="string" required>
+  Country that issued the document (ISO country code).
+</ResponseField>
+
+<ResponseField name="fileId" type="string" required>
+  The file ID received from the file upload endpoint.
+</ResponseField>
+
+**Response:**
+
+```json
+{
+  "count": 2,
+  "data": [
+    {
+      "id": "e477fa56-3e1e-4dac-abe6-008166749f30",
+      "type": "DRIVERS",
+      "subType": "FRONT_SIDE",
+      "issuedCountry": "USA",
+      "url": "https://pqgnrjvoqbopfaxmlhlv.supabase.co/storage/v1/object/sign/kyc_documents/...",
+      "fileId": "file_JzALYV2L1-4LBmaxZ6GCm"
+    },
+    {
+      "id": "a2190d1d-61af-416d-8fcf-20673da5eaa0",
+      "type": "DRIVERS",
+      "subType": "BACK_SIDE",
+      "issuedCountry": "USA",
+      "url": "https://pqgnrjvoqbopfaxmlhlv.supabase.co/storage/v1/object/sign/kyc_documents/...",
+      "fileId": "file_JzALYV2L1-4LBmaxZ6GCm"
+    }
+  ]
+}
+```
+
+**Response Fields:**
+
+<ResponseField name="count" type="number">
+  Number of documents successfully attached.
+</ResponseField>
+
+<ResponseField name="data" type="array">
+  Array of document objects with IDs, types, and temporary signed URLs for
+  viewing.
+</ResponseField>
+
+✅ **Documents uploaded!** All required KYC information is now complete. Time to submit for review.
+
+---
+
+## Submit KYC
+
+With all fields and documents provided, submit the KYC application to unlock the rail using the [Submit KYC](https://docs.hifibridge.com/api-reference/kyc/submit-kyc) endpoint.
+
+**Request:**
+
+```bash
+curl --request POST \
+     --url https://sandbox.hifibridge.com/v2/users/32051b2f-0798-55a7-9c42-b08da4192c97/kyc/submissions \
+     --header 'accept: application/json' \
+     --header 'authorization: Bearer YOUR_API_KEY' \
+     --header 'content-type: application/json' \
+     --data '{"rails": "USD"}'
+```
+
+**Response:**
+
+```json
+{
+  "USD": {
+    "status": "CREATED",
+    "message": "Your KYC application has been successfully created. We will review it shortly."
+  }
+}
+```
+
+✅ **KYC application submitted!**
+
+**What happens next?**
+
+1. **Status starts as `CREATED`** (immediate)
+2. **Transitions to `PENDING`** (within minutes in sandbox)
+3. **Final status: `ACTIVE` or `REJECTED`** (typically automatic in sandbox, 1-3 business days in production)
+
+<Note>
+  **Sandbox Auto-Approval:** In the sandbox environment, KYC applications are
+  typically automatically approved within minutes for testing purposes. However,
+  certain compliance checks (like PEP screening by banking partners) may still
+  block approval even in sandbox. In production, the review process typically
+  takes 1-3 business days.
+</Note>
+
+You can either:
+
+1. **Poll** the [Retrieve KYC Status](https://docs.hifibridge.com/api-reference/kyc/retrieve-kyc-status) endpoint
+2. **Listen** for `KYC.STATUS_UPDATE` [webhook events](/docs/webhooks/kyc-events)
+
+---
+
+## Check KYC Status
+
+Check the current KYC status for the rail using the [Retrieve KYC Status](https://docs.hifibridge.com/api-reference/kyc/retrieve-kyc-status) endpoint.
+
+**Request:**
+
+```bash
+curl --request GET \
+     --url 'https://sandbox.hifibridge.com/v2/users/32051b2f-0798-55a7-9c42-b08da4192c97/kyc/status?rails=USD' \
+     --header 'accept: application/json' \
+     --header 'authorization: Bearer YOUR_API_KEY'
+```
+
+**Response:**
+
+```json
+{
+  "status": "ACTIVE",
+  "message": "",
+  "reviewResult": {
+    "reviewAnswer": "APPROVED",
+    "reviewRejectType": "",
+    "rejectReasons": [],
+    "comment": ""
+  },
+  "details": {
+    "identity": {
+      "reviewResult": {
+        "reviewAnswer": "APPROVED",
+        "reviewRejectType": "",
+        "rejectReasons": [],
+        "comment": ""
+      },
+      "details": [
+        {
+          "id": "e477fa56-3e1e-4dac-abe6-008166749f30",
+          "type": "DRIVERS",
+          "subType": "FRONT_SIDE",
+          "reviewResult": {
+            "reviewAnswer": "APPROVED",
+            "reviewRejectType": "",
+            "rejectReasons": [],
+            "comment": ""
+          }
+        },
+        {
+          "id": "a2190d1d-61af-416d-8fcf-20673da5eaa0",
+          "type": "DRIVERS",
+          "subType": "BACK_SIDE",
+          "reviewResult": {
+            "reviewAnswer": "APPROVED",
+            "reviewRejectType": "",
+            "rejectReasons": [],
+            "comment": ""
+          }
+        }
+      ]
+    },
+    "questionnaire": {
+      "reviewResult": {
+        "reviewAnswer": "APPROVED",
+        "reviewRejectType": "",
+        "rejectReasons": [],
+        "comment": ""
+      }
+    },
+    "personalInfo": {
+      "reviewResult": {
+        "reviewAnswer": "APPROVED",
+        "reviewRejectType": "",
+        "rejectReasons": [],
+        "comment": ""
+      }
+    }
+  }
+}
+```
+
+✅ **KYC approved!** The status is `ACTIVE`, which means the rail is now unlocked and the user can:
+
+- Onramp fiat to stablecoins
+- Offramp stablecoins to fiat
+
+**Response Fields:**
+
+<ResponseField name="status" type="string">
+  Overall KYC status for the rail. Possible values: - `CREATED` - Application
+  submitted, not yet reviewed - `PENDING` - Being reviewed by compliance team -
+  `ACTIVE` - Approved, rail is unlocked - `REJECTED` - Not approved (see
+  rejectReasons for details)
+</ResponseField>
+
+<ResponseField name="reviewResult" type="object">
+  High-level review outcome for the entire application.
+
+  <Expandable title="properties">
+    <ResponseField name="reviewAnswer" type="string">
+      Review decision (APPROVED, REJECTED, PENDING)
+    </ResponseField>
+    <ResponseField name="reviewRejectType" type="string">
+      Type of rejection, if applicable
+    </ResponseField>
+    <ResponseField name="rejectReasons" type="array">
+      List of reasons for rejection, if applicable
+    </ResponseField>
+    <ResponseField name="comment" type="string">
+      Additional comments from reviewers
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="details" type="object">
+  Detailed review results broken down by category (identity documents, personal
+  information, questionnaire). Useful for diagnosing issues if rejected.
+
+  <Expandable title="properties">
+    <ResponseField name="identity" type="object">
+      Review results for identity document verification
+    </ResponseField>
+    <ResponseField name="questionnaire" type="object">
+      Review results for KYC questionnaire responses
+    </ResponseField>
+    <ResponseField name="personalInfo" type="object">
+      Review results for personal information verification
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+---
+
+## Next Steps
+
+Now that your user has completed KYC and unlocked the rail, you can:
+
+- **[Set up Virtual Accounts](/docs/accounts/virtual-accounts)** - For receiving fiat deposits (onramping)
+- **[Add Offramp Accounts](/docs/accounts/offramp-accounts)** - For sending fiat withdrawals (offramping)
+- **[Execute Transfers](/docs/guides/quickstart#make-transfers)** - Start moving money between fiat and crypto
+
+## Related Resources
+
+- **[KYC Links](/docs/features/kyc-links)** - Use hosted KYC flow for easier implementation
+- **[KYC Requirements](/docs/kyc/kyc-requirements)** - Detailed information about KYC requirements
+- **[Rails Overview](/docs/rails)** - Learn about available rails and their requirements
+- **[Webhooks](/docs/webhooks/kyc-events)** - Monitor KYC status changes in real-time
+- **[API Reference](https://docs.hifibridge.com/api-reference)** - Complete endpoint documentation

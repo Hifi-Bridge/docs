@@ -1,0 +1,291 @@
+---
+title: "Send Money"
+---
+
+This guide shows you how to **send money** - converting stablecoins (like USDC) into fiat currency (like USD) and sending it to a user's bank account.
+
+**⏱️ Time to complete:** 5-10 minutes
+
+<Note>
+  **Sandbox Environment:** All examples in this guide use the sandbox
+  environment (`https://sandbox.hifibridge.com`). Transactions are simulated -
+  no real money moves. When you're ready for production, replace the sandbox URL
+  with the production endpoint.
+</Note>
+
+## Prerequisites
+
+Before sending money, ensure you have:
+
+- ✅ **User created** with Terms of Service accepted
+- ✅ **KYC completed** and approved for the target rail
+- ✅ **Offramp Account** set up for receiving fiat
+- ✅ **API keys** from the Dashboard
+
+<Info>
+  If you haven't set up users, KYC, or accounts yet, see the [Quickstart
+  Guide](/docs/guides/quickstart) for step-by-step instructions.
+</Info>
+
+## How Sending Money Works
+
+Sending money is a two-step process:
+
+1. **Create offramp request** - Get a quote for the conversion
+2. **Accept the quote** - Execute the offramp
+
+## Step 1: Create Offramp Request
+
+Create an offramp request using the [Create an offramp](https://docs.hifibridge.com/api-reference/offramp/create-an-offramp) endpoint:
+
+**Request:**
+
+```bash
+curl --request POST \
+     --url https://sandbox.hifibridge.com/v2/offramps \
+     --header 'accept: application/json' \
+     --header 'authorization: Bearer YOUR_API_KEY' \
+     --header 'content-type: application/json' \
+     --data '
+{
+  "source": {
+    "currency": "usdc",
+    "chain": "POLYGON",
+    "userId": "32051b2f-0798-55a7-9c42-b08da4192c97",
+    "amount": 1
+  },
+  "destination": {
+    "currency": "usd",
+    "accountId": "583eb259-e78b-4f0c-a4b5-a8957876fa6f",
+    "userId": "32051b2f-0798-55a7-9c42-b08da4192c97"
+  },
+  "requestId": "b08e27be-c086-4b84-a321-307ed9f265e1"
+}
+'
+```
+
+**Request Fields:**
+
+<ResponseField name="requestId" type="string" required>
+  Unique identifier (UUID) for this offramp request.
+</ResponseField>
+
+<ResponseField name="source" type="object" required>
+  Source of the offramp (crypto side).
+
+  <Expandable title="properties">
+    <ResponseField name="userId" type="string" required>
+      The user sending crypto (who wants to send money).
+    </ResponseField>
+    <ResponseField name="currency" type="string" required>
+      Source cryptocurrency (e.g., "usdc")
+    </ResponseField>
+    <ResponseField name="chain" type="string" required>
+      Blockchain network (e.g., "POLYGON")
+    </ResponseField>
+    <ResponseField name="amount" type="number" required>
+      Amount of stablecoins to convert to fiat.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="destination" type="object" required>
+  Destination of the offramp (fiat side).
+
+  <Expandable title="properties">
+    <ResponseField name="userId" type="string" required>
+      The user receiving the fiat (typically the same as source.userId).
+    </ResponseField>
+    <ResponseField name="currency" type="string" required>
+      Destination fiat currency (e.g., "usd")
+    </ResponseField>
+    <ResponseField name="accountId" type="string" required>
+      The offramp bank account ID where fiat will be sent.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+**Response:**
+
+```json
+{
+  "transferType": "OFFRAMP",
+  "transferDetails": {
+    "id": "b838908b-95d0-4ebb-a2c6-8f0c142bcdd7",
+    "requestId": "b08e27be-c086-4b84-a321-307ed9f265e1",
+    "createdAt": "2025-09-26T03:15:57.766Z",
+    "updatedAt": "2025-09-26T03:15:58.463Z",
+    "status": "OPEN_QUOTE",
+    "failedReason": null,
+    "error": null,
+    "errorDetails": null,
+    "source": {
+      "userId": "32051b2f-0798-55a7-9c42-b08da4192c97",
+      "chain": "POLYGON",
+      "currency": "usdc",
+      "amount": 1,
+      "walletAddress": "0x1b932E54e77Aeb698144550d5a493Ea99E20Daa7",
+      "user": {
+        "email": "john@hifibridge.com",
+        "lastName": "Doe",
+        "firstName": "John",
+        "businessName": null
+      }
+    },
+    "destination": {
+      "userId": "32051b2f-0798-55a7-9c42-b08da4192c97",
+      "amount": 1,
+      "currency": "usd",
+      "user": {
+        "email": "john@hifibridge.com",
+        "lastName": "Doe",
+        "firstName": "John",
+        "businessName": null
+      },
+      "accountId": "583eb259-e78b-4f0c-a4b5-a8957876fa6f"
+    },
+    "receipt": {
+      "transactionHash": null
+    },
+    "developerFee": null,
+    "quoteInformation": {
+      "rate": "1.00",
+      "sendNet": {
+        "amount": "1.00",
+        "currency": "usdc"
+      },
+      "sendGross": {
+        "amount": "1.00",
+        "currency": "usdc"
+      },
+      "receiveNet": {
+        "amount": "1.00",
+        "currency": "usd"
+      },
+      "receiveGross": {
+        "amount": "1.00",
+        "currency": "usd"
+      },
+      "expiresAt": "2025-09-27T03:15:58.112Z"
+    },
+    "depositInformation": []
+  }
+}
+```
+
+**Response Fields:**
+
+<ResponseField name="transferDetails.id" type="string">
+  Unique offramp transaction ID. **Save this** - you'll need it to accept the
+  quote and check status.
+</ResponseField>
+
+<ResponseField name="transferDetails.status" type="string">
+  Current status: `OPEN_QUOTE` means you have an active quote that needs to be
+  accepted.
+</ResponseField>
+
+<ResponseField name="transferDetails.quoteInformation" type="object">
+  **Critical:** Contains the conversion rate and amounts. Review this before accepting.
+
+  <Expandable title="properties">
+    <ResponseField name="rate" type="string">
+      Exchange rate (stablecoin to fiat)
+    </ResponseField>
+    <ResponseField name="sendNet" type="object">
+      <Expandable title="properties">
+        <ResponseField name="amount" type="string">
+          Crypto amount after fees
+        </ResponseField>
+        <ResponseField name="currency" type="string">
+          Currency code
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+    <ResponseField name="receiveNet" type="object">
+      <Expandable title="properties">
+        <ResponseField name="amount" type="string">
+          Fiat amount you'll receive after fees
+        </ResponseField>
+        <ResponseField name="currency" type="string">
+          Currency code
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+    <ResponseField name="expiresAt" type="string">
+      Quote expiration time
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<Warning>
+  **Quote Expiration:** Quotes typically expire after 15-30 minutes. If your
+  quote expires before you accept it, you'll need to create a new offramp
+  request to get a fresh quote with updated rates.
+</Warning>
+
+## Step 2: Accept the Quote
+
+After reviewing the quote, accept it to start the offramp process using the [Accept Quote](https://docs.hifibridge.com/api-reference/offramp/accept-quote) endpoint:
+
+**Request:**
+
+```bash
+curl --request POST \
+     --url https://sandbox.hifibridge.com/v2/offramps/b838908b-95d0-4ebb-a2c6-8f0c142bcdd7/quote/accept \
+     --header 'accept: application/json' \
+     --header 'authorization: Bearer YOUR_API_KEY'
+```
+
+**Response:**
+
+```json
+{
+  "transferType": "OFFRAMP",
+  "transferDetails": {
+    "id": "b838908b-95d0-4ebb-a2c6-8f0c142bcdd7",
+    "status": "CRYPTO_INITIATED",
+    "quoteInformation": {
+      "rate": "1.00",
+      "sendNet": {
+        "amount": "1.00",
+        "currency": "usdc"
+      },
+      "receiveNet": {
+        "amount": "1.00",
+        "currency": "usd"
+      }
+    }
+  }
+}
+```
+
+✅ **Quote accepted!** The status has changed to `CRYPTO_INITIATED`.
+
+## Monitor Status
+
+**Status Progression:**
+
+1. `OPEN_QUOTE` - Quote generated, waiting for acceptance
+2. `CRYPTO_INITIATED` - Processing crypto conversion
+3. `CRYPTO_PENDING` - Waiting for blockchain confirmation
+4. `FIAT_PENDING` - Converting to fiat
+5. `COMPLETE` - Fiat sent to bank account
+
+**Monitor via:**
+
+- **Polling:** Call [Retrieve an offramp](https://docs.hifibridge.com/api-reference/offramp/retrieve-an-offramp) with the transaction ID
+- **Webhooks:** Subscribe to `OFFRAMP.UPDATE` events for real-time notifications
+
+<Note>
+  In production, sending money may take 1-3 business days for the fiat to arrive
+  in the user's bank account. In sandbox, completion is typically instant.
+</Note>
+
+## Related Resources
+
+- **[Quickstart Guide](/docs/guides/quickstart)** - Set up users, KYC, and accounts
+- **[Receive Money](/docs/guides/receive-money)** - Convert fiat to stablecoins
+- **[Offramps](/docs/transactions/offramps)** - Detailed offramp documentation
+- **[Webhooks](/docs/webhooks)** - Real-time transaction monitoring
+- **[API Reference](https://docs.hifibridge.com/api-reference)** - Complete endpoint documentation
