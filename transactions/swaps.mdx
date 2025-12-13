@@ -20,7 +20,6 @@ Swaps execute immediately upon creation:
   </Step>
 </Steps>
 
-
 ## Creating Swaps
 
 Use the [Create Swap](https://docs.hifibridge.com/api-reference/swap/create-a-swap) endpoint to exchange currencies on the same chain.
@@ -65,6 +64,7 @@ curl -X POST "https://sandbox.hifibridge.com/v2/wallets/swaps" \
     }
   }'
 ```
+
 </CodeGroup>
 
 The response contains the swap details and execution results:
@@ -133,11 +133,14 @@ The response contains the swap details and execution results:
 </Accordion>
 
 <ResponseField name="transferDetails.id" type="string">
-  Unique swap ID. Use this to check status using the [Retrieve Swap](https://docs.hifibridge.com/api-reference/swap/retrieve-a-swap) endpoint.
+  Unique swap ID. Use this to check status using the [Retrieve
+  Swap](https://docs.hifibridge.com/api-reference/swap/retrieve-a-swap)
+  endpoint.
 </ResponseField>
 
 <ResponseField name="transferDetails.status" type="string">
-  Swap status. Swaps typically complete immediately. See [Transaction Status](#transaction-status) for details.
+  Swap status. Swaps typically complete immediately. See [Transaction
+  Status](#transaction-status) for details.
 </ResponseField>
 
 <ResponseField name="transferDetails.source" type="object">
@@ -145,7 +148,8 @@ The response contains the swap details and execution results:
 </ResponseField>
 
 <ResponseField name="transferDetails.destination" type="object">
-  Destination wallet details including currency, amount received, chain, and user information.
+  Destination wallet details including currency, amount received, chain, and
+  user information.
 </ResponseField>
 
 <ResponseField name="transferDetails.quoteInformation" type="object">
@@ -184,22 +188,26 @@ The response contains the swap details and execution results:
 </ResponseField>
 
 <Info>
-For detailed field documentation, see the [Create Swap](https://docs.hifibridge.com/api-reference/swap/create-a-swap) API reference.
+  For detailed field documentation, see the [Create
+  Swap](https://docs.hifibridge.com/api-reference/swap/create-a-swap) API
+  reference.
 </Info>
 
 ## Transaction Status
 
 Swaps typically complete within seconds:
 
-| Status          | Description                                                       |
-| :-------------- | :---------------------------------------------------------------- |
-| **PENDING**     | Swap request created and processing                               |
-| **COMPLETED**   | Swap successfully executed                                        |
-| **FAILED**      | Swap failed (check `error` and `errorDetails` for specifics)      |
-| **CANCELLED**   | Swap was cancelled before execution                               |
+| Status        | Description                                                  |
+| :------------ | :----------------------------------------------------------- |
+| **PENDING**   | Swap request created and processing                          |
+| **COMPLETED** | Swap successfully executed                                   |
+| **FAILED**    | Swap failed (check `error` and `errorDetails` for specifics) |
+| **CANCELLED** | Swap was cancelled before execution                          |
 
 <Note>
-**Status Updates:** Subscribe to `SWAP.CREATE` and `SWAP.UPDATE` webhook events to receive real-time status notifications. See [Webhooks](/docs/webhooks) for setup instructions.
+  **Status Updates:** Subscribe to `SWAP.CREATE` and `SWAP.UPDATE` webhook
+  events to receive real-time status notifications. See
+  [Webhooks](/docs/webhooks) for setup instructions.
 </Note>
 
 ## Tracking Swaps
@@ -237,21 +245,23 @@ The retrieve response includes current swap status:
 </Accordion>
 
 <ResponseField name="transferDetails.status" type="string">
-  Current swap status. See [Transaction Status](#transaction-status) for all possible statuses.
+  Current swap status. See [Transaction Status](#transaction-status) for all
+  possible statuses.
 </ResponseField>
 
 ## Supported Swap Pairs
 
 Currently supported swap combinations:
 
-| Chain           | Supported Pairs                                   |
-| :-------------- | :------------------------------------------------ |
-| **Polygon**     | USDC ↔ USDT, USDC ↔ USDG, USDT ↔ USDG            |
-| **Ethereum**    | USDC ↔ USDT, USDC ↔ USDG, USDT ↔ USDG            |
-| **Solana**      | USDC ↔ USDT                                       |
+| Chain        | Supported Pairs                       |
+| :----------- | :------------------------------------ |
+| **Polygon**  | USDC ↔ USDT, USDC ↔ USDG, USDT ↔ USDG |
+| **Ethereum** | USDC ↔ USDT, USDC ↔ USDG, USDT ↔ USDG |
+| **Solana**   | USDC ↔ USDT                           |
 
 <Info>
-**Coming Soon:** Additional chains and token pairs will be added. Contact support if you need specific swap pairs.
+  **Coming Soon:** Additional chains and token pairs will be added. Contact
+  support if you need specific swap pairs.
 </Info>
 
 ## Key Concepts
@@ -289,25 +299,22 @@ Currently supported swap combinations:
     Provide amount in only one side - the system calculates the other based on the current rate.
   </Accordion>
 
-  <Accordion title="Exchange Rates">
-    The `quoteInformation.rate` shows the exchange rate between currencies:
-    - **1:1 stablecoins** (USDC ↔ USDT): Rate is typically "1"
-    - **Market rates**: Rates may vary slightly based on liquidity
-    
-    Always verify `receiveNet` to see the exact amount you'll receive after any fees.
-  </Accordion>
+{" "}
+<Accordion title="Exchange Rates">
+  The `quoteInformation.rate` shows the exchange rate between currencies: -
+  **1:1 stablecoins** (USDC ↔ USDT): Rate is typically "1" - **Market rates**:
+  Rates may vary slightly based on liquidity Always verify `receiveNet` to see
+  the exact amount you'll receive after any fees.
+</Accordion>
 
-  <Accordion title="Billing Information">
-    The `billingInformation.fees` array shows all applicable fees:
-    
-    **EXCHANGE_FEE**: Conversion fee for the swap
-    - **timing: ON_INVOICE**: Billed on your monthly invoice (not deducted from swap)
-    - **timing: ON_TRANSACTION**: Deducted from the swap amount
-    
-    **GAS_FEE**: Blockchain transaction fees (if applicable)
-    
-    Check `timing` to understand when fees are charged.
-  </Accordion>
+{" "}
+<Accordion title="Billing Information">
+  The `billingInformation.fees` array shows all applicable fees:
+  **EXCHANGE_FEE**: Conversion fee for the swap - **timing: ON_INVOICE**: Billed
+  on your monthly invoice (not deducted from swap) - **timing: ON_TRANSACTION**:
+  Deducted from the swap amount **GAS_FEE**: Blockchain transaction fees (if
+  applicable) Check `timing` to understand when fees are charged.
+</Accordion>
 
   <Accordion title="External Wallet Swaps">
     Swap to external wallets (not managed by HIFI) by providing `externalWalletId` or `walletAddress`:
@@ -376,12 +383,12 @@ Currently supported swap combinations:
     ```
   </Step>
 
-  <Step title="Verify completion">
-    The response will show status `COMPLETED` for successful swaps. Check:
-    - `destination.amount` - Amount received
-    - `quoteInformation.rate` - Exchange rate used
-    - `billingInformation.fees` - Any applicable fees
-  </Step>
+{" "}
+<Step title="Verify completion">
+  The response will show status `COMPLETED` for successful swaps. Check: -
+  `destination.amount` - Amount received - `quoteInformation.rate` - Exchange
+  rate used - `billingInformation.fees` - Any applicable fees
+</Step>
 
   <Step title="Handle errors">
     If status is `FAILED`:
@@ -426,7 +433,7 @@ Currently supported swap combinations:
 
 ## Getting Help
 
-- 📧 **Email:** support@hifibridge.com
+- 📧 **Email:** support@hifi.com
 - 💬 **Slack:** Message us in our shared Slack channel
 
 ## Related Resources

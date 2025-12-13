@@ -8,13 +8,16 @@ An **Offramp Account** is a user's external bank account where they receive fiat
 
 <Steps>
   <Step title="Register bank account">
-    Add the user's external bank account to HIFI by providing account details and account holder information.
+    Add the user's external bank account to HIFI by providing account details
+    and account holder information.
   </Step>
   <Step title="Create offramp">
-    Initiate an offramp transfer to get a conversion quote with current exchange rates and fees.
+    Initiate an offramp transfer to get a conversion quote with current exchange
+    rates and fees.
   </Step>
   <Step title="Accept quote">
-    Accept the quote to execute the conversion. Stablecoins are converted to fiat and delivered to the registered bank account.
+    Accept the quote to execute the conversion. Stablecoins are converted to
+    fiat and delivered to the registered bank account.
   </Step>
 </Steps>
 
@@ -23,7 +26,9 @@ Each offramp account is configured for a specific currency and region (e.g., USD
 ## Prerequisites
 
 <Warning>
-**KYC Required:** Users must complete KYC verification for the relevant rail before creating offramp accounts. For example, to create a USD offramp account, the user must have an active USD rail.
+  **KYC Required:** Users must complete KYC verification for the relevant rail
+  before creating offramp accounts. For example, to create a USD offramp
+  account, the user must have an active USD rail.
 </Warning>
 
 ## Creating Offramp Accounts
@@ -77,7 +82,6 @@ curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/accounts" \
 
 <ResponseField name="accountHolder" type="object" required>
   Account holder information. Must match user's KYC data for compliance.
-  
   <Expandable title="properties">
     <ResponseField name="type" type="string" required>
       Account holder type: `individual` or `business`
@@ -99,7 +103,6 @@ curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/accounts" \
 
 <ResponseField name="us" type="object" required>
   US-specific bank account details.
-  
   <Expandable title="properties">
     <ResponseField name="transferType" type="string" required>
       Payment method: `wire` or `ach`
@@ -136,11 +139,13 @@ curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/accounts" \
 **Response Fields:**
 
 <ResponseField name="id" type="string">
-  Unique account ID. **Save this** for creating offramp transfers to this account.
+  Unique account ID. **Save this** for creating offramp transfers to this
+  account.
 </ResponseField>
 
 <ResponseField name="status" type="string">
-  Account status: `ACTIVE` (ready to use), `PENDING` (being validated), or `REJECTED` (validation failed)
+  Account status: `ACTIVE` (ready to use), `PENDING` (being validated), or
+  `REJECTED` (validation failed)
 </ResponseField>
 
 <ResponseField name="invalidFields" type="array">
@@ -394,7 +399,8 @@ curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/accounts" \
 </ResponseField>
 
 <Note>
-Check the [Africa Rail documentation](/docs/rails/africa) for supported combinations of country, currency, and financial institution.
+  Check the [Africa Rail documentation](/docs/rails/africa) for supported
+  combinations of country, currency, and financial institution.
 </Note>
 
 ## Using Offramp Accounts
@@ -426,18 +432,20 @@ curl -X POST "https://sandbox.hifibridge.com/v2/offramps" \
 The `accountId` from the account creation response tells HIFI which bank account should receive the fiat funds.
 
 <Info>
-**Complete Offramp Flow:** See the [Offramps documentation](/docs/transactions/offramps) for the full process including quote acceptance, status tracking, and settlement timing.
+  **Complete Offramp Flow:** See the [Offramps
+  documentation](/docs/transactions/offramps) for the full process including
+  quote acceptance, status tracking, and settlement timing.
 </Info>
 
 ## Account Validation
 
 After creating an offramp account, HIFI validates the account details:
 
-| Status       | Description                                                    |
-| :----------- | :------------------------------------------------------------- |
-| **ACTIVE**   | Account validated and ready to receive funds                   |
-| **PENDING**  | Account being validated (typically resolves within minutes)    |
-| **REJECTED** | Validation failed - check `invalidFields` for specific issues  |
+| Status       | Description                                                   |
+| :----------- | :------------------------------------------------------------ |
+| **ACTIVE**   | Account validated and ready to receive funds                  |
+| **PENDING**  | Account being validated (typically resolves within minutes)   |
+| **REJECTED** | Validation failed - check `invalidFields` for specific issues |
 
 ## Key Concepts
 
@@ -452,27 +460,25 @@ After creating an offramp account, HIFI validates the account details:
     - Multiple accounts in the same currency for different banks
   </Accordion>
 
-  <Accordion title="Account Types vs Transfer Types">
-    Don't confuse these two concepts:
-    
-    - **Account Type** (`type` field): The region or country (e.g., `us`, `brazil`, `mexico`)
-    - **Transfer Type** (within account-specific fields): The payment method (e.g., `wire`, `ach`, `pix`, `spei`)
-    
-    Not all transfer types are available in all regions. Check the API reference for supported combinations.
-  </Accordion>
+{" "}
+<Accordion title="Account Types vs Transfer Types">
+  Don't confuse these two concepts: - **Account Type** (`type` field): The
+  region or country (e.g., `us`, `brazil`, `mexico`) - **Transfer Type** (within
+  account-specific fields): The payment method (e.g., `wire`, `ach`, `pix`,
+  `spei`) Not all transfer types are available in all regions. Check the API
+  reference for supported combinations.
+</Accordion>
 
-  <Accordion title="First Party vs Third Party Payments">
-    Offramp accounts support two payment scenarios:
-    
-    **First Party Payments:** Funds sent to the account holder (the user who completed KYC). This is the standard case where users receive money in their own bank account.
-    
-    **Third Party Payments:** Funds sent to someone other than the account holder. This enables use cases like:
-    - Sending money to family members
-    - Paying business partners or vendors
-    - Disbursing funds to beneficiaries
-    
-    Both are supported, but third party payments may require additional compliance verification.
-  </Accordion>
+{" "}
+<Accordion title="First Party vs Third Party Payments">
+  Offramp accounts support two payment scenarios: **First Party Payments:**
+  Funds sent to the account holder (the user who completed KYC). This is the
+  standard case where users receive money in their own bank account. **Third
+  Party Payments:** Funds sent to someone other than the account holder. This
+  enables use cases like: - Sending money to family members - Paying business
+  partners or vendors - Disbursing funds to beneficiaries Both are supported,
+  but third party payments may require additional compliance verification.
+</Accordion>
 
   <Accordion title="Regional Payment Methods">
     Different regions support different payment methods:
@@ -752,7 +758,7 @@ After creating an offramp account, HIFI validates the account details:
 
 ## Getting Help
 
-- 📧 **Email:** support@hifibridge.com
+- 📧 **Email:** support@hifi.com
 - 💬 **Slack:** Message us in our shared Slack channel
 
 ## Related Resources

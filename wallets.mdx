@@ -327,6 +327,7 @@ See [Offramp](/docs/transactions/offramps) for detailed instructions.
     ```
 
     Check that `displayBalance` is greater than or equal to the amount you want to send. If insufficient, the transfer will fail with an insufficient balance error.
+
   </Step>
 
   <Step title="Monitor deposit status">
@@ -343,6 +344,7 @@ See [Offramp](/docs/transactions/offramps) for detailed instructions.
     - `FAILED` - Transaction failed (funds not received)
 
     Alternatively, set up `WALLET.DEPOSIT` webhook events for real-time notifications instead of polling the API.
+
   </Step>
 
   <Step title="Display balance to users">
@@ -367,12 +369,13 @@ See [Offramp](/docs/transactions/offramps) for detailed instructions.
       parseFloat(data.balance) / Math.pow(10, data.tokenInfo.decimals);
     console.log(`Balance: ${displayAmount.toFixed(2)} USDC`);
     ```
+
   </Step>
 </Steps>
 
 ## Getting Help
 
-- 📧 **Email:** support@hifibridge.com
+- 📧 **Email:** support@hifi.com
 - 💬 **Slack:** Message us in our shared Slack channel
 
 ## Related Resources

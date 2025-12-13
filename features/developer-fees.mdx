@@ -5,27 +5,34 @@ title: "Developer Fees"
 **Developer Fees** enable automated calculation and distribution of fees for offramp transactions. Fees can be configured to be distributed to up to **10 different beneficiary wallets**.
 
 <Info>
-Developer fees work for offramp transactions. Looking to charge fees for Virtual Accounts? Try [Settlement Rules](/docs/features/settlement-rules).
+  Developer fees work for offramp transactions. Looking to charge fees for
+  Virtual Accounts? Try [Settlement Rules](/docs/features/settlement-rules).
 </Info>
 
 ## How Developer Fees Work
 
 <Steps>
   <Step title="Define fees and beneficiary">
-    Specify the fee calculation method and destination wallets by including the developer fee when creating offramp transactions.
+    Specify the fee calculation method and destination wallets by including the
+    developer fee when creating offramp transactions.
   </Step>
   <Step title="Automatic distribution">
-    Fees are automatically calculated and distributed during the offramp process. The total amount (offramp amount + fees) is debited from the source wallet.
+    Fees are automatically calculated and distributed during the offramp
+    process. The total amount (offramp amount + fees) is debited from the source
+    wallet.
   </Step>
   <Step title="Fee settlement">
-    After the offramp is processed, fees are credited to the specified beneficiary wallets in stablecoin.
+    After the offramp is processed, fees are credited to the specified
+    beneficiary wallets in stablecoin.
   </Step>
 </Steps>
 
 ## Supported Rails
 
 <Info>
-Developer fees are currently supported for USD offramps only. Additional currencies and payment rails—including global fiat currencies and non-USD transfer methods—will be supported soon. Stay tuned for updates!
+  Developer fees are currently supported for USD offramps only. Additional
+  currencies and payment rails—including global fiat currencies and non-USD
+  transfer methods—will be supported soon. Stay tuned for updates!
 </Info>
 
 ## Fee Models
@@ -94,10 +101,13 @@ curl -X POST "https://sandbox.hifibridge.com/v2/offramps" \
   Array of fee configurations to be applied. Each fee object requires:
   <Expandable title="Fee Object Fields">
     <ResponseField name="type" type="string" required>
-      Fee calculation type. Must be either <code>PERCENTAGE</code> or <code>FLAT</code>.
+      Fee calculation type. Must be either <code>PERCENTAGE</code> or{" "}
+      <code>FLAT</code>.
     </ResponseField>
     <ResponseField name="value" type="string" required>
-      Fee amount. For percentages, use decimal format (e.g., <code>"0.002"</code> for 0.2%). For flat fees, specify as a string amount (e.g., <code>"5"</code>).
+      Fee amount. For percentages, use decimal format (e.g.,{" "}
+      <code>"0.002"</code> for 0.2%). For flat fees, specify as a string amount
+      (e.g., <code>"5"</code>).
     </ResponseField>
     <ResponseField name="walletAddress" type="string" required>
       Beneficiary wallet address to receive the fee.
@@ -162,8 +172,12 @@ curl -X POST "https://sandbox.hifibridge.com/v2/offramps" \
 }
 ```
 
-<ResponseField name="transferDetails.source.amountIncludeDeveloperFee" type="number">
-  Total amount debited from the source wallet, including the offramp amount and all developer fees.
+<ResponseField
+  name="transferDetails.source.amountIncludeDeveloperFee"
+  type="number"
+>
+  Total amount debited from the source wallet, including the offramp amount and
+  all developer fees.
 </ResponseField>
 
 <ResponseField name="transferDetails.developerFee" type="object">
@@ -187,7 +201,9 @@ curl -X POST "https://sandbox.hifibridge.com/v2/offramps" \
 </ResponseField>
 
 <Info>
-For detailed field documentation, see the [Create Offramp](https://docs.hifibridge.com/api-reference/offramp/create-an-offramp) API reference.
+  For detailed field documentation, see the [Create
+  Offramp](https://docs.hifibridge.com/api-reference/offramp/create-an-offramp)
+  API reference.
 </Info>
 
 ## Key Concepts
@@ -209,19 +225,20 @@ For detailed field documentation, see the [Create Offramp](https://docs.hifibrid
     Both models can be combined in a single transaction with up to 10 different beneficiary wallets.
   </Accordion>
 
-  {" "}
+{" "}
 
-  <Accordion title="Fee Distribution">
-    Developer fees work as follows:
-    
-    1. **Total debit**: The source wallet is debited for the offramp amount plus all fees
-    2. **Offramp processing**: The offramp amount is converted to fiat and sent to the bank account
-    3. **Fee distribution**: Each fee is credited to its specified beneficiary wallet in stablecoin
-    
-    The `amountIncludeDeveloperFee` field in the response shows the total amount debited, helping you calculate the exact amount needed in the source wallet.
-  </Accordion>
+{" "}
+<Accordion title="Fee Distribution">
+  Developer fees work as follows: 1. **Total debit**: The source wallet is
+  debited for the offramp amount plus all fees 2. **Offramp processing**: The
+  offramp amount is converted to fiat and sent to the bank account 3. **Fee
+  distribution**: Each fee is credited to its specified beneficiary wallet in
+  stablecoin The `amountIncludeDeveloperFee` field in the response shows the
+  total amount debited, helping you calculate the exact amount needed in the
+  source wallet.
+</Accordion>
 
-  {" "}
+{" "}
 
   <Accordion title="Multiple Beneficiaries">
     You can distribute fees to up to 10 different beneficiary wallets in a single transaction:
@@ -253,7 +270,7 @@ For detailed field documentation, see the [Create Offramp](https://docs.hifibrid
     Fees are distributed in the order they are specified in the array.
   </Accordion>
 
-  {" "}
+{" "}
 
   <Accordion title="Fee Tracking">
     Each developer fee has:
@@ -268,7 +285,7 @@ For detailed field documentation, see the [Create Offramp](https://docs.hifibrid
 
 ## Getting Help
 
-- 📧 **Email:** support@hifibridge.com
+- 📧 **Email:** support@hifi.com
 - 💬 **Slack:** Message us in our shared Slack channel
 
 ## Related Resources
