@@ -4,7 +4,7 @@
   "name": "HIFI Developer Docs",
   "description": "Developer Documentation for HIFI",
   "colors": {
-    "primary": "#ECEAE5",
+    "primary": "#222222",
     "light": "#F2FF66",
     "dark": "#222222"
   },
