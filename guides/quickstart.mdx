@@ -47,6 +47,8 @@ Here's what we'll accomplish in this guide:
 3. **Set Up Virtual Account** - Create a virtual account for receiving deposits
 4. **Simulate Deposit** - Fund the wallet by simulating a deposit (onramp)
 5. **Execute a Transfer** - Send stablecoins between wallets
+6. **Create Offramp Account** - Register a bank account for receiving fiat
+7. **Create an Offramp** - Convert stablecoins back to fiat currency
 
 ---
 
@@ -696,6 +698,214 @@ curl --request POST \
 
 ---
 
+## Create an Offramp
+
+Now let's convert stablecoins back to USD using an **offramp**. An offramp converts USDC to USD and sends it to a user's bank account.
+
+### Create Offramp Account
+
+Before creating an offramp, users need to register their bank account as an **offramp account**. This account will receive fiat currency when stablecoins are converted.
+
+Create an offramp account using the [Create Account](https://docs.hifibridge.com/api-reference/account/create-an-account) endpoint:
+
+<Tabs>
+  <Tab title="USD (US Bank Account)">
+
+```bash
+curl -X POST "https://sandbox.hifibridge.com/v2/users/32051b2f-0798-55a7-9c42-b08da4192c97/accounts" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "rail": "offramp",
+    "type": "us",
+    "accountHolder": {
+      "type": "individual",
+      "name": "John Doe",
+      "phone": "+18573491112",
+      "email": "john@hifibridge.com",
+      "address": {
+        "addressLine1": "123 Main St",
+        "city": "New York",
+        "stateProvinceRegion": "NY",
+        "postalCode": "10010",
+        "country": "USA"
+      }
+    },
+    "us": {
+      "transferType": "wire",
+      "accountType": "checking",
+      "accountNumber": "99485843",
+      "routingNumber": "011002877",
+      "bankName": "HIFI Bank",
+      "currency": "usd"
+    }
+  }'
+```
+
+**Response:**
+
+```json
+{
+  "status": "ACTIVE",
+  "id": "583eb259-e78b-4f0c-a4b5-a8957876fa6f",
+  "message": "Account created successfully"
+}
+```
+
+✅ **Account created!** Save the `id` - you'll need it when creating offramps.
+
+  </Tab>
+
+  <Tab title="Mexico (MXN - SPEI)">
+
+```bash
+curl -X POST "https://sandbox.hifibridge.com/v2/users/32051b2f-0798-55a7-9c42-b08da4192c97/accounts" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "rail": "offramp",
+    "type": "mexicoGlobalNetwork",
+    "accountHolder": {
+      "type": "individual",
+      "name": "John Doe",
+      "dateOfBirth": "1990-01-01",
+      "idNumber": "ABCD123456EFGH78",
+      "nationality": "MEX",
+      "address": {
+        "addressLine1": "123 Main Street",
+        "city": "Mexico City",
+        "stateProvinceRegion": "CDMX",
+        "postalCode": "01000",
+        "country": "MEX"
+      }
+    },
+    "mexicoGlobalNetwork": {
+      "bankName": "Banco Nacional de México",
+      "accountNumber": "1234567890",
+      "clabe": "012345678901234567",
+      "currency": "mxn"
+    }
+  }'
+```
+
+  </Tab>
+
+  <Tab title="Brazil (BRL - PIX)">
+
+```bash
+curl -X POST "https://sandbox.hifibridge.com/v2/users/32051b2f-0798-55a7-9c42-b08da4192c97/accounts" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "rail": "offramp",
+    "type": "brazilGlobalNetwork",
+    "accountHolder": {
+      "type": "individual",
+      "name": "John Doe",
+      "dateOfBirth": "1990-01-01",
+      "idNumber": "12345678901",
+      "nationality": "BRA",
+      "address": {
+        "addressLine1": "123 Main Street",
+        "city": "São Paulo",
+        "stateProvinceRegion": "SP",
+        "postalCode": "01310-100",
+        "country": "BRA"
+      }
+    },
+    "brazilGlobalNetwork": {
+      "bankName": "Banco do Brasil",
+      "accountNumber": "12345-6",
+      "branchNumber": "1234",
+      "currency": "brl"
+    }
+  }'
+```
+
+  </Tab>
+</Tabs>
+
+**Monitor Account Status:**
+
+Account status indicates whether the account is ready to use:
+
+- `ACTIVE` - Account is validated and ready for offramps
+- `PENDING` - Account is being validated (wait for activation)
+- `REJECTED` - Validation failed (check `invalidFields` for details)
+
+Monitor via webhooks (`ACCOUNT.UPDATE`) or by polling the [Retrieve an account](https://docs.hifibridge.com/api-reference/account/retrieve-an-account) endpoint.
+
+<Info>
+  **More Account Types:** For additional regions and currencies (China, Hong
+  Kong, Nigeria, and more), see the [Offramp Accounts
+  Guide](/docs/accounts/offramp-accounts).
+</Info>
+
+### Create Offramp Request
+
+Create an offramp request to get a quote for converting USDC to USD:
+
+**Request:**
+
+```bash
+curl --request POST \
+     --url https://sandbox.hifibridge.com/v2/offramps \
+     --header 'accept: application/json' \
+     --header 'authorization: Bearer YOUR_API_KEY' \
+     --header 'content-type: application/json' \
+     --data '
+{
+  "requestId": "c5f8a2b1-3d4e-5f6a-7b8c-9d0e1f2a3b4c",
+  "source": {
+    "userId": "32051b2f-0798-55a7-9c42-b08da4192c97",
+    "currency": "usdc",
+    "chain": "POLYGON",
+    "amount": 1
+  },
+  "destination": {
+    "userId": "32051b2f-0798-55a7-9c42-b08da4192c97",
+    "currency": "usd",
+    "accountId": "583eb259-e78b-4f0c-a4b5-a8957876fa6f"
+  }
+}
+'
+```
+
+**Response:**
+
+```json
+{
+  "transferType": "OFFRAMP",
+  "transferDetails": {
+    "id": "b838908b-95d0-4ebb-a2c6-8f0c142bcdd7",
+    "status": "OPEN_QUOTE",
+    "quoteInformation": {
+      "exchangeRate": "0.99",
+      "expiresAt": "2025-09-26T03:20:00.000Z"
+    }
+  }
+}
+```
+
+Accept the quote to execute the conversion:
+
+```bash
+curl --request POST \
+     --url https://sandbox.hifibridge.com/v2/offramps/b838908b-95d0-4ebb-a2c6-8f0c142bcdd7/quote/accept \
+     --header 'accept: application/json' \
+     --header 'authorization: Bearer YOUR_API_KEY'
+```
+
+✅ **Offramp initiated!** Monitor status via webhooks (`OFFRAMP.UPDATE`) or by polling the [Retrieve an offramp](https://docs.hifibridge.com/api-reference/offramp/retrieve-an-offramp) endpoint.
+
+<Info>
+  **Learn More:** For detailed offramp information, see the [Send Money
+  Guide](/docs/guides/send-money) and [Offramp
+  Guide](/docs/transactions/offramps).
+</Info>
+
+---
+
 ## 🎉 Congratulations!
 
 You've successfully completed the HIFI API quickstart! By following the steps above, you can now:
@@ -705,6 +915,8 @@ You've successfully completed the HIFI API quickstart! By following the steps ab
 - ✅ Set up virtual accounts for receiving deposits
 - ✅ Simulate deposits to fund wallets
 - ✅ Execute transfers between wallets
+- ✅ Create offramp accounts for receiving fiat
+- ✅ Create offramps to convert stablecoins to fiat
 
 ### Next Steps
 
