@@ -5,6 +5,22 @@ description: "Product updates and announcements"
 rss: true
 ---
 
+<Update label="December 13, 2025" description="Updates and fixes">
+
+## Updates
+
+- The Transfers page on the Dashboard has been changed to Transactions. HIFI supports three transaction types: transfers (onchain), onramps and offramps. We also improved legibility in drawers.
+- We've implemented retries for wallet swaps to improve reliability.
+
+## Fixes
+
+- Fixed a bug related to fee charging for refund wallet transfers.
+- Updated the Global Network KYC response object to show a failed status when the sender's country is unsupported, instead of throwing errors.
+- Fixed an issue with required fields for KYC Links.
+- Fixed an issue disabling production access for some customers.
+
+</Update>
+
 <Update label="December 12, 2025" description="New feature">
 
 ## Reporting
@@ -24,8 +40,8 @@ Get started by reading the [Metrics docs](/reporting/metrics), the [Reporting gu
 
 <Update label="December 9, 2025" description="Expansion">
 
-## USD Offramps via SWIFT
+## SWIFT Offramps
 
-We've expanded our offramp capabilities through Cross River Bank to include international SWIFT payouts! Refer to the [USD Rails page](/rails/usd) for more details on supported countries and regions. See the [Offramp Accounts guide](/accounts/offramp-accounts) for instructions on how to create an account.
+We now support international SWIFT payouts (USD). Refer to the [USD Rails page](/rails/usd) for more details on supported countries and regions. Or see the [Offramp Accounts guide](/accounts/offramp-accounts) for instructions on how to create an account.
 
 </Update>
