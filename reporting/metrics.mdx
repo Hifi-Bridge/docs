@@ -1,0 +1,145 @@
+---
+title: "Metrics"
+---
+
+Track transaction volume, activity patterns, and user growth with configurable metrics. Build custom views using templates, apply filters, and break down data by dimensions like transaction type or user.
+
+## Core Concepts
+
+**Metric Templates** define what you're measuring—gross volume, transaction counts, or new users.
+
+**Saved Metrics** are optional—use them to persist configurations for recurring queries or create custom metrics for specific use cases.
+
+**Breakdowns** split metrics into groups (by transaction type, status, or user) for deeper analysis.
+
+## Available Metric Types
+
+<AccordionGroup>
+  <Accordion title="Gross Volume">
+    Measure total transaction value over time. Returns volume in original currency and USD equivalent.
+
+    **Common uses:**
+
+    - Track daily, weekly, or monthly payment volume
+    - Monitor revenue trends
+    - Compare volume across transaction types
+
+  </Accordion>
+
+  <Accordion title="Transaction Count">
+    Count the number of transactions within a period.
+
+    **Common uses:**
+
+    - Measure transaction activity
+    - Calculate success rates by status
+    - Track user-specific transaction patterns
+
+  </Accordion>
+
+  <Accordion title="New Users">
+    Count users acquired within a time period.
+
+    **Common uses:**
+
+    - Monitor user acquisition
+    - Track onboarding velocity
+    - Measure growth by period
+
+  </Accordion>
+</AccordionGroup>
+
+## Quick Start
+
+1. **List templates** - See available metric types and their breakdown options
+2. **Preview metrics** - Test queries without saving using the preview endpoint
+3. **Save metrics** (optional) - Persist configurations for recurring queries
+4. **Query results** - Retrieve data from saved metrics or preview endpoints
+
+<Note>
+  For detailed examples and step-by-step guides, see the [Reporting
+  Guide](/guides/reporting).
+</Note>
+
+## Configuration Options
+
+<AccordionGroup>
+  <Accordion title="Date Range">
+    Every metric requires a date range using ISO 8601 format (YYYY-MM-DD). Available parameters vary by template—check the template response for supported params.
+  </Accordion>
+
+{" "}
+
+<Accordion title="Calculation Interval">
+  Choose how to aggregate data over time: `day`, `week`, or `month`. Daily
+  aggregation returns one row per period in your date range.
+</Accordion>
+
+{" "}
+
+<Accordion title="Filters">
+  Narrow results to specific subsets by users, transaction types, or transaction
+  statuses. Available filters depend on the template.
+</Accordion>
+
+  <Accordion title="Breakdowns">
+    Split metrics by dimensions for comparison: `transactionType`, `transactionStatus`, or `userId`. Without breakdowns, you get one row per time period. With breakdowns, you get multiple rows per period—one for each unique combination of breakdown values.
+
+    <Note>
+      Check each template's `breakdownOptions` field. NEW_USERS doesn't support breakdowns.
+    </Note>
+
+  </Accordion>
+</AccordionGroup>
+
+## Common Use Cases
+
+- **Track volume by transaction type** - Separate volume numbers for onramps and offramps
+- **Monitor specific user activity** - Transaction counts for specific users, broken down by success/failure
+- **Measure user acquisition** - New user count over time periods
+
+<Note>
+  See the [Reporting Guide](/guides/reporting) for detailed examples with code
+  samples.
+</Note>
+
+## Managing Saved Metrics
+
+Create, view, update, and delete saved metrics using the Metrics API endpoints. Saved metrics persist your configuration for recurring queries or custom user-specific metrics.
+
+## Best Practices
+
+**Use preview to experiment.** The preview endpoint lets you try any metric without saving. Test different parameters and breakdowns to find what works.
+
+**Save only when needed.** Create saved metrics for recurring queries or custom user-specific metrics. Most one-off queries work fine with preview.
+
+**Start simple.** Begin with basic metrics (no filters, no breakdowns) then add complexity as needed.
+
+**Choose appropriate intervals.** Daily intervals give granular data but can be overwhelming for long periods. Monthly or quarterly intervals work better for high-level trends.
+
+**Use breakdowns strategically.** Each breakdown dimension multiplies your result rows. Combine `transactionType` and `transactionStatus` breakdowns carefully—you'll get rows for every combination.
+
+**Check template parameters.** Available parameters vary by template. Review the template response to see what filters and options each metric supports.
+
+## Dashboard Access
+
+View and analyze metrics visually in the HIFI Dashboard:
+
+- Create charts and graphs
+- Build custom dashboards
+- Schedule automated reports
+- Export to CSV
+
+Access the Metrics section in your Dashboard.
+
+## Get Help
+
+- 📧 **Email:** support@hifi.com
+- 💬 **Slack:** Join our shared channel
+
+## Related Resources
+
+- [Reporting Guide](/guides/reporting) — Detailed examples and code samples
+- [API Reference: Metrics](/api-reference/reporting) — Complete endpoint specs
+- [Transactions](/transactions) — Understanding transaction types and statuses
+- [Users](/users) — User management

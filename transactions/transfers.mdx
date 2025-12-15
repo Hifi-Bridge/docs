@@ -1,9 +1,9 @@
 ---
-title: "Wallet Transfers"
-sidebarTitle: "Onchain"
+title: "Transfers"
+sidebarTitle: "Transfers"
 ---
 
-**Wallet transfers** allow you to send stablecoins between wallets on blockchain networks. Transfers can be sent to other HIFI users or external wallet addresses.
+**Wallet transfers** allow you to send stablecoins between wallets on blockchain networks. Transactions can be sent to other HIFI users or external wallet addresses.
 
 ## Transfer Types
 
@@ -239,9 +239,9 @@ Let's take a look at the response:
   API reference.
 </Info>
 
-## Transaction Status
+## Transfer Status
 
-Wallet transfers progress through several statuses:
+Wallet transfets progress through several statuses:
 
 | Status            | Description                                        |
 | :---------------- | :------------------------------------------------- |
@@ -261,7 +261,7 @@ Wallet transfers progress through several statuses:
   for setup instructions.
 </Note>
 
-Monitor transfer status using the [Retrieve Crypto Transfer](https://docs.hifibridge.com/api-reference/crypto-transfer/retrieve-a-crypto-transfer) endpoint. The response structure matches the create endpoint shown above.
+Monitor transaction status using the [Retrieve Crypto Transfer](https://docs.hifibridge.com/api-reference/crypto-transfer/retrieve-a-crypto-transfer) endpoint. The response structure matches the create endpoint shown above.
 
 ```bash
 curl -X GET "https://sandbox.hifibridge.com/v2/wallets/transfers/xfr_abc123" \
@@ -272,21 +272,21 @@ Use the `transactionHash` in the response to view the transaction on a blockchai
 
 ## Transfer Approvals
 
-For organizations requiring multi-party authorization, all transfers support an optional approval workflow.
+For organizations requiring multi-party authorization, all transactions support an optional approval workflow.
 
 ### How Approvals Work
 
 <Steps>
   <Step title="Enable approval requirement">
-    Set `requireApproval: true` when creating a transfer.
+    Set `requireApproval: true` when creating a transaction.
   </Step>
-  <Step title="Review pending transfer">
-    The transfer enters `PENDING_APPROVAL` status. Dashboard admins are notified
-    via email and webhook to approve or reject the transfer. Any admin can make
-    the decision.
+  <Step title="Review pending transaction">
+    The transaction enters `PENDING_APPROVAL` status. Dashboard admins are
+    notified via email and webhook to approve or reject the transaction. Any
+    admin can make the decision.
   </Step>
   <Step title="Execution or rejection">
-    If approved, the transfer is executed. If rejected, it's cancelled.
+    If approved, the transaction is executed. If rejected, it's cancelled.
   </Step>
 </Steps>
 
@@ -365,24 +365,25 @@ When approval is required, the response includes approval details:
 
 <Note>
   **Configuring Approvers:** Manage your team roles in the HIFI Dashboard.
-  Members can create transfers, but only admins can approve.
+  Members can create transactions, but only admins can approve.
 </Note>
 
 ## Key Concepts
 
 <AccordionGroup>
-  <Accordion title="HIFI vs External Transfers">
-    **HIFI transfers** use `userId` as the destination while **external transfers** use a `walletAddress` as the destination.
+  <Accordion title="HIFI vs External Transactions">
+    **HIFI transactions** use `userId` as the destination while **external transactions** use a `walletAddress` as the destination.
     
     <Warning>
-    **Registration Required:** External wallet addresses must be registered before use. Create an external wallet record using the [External Wallets API](https://docs.hifibridge.com/api-reference/wallet/add-external-wallets-to-a-user) before including the address in transfer requests.
+    **Registration Required:** External wallet addresses must be registered before use. Create an external wallet record using the [External Wallets API](https://docs.hifibridge.com/api-reference/wallet/add-external-wallets-to-a-user) before including the address in transaction requests.
     </Warning>
   </Accordion>
 
 {" "}
-<Accordion title="Batch Transfer Limits">
-  Batch transfers have the following constraints: - **Maximum recipients:** 50
-  per batch - **Supported chains:** Currently POLYGON only - **Supported
+
+<Accordion title="Batch Transaction Limits">
+  Batch transactions have the following constraints: - **Maximum recipients:**
+  50 per batch - **Supported chains:** Currently POLYGON only - **Supported
   currencies:** USDC, USDT If you need to send to more than 50 recipients,
   create multiple batches.
 </Accordion>
@@ -392,18 +393,18 @@ When approval is required, the response includes approval details:
     - **transactionHash:** Unique identifier for the blockchain transaction. Use this to view the transaction on block explorers.
     - **userOpHash:** For account abstraction wallets, this is the user operation hash
     
-    Both values are `null` until the transfer is confirmed on-chain (status becomes COMPLETED).
+    Both values are `null` until the transaction is confirmed on-chain (status becomes COMPLETED).
   </Accordion>
 </AccordionGroup>
 
 ## Getting Help
 
-- 📧 **Email:** support@hifibridge.com
+- 📧 **Email:** support@hifi.com
 - 💬 **Slack:** Message us in our shared Slack channel
 
 ## Related Resources
 
 - [Wallets](/docs/wallets) - Understand wallet addresses and balances
-- [Webhooks](/docs/webhooks) - Real-time transfer status notifications
+- [Webhooks](/docs/webhooks) - Real-time transaction status notifications
 - [API: Single Transfer](https://docs.hifibridge.com/api-reference/crypto-transfer/create-a-crypto-transfer) - Complete single transfer documentation
 - [API: Batch Transfer](https://docs.hifibridge.com/api-reference/crypto-transfer/create-a-batch-crypto-transfer) - Complete batch transfer documentation

@@ -1,0 +1,49 @@
+---
+title: "Changelog"
+mode: "center"
+description: "Product updates and announcements"
+rss: true
+---
+
+<Update label="December 13, 2025" description="Updates and fixes">
+
+## Updates
+
+- Added a "Find User" feature on the Compliance page to search quickly.
+- Changed Transfers page on the Dashboard to Transactions. HIFI supports three transaction types: transfers (onchain), onramps and offramps.
+- Improved legibility in drawers for usernames and lengthy IDs.
+- Implemented retries for wallet swaps to improve reliability.
+
+## Fixes
+
+- Fixed a bug related to fee charging for refund wallet transfers.
+- Updated the Global Network KYC response object to show a failed status when the sender's country is unsupported, instead of throwing errors.
+- Fixed an issue with required fields for KYC Links.
+- Fixed an issue disabling production access for some customers.
+
+</Update>
+
+<Update label="December 12, 2025" description="New feature">
+
+## Reporting
+
+We're excited to share our new **Metrics API**! This powerful addition enables you to generate comprehensive data and reports for your payment operations.
+
+With the Metrics API, you can:
+
+- Generate metrics on transactions and user activity
+- Preview report results before finalizing
+- Create custom reporting templates tailored to your needs
+- Access detailed reports through the API and Dashboard
+
+Get started by reading the [Metrics docs](/reporting/metrics), the [Reporting guide](/guides/reporting), or exploring the new endpoints in our [API Reference](/api-reference/reporting).
+
+</Update>
+
+<Update label="December 9, 2025" description="Expansion">
+
+## SWIFT Offramps
+
+We now support international SWIFT payouts (USD). Refer to the [USD Rails page](/rails/usd) for more details on supported countries and regions. Or see the [Offramp Accounts guide](/accounts/offramp-accounts) for instructions on how to create an account.
+
+</Update>

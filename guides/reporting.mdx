@@ -1,0 +1,416 @@
+---
+title: "Reporting"
+tag: "NEW"
+---
+
+Learn how to use the **Metrics API** with detailed examples. This guide covers common patterns, step-by-step workflows, and code samples for tracking transaction volume, activity patterns, and user growth.
+
+<Note>
+  **Prerequisite:** Before diving into examples, make sure you've read the
+  [Metrics documentation](/reporting/metrics) to understand core concepts like
+  metric templates, saved metrics, and breakdowns.
+</Note>
+
+## Quickstart
+
+<Tabs>
+  <Tab title="1. List Templates">
+    List available templates to see what you can measure:
+
+    ```bash
+    curl -X GET "https://sandbox.hifibridge.com/v2/reporting/templates" \
+      -H "Authorization: Bearer YOUR_API_KEY"
+    ```
+
+    **Response:**
+
+    ```json
+    {
+      "status": "success",
+      "data": [
+        {
+          "template": "GROSS_VOLUME",
+          "displayName": "Gross Volume",
+          "description": "Total combined USD-equivalent value of completed Onramp and Offramp transactions",
+          "breakdownOptions": ["transactionType", "userId"]
+        },
+        {
+          "template": "TRANSACTION_COUNT",
+          "displayName": "Transaction Count",
+          "description": "Aggregated count of transactions grouped by status and type over time",
+          "breakdownOptions": ["transactionType", "transactionStatus", "userId"]
+        },
+        {
+          "template": "NEW_USERS",
+          "displayName": "New Users",
+          "description": "Count of new unique end-users onboarded within the time period",
+          "breakdownOptions": null
+        }
+      ]
+    }
+    ```
+
+  </Tab>
+
+  <Tab title="2. Preview Metrics">
+    Preview results by providing a template with parameters. Saving is optional—preview lets you query metrics without persisting anything.
+
+    ```bash
+    curl -X POST "https://sandbox.hifibridge.com/v2/reporting/metrics/preview" \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "template": "GROSS_VOLUME",
+        "params": {
+          "createdAfter": "2025-11-12T18:01:29.891Z",
+          "createdBefore": "2025-12-12T18:01:29.891Z",
+          "calculationInterval": "day",
+          "transactionTypes": [
+            "transfer",
+            "onramp",
+            "offramp"
+          ],
+          "transactionStatuses": [
+            "COMPLETED"
+          ]
+        }
+      }'
+    ```
+
+    **Response:**
+
+    <Accordion title="View Response">
+    ```json
+    {
+      "status": "success",
+      "data": [
+        {
+          "periodStart": "2025-12-12",
+          "grossVolume": 0
+        },
+        {
+          "periodStart": "2025-12-11",
+          "grossVolume": 10
+        }
+      ],
+      "metadata": {
+        "template": "GROSS_VOLUME",
+        "recordCount": 31,
+        "projectedRowCount": null,
+        "filledCount": 26,
+        "calculationInterval": "day",
+        "dateRange": {
+          "start": "2025-11-12T18:01:29.891Z",
+          "end": "2025-12-12T18:01:29.891Z"
+        },
+        "filters": {
+          "createdAfter": {
+            "applied": "subset",
+            "specified": true,
+            "values": "2025-11-12T18:01:29.891Z"
+          },
+          "createdBefore": {
+            "applied": "subset",
+            "specified": true,
+            "values": "2025-12-12T18:01:29.891Z"
+          },
+          "calculationInterval": {
+            "applied": "subset",
+            "specified": true,
+            "values": "day"
+          },
+          "transactionTypes": {
+            "applied": "subset",
+            "specified": true,
+            "count": 3,
+            "values": ["transfer", "onramp", "offramp"]
+          },
+          "transactionStatuses": {
+            "applied": "subset",
+            "specified": true,
+            "count": 1,
+            "values": ["COMPLETED"]
+          },
+          "userIds": {
+            "applied": "all",
+            "specified": false,
+            "count": 227,
+            "note": "227 total (list omitted for brevity)"
+          }
+        },
+        "breakdowns": null
+      }
+    }
+    ```
+    </Accordion>
+
+  </Tab>
+
+  <Tab title="3. Save Metric">
+    Create a saved metric to persist the configuration or build custom metrics for specific users:
+
+    ```bash
+    curl -X POST "https://sandbox.hifibridge.com/v2/reporting/metrics" \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "template": "GROSS_VOLUME",
+        "name": "Daily Volume by Direction",
+        "params": {
+          "createdAfter": "2025-01-01",
+          "createdBefore": "2025-01-31",
+          "calculationInterval": "day",
+          "breakdowns": ["transactionType"]
+        }
+      }'
+    ```
+
+    **Response:**
+
+    ```json
+    {
+      "status": "success",
+      "data": {
+        "id": "mtr_abc123",
+        "name": "Daily Volume by Direction",
+        "template": "GROSS_VOLUME"
+      }
+    }
+    ```
+
+  </Tab>
+
+  <Tab title="4. Query Results">
+    Retrieve data from your saved metric:
+
+    ```bash
+    curl -X GET "https://sandbox.hifibridge.com/v2/reporting/metrics/mtr_abc123/results" \
+      -H "Authorization: Bearer YOUR_API_KEY"
+    ```
+
+  </Tab>
+</Tabs>
+
+## Configuration Examples
+
+<Tabs>
+  <Tab title="Date Range">
+    Every metric requires a date range:
+
+    ```json
+    {
+      "createdAfter": "2025-01-01",
+      "createdBefore": "2025-01-31"
+    }
+    ```
+
+    Dates use ISO 8601 format (YYYY-MM-DD). Available parameters vary by template—check the template response for supported params.
+
+  </Tab>
+
+  <Tab title="Calculation Interval">
+    Choose how to aggregate data over time:
+
+    - `day` — Daily totals
+    - `week` — Weekly totals (starts Monday)
+    - `month` — Monthly totals
+
+    Example: Daily aggregation returns one row per day in your date range.
+
+    ```json
+    {
+      "calculationInterval": "day"
+    }
+    ```
+
+  </Tab>
+
+  <Tab title="Filters">
+    Narrow results to specific subsets:
+
+    **Filter by users:**
+
+    ```json
+    {
+      "userIds": ["usr_abc123", "usr_def456"]
+    }
+    ```
+
+    **Filter by transaction type:**
+
+    ```json
+    {
+      "transactionTypes": ["onramp", "offramp", "transfer"]
+    }
+    ```
+
+    **Filter by transaction status:**
+
+    ```json
+    {
+      "transactionStatuses": ["COMPLETED", "FAILED", "PENDING"]
+    }
+    ```
+
+    Available filters depend on the template. Get filter options:
+
+    ```bash
+    curl -X GET "https://sandbox.hifibridge.com/v2/reporting/params/userIds/options" \
+      -H "Authorization: Bearer YOUR_API_KEY"
+    ```
+
+  </Tab>
+
+  <Tab title="Breakdowns">
+    Split metrics by dimensions for comparison:
+
+    - **transactionType** — Separate rows for each direction (onramp, offramp, transfer)
+    - **transactionStatus** — Separate rows for each status (COMPLETED, FAILED, PENDING, etc.)
+    - **userId** — Separate rows for each user
+
+    Without breakdowns, you get one row per time period. With breakdowns, you get multiple rows per period—one for each unique combination of breakdown values.
+
+    ```json
+    {
+      "breakdowns": ["transactionType"]
+    }
+    ```
+
+    <Note>
+      Check each template's `breakdownOptions` field. NEW_USERS doesn't support breakdowns.
+    </Note>
+
+  </Tab>
+</Tabs>
+
+## Common Patterns
+
+<Tabs>
+  <Tab title="Track Volume by Type">
+    Track daily volume split by transaction type (onramp vs offramp):
+
+    ```bash
+    curl -X POST "https://sandbox.hifibridge.com/v2/reporting/metrics" \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "template": "GROSS_VOLUME",
+        "name": "Daily Volume Split",
+        "params": {
+          "createdAfter": "2025-01-01",
+          "createdBefore": "2025-01-31",
+          "calculationInterval": "day",
+          "breakdowns": ["transactionType"]
+        }
+      }'
+    ```
+
+    Returns separate volume numbers for onramps and offramps each day.
+
+  </Tab>
+
+  <Tab title="Monitor User Activity">
+    Track weekly transaction counts for specific users, broken down by success/failure:
+
+    ```bash
+    curl -X POST "https://sandbox.hifibridge.com/v2/reporting/metrics" \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "template": "TRANSACTION_COUNT",
+        "name": "VIP User Activity",
+        "params": {
+          "createdAfter": "2025-01-01",
+          "createdBefore": "2025-01-31",
+          "calculationInterval": "week",
+          "userIds": ["usr_abc123", "usr_def456"],
+          "breakdowns": ["userId", "transactionStatus"]
+        }
+      }'
+    ```
+
+    Shows weekly transaction counts for specific users, broken down by success/failure.
+
+  </Tab>
+
+  <Tab title="Measure User Acquisition">
+    Track monthly new user growth:
+
+    ```bash
+    curl -X POST "https://sandbox.hifibridge.com/v2/reporting/metrics" \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "template": "NEW_USERS",
+        "name": "Monthly Growth",
+        "params": {
+          "createdAfter": "2025-01-01",
+          "createdBefore": "2025-12-31",
+          "calculationInterval": "month"
+        }
+      }'
+    ```
+
+    Returns new user count for each month.
+
+  </Tab>
+</Tabs>
+
+## Managing Saved Metrics
+
+<Tabs>
+  <Tab title="List Metrics">
+    List all your saved metrics:
+
+    ```bash
+    curl -X GET "https://sandbox.hifibridge.com/v2/reporting/metrics" \
+      -H "Authorization: Bearer YOUR_API_KEY"
+    ```
+
+  </Tab>
+
+  <Tab title="View Details">
+    Get details for a specific metric:
+
+    ```bash
+    curl -X GET "https://sandbox.hifibridge.com/v2/reporting/metrics/mtr_abc123" \
+      -H "Authorization: Bearer YOUR_API_KEY"
+    ```
+
+  </Tab>
+
+  <Tab title="Update Metric">
+    Update a saved metric's configuration:
+
+    ```bash
+    curl -X POST "https://sandbox.hifibridge.com/v2/reporting/metrics/mtr_abc123" \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "name": "Updated Name",
+        "params": {
+          "createdAfter": "2025-02-01",
+          "createdBefore": "2025-02-28"
+        }
+      }'
+    ```
+
+  </Tab>
+
+  <Tab title="Delete Metric">
+    Delete a saved metric:
+
+    ```bash
+    curl -X DELETE "https://sandbox.hifibridge.com/v2/reporting/metrics/mtr_abc123" \
+      -H "Authorization: Bearer YOUR_API_KEY"
+    ```
+
+  </Tab>
+</Tabs>
+
+## Related Resources
+
+- [Metrics Overview](/reporting/metrics) — Core concepts and overview
+- [API Reference: Metrics](/api-reference/reporting) — Complete endpoint specs
+- [Transactions](/transactions) — Understanding transaction types and statuses
+- [Users](/users) — User management

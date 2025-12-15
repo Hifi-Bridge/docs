@@ -1,0 +1,139 @@
+---
+title: "Receive Money"
+---
+
+This guide shows you how to **receive money** - converting fiat currency (like USD) into stablecoins (like USDC) and depositing them into a user's wallet.
+
+**⏱️ Time to complete:** 5-10 minutes
+
+<Note>
+  **Sandbox Environment:** All examples in this guide use the sandbox
+  environment (`https://sandbox.hifibridge.com`). Transactions are simulated -
+  no real money moves. When you're ready for production, replace the sandbox URL
+  with the production endpoint.
+</Note>
+
+## Prerequisites
+
+Before receiving money, ensure you have:
+
+- ✅ **User created** with Terms of Service accepted
+- ✅ **KYC completed** and approved for the target rail
+- ✅ **Virtual Account** set up for receiving deposits
+- ✅ **API keys** from the Dashboard
+
+<Info>
+  If you haven't set up users, KYC, or accounts yet, see the [Quickstart
+  Guide](/docs/guides/quickstart) for step-by-step instructions.
+</Info>
+
+## How Receiving Money Works
+
+1. User deposits fiat to their virtual account (via bank transfer)
+2. HIFI detects the deposit
+3. HIFI converts fiat to stablecoins at the current exchange rate
+4. Stablecoins are sent to the user's wallet on the specified blockchain
+
+## Production Flow
+
+In production, receiving money happens automatically when your user sends money from their bank to the virtual account. HIFI detects the deposit and creates an onramp transaction.
+
+**User sends money to:**
+
+- Bank account details from the virtual account's `depositInstructions`
+- Routing number and account number for ACH, Wire, or RTP
+
+## Sandbox: Simulate Deposit
+
+In sandbox, use the simulate endpoint to create a test deposit:
+
+**Request:**
+
+```bash
+curl --request POST \
+     --url https://sandbox.hifibridge.com/v2/users/32051b2f-0798-55a7-9c42-b08da4192c97/virtual-accounts/938e3b36-3be7-5535-ba12-8d89eb683e6b/simulate-deposit \
+     --header 'accept: application/json' \
+     --header 'authorization: Bearer YOUR_API_KEY' \
+     --header 'content-type: application/json' \
+     --data '
+{
+  "paymentRail": "wire",
+  "source": {
+    "routingNumber": "021000021",
+    "accountNumber": "516843515316",
+    "name": "Jane Doe",
+    "bankName": "JP Morgan Chase"
+  },
+  "amount": "2",
+  "requestId": "32639f89-5fcc-4e31-8abe-0e710ba2e4a1",
+  "reference": "This is a test deposit"
+}
+'
+```
+
+**Request Fields:**
+
+<ResponseField name="paymentRail" type="string" required>
+  How the money is being sent: `wire`, `ach`, or `rtp`
+</ResponseField>
+
+<ResponseField name="source" type="object" required>
+  Simulates the sender's bank information. This represents the bank account
+  sending money TO the virtual account.
+
+  <Expandable title="properties">
+    <ResponseField name="routingNumber" type="string">
+      Sender's bank routing number
+    </ResponseField>
+    <ResponseField name="accountNumber" type="string">
+      Sender's bank account number
+    </ResponseField>
+    <ResponseField name="name" type="string">
+      Sender's name
+    </ResponseField>
+    <ResponseField name="bankName" type="string">
+      Sender's bank name
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="amount" type="string" required>
+  Amount of fiat being deposited (will convert to equivalent stablecoins).
+</ResponseField>
+
+<ResponseField name="requestId" type="string" required>
+  Unique identifier for this deposit simulation (UUID).
+</ResponseField>
+
+**Response:**
+
+```json
+{
+  "message": "Sandbox deposit triggered"
+}
+```
+
+✅ **Deposit simulated!** HIFI will process the deposit and create an onramp transaction.
+
+## Monitor Status
+
+HIFI creates an onramp transaction when a deposit is detected. You'll receive a `ONRAMP.CREATE` webhook event with transaction details.
+
+**Status Progression:**
+
+1. `FIAT_PENDING` - Waiting for fiat to settle
+2. `CRYPTO_PENDING` - Converting and sending crypto
+3. `COMPLETE` - Stablecoins delivered to wallet
+
+**Monitor via:**
+
+- **Webhooks:** Subscribe to `ONRAMP.UPDATE` events for real-time notifications
+- **Polling:** Call [Retrieve an onramp](https://docs.hifibridge.com/api-reference/onramp/retrieve-an-onramp) with the transaction ID
+
+## Related Resources
+
+- **[Quickstart Guide](/docs/guides/quickstart)** - Set up users, KYC, and accounts
+- **[Send Money](/docs/guides/send-money)** - Convert stablecoins back to fiat
+- **[Onramps](/docs/transactions/onramps)** - Detailed onramp documentation
+- **[Webhooks](/docs/webhooks)** - Real-time transaction monitoring
+- **[API Reference](https://docs.hifibridge.com/api-reference)** - Complete endpoint documentation
