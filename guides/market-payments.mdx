@@ -2,9 +2,7 @@
 title: "Marketplace Payments"
 ---
 
-Facilitate marketplace payments with fiat onramp, stablecoin purchases, and seamless offramps back to bank accounts. Support escrow via HIFI’s transfer approval workflows to add security and compliance controls to payouts.
-
-**⏱️ Time to complete:** 30-40 minutes
+Facilitate marketplace payments where buyers can pay sellers across regions and currencies, with structured payout flows that reflect how modern marketplaces operate. Support common marketplace behaviors such as holding funds until conditions are met, confirming completed orders, and releasing payouts with added security.
 
 **🎯 What you'll build:** A complete marketplace payment flow where a buyer in the US pays a seller in Hong Kong in USDC. The seller then offramps HKD from their wallet to their bank account.
 
@@ -17,7 +15,7 @@ This recipe demonstrates a marketplace payment where:
 - ✅ USDC is transferred to User B wallet
 - ✅ USDC is converted to HKD and sent to User B’s bank account
 
-This flow will also demonstrate the use of transfer approvals to hold funds until transfers are approved.
+This flow will demonstrate the use of transfer approvals to hold funds until transfers are approved. Marketplaces may use approval steps for things like confirming delivery, holding funds during a dispute window, or simply adding a release step before paying out a seller.
 
 ---
 
@@ -25,12 +23,10 @@ This flow will also demonstrate the use of transfer approvals to hold funds unti
 
 Here's what we'll accomplish in this recipe:
 
-1. **Generate API Keys** - Set up authentication for HIFI API
-2. **Create Individual User A (Buyer)** - Onboard US customer and complete KYC for USD rail
-3. **Add Virtual Account** - Set up account for USD deposits that convert to USDC
-4. **Create Business user B (Seller)** - Onboard Hong Kong seller (or use existing business)
-5. **Execute Payment** - Send USDC from User A wallet to User B wallet
-6. **Initiate Offramp** - Convert crypto funds to User B HKD bank account
+1. **Add Virtual Account (Buyer / User A)** - Set up account for USD deposits that convert to USDC
+2. **Create Business User B (Seller)** - Onboard Hong Kong seller
+3. **Execute Payment** - Send USDC from User A wallet to User B wallet
+4. **Initiate Offramp** - Convert crypto funds from User B's wallet to User B HKD bank account
 
 **Payment Flow:**
 
@@ -46,226 +42,26 @@ USD → User A Bank Account → USDC → User A Wallet → USDC → Business B W
 
 ---
 
-## Generate API Keys
+## Prerequisites
 
-Access to the HIFI API requires authentication via API keys. Generate your keys from the HIFI Dashboard before making any API calls. Be sure to copy the key immediately as it’s only shown once.
+Before you begin, make sure you have:
 
-For a complete guide on API authentication, see our [Authentication Documentation](/docs/api/authentication).
+**User A** – Individual user created and KYC submitted with `status = active`
+**User B** – Business user created and KYB submitted with `status = active`
 
-<AccordionGroup>
-  <Accordion title="Using Your API Key">
+For a complete guide on user onboarding, see:
+- [Authentication Guide](/docs/api/authentication)
+- [User Guide](/docs/users/overview)
+- [KYC Guide](/docs/kyc)
 
-Include your API key in the `Authorization` header of all API requests:
 
-```bash
---header 'authorization: Bearer YOUR_API_KEY'
-```
-
-  </Accordion>
-</AccordionGroup>
 
 ---
 
-## Create User A (Buyer)
 
-The buyer needs a verified user account to access fiat rails and make purchases. Every user must accept HIFI's Terms of Service and complete KYC verification before they can move money between fiat and crypto.
+## Add Virtual Account (Buyer)
 
-<Note>
-  **Complete Onboarding Guide:** For a comprehensive walkthrough of user
-  onboarding and KYC verification, see our [User Guide](/docs/users).
-</Note>
-
-<AccordionGroup>
-  <Accordion title="Generate Terms of Service Link">
-
-**Request:**
-
-```bash
-curl --request POST \
-  --url https://sandbox.hifibridge.com/v2/tos-link \
-  --header 'accept: application/json' \
-  --header 'authorization: Bearer YOUR_API_KEY' \
-  --header 'content-type: application/json' \
-  --data '
-{
-  "idempotencyKey": "c9c91801-d3a2-4a1c-aa2e-fcb2c473198c"
-}
-'
-```
-
-**Response:**
-
-```json
-{
-  "signedAgreementId": "c9c91801-d3a2-4a1c-aa2e-fcb2c473198c",
-  "url": "https://dashboard.hifibridge.com/accept-terms-of-service?sessionToken=536bb03a..."
-}
-```
-
-  </Accordion>
-
-  <Accordion title="Create User">
-
-**Request:**
-
-```bash
-curl --request POST \
-  --url https://sandbox.hifibridge.com/v2/users \
-  --header 'accept: application/json' \
-  --header 'authorization: Bearer YOUR_API_KEY' \
-  --header 'content-type: application/json' \
-  --data '
-{
-  "type": "individual",
-  "firstName": "John",
-  "lastName": "Doe",
-  "email": "johndoe@gmail.com",
-  "dateOfBirth": "1990-01-01",
-  "address": {
-    "addressLine1": "123 Park Ave",
-    "city": "Kansas City",
-    "stateProvinceRegion": "KS",
-    "postalCode": "10001",
-    "country": "USA"
-  },
-  "signedAgreementId": "c9c91801-d3a2-4a1c-aa2e-fcb2c473198c",
-  "requestId": "705f1f8b-a080-467c-b683-174eca409928"
-}
-'
-```
-
-**Response:**
-
-```json
-{
-  "id": "3b77cec8-1bb9-5ea0-91a1-e8c1411dd429",
-  "type": "individual",
-  "email": "johndoe@gmail.com",
-  "name": "John Doe",
-  "wallets": {
-    "INDIVIDUAL": {
-      "ETHEREUM": {
-        "address": "0x062f27D749Db9AdE709FaCF753e71618a0d64eF7"
-      },
-      "POLYGON": {
-        "address": "0x63dAbB631bcE6d6090A4e6c5c7aB20d3D853C338"
-      }
-    }
-  }
-}
-```
-
-  </Accordion>
-
-  <Accordion title="Update KYC Information">
-
-**Request:**
-
-```bash
-curl --request POST \
-  --url https://sandbox.hifibridge.com/v2/users/3b77cec8-1bb9-5ea0-91a1-e8c1411dd429/kyc \
-  --header 'accept: application/json' \
-  --header 'authorization: Bearer YOUR_API_KEY' \
-  --header 'content-type: application/json' \
-  --data '
-{
-  "firstName": "John",
-  "phone": "+11111111111",
-  "taxIdentificationNumber": "678898765",
-  "nationality": "USA"
-}
-'
-```
-
-**Response:**
-
-```json
-{
-  "userId": "3b77cec8-1bb9-5ea0-91a1-e8c1411dd429",
-  "kycInfo": {
-    "type": "individual",
-    "firstName": "John",
-    "lastName": "Doe",
-    "nationality": "USA",
-    "email": "johndoe@gmail.com",
-    "phone": "+11111111111",
-    "address": {
-      "city": "Kansas City",
-      "country": "USA",
-      "postalCode": "10001",
-      "addressLine1": "123 Park Ave",
-      "stateProvinceRegion": "KS"
-    },
-    "dateOfBirth": "1990-01-01T00:00:00+00:00",
-    "taxIdentificationNumber": "678898765",
-    "documents": []
-  }
-}
-```
-
-  </Accordion>
-
-  <Accordion title="Submit KYC for USD Rail">
-
-**Request:**
-
-```bash
-curl --request POST \
-  --url https://sandbox.hifibridge.com/v2/users/3b77cec8-1bb9-5ea0-91a1-e8c1411dd429/kyc/submissions \
-  --header 'accept: application/json' \
-  --header 'authorization: Bearer YOUR_API_KEY' \
-  --header 'content-type: application/json' \
-  --data '
-{
-  "rails": "USD"
-}
-'
-```
-
-**Response:**
-
-```json
-{
-  "currency": "USD",
-  "status": "ACTIVE",
-  "reviewResult": {
-    "reviewAnswer": "APPROVED",
-    "reviewRejectType": "",
-    "rejectReasons": [],
-    "comment": ""
-  },
-  "details": {
-    "identity": {
-      "reviewAnswer": "APPROVED",
-      "documents": [
-        {
-          "id": "c00791d0-213a-480a-9e54-1c535673f10c",
-          "type": "PASSPORT",
-          "subType": "SINGLE_SIDE",
-          "reviewAnswer": "APPROVED"
-        }
-      ]
-    },
-    "questionnaire": {
-      "reviewAnswer": "APPROVED",
-      "details": []
-    },
-    "personalInfo": {
-      "reviewAnswer": "APPROVED",
-      "details": []
-    }
-  }
-}
-```
-
-  </Accordion>
-</AccordionGroup>
-
----
-
-## Add Virtual Account (User A)
-
-Now that User A has passed KYC, create a **Virtual Account** for onramping. This is a bank account number automatically created by HIFI that User A can deposit USD into. When fiat arrives, it's automatically converted to USDC and sent to their wallet.
+The buyer needs a **Virtual Account** for onramping. This is a bank account number automatically created by HIFI that User A can deposit USD into. When fiat arrives, it's automatically converted to USDC and sent to their wallet.
 
 <Note>
   **Complete Virtual Account Guide:** For more details on virtual accounts and
@@ -336,7 +132,7 @@ curl --request POST \
 
 ## Create Business B (Seller)
 
-The recipient business (Business B in Hong Kong) needs a wallet address to receive the payment. Follow the same business creation flow as User A, but complete KYB for the appropriate Hong Kong rail.
+The seller (Business B in Hong Kong) needs a wallet address to receive the payment. This is created automatically when the business user is onboarded. Some sellers may choose to use a separate wallet dedicated to marketplace-related activity to make tracking incoming payments easier.
 
 <Note>
   **Using an Existing Business:** If Business B already exists in your system,
@@ -353,12 +149,6 @@ To complete this recipe, you'll need:
 - **Business B's `walletAddress`** - Provisioned upon creating the business user
 - **Business B's HKD `accountId`** - From adding their Hong Kong bank account
 
-For the complete flow of creating Business B and adding their HKD bank account, follow the same steps as User A but:
-
-1. Use Hong Kong business information and address details
-2. Submit KYB for the Hong Kong rail
-3. Add an **Offramp Account** (Hong Kong bank account) instead of a Virtual Account
-
 For detailed instructions on adding offramp accounts for international recipients, see our [Wallet Guide](/docs/wallets).
 
 ---
@@ -371,7 +161,6 @@ Now you can send the wallet transfer payment from User A (US) to Business B (Hon
   Transfers can be sent to other HIFI users or external wallet addresses. For
   this example, we will send to another HIFI user (Business B).
 </Note>
-
 For this recipe, we will demonstrate the use of Transfer Approvals.
 
 This is a two-step process:
@@ -570,7 +359,7 @@ For detailed instructions on the approval workflow, see:
 
 ## Execute Offramp
 
-With the approved transfer, Business B now has everything they need to transfer the USDC funds from their wallet into their HKD bank account.
+With the approved transfer, Business B can now transfer the USDC from their wallet into their HKD bank account.
 
 This is a two-step process:
 
@@ -595,8 +384,6 @@ For detailed instructions on creating an offramp transaction, see our [Offramp G
 
 You've successfully completed a marketplace payment! By following this recipe, you can now:
 
-- ✅ Generate API keys and authenticate with HIFI
-- ✅ Onboard users and complete KYC for multiple currency rails
 - ✅ Create virtual accounts for fiat-to-crypto conversion
 - ✅ Execute marketplace payments with transfer approvals
 - ✅ Provide transparent fee structures and quote expiration
