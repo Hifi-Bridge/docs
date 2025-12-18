@@ -98,7 +98,7 @@
           "ratingCount": "12"
         },
         "url": "https://hifibridge.com",
-        "description": "Compose payment workflows and automate money movement with our APIs and tools. Connect KYC/KYB, virtual accounts, transfers, and webhooks into intelligent flows that orchestrate stablecoins and fiat rails."
+        "description": "Compose payment workflows and automate money movement with our APIs and tools. Connect KYC/KYB, virtual accounts, transfers, and webhooks into intelligent flows that orchestrate stablecoins and fiat currencies."
       },
       {
         "@context": "https://schema.org",
@@ -180,15 +180,6 @@
                   "kyc/kyc-requirements",
                   "kyc/kyc-status",
                   "kyc/kyb-status"
-                ]
-              },
-              {
-                "group": "Rails",
-                "pages": [
-                  "rails",
-                  "rails/usd",
-                  "rails/global-network",
-                  "rails/africa"
                 ]
               },
               {

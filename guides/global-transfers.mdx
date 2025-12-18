@@ -26,7 +26,7 @@ This flow enables fast, cost-effective international business payments with tran
 Here's what we'll accomplish in this recipe:
 
 1. **Generate API Keys** - Set up authentication for HIFI API
-2. **Create Business A (Payer)** - Onboard US business and complete KYB for USD rail
+2. **Create Business A (Payer)** - Onboard US business and complete KYB verification
 3. **Add Virtual Account** - Set up account for USD deposits that convert to USDC
 4. **Create Business B (Payee)** - Onboard Hong Kong supplier (or use existing business)
 5. **Execute Payment** - Send USDC from Business A → HKD to Business B's bank account
@@ -67,7 +67,7 @@ Include your API key in the `Authorization` header of all API requests:
 
 ## Create Business A (US Payer)
 
-The paying business needs a verified business account to access fiat rails and send international payments. Every business must accept HIFI's Terms of Service and complete KYB (Know Your Business) verification before they can move money between fiat and crypto.
+The paying business needs a verified business account to access fiat payment capabilities and send international payments. Every business must accept HIFI's Terms of Service and complete KYB (Know Your Business) verification before they can move money between fiat and crypto.
 
 <Note>
   **Complete Business Onboarding Guide:** For a comprehensive walkthrough of
@@ -198,7 +198,7 @@ The response includes comprehensive business information including UBO details, 
 
   </Accordion>
 
-  <Accordion title="Submit KYB for USD Rail">
+  <Accordion title="Submit KYB">
 
 **Request:**
 
@@ -208,10 +208,7 @@ curl --request POST \
   --header 'accept: application/json' \
   --header 'authorization: Bearer YOUR_API_KEY' \
   --header 'content-type: application/json' \
-  --data '
-{
-  "rails": "USD"
-}
+  --data '{}'
 '
 ```
 
@@ -321,7 +318,7 @@ curl --request POST \
 
 ## Create Business B (HK Payee)
 
-The recipient business (Business B in Hong Kong) needs a business account with an HKD bank account to receive the payment. Follow the same business creation flow as Business A, but complete KYB for the appropriate Hong Kong rail.
+The recipient business (Business B in Hong Kong) needs a business account with an HKD bank account to receive the payment. Follow the same business creation flow as Business A, but complete KYB verification.
 
 <Note>
   **Using an Existing Business:** If Business B already exists in your system,
@@ -340,7 +337,7 @@ To complete this recipe, you'll need:
 For the complete flow of creating Business B and adding their HKD bank account, follow the same steps as Business A but:
 
 1. Use Hong Kong business information and address details
-2. Submit KYB for the Hong Kong rail
+2. Submit KYB verification
 3. Add an **Offramp Account** (Hong Kong bank account) instead of a Virtual Account
 
 For detailed instructions on adding offramp accounts for international recipients, see our [Offramp Guide](/docs/transactions/offramps).
@@ -853,7 +850,7 @@ Track the payment progress using:
 You've successfully completed a cross-border business payment! By following this recipe, you can now:
 
 - ✅ Generate API keys and authenticate with HIFI
-- ✅ Onboard businesses and complete KYB for multiple currency rails
+- ✅ Onboard businesses and complete KYB verification
 - ✅ Create virtual accounts for fiat-to-crypto conversion
 - ✅ Execute international payments with instant settlement via stablecoins
 - ✅ Provide transparent fee structures and competitive exchange rates
@@ -863,7 +860,6 @@ You've successfully completed a cross-border business payment! By following this
 Ready to build a full cross-border payment platform? Here's what to explore next:
 
 - **[Webhooks](/docs/webhooks)** - Set up real-time notifications for payment status updates and settlement confirmations
-- **[Rails Overview](/docs/rails)** - Explore additional currency corridors to expand your global payment coverage
 - **[Offramp Guide](/docs/transactions/offramps)** - Deep dive into offramp transactions, compliance requirements, and settlement rules
 - **[Business User Guide](/docs/users)** - Learn about KYB requirements, UBO verification, and business document management
 - **[Error Handling](/docs/api/errors)** - Implement robust error handling for failed transactions, expired quotes, and compliance issues

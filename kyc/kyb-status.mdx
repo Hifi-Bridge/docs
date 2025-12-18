@@ -2,16 +2,12 @@
 title: "KYB Status"
 ---
 
-To check where a business's verification stands, diagnose issues, and confirm when they're ready to use a rail, use the [KYC Status endpoint](https://docs.hifibridge.com/api-reference/kyc/retrieve-kyc-status). This guide focuses on interpreting the business-specific response.
+To check where a business's verification stands, diagnose issues, and confirm when they're ready to use fiat payment functionalities, use the [KYC Status endpoint](https://docs.hifibridge.com/api-reference/kyc/retrieve-kyc-status). This guide focuses on interpreting the business-specific response.
 
 <Tip>
-  Read the [KYC Status](/kyc/kyc-status) guide first—it explains the compliance screening structure without Ultimate Beneficial Owners.
+  Read the [KYC Status](/kyc/kyc-status) guide first—it explains the compliance
+  screening structure without Ultimate Beneficial Owners.
 </Tip>
-
-<Note>
-  This guide focuses on the USD rail. Requirements and response structure differ for other rails—see the [API
-  Reference](https://docs.hifibridge.com/api-reference/kyc/retrieve-kyc-status) for complete details.
-</Note>
 
 ## Status Overview
 
@@ -24,12 +20,13 @@ Business KYB applications move through the same statuses as individual KYC:
 | **PENDING**         | KYB submitted and is moving through automated compliance checks or bank onboarding |
 | **MANUAL_REVIEW**   | Compliance team manually reviewing before final decision                           |
 | **RFI_PENDING**     | Compliance requested additional information—check your compliance email            |
-| **ACTIVE**          | Business passed compliance review and can use the USD rail                         |
-| **REJECTED**        | Permanently denied for USD rail—resubmission not permitted                         |
+| **ACTIVE**          | Business passed compliance review and can use fiat payment functionalities         |
+| **REJECTED**        | Permanently denied—resubmission not permitted                                      |
 | **CONTACT_SUPPORT** | System couldn't confirm status—contact HIFI support                                |
 
 <Info>
-  Contact support if a business applicant remains in `PENDING` or `MANUAL_REVIEW` for more than 3 days.
+  Contact support if a business applicant remains in `PENDING` or
+  `MANUAL_REVIEW` for more than 3 days.
 </Info>
 
 ## Response Structure
@@ -47,7 +44,8 @@ The KYB status response has the same top-level structure as individual KYC, but 
 </ResponseField>
 
 <ResponseField name="reviewResult" type="object">
-  Overall decision for the KYB submission (`APPROVED`, `DECLINED`, or empty while pending review).
+  Overall decision for the KYB submission (`APPROVED`, `DECLINED`, or empty
+  while pending review).
 </ResponseField>
 
 <ResponseField name="details" type="object">
@@ -63,7 +61,8 @@ Each compliance category includes a `reviewResult` object with a general summary
 </ResponseField>
 
 <ResponseField name="reviewRejectType" type="string">
-  Resubmission permission: `RETRY` (can resubmit) or `FINAL` (hard rejection). Only present when `reviewAnswer` is `DECLINED`.
+  Resubmission permission: `RETRY` (can resubmit) or `FINAL` (hard rejection).
+  Only present when `reviewAnswer` is `DECLINED`.
 </ResponseField>
 
 <ResponseField name="rejectReasons" type="array[string]">
@@ -71,7 +70,8 @@ Each compliance category includes a `reviewResult` object with a general summary
 </ResponseField>
 
 <ResponseField name="comment" type="string">
-  Human-readable explanation of the rejection. Only present when `reviewAnswer` is `DECLINED`.
+  Human-readable explanation of the rejection. Only present when `reviewAnswer`
+  is `DECLINED`.
 </ResponseField>
 
 ### Review Details
@@ -123,6 +123,7 @@ The `details` object returns the compliance review outcome for each information 
         </ResponseField>
       </Expandable>
     </ResponseField>
+
   </Expandable>
 </ResponseField>
 
@@ -151,6 +152,7 @@ The `details` object returns the compliance review outcome for each information 
         </ResponseField>
       </Expandable>
     </ResponseField>
+
   </Expandable>
 </ResponseField>
 
@@ -179,6 +181,7 @@ The `details` object returns the compliance review outcome for each information 
         </ResponseField>
       </Expandable>
     </ResponseField>
+
   </Expandable>
 </ResponseField>
 
@@ -207,6 +210,7 @@ The `details` object returns the compliance review outcome for each information 
         </ResponseField>
       </Expandable>
     </ResponseField>
+
   </Expandable>
 </ResponseField>
 
@@ -238,6 +242,7 @@ The `details` object returns the compliance review outcome for each information 
         </ResponseField>
       </Expandable>
     </ResponseField>
+
   </Expandable>
 </ResponseField>
 
@@ -245,7 +250,7 @@ The `details` object returns the compliance review outcome for each information 
 
 <Tabs>
   <Tab title="ACTIVE">
-    Business passed all compliance checks and completed bank onboarding. They can now use the USD rail.
+    Business passed all compliance checks and completed bank onboarding. They can now use fiat payment functionalities.
 
     ```json expandable
     {
@@ -333,6 +338,7 @@ The `details` object returns the compliance review outcome for each information 
       }
     }
     ```
+
   </Tab>
   <Tab title="INACTIVE">
     No KYB submission made yet. Call the [Submit KYC endpoint](https://docs.hifibridge.com/api-reference/kyc/submit-kyc) to begin verification.
@@ -340,11 +346,12 @@ The `details` object returns the compliance review outcome for each information 
     ```json
     {
       "status": "INACTIVE",
-      "message": "The rail is not active.",
+      "message": "KYB verification is not active.",
       "reviewResult": {},
       "details": {}
     }
     ```
+
   </Tab>
   <Tab title="PENDING">
     Application is moving through automated compliance screening or bank onboarding.
@@ -363,6 +370,7 @@ The `details` object returns the compliance review outcome for each information 
     <Info>
       Contact support if status doesn't change within 3 days for business applicants.
     </Info>
+
   </Tab>
   <Tab title="MANUAL_REVIEW">
     Compliance team is manually reviewing the application. This typically follows `PENDING` when additional investigation is needed.
@@ -379,6 +387,7 @@ The `details` object returns the compliance review outcome for each information 
     <Info>
       Contact support if status doesn't change within 3 days.
     </Info>
+
   </Tab>
   <Tab title="INCOMPLETE">
     Submitted data needs updates before verification can continue. Use the `reviewResult` in each compliance category to identify what needs fixing.
@@ -503,6 +512,7 @@ The `details` object returns the compliance review outcome for each information 
     <Info>
       For compliance reasons, detailed rejection information is only available for documentation—not for other categories. Each UBO follows the individual KYC structure detailed in the [KYC Status guide](/kyc/kyc-status).
     </Info>
+
   </Tab>
   <Tab title="RFI_PENDING">
     Compliance sent a Request for Information (RFI) to your compliance email asking for additional details about this business.
@@ -519,9 +529,10 @@ The `details` object returns the compliance review outcome for each information 
     <Info>
       Monitor your compliance inbox for RFI requests from **@hifi.com**
     </Info>
+
   </Tab>
   <Tab title="REJECTED">
-    Business is permanently denied for the USD rail. Resubmission via API is not permitted.
+    Business is permanently denied. Resubmission via API is not permitted.
 
     ```json
     {
@@ -535,6 +546,7 @@ The `details` object returns the compliance review outcome for each information 
     <Info>
       Contact support if you believe this status is incorrect.
     </Info>
+
   </Tab>
   <Tab title="CONTACT_SUPPORT">
     System couldn't process the KYB or return the correct status. Contact HIFI support for resolution.
@@ -547,5 +559,6 @@ The `details` object returns the compliance review outcome for each information 
       "details": {}
     }
     ```
+
   </Tab>
 </Tabs>

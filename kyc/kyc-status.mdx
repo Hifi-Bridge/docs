@@ -2,12 +2,7 @@
 title: "KYC Status"
 ---
 
-Use the KYC Status endpoint to check where a user's verification stands, diagnose issues, and confirm when they're ready to use a rail.
-
-<Note>
-  This guide focuses on the USD rail. Requirements and response structure differ for other rails—see the [API
-  Reference](https://docs.hifibridge.com/api-reference/kyc/retrieve-kyc-status) for complete details.
-</Note>
+Use the KYC Status endpoint to check where a user's verification stands, diagnose issues, and confirm when they're ready to use fiat payment functionalities.
 
 ## Status Overview
 
@@ -18,12 +13,13 @@ Use the KYC Status endpoint to check where a user's verification stands, diagnos
 | **PENDING**         | KYC submitted and is moving through automated compliance checks or bank onboarding |
 | **MANUAL_REVIEW**   | Compliance team manually reviewing before final decision                           |
 | **RFI_PENDING**     | Compliance requested additional information—check your compliance email            |
-| **ACTIVE**          | User passed compliance review and can use the USD rail                             |
-| **REJECTED**        | Permanently denied for USD rail—resubmission not permitted                         |
+| **ACTIVE**          | User passed compliance review and can use fiat payment functionalities             |
+| **REJECTED**        | Permanently denied—resubmission not permitted                                      |
 | **CONTACT_SUPPORT** | System couldn't confirm status—contact HIFI support                                |
 
 <Info>
-  Contact support if an applicant remains in `PENDING` or `MANUAL_REVIEW` for more than 24 hours.
+  Contact support if an applicant remains in `PENDING` or `MANUAL_REVIEW` for
+  more than 24 hours.
 </Info>
 
 ## Response Structure
@@ -57,7 +53,8 @@ Each compliance category includes a `reviewResult` object with a general summary
 </ResponseField>
 
 <ResponseField name="reviewRejectType" type="string">
-  Resubmission permission: `RETRY` (can resubmit) or `FINAL` (hard rejection). Only present when `reviewAnswer` is `DECLINED`.
+  Resubmission permission: `RETRY` (can resubmit) or `FINAL` (hard rejection).
+  Only present when `reviewAnswer` is `DECLINED`.
 </ResponseField>
 
 <ResponseField name="rejectReasons" type="array[string]">
@@ -65,7 +62,8 @@ Each compliance category includes a `reviewResult` object with a general summary
 </ResponseField>
 
 <ResponseField name="comment" type="string">
-  Human-readable explanation of the rejection. Only present when `reviewAnswer` is `DECLINED`.
+  Human-readable explanation of the rejection. Only present when `reviewAnswer`
+  is `DECLINED`.
 </ResponseField>
 
 ### Review Details
@@ -107,6 +105,7 @@ The `details` object returns the compliance review outcome for each KYC category
         </ResponseField>
       </Expandable>
     </ResponseField>
+
   </Expandable>
 </ResponseField>
 
@@ -135,6 +134,7 @@ The `details` object returns the compliance review outcome for each KYC category
         </ResponseField>
       </Expandable>
     </ResponseField>
+
   </Expandable>
 </ResponseField>
 
@@ -152,7 +152,7 @@ The `details` object returns the compliance review outcome for each KYC category
 
 <Tabs>
   <Tab title="ACTIVE">
-    User passed all compliance checks and completed bank onboarding. They can now use the USD rail.
+    User passed all compliance checks and completed bank onboarding. They can now use fiat payment functionalities.
 
     ```json expandable
     {
@@ -207,6 +207,7 @@ The `details` object returns the compliance review outcome for each KYC category
       }
     }
     ```
+
   </Tab>
   <Tab title="INACTIVE">
     No KYC submission made yet. Call the [Submit KYC endpoint](https://docs.hifibridge.com/api-reference/kyc/submit-kyc) to begin verification.
@@ -214,11 +215,12 @@ The `details` object returns the compliance review outcome for each KYC category
     ```json
     {
       "status": "INACTIVE",
-      "message": "The rail is not active.",
+      "message": "KYC verification is not active.",
       "reviewResult": {},
       "details": {}
     }
     ```
+
   </Tab>
   <Tab title="PENDING">
     Application is moving through automated compliance screening or bank onboarding.
@@ -246,6 +248,7 @@ The `details` object returns the compliance review outcome for each KYC category
     <Info>
       Contact support if status doesn't change within 24 hours for individual applicants.
     </Info>
+
   </Tab>
   <Tab title="MANUAL_REVIEW">
     Compliance team is manually reviewing the application. This typically follows `PENDING` when additional investigation is needed.
@@ -262,6 +265,7 @@ The `details` object returns the compliance review outcome for each KYC category
     <Info>
       Contact support if status doesn't change within 24 hours.
     </Info>
+
   </Tab>
   <Tab title="INCOMPLETE">
     Submitted data needs updates before verification can continue. Use the `reviewResult` in each compliance category to identify what needs fixing.
@@ -337,6 +341,7 @@ The `details` object returns the compliance review outcome for each KYC category
     <Info>
       For compliance reasons, detailed rejection information is only available for documentation—not for other categories.
     </Info>
+
   </Tab>
   <Tab title="RFI_PENDING">
     Compliance sent a Request for Information (RFI) to your compliance email asking for additional details about this user.
@@ -353,9 +358,10 @@ The `details` object returns the compliance review outcome for each KYC category
     <Info>
       Monitor your compliance inbox for RFI requests from **@hifi.com**
     </Info>
+
   </Tab>
   <Tab title="REJECTED">
-    User is permanently denied for the USD rail. Resubmission via API is not permitted.
+    User is permanently denied. Resubmission via API is not permitted.
 
     ```json
     {
@@ -369,6 +375,7 @@ The `details` object returns the compliance review outcome for each KYC category
     <Info>
       Contact support if you believe this status is incorrect.
     </Info>
+
   </Tab>
   <Tab title="CONTACT_SUPPORT">
     System couldn't process the KYC or return the correct status. Contact HIFI support for resolution.
@@ -381,5 +388,6 @@ The `details` object returns the compliance review outcome for each KYC category
       "details": {}
     }
     ```
+
   </Tab>
 </Tabs>

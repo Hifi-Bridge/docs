@@ -2,7 +2,7 @@
 title: "KYC Requirements"
 ---
 
-The KYC Requirements endpoint tells you exactly which data points and documents are needed to unlock a given rail for a specific user.
+The KYC Requirements endpoint tells you exactly which data points and documents are needed for KYC verification for a specific user.
 
 Use it **before** submitting KYC information so you can pre-fill forms, surface missing fields, and resolve issues.
 
@@ -14,7 +14,7 @@ Use it **before** submitting KYC information so you can pre-fill forms, surface 
 
 ## Usage
 
-- **Pre-fill onboarding flows** with the precise set of fields per rail.
+- **Pre-fill onboarding flows** with the precise set of required fields.
 - **Detect missing or invalid data** before attempting a submission.
 - **Show document requirements** (including minimum counts and accepted document types) to users or operators.
 
@@ -22,7 +22,7 @@ Use it **before** submitting KYC information so you can pre-fill forms, surface 
 
 <CodeGroup>
 ```http Request
-GET https://sandbox.hifibridge.com/v2/users/{userId}/kyc/requirements?rails=USD
+GET https://sandbox.hifibridge.com/v2/users/{userId}/kyc/requirements
 Authorization: Bearer <token>
 ```
 </CodeGroup>
@@ -31,19 +31,9 @@ Authorization: Bearer <token>
   Path parameter. Provide the target user ID (UUID).
 </ResponseField>
 
-<ResponseField name="rails" type="enum<string>" required>
-  Query parameter. Specify the rail to unlock — `USD`, `AFRICA_GENERAL`,
-  `AFRICA_NIGERIA`, or `GLOBAL_NETWORK`.
-</ResponseField>
-
-<Tip>
-  You can submit requirements for multiple rails at the same time and get all
-  requirements at once.
-</Tip>
-
 ## Response Structure
 
-Below is an example of a `200 OK` response for a USD business user:
+Below is an example of a `200 OK` response for a business user:
 
 ```json expandable
 [
@@ -78,7 +68,7 @@ Below is an example of a `200 OK` response for a USD business user:
 
 The response has a standard shape:
 
-- top-level identifiers to anchor the entry (`userId`, `rails`, `type`)
+- top-level identifiers to anchor the entry (`userId`, `type`)
 - three requirement buckets (`required`, `optional`, `invalid`)
 - reusable document-group metadata.
 
@@ -89,10 +79,6 @@ Walk through the sections below to understand this structure.
 <ResponseField name="userId" type="string" required>
   Unique identifier for the user. Always returned for context, even when the
   user has no invalid fields.
-</ResponseField>
-
-<ResponseField name="rails" type="string" required>
-  The rail the requirements apply to. Matches the `rails` query parameter.
 </ResponseField>
 
 <ResponseField name="type" type="string" required>
@@ -199,11 +185,10 @@ Document groups appear anywhere documents are referenced (`required.documents`, 
 The structure under `required`, `optional`, and `invalid` changes depending on whether the user is a business or an individual. Use the tabs below to explore both shapes.
 
 <Tabs>
-  <Tab title="Business (USD)">
+  <Tab title="Business">
     ```json expandable
     {
       "userId": "35dbc7ea-2877-4a70-add6-b5458289df23",
-      "rails": "USD",
       "type": "business",
       "required": {
         "businessName": "string",
@@ -355,14 +340,13 @@ The structure under `required`, `optional`, and `invalid` changes depending on w
 
     - **Ultimate Beneficial Owners (UBOs)**: Each UBO must meet the same address, identity, and questionnaire requirements as an individual. If any UBO document is missing, the requirement appears under `invalid.documents.groups`.
     - **Document groups**: All four groups (`legalPresence`, `ownershipStructure`, `companyDetails`, `controlStructure`) must satisfy `minCount`. The response repeats accepted document types, so you can render them directly in an operator dashboard.
-    - **SofEu questionnaire**: Every field listed under `required` must be supplied. Optional fields only appear when they are relevant to the rail.
+    - **SofEu questionnaire**: Every field listed under `required` must be supplied. Optional fields only appear when they are relevant.
 
   </Tab>
-  <Tab title="Individual (USD)">
+  <Tab title="Individual">
     ```json expandable
     {
       "userId": "35dbc7ea-2877-4a70-add6-b5458289df23",
-      "rails": "USD",
       "type": "individual",
       "required": {
         "firstName": "string",
@@ -447,7 +431,7 @@ The structure under `required`, `optional`, and `invalid` changes depending on w
     **What to watch for**
 
     - **Identity documents**: Individuals must always satisfy the `identity` document group. If `minCount` is `1`, at least one document from the accepted list must be present.
-    - **Proof of residence**: Some rails require the `proofOfResidence` group; when it is optional it will surface in the `optional` object instead.
+    - **Proof of residence**: The `proofOfResidence` group may be required or optional depending on the user's location; when it is optional it will surface in the `optional` object instead.
     - **Invalid messages**: Use `invalid.fields` to highlight missing form inputs and `invalid.documents.message` for UI copy explaining outstanding document groups.
 
   </Tab>

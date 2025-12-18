@@ -26,9 +26,8 @@ Each offramp account is configured for a specific currency and region (e.g., USD
 ## Prerequisites
 
 <Warning>
-  **KYC Required:** Users must complete KYC verification for the relevant rail
-  before creating offramp accounts. For example, to create a USD offramp
-  account, the user must have an active USD rail.
+  **KYC Required:** Users must complete KYC verification before creating offramp
+  accounts.
 </Warning>
 
 ## Creating Offramp Accounts
@@ -342,9 +341,9 @@ Global Network accounts support multiple countries including China, Hong Kong, B
   </Accordion>
 </AccordionGroup>
 
-### Africa Rail Accounts
+### Africa Accounts
 
-Africa Rail supports multiple countries with bank accounts and mobile money (momo) payments.
+Africa accounts support multiple countries with bank accounts and mobile money (momo) payments.
 
 ```bash
 curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/accounts" \
@@ -397,11 +396,6 @@ curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/accounts" \
 <ResponseField name="africa.country" type="string" required>
   Country code (e.g., `uga`, `ken`, `gha`)
 </ResponseField>
-
-<Note>
-  Check the [Africa Rail documentation](/docs/rails/africa) for supported
-  combinations of country, currency, and financial institution.
-</Note>
 
 ## Using Offramp Accounts
 
@@ -461,6 +455,7 @@ After creating an offramp account, HIFI validates the account details:
   </Accordion>
 
 {" "}
+
 <Accordion title="Account Types vs Transfer Types">
   Don't confuse these two concepts: - **Account Type** (`type` field): The
   region or country (e.g., `us`, `brazil`, `mexico`) - **Transfer Type** (within
@@ -470,6 +465,7 @@ After creating an offramp account, HIFI validates the account details:
 </Accordion>
 
 {" "}
+
 <Accordion title="First Party vs Third Party Payments">
   Offramp accounts support two payment scenarios: **First Party Payments:**
   Funds sent to the account holder (the user who completed KYC). This is the
@@ -764,7 +760,7 @@ After creating an offramp account, HIFI validates the account details:
 ## Related Resources
 
 - [Quickstart Guide](/docs/quickstart) - Step-by-step tutorial
-- [Rails](/docs/rails) - Understand KYC requirements for different rails
+- [KYC Requirements](/docs/kyc/kyc-requirements) - Understand KYC requirements
 - [Offramps](/docs/transactions/offramps) - Complete guide to executing offramp transfers
 - [Webhooks](/docs/webhooks) - Real-time account validation notifications
 - [API Reference](https://docs.hifibridge.com/api-reference/account/create-an-account) - Complete endpoint documentation

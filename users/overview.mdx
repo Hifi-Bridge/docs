@@ -33,10 +33,10 @@ What users can do depends on their verification status:
     **All unverified capabilities, plus:**
     - ✅ Onramp fiat to stablecoins via virtual accounts
     - ✅ Offramp stablecoins to fiat bank accounts
-    - ✅ Access to regulated fiat rails (USD, EUR, etc.)
+    - ✅ Access to regulated fiat payment capabilities
     
     **Requirements:**
-    - Complete KYC verification for desired rails
+    - Complete KYC verification
     - Maintain active compliance status
   </Accordion>
 </AccordionGroup>
@@ -99,7 +99,7 @@ curl -X POST "https://sandbox.hifibridge.com/v2/users" \
 
 ### Verification
 
-To unlock fiat rails, users must complete KYC (Know Your Customer) verification. KYC requirements vary by rail (USD, EUR, etc.) and include:
+To enable fiat payments, users must complete KYC (Know Your Customer) verification. KYC requirements include:
 
 - Personal information (name, date of birth, address, tax ID)
 - Identity documents (passport, driver's license, or ID card)
@@ -110,12 +110,12 @@ The KYC process typically takes:
 - **Sandbox:** Typically auto-approved within minutes for testing (may be blocked by compliance checks like PEP screening)
 - **Production:** 1-3 business days for manual review
 
-Once approved, the user can access fiat onramp and offramp capabilities for that specific rail.
+Once approved, the user can access fiat onramp and offramp capabilities.
 
 **Check KYC status:**
 
 ```bash
-curl -X GET "https://sandbox.hifibridge.com/v2/users/usr_abc123/kyc/status?rails=USD" \
+curl -X GET "https://sandbox.hifibridge.com/v2/users/usr_abc123/kyc/status" \
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
@@ -172,11 +172,6 @@ These accounts are created separately after user creation and require KYC verifi
 
 {" "}
 
-<Accordion title="Rails & KYC">
-  A "rail" is a payment corridor enabling conversions between specific fiat
-  currencies and stablecoins. For example, the USD rail allows conversion
-  between USD and USDC. Each rail has its own KYC requirements.
-</Accordion>
 </AccordionGroup>
 
 ## Sample Code
@@ -268,7 +263,7 @@ These accounts are created separately after user creation and require KYC verifi
     curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/kyc/submissions" \
       -H "Authorization: Bearer YOUR_API_KEY" \
       -H "Content-Type: application/json" \
-      -d '{"rails": "USD"}'
+      -d '{}'
     ```
   </Step>
 </Steps>
@@ -285,9 +280,9 @@ Determine what a user can do based on their KYC status:
     ```
   </Accordion>
 
-  <Accordion title="Check KYC status for specific rail">
+  <Accordion title="Check KYC status">
     ```bash
-    curl -X GET "https://sandbox.hifibridge.com/v2/users/usr_abc123/kyc/status?rails=USD" \
+    curl -X GET "https://sandbox.hifibridge.com/v2/users/usr_abc123/kyc/status" \
       -H "Authorization: Bearer YOUR_API_KEY"
     ```
   </Accordion>
