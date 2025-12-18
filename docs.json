@@ -178,6 +178,7 @@
                 "pages": [
                   "kyc",
                   "kyc/kyc-requirements",
+                  "kyc/kyc-documents",
                   "kyc/kyc-status",
                   "kyc/kyb-status"
                 ]

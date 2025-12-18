@@ -4,6 +4,14 @@ title: "Overview"
 
 To comply with financial regulations, HIFI enforces **KYC (Know Your Customer)** and **KYB (Know Your Business)** checks before a User can receive funds from fiat (onramps) or pay out to fiat (offramps).
 
+## KYC Link (Recommended)
+
+The easiest way to collect KYC information is using **KYC Links**, which provide a hosted, user-friendly flow. Generate a KYC link and redirect your user to complete verification.
+
+<Card title="Create KYC Link" href="/features/kyc-links" arrow>
+  Learn how to onboard users using a link
+</Card>
+
 ## KYC Requirements
 
 Before submitting KYC information, call the KYC Requirements endpoint to see what documents and information are needed for a specific user.
@@ -17,6 +25,20 @@ Authorization: Bearer <token>
 
 <Card title="KYC Requirements Guide" href="/kyc/kyc-requirements" arrow>
   Learn about the endpoint and response structure
+</Card>
+
+## KYC Documents
+
+Document requirements vary significantly depending on user type:
+
+- **Individual users**: Structure with 1-2 document groups (identity and optionally address)
+- **Business users**: Structure with 4+ document groups (legal presence, ownership, control, company details)
+- **Ultimate Beneficial Owners (UBOs)**: Each UBO with >25% ownership must provide individual identity documents
+
+Businesses must upload documents for both the business entity and each UBO separately. UBO documents are uploaded through UBO-specific endpoints.
+
+<Card title="KYC Documents Guide" href="/kyc/kyc-documents" arrow>
+  Detailed guide on document requirements and differences
 </Card>
 
 ## Submit KYC
@@ -37,11 +59,4 @@ This guide lists every possible status, explains review results, and shows compl
 
 <Card title="KYC Status Guide" href="/kyc/kyc-status" arrow>
   Learn more about the endpoint and response structure
-</Card>
-## Alternative: KYC Link
-
-If you don't want to handle KYC submission via API, generate a KYC link for users to complete verification through a web interface.
-
-<Card title="Create KYC Link" href="/features/kyc-links" arrow>
-  Learn how to onboard users using a link
 </Card>

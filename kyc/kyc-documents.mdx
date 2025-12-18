@@ -1,0 +1,210 @@
+---
+title: "KYC Documents"
+---
+
+KYC documents are required for identity verification and compliance. The document requirements differ significantly between individual users, businesses, and Ultimate Beneficial Owners (UBOs).
+
+## Document Overview
+
+Documents serve to verify:
+
+- **Identity** - Who the user is
+- **Address** - Where the user resides
+- **Business legitimacy** - For business accounts, proof of legal existence and ownership
+- **Ownership structure** - Who controls the business
+
+All documents must be uploaded through the [Documents API](/docs/compliance/documents) before submitting KYC for review.
+
+## Individual Documents
+
+For individual users, document requirements are straightforward:
+
+### Required Document Groups
+
+**Identity Group** (minimum 1 document):
+
+- Driver's License (front + back)
+- ID Card (front + back)
+- Passport
+- Residence Permit
+
+**Address Group** (may be required or optional):
+
+- Utility bill
+- Bank statement
+- Lease agreement
+
+### Key Characteristics
+
+- **Simple structure**: Typically only 1-2 document groups
+- **Personal identity**: Focus on verifying the individual's identity and residence
+- **Single upload per document**: Each document type is uploaded once (except driver's license/ID card which need both sides)
+
+<Card title="Document Upload Guide" href="/docs/compliance/documents" arrow>
+  Learn how to upload documents programmatically
+</Card>
+
+## Business Documents
+
+Business accounts require significantly more documentation to verify legal existence, ownership, and control structure.
+
+### Required Document Groups
+
+Businesses must satisfy multiple document groups:
+
+**Legal Presence** (minimum 1 document):
+
+- Incorporation Articles
+- Incorporation Certificate
+- State Registry
+
+**Ownership Structure** (minimum 1 document):
+
+- Shareholder Registry
+- Trust Agreement
+- Information Statement
+- State Registry
+
+**Company Details** (minimum 1 document):
+
+- Proof of Address
+
+**Control Structure** (minimum 1 document):
+
+- Directors Registry
+- Trust Agreement
+- Information Statement
+- State Registry
+
+### Key Characteristics
+
+- **Multiple document groups**: Businesses must satisfy 4+ document groups
+- **Legal verification**: Documents prove the business legally exists and is registered
+- **Ownership transparency**: Documents reveal who owns and controls the business
+- **Regulatory compliance**: Required to meet financial regulations for business accounts
+
+<Info>
+  **Document Types:** Some document types (like STATE_REGISTRY) can satisfy
+  multiple groups, but you still need to provide enough documents to satisfy
+  each group's minimum count requirement.
+</Info>
+
+## Ultimate Beneficial Owner (UBO) Documents
+
+UBOs are individuals who own or control a business. Each UBO with more than 25% ownership must provide their own identity documents.
+
+### UBO Requirements
+
+**Who needs to provide documents:**
+
+- Any individual with **>25% ownership** in the business
+- Must include at least one **DIRECTOR** and one **UBO** role across all UBOs
+
+**Required for each UBO:**
+
+**Personal Information:**
+
+- First name, last name, middle name (optional)
+- Date of birth
+- Nationality
+- Email, phone
+- Address (full address details)
+- Tax identification number
+- Business title
+- Share proportion
+- Relationship established date
+
+**Identity Documents** (minimum 1 document):
+
+- Driver's License
+- ID Card
+- Passport
+- Residence Permit
+
+### Key Characteristics
+
+- **Individual-level verification**: Each UBO is verified like an individual user
+- **Ownership threshold**: Only UBOs with >25% ownership need to be provided
+- **Role requirements**: Combined roles across all UBOs must include at least one DIRECTOR and one UBO
+- **Separate document uploads**: Each UBO's documents are uploaded separately
+
+<Warning>
+  **Important:** UBO documents are uploaded separately from business documents.
+  Each UBO requires their own identity document uploads through the UBO-specific
+  endpoints.
+</Warning>
+
+## Key Differences Summary
+
+| Aspect              | Individual         | Business                    | UBO                    |
+| :------------------ | :----------------- | :-------------------------- | :--------------------- |
+| **Document Groups** | 1-2 groups         | 4+ groups                   | 1 group (identity)     |
+| **Focus**           | Personal identity  | Legal existence & ownership | Personal identity      |
+| **Document Types**  | Identity + Address | Legal + Ownership + Control | Identity only          |
+| **Upload Location** | User KYC documents | Business KYC documents      | UBO-specific endpoints |
+
+## Document Workflow
+
+The document upload process follows these steps:
+
+<Steps>
+  <Step title="1. Upload file">
+    Upload the document file using the [Upload
+    File](/docs/api-reference/files/upload-file) endpoint to get a `fileId`.
+  </Step>
+  <Step title="2. Add document">
+    Associate the file with the user/business/UBO using the appropriate
+    endpoint: - **Individual/Business**: [Add
+    Documents](/docs/api-reference/kyc/add-documents) - **UBO**: [Add UBO
+    Documents](/docs/api-reference/kyc/add-ubo-documents)
+  </Step>
+  <Step title="3. Verify requirements">
+    Check [KYC Requirements](/docs/kyc/kyc-requirements) to ensure all required
+    document groups are satisfied.
+  </Step>
+  <Step title="4. Submit KYC">
+    Once all documents are uploaded, submit KYC for review.
+  </Step>
+</Steps>
+
+## Common Scenarios
+
+### Individual User
+
+- Upload 1 identity document (e.g., passport)
+- Upload 1 proof of address (if required)
+- Submit KYC
+
+### Business User
+
+- Upload business documents (legal presence, ownership, control, company details)
+- Add UBOs with their personal information
+- Upload identity documents for each UBO (>25% ownership)
+- Submit KYB
+
+### Business with Multiple UBOs
+
+- Upload all business documents
+- Add UBO #1: Personal info + identity documents
+- Add UBO #2: Personal info + identity documents
+- Add UBO #3: Personal info + identity documents
+- Ensure combined roles include DIRECTOR and UBO
+- Submit KYB
+
+## Document Status
+
+After uploading documents, they progress through verification:
+
+- **PENDING_REVIEW**: Document uploaded, awaiting verification
+- **APPROVED**: Document verified and accepted
+- **REJECTED**: Document rejected (check rejection reason)
+- **EXPIRED**: Document expired and needs replacement
+
+Monitor document status through the [KYC Status](/docs/kyc/kyc-status) endpoint or [webhook events](/docs/webhooks/kyc-events).
+
+## Next Steps
+
+- **[Document Upload Guide](/docs/compliance/documents)** - Detailed guide on uploading documents programmatically
+- **[KYC Requirements](/docs/kyc/kyc-requirements)** - Check what documents are required for your use case
+- **[KYC Status](/docs/kyc/kyc-status)** - Monitor document verification status
+- **[Submit KYC Guide](/docs/guides/submit-kyc)** - Complete workflow for submitting KYC

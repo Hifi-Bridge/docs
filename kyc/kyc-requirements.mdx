@@ -168,17 +168,11 @@ The `required`, `optional`, and `invalid` objects share the same internal layout
 
 ### Document Groups
 
-Document groups appear anywhere documents are referenced (`required.documents`, `optional.documents`, and `invalid.documents.groups`). Each group specifies a minimum number of files and the accepted document types.
+Document groups specify minimum counts and accepted document types. Each group must be satisfied with the required number of documents from the accepted types list.
 
-| Property           | Type    | Description                                                                                        |
-| ------------------ | ------- | -------------------------------------------------------------------------------------------------- |
-| `minCount`         | integer | Minimum number of documents needed for that group.                                                 |
-| `acceptedDocTypes` | array   | Accepted document identifiers; the user must provide at least `minCount` documents from this list. |
-
-<Info>
-  Only documents uploaded through the Documents API count toward these
-  requirements.
-</Info>
+<Card title="KYC Documents Guide" href="/kyc/kyc-documents" arrow>
+  Learn about document requirements for individuals, businesses, and UBOs
+</Card>
 
 ## Response Breakdown
 
@@ -338,8 +332,8 @@ The structure under `required`, `optional`, and `invalid` changes depending on w
 
     **What to watch for**
 
-    - **Ultimate Beneficial Owners (UBOs)**: Each UBO must meet the same address, identity, and questionnaire requirements as an individual. If any UBO document is missing, the requirement appears under `invalid.documents.groups`.
-    - **Document groups**: All four groups (`legalPresence`, `ownershipStructure`, `companyDetails`, `controlStructure`) must satisfy `minCount`. The response repeats accepted document types, so you can render them directly in an operator dashboard.
+    - **Ultimate Beneficial Owners (UBOs)**: Each UBO must meet the same address, identity, and questionnaire requirements as an individual. If any UBO document is missing, the requirement appears under `invalid.documents.groups`. See the [KYC Documents guide](/kyc/kyc-documents) for UBO document requirements.
+    - **Document groups**: All required groups must satisfy `minCount`. The response repeats accepted document types, so you can render them directly in an operator dashboard. See the [KYC Documents guide](/kyc/kyc-documents) for details on business document groups.
     - **SofEu questionnaire**: Every field listed under `required` must be supplied. Optional fields only appear when they are relevant.
 
   </Tab>
@@ -430,7 +424,7 @@ The structure under `required`, `optional`, and `invalid` changes depending on w
 
     **What to watch for**
 
-    - **Identity documents**: Individuals must always satisfy the `identity` document group. If `minCount` is `1`, at least one document from the accepted list must be present.
+    - **Identity documents**: Individuals must always satisfy the `identity` document group. If `minCount` is `1`, at least one document from the accepted list must be present. See the [KYC Documents guide](/kyc/kyc-documents) for individual document requirements.
     - **Proof of residence**: The `proofOfResidence` group may be required or optional depending on the user's location; when it is optional it will surface in the `optional` object instead.
     - **Invalid messages**: Use `invalid.fields` to highlight missing form inputs and `invalid.documents.message` for UI copy explaining outstanding document groups.
 
@@ -439,5 +433,7 @@ The structure under `required`, `optional`, and `invalid` changes depending on w
 
 ## Next Steps
 
-- After all required fields and documents are satisfied, call [Submit KYC](https://docs.hifibridge.com/api-reference/kyc/submit-kyc).
-- Use the [KYC Status guide](/docs/users/features/kyc-status) to interpret post-submission results and remediation steps.
+- **[KYC Documents](/kyc/kyc-documents)** - Understand document requirements and how to upload documents for individuals, businesses, and UBOs
+- **[Document Upload Guide](/docs/compliance/documents)** - Detailed guide on uploading documents programmatically
+- After all required fields and documents are satisfied, call [Submit KYC](https://docs.hifibridge.com/api-reference/kyc/submit-kyc)
+- Use the [KYC Status guide](/kyc/kyc-status) to interpret post-submission results and remediation steps
