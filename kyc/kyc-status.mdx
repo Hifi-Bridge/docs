@@ -2,7 +2,7 @@
 title: "KYC Status"
 ---
 
-Use the KYC Status endpoint to check where a user's verification stands, diagnose issues, and confirm when they're ready to use fiat payment functionalities.
+Use the KYC Status endpoint to check where a user's verification stands, diagnose issues, and confirm when they're ready to use fiat payment functionalities. This guide covers both individual KYC and business KYB verification.
 
 ## Status Overview
 
@@ -19,7 +19,7 @@ Use the KYC Status endpoint to check where a user's verification stands, diagnos
 
 <Info>
   Contact support if an applicant remains in `PENDING` or `MANUAL_REVIEW` for
-  more than 24 hours.
+  more than 24 hours (individuals) or 3 days (businesses).
 </Info>
 
 ## Response Structure
@@ -148,11 +148,109 @@ The `details` object returns the compliance review outcome for each KYC category
   </Expandable>
 </ResponseField>
 
+### Business-Specific Fields
+
+For business accounts, the `details` object includes additional compliance categories:
+
+<ResponseField name="companyInfo" type="object">
+  Structured business data: legal name, registered address, registration number, tax identifiers, and other non-document metadata.
+
+  <Expandable title="properties">
+    <ResponseField name="reviewResult" type="ReviewResultObject">
+      Outcome of the automated compliance checks for the provided company attributes.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="legalPresence" type="object">
+  Document verification for the legal presence requirements.
+
+  <Expandable title="properties">
+    <ResponseField name="reviewResult" type="ReviewResultObject">
+      Aggregate result for all submitted documents in this category.
+    </ResponseField>
+    <ResponseField name="details" type="array[Document]">
+      List of every uploaded document that was reviewed.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="ownershipStructure" type="object">
+  Document verification for the ownership structure requirements.
+
+  <Expandable title="properties">
+    <ResponseField name="reviewResult" type="ReviewResultObject">
+      Aggregate result for all submitted documents in this category.
+    </ResponseField>
+    <ResponseField name="details" type="array[Document]">
+      List of every uploaded document that was reviewed.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="companyDetails" type="object">
+  Document verification for the company details requirements.
+
+  <Expandable title="properties">
+    <ResponseField name="reviewResult" type="ReviewResultObject">
+      Aggregate result for all submitted documents in this category.
+    </ResponseField>
+    <ResponseField name="details" type="array[Document]">
+      List of every uploaded document that was reviewed.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="controlStructure" type="object">
+  Document verification for the control structure requirements.
+
+  <Expandable title="properties">
+    <ResponseField name="reviewResult" type="ReviewResultObject">
+      Aggregate result for all submitted documents in this category.
+    </ResponseField>
+    <ResponseField name="details" type="array[Document]">
+      List of every uploaded document that was reviewed.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="ultimateBeneficialOwners" type="object">
+  Aggregated status for all UBOs. It contains a category-level `reviewResult` and a `details` array with one entry per UBO. Each UBO entry mirrors the individual KYC structure (personal info, identity documents, proof of address, questionnaire).
+
+  <Expandable title="properties">
+    <ResponseField name="reviewResult" type="ReviewResultObject">
+      Combined decision for the UBO set. If declined, consult each entry for remediation guidance.
+    </ResponseField>
+    <ResponseField name="details" type="array[Ubo]">
+      One entry per Ultimate Beneficial Owner.
+
+      <Expandable title="UBO item">
+        <ResponseField name="id" type="string">
+          UUID used to update the UBO's information via Update KYC.
+        </ResponseField>
+        <ResponseField name="status" type="string">
+          Current onboarding status for that UBO (`ACTIVE`, `INCOMPLETE`, etc.).
+        </ResponseField>
+        <ResponseField name="message" type="string">
+          Contextual message for developers or support agents.
+        </ResponseField>
+        <ResponseField name="reviewResult" type="ReviewResultObject">
+          Decision for the specific UBO.
+        </ResponseField>
+        <ResponseField name="details" type="object">
+          Nested verification categories (`personalInfo`, `identity`, `proofOfAddress`, `questionnaire`) following the individual KYC schema.
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+
+  </Expandable>
+</ResponseField>
+
 ## Response Breakdown
 
 <Tabs>
   <Tab title="ACTIVE">
-    User passed all compliance checks and completed bank onboarding. They can now use fiat payment functionalities.
+    User or business passed all compliance checks and completed bank onboarding. They can now use fiat payment functionalities.
 
     ```json expandable
     {
@@ -246,7 +344,7 @@ The `details` object returns the compliance review outcome for each KYC category
     ```
 
     <Info>
-      Contact support if status doesn't change within 24 hours for individual applicants.
+      Contact support if status doesn't change within 24 hours (individuals) or 3 days (businesses).
     </Info>
 
   </Tab>
@@ -263,7 +361,7 @@ The `details` object returns the compliance review outcome for each KYC category
     ```
 
     <Info>
-      Contact support if status doesn't change within 24 hours.
+      Contact support if status doesn't change within 24 hours (individuals) or 3 days (businesses).
     </Info>
 
   </Tab>
@@ -322,14 +420,121 @@ The `details` object returns the compliance review outcome for each KYC category
     }
     ```
 
-    **How to resolve:**
+    **How to resolve (Individual):**
 
     1. Check the `reviewResult` in each compliance category for `DECLINED` items
     2. Read the `comment` field for specific guidance
     3. Use [**Update KYC**](https://docs.hifibridge.com/api-reference/kyc/update-kyc-information) to update non-document information, or [**Update Document**](https://docs.hifibridge.com/api-reference/kyc/update-a-document)** / **[**Add Document**](https://docs.hifibridge.com/api-reference/kyc/add-documents) to update documentation.
     4. Call [Submit KYC](https://docs.hifibridge.com/api-reference/kyc/submit-kyc) to trigger a new review
 
-    **Compliance category mapping:**
+    **How to resolve (Business):**
+
+    1. Check the `reviewResult` in each compliance category for `DECLINED` items
+    2. Read the `comment` field for specific guidance
+    3. For company data: Use [**Update KYC**](https://docs.hifibridge.com/api-reference/kyc/update-kyc-information) to update non-document information, or [**Update Document**](https://docs.hifibridge.com/api-reference/kyc/update-a-document) / [**Add Document**](https://docs.hifibridge.com/api-reference/kyc/add-documents) to update documentation.
+    4. For UBO data: Update the specific UBO's information using their `id` with [Update UBO](https://docs.hifibridge.com/api-reference/kyc/update-a-ubo) or [**Update Document**](https://docs.hifibridge.com/api-reference/kyc/update-a-document) / [**Add Document**](https://docs.hifibridge.com/api-reference/kyc/add-documents) to update documentation.
+    5. Call [Submit KYC](https://docs.hifibridge.com/api-reference/kyc/submit-kyc) to trigger a new review
+
+    <Accordion title="Business INCOMPLETE Example">
+      ```json expandable
+      {
+        "status": "INCOMPLETE",
+        "message": "",
+        "reviewResult": {
+          "reviewAnswer": "DECLINED",
+          "reviewRejectType": "RETRY",
+          "rejectReasons": ["UNFILLED_ID"],
+          "comment": ""
+        },
+        "details": {
+          "companyInfo": {
+            "reviewResult": {
+              "reviewAnswer": "APPROVED",
+              "reviewRejectType": "",
+              "rejectReasons": [],
+              "comment": ""
+            }
+          },
+          "questionnaire": {
+            "reviewResult": {
+              "reviewAnswer": "APPROVED",
+              "reviewRejectType": "",
+              "rejectReasons": [],
+              "comment": ""
+            }
+          },
+          "legalPresence": {
+            "reviewResult": {
+              "reviewAnswer": "DECLINED",
+              "reviewRejectType": "RETRY",
+              "rejectReasons": ["SCREENSHOTS"],
+              "comment": "Screenshots aren't accepted. Please upload a live photo of the document."
+            },
+            "details": [...]
+          },
+          "ownershipStructure": {
+            "reviewResult": {
+              "reviewAnswer": "DECLINED",
+              "reviewRejectType": "RETRY",
+              "rejectReasons": ["SCREENSHOTS"],
+              "comment": "Screenshots aren't accepted. Please upload a live photo of the document."
+            },
+            "details": [...]
+          },
+          "companyDetails": {
+            "reviewResult": {
+              "reviewAnswer": "APPROVED",
+              "reviewRejectType": "",
+              "rejectReasons": [],
+              "comment": ""
+            },
+            "details": [...]
+          },
+          "controlStructure": {
+            "reviewResult": {
+              "reviewAnswer": "APPROVED",
+              "reviewRejectType": "",
+              "rejectReasons": [],
+              "comment": ""
+            },
+            "details": [...]
+          },
+          "ultimateBeneficialOwners": {
+            "reviewResult": {
+              "reviewAnswer": "DECLINED",
+              "reviewRejectType": "RETRY",
+              "rejectReasons": ["SCREENSHOTS"],
+              "comment": ""
+            },
+            "details": [
+              {
+                "id": "74441b74-caab-5f74-8e24-3fcee83faac8",
+                "status": "INCOMPLETE",
+                "reviewResult": {
+                  "reviewAnswer": "DECLINED",
+                  "reviewRejectType": "RETRY",
+                  "rejectReasons": ["SCREENSHOTS"],
+                  "comment": ""
+                },
+                "details": {
+                  "identity": {
+                    "reviewResult": {
+                      "reviewAnswer": "DECLINED",
+                      "reviewRejectType": "RETRY",
+                      "rejectReasons": ["SCREENSHOTS"],
+                      "comment": "Screenshots aren't accepted. Please upload a live photo of the document."
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+      ```
+    </Accordion>
+
+    **Individual compliance category mapping:**
 
     | Category       | Contains                                     |
     | -------------- | -------------------------------------------- |
@@ -338,13 +543,25 @@ The `details` object returns the compliance review outcome for each KYC category
     | personalInfo   | Name, address, date of birth, tax ID         |
     | proofOfAddress | Proof of address documentation (if provided) |
 
+    **Business compliance category mapping:**
+
+    | Category                 | Contains                                                                                                 |
+    | ------------------------ | -------------------------------------------------------------------------------------------------------- |
+    | companyInfo              | Business name, address, registration number, tax ID                                                      |
+    | questionnaire            | Source of funds and intended use responses                                                               |
+    | legalPresence            | [Legal presence documentation](/compliance/documents#business-documents)                                   |
+    | ownershipStructure       | [Ownership structure documentation](/compliance/documents#business-documents)                             |
+    | companyDetails           | [Company details documentation](/compliance/documents#business-documents)                                 |
+    | controlStructure         | [Control structure documentation](/compliance/documents#business-documents)                              |
+    | ultimateBeneficialOwners | Individual KYC for each UBO (follows individual KYC structure)                                            |
+
     <Info>
-      For compliance reasons, detailed rejection information is only available for documentation—not for other categories.
+      For compliance reasons, detailed rejection information is only available for documentation—not for other categories. Each UBO follows the individual KYC structure.
     </Info>
 
   </Tab>
   <Tab title="RFI_PENDING">
-    Compliance sent a Request for Information (RFI) to your compliance email asking for additional details about this user.
+    Compliance sent a Request for Information (RFI) to your compliance email asking for additional details about this user or business.
 
     ```json
     {
@@ -361,7 +578,7 @@ The `details` object returns the compliance review outcome for each KYC category
 
   </Tab>
   <Tab title="REJECTED">
-    User is permanently denied. Resubmission via API is not permitted.
+    User or business is permanently denied. Resubmission via API is not permitted.
 
     ```json
     {
@@ -378,7 +595,7 @@ The `details` object returns the compliance review outcome for each KYC category
 
   </Tab>
   <Tab title="CONTACT_SUPPORT">
-    System couldn't process the KYC or return the correct status. Contact HIFI support for resolution.
+    System couldn't process the KYC/KYB or return the correct status. Contact HIFI support for resolution.
 
     ```json
     {
