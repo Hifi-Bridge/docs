@@ -43,7 +43,7 @@ Before you start, make sure you have:
 Here's what we'll accomplish in this recipe:
 
 1. **Generate API Keys** - Set up authentication for HIFI API
-2. **Create User A** - Onboard the sender and complete KYC for USD rail
+2. **Create User A** - Onboard the sender and complete KYC verification
 3. **Add Virtual Account** - Set up account for USD deposits that convert to USDC
 4. **Create User B** - Onboard the recipient (or use existing user)
 5. **Execute Remittance** - Send USDC from User A → MXN to User B's bank account
@@ -99,7 +99,7 @@ Include your API key in the `Authorization` header of all API requests:
 
 ## Create User A (Sender)
 
-The sender needs a verified user account to access fiat rails and send remittances. Every user must accept HIFI's Terms of Service and complete KYC verification before they can move money between fiat and crypto.
+The sender needs a verified user account to access fiat payment capabilities and send remittances. Every user must accept HIFI's Terms of Service and complete KYC verification before they can move money between fiat and crypto.
 
 <Note>
   **Complete Onboarding Guide:** For a comprehensive walkthrough of user
@@ -113,7 +113,7 @@ Creating a user involves four steps:
 1. **Generate Terms of Service Link** - Get acceptance link for your customer
 2. **Create User** - Create the user account after TOS acceptance
 3. **Update KYC Information** - Provide required personal details
-4. **Submit KYC** - Submit for verification to unlock USD rail
+4. **Submit KYC** - Submit for verification
 
 <AccordionGroup>
   <Accordion title="Generate Terms of Service Link">
@@ -408,9 +408,9 @@ curl --request POST \
 
   </Accordion>
 
-  <Accordion title="Submit KYC for USD Rail">
+  <Accordion title="Submit KYC">
 
-Submit the KYC application to unlock the USD rail using the [Submit KYC](https://docs.hifibridge.com/api-reference/kyc/submit-kyc) endpoint.
+Submit the KYC application using the [Submit KYC](https://docs.hifibridge.com/api-reference/kyc/submit-kyc) endpoint.
 
 **Request:**
 
@@ -420,18 +420,9 @@ curl --request POST \
   --header 'accept: application/json' \
   --header 'authorization: Bearer YOUR_API_KEY' \
   --header 'content-type: application/json' \
-  --data '
-{
-  "rails": "USD"
-}
+  --data '{}'
 '
 ```
-
-**Request Fields:**
-
-<ResponseField name="rails" type="string" required>
-  The currency rail to unlock. Use `USD` for US Dollar operations.
-</ResponseField>
 
 **Response:**
 
@@ -469,13 +460,12 @@ curl --request POST \
 }
 ```
 
-✅ **KYC approved! USD rail is now active.**
+✅ **KYC approved!**
 
 **Response Fields:**
 
 <ResponseField name="status" type="string">
-  Overall KYC status. `ACTIVE` means the USD rail is unlocked and the user can
-  now onramp and offramp USD.
+  Overall KYC status. `ACTIVE` means the user can now onramp and offramp USD.
 </ResponseField>
 
 <ResponseField name="reviewResult" type="object">
@@ -1178,7 +1168,7 @@ Track the remittance progress using:
 You've successfully completed a cross-border remittance transaction! By following this recipe, you can now:
 
 - ✅ Generate API keys and authenticate with HIFI
-- ✅ Onboard users and complete KYC for multiple currency rails
+- ✅ Onboard users and complete KYC verification
 - ✅ Create virtual accounts for fiat-to-crypto conversion
 - ✅ Execute cross-border remittances with competitive exchange rates
 - ✅ Provide transparent fee structures and quote expiration

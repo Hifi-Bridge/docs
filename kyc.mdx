@@ -4,33 +4,41 @@ title: "Overview"
 
 To comply with financial regulations, HIFI enforces **KYC (Know Your Customer)** and **KYB (Know Your Business)** checks before a User can receive funds from fiat (onramps) or pay out to fiat (offramps).
 
-## KYC & Rails
+## KYC Link (Recommended)
 
-A Rail is a payment corridor that enables payins or payouts to specific regions. Each rail has different KYC requirements depending on what it enables.
+The easiest way to collect KYC information is using **KYC Links**, which provide a hosted, user-friendly flow. Generate a KYC link and redirect your user to complete verification.
 
-| Rail                | Access                                                | Notes                                        |
-| ------------------- | ----------------------------------------------------- | -------------------------------------------- |
-| USD Rail            | Payins and payouts to the US via ACH and wire         | Full USD coverage, includes virtual accounts |
-| Global Network Rail | Payouts to select corridors in Asia and Africa        | Multi-currency support across key markets    |
-| Africa Rail         | Payins and payouts across supported African countries | Local currency settlement                    |
-
-<Card title="Explore rails" href="/docs/rails" arrow>
-  View supported rails and their KYC requirements
+<Card title="Create KYC Link" href="/features/kyc-links" arrow>
+  Learn how to onboard users using a link
 </Card>
 
 ## KYC Requirements
 
-Before submitting KYC information, call the KYC Requirements endpoint to see what documents and information are needed for a specific user and rail combination.
+Before submitting KYC information, call the KYC Requirements endpoint to see what documents and information are needed for a specific user.
 
 <CodeGroup>
 ```http Request
-GET https://sandbox.hifibridge.com/v2/users/{userId}/kyc/requirements?rails=USD
+GET https://sandbox.hifibridge.com/v2/users/{userId}/kyc/requirements
 Authorization: Bearer <token>
 ```
 </CodeGroup>
 
 <Card title="KYC Requirements Guide" href="/kyc/kyc-requirements" arrow>
   Learn about the endpoint and response structure
+</Card>
+
+## KYC Documents
+
+Document requirements vary significantly depending on user type:
+
+- **Individual users**: Structure with 1-2 document groups (identity and optionally address)
+- **Business users**: Structure with 4+ document groups (legal presence, ownership, control, company details)
+- **Ultimate Beneficial Owners (UBOs)**: Each UBO with >25% ownership must provide individual identity documents
+
+Businesses must upload documents for both the business entity and each UBO separately. UBO documents are uploaded through UBO-specific endpoints.
+
+<Card title="KYC Documents Guide" href="/kyc/kyc-documents" arrow>
+  Detailed guide on document requirements and differences
 </Card>
 
 ## Submit KYC
@@ -45,17 +53,10 @@ Once you've gathered and uploaded the required information for the User, submit 
 ## Track KYC Status
 
 After you submit KYC data, use the [KYC Status](https://docs.hifibridge.com/api-reference/kyc/retrieve-kyc-status) endpoint to monitor review progress and see any follow-up actions.
-When the status reaches `active`, the user can now access the functionalities of that rail.
+When the status reaches `active`, the user can now access fiat payment functionalities.
 
 This guide lists every possible status, explains review results, and shows complete response examples.
 
 <Card title="KYC Status Guide" href="/kyc/kyc-status" arrow>
   Learn more about the endpoint and response structure
-</Card>
-## Alternative: KYC Link
-
-If you don't want to handle KYC submission via API, generate a KYC link for users to complete verification through a web interface.
-
-<Card title="Create KYC Link" href="/features/kyc-links" arrow>
-  Learn how to onboard users using a link
 </Card>
