@@ -37,6 +37,10 @@
       "description": "Account endpoints"
     },
     {
+      "name": "Fiat Account",
+      "description": "Fiat Account endpoints"
+    },
+    {
       "name": "Virtual Account",
       "description": "Virtual Account endpoints"
     },
@@ -263,6 +267,24 @@
         },
         "description": "Number of settlement rules to return, default to 10 maximum to 100",
         "required": false
+      },
+      "FiatAccountIdPathParameter": {
+        "name": "accountId",
+        "in": "path",
+        "schema": {
+          "type": "string"
+        },
+        "description": "ID of the fiat account",
+        "required": true
+      },
+      "TransferIdPathParameter": {
+        "name": "transferId",
+        "in": "path",
+        "schema": {
+          "type": "string"
+        },
+        "description": "ID of the transfer",
+        "required": true
       },
       "LimitParameter": {
         "name": "limit",
@@ -773,6 +795,15 @@
         "description": "If passed, you will get all users with the case-insensitive partial match of `businessName`.\n",
         "required": false
       },
+      "UserSearchParameter": {
+        "name": "search",
+        "in": "query",
+        "schema": {
+          "type": "string"
+        },
+        "description": "If passed, you will get all users with the case-insensitive partial match of `search` in the first name, last name, business name, or email. If the search is a valid UUID, you will get the user with the matching ID.\n",
+        "required": false
+      },
       "UserEmailParameter": {
         "name": "email",
         "in": "query",
@@ -880,22 +911,13 @@
                   "$ref": "#/components/schemas/CreateUsAccount"
                 },
                 {
-                  "$ref": "#/components/schemas/CreateBrazilAccount"
+                  "$ref": "#/components/schemas/CreateFiatAccount"
                 },
                 {
                   "$ref": "#/components/schemas/CreateBrazilGlobalNetworkAccountIndividual"
                 },
                 {
                   "$ref": "#/components/schemas/CreateBrazilGlobalNetworkAccountBusiness"
-                },
-                {
-                  "$ref": "#/components/schemas/CreateColombiaAccount"
-                },
-                {
-                  "$ref": "#/components/schemas/CreateArgentinaAccount"
-                },
-                {
-                  "$ref": "#/components/schemas/CreateMexicoAccount"
                 },
                 {
                   "$ref": "#/components/schemas/CreateMexicoGlobalNetworkAccountIndividual"
@@ -920,6 +942,12 @@
                 },
                 {
                   "$ref": "#/components/schemas/CreateChinaGlobalNetworkAccountBusiness"
+                },
+                {
+                  "$ref": "#/components/schemas/CreateSaudiArabiaGlobalNetworkAccountIndividual"
+                },
+                {
+                  "$ref": "#/components/schemas/CreateSaudiArabiaGlobalNetworkAccountBusiness"
                 },
                 {
                   "$ref": "#/components/schemas/CreateSingaporeGlobalNetworkAccountIndividual"
@@ -984,6 +1012,56 @@
           "application/json": {
             "schema": {
               "$ref": "#/components/schemas/UpdateSettlementRule"
+            }
+          }
+        }
+      },
+      "CreateBeneficiaryBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/CreateBeneficiary"
+            }
+          }
+        }
+      },
+      "SendFundsBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/SendFunds"
+            }
+          }
+        }
+      },
+      "AttachWalletBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/AttachWallet"
+            }
+          }
+        }
+      },
+      "MintStablecoinsBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/MintStablecoins"
+            }
+          }
+        }
+      },
+      "CreateFiatAccountTransferBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/CreateFiatAccountTransfer"
             }
           }
         }
@@ -1670,6 +1748,155 @@
           "application/json": {
             "schema": {
               "$ref": "#/components/schemas/RemoveSettlementRuleResponse"
+            }
+          }
+        }
+      },
+      "CreateFiatAccountResponse": {
+        "description": "Success",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/FiatAccount"
+            }
+          }
+        }
+      },
+      "GetFiatAccountResponse": {
+        "description": "Success",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/FiatAccount"
+            }
+          }
+        }
+      },
+      "GetFiatAccountsResponse": {
+        "description": "Success",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "accounts": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FiatAccount"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "GetFiatAccountBalanceResponse": {
+        "description": "Success",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/FiatAccountBalance"
+            }
+          }
+        }
+      },
+      "CreateBeneficiaryResponse": {
+        "description": "Success",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean"
+                },
+                "message": {
+                  "type": "string"
+                },
+                "data": {
+                  "$ref": "#/components/schemas/Beneficiary"
+                }
+              }
+            }
+          }
+        }
+      },
+      "GetBeneficiariesResponse": {
+        "description": "Success",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/BeneficiaryList"
+            }
+          }
+        }
+      },
+      "SendFundsResponse": {
+        "description": "Success",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/SendFundsResponse"
+            }
+          }
+        }
+      },
+      "AttachWalletResponse": {
+        "description": "Success",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/AttachWalletResponse"
+            }
+          }
+        }
+      },
+      "GetWalletsResponse": {
+        "description": "Success",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/WalletList"
+            }
+          }
+        }
+      },
+      "MintStablecoinsResponse": {
+        "description": "Success",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/MintStablecoinsResponse"
+            }
+          }
+        }
+      },
+      "CreateFiatTransferResponse": {
+        "description": "Success",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/FiatTransferResponse"
+            }
+          }
+        }
+      },
+      "AcceptFiatTransferQuoteResponse": {
+        "description": "Success",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/FiatTransferResponse"
+            }
+          }
+        }
+      },
+      "GetFiatTransferResponse": {
+        "description": "Success",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/FiatTransferResponse"
             }
           }
         }
@@ -2782,22 +3009,25 @@
         "description": "The type of account.",
         "enum": [
           "us",
-          "brazil",
-          "colombia",
-          "argentina",
-          "mexico",
           "africa",
+          "fiat",
+          "recipient",
           "brazilGlobalNetwork",
           "nigeriaGlobalNetwork",
           "mexicoGlobalNetwork",
           "hongKongGlobalNetwork",
           "chinaGlobalNetwork",
-          "singaporeGlobalNetwork"
+          "singaporeGlobalNetwork",
+          "italyGlobalNetwork",
+          "spainGlobalNetwork",
+          "germanyGlobalNetwork",
+          "unitedArabEmiratesGlobalNetwork"
         ]
       },
       "CreateAccount": {
         "type": "object",
         "title": "Account",
+        "description": "Create an onramp or offramp account for different account types.\n\n**Note for fiat accounts:** When `type` is `fiat` and `rail` is `offramp`, this adds an offramp beneficiary account to an existing fiat account. The user must have an active fiat account before adding a beneficiary.\n",
         "properties": {
           "rail": {
             "type": "string",
@@ -2816,30 +3046,20 @@
             "description": "US account.",
             "$ref": "#/components/schemas/UsAccount"
           },
-          "brazil": {
-            "type": "object",
-            "description": "Brazil account.",
-            "$ref": "#/components/schemas/BrazilAccount"
-          },
-          "colombia": {
-            "type": "object",
-            "description": "Colombia account.",
-            "$ref": "#/components/schemas/ColombiaAccount"
-          },
-          "argentina": {
-            "type": "object",
-            "description": "Argentina account.",
-            "$ref": "#/components/schemas/ArgentinaAccount"
-          },
-          "mexico": {
-            "type": "object",
-            "description": "Mexico account.",
-            "$ref": "#/components/schemas/MexicoAccount"
-          },
           "africa": {
             "type": "object",
             "description": "Africa account.",
             "$ref": "#/components/schemas/AfricaAccount"
+          },
+          "fiat": {
+            "type": "object",
+            "description": "Fiat account (uses us account schema).",
+            "$ref": "#/components/schemas/UsAccount"
+          },
+          "recipient": {
+            "type": "object",
+            "description": "Recipient account (uses us account schema).",
+            "$ref": "#/components/schemas/UsAccount"
           },
           "brazilGlobalNetwork": {
             "type": "object",
@@ -2865,6 +3085,26 @@
             "type": "object",
             "description": "Singapore Global Network account.",
             "$ref": "#/components/schemas/SingaporeGlobalNetworkAccount"
+          },
+          "italyGlobalNetwork": {
+            "type": "object",
+            "description": "Italy Global Network account.",
+            "$ref": "#/components/schemas/ItalyGlobalNetworkAccount"
+          },
+          "spainGlobalNetwork": {
+            "type": "object",
+            "description": "Spain Global Network account.",
+            "$ref": "#/components/schemas/SpainGlobalNetworkAccount"
+          },
+          "germanyGlobalNetwork": {
+            "type": "object",
+            "description": "Germany Global Network account.",
+            "$ref": "#/components/schemas/GermanyGlobalNetworkAccount"
+          },
+          "unitedArabEmiratesGlobalNetwork": {
+            "type": "object",
+            "description": "United Arab Emirates Global Network account.",
+            "$ref": "#/components/schemas/UnitedArabEmiratesGlobalNetworkAccount"
           }
         },
         "required": ["rail", "type"]
@@ -2881,6 +3121,33 @@
             "type": "string",
             "description": "The type of account to create. The value of this field should match the acount info object field submitted. eg. if the type is `us`, only the `us` account object should be filled.\n",
             "enum": ["us"]
+          },
+          "accountHolder": {
+            "type": "object",
+            "description": "account holder information.",
+            "$ref": "#/components/schemas/UsAccountHolder"
+          },
+          "us": {
+            "type": "object",
+            "description": "US account.",
+            "$ref": "#/components/schemas/UsAccount"
+          }
+        },
+        "required": ["rail", "type", "accountHolder", "us"]
+      },
+      "CreateFiatAccount": {
+        "type": "object",
+        "title": "Add Offramp Beneficiary to Fiat Account",
+        "description": "Add an offramp beneficiary account to an existing fiat account.\nThe user must have an active fiat account before adding a beneficiary.\n",
+        "properties": {
+          "rail": {
+            "type": "string",
+            "enum": ["offramp"]
+          },
+          "type": {
+            "type": "string",
+            "description": "The type of account to create. The value of this field should match the account info object field submitted. eg. if the type is `fiat`, only the `us` account object should be filled.\n",
+            "enum": ["fiat"]
           },
           "accountHolder": {
             "type": "object",
@@ -2987,11 +3254,423 @@
           },
           "currency": {
             "type": "string",
-            "enum": ["brl"],
+            "enum": ["brl", "usd"],
+            "description": "The currency for the account"
+          },
+          "transferType": {
+            "type": "string",
+            "enum": ["pix", "swift"],
+            "description": "Transfer type of the account. `pix` is the default transfer type if not provided."
+          }
+        },
+        "required": ["currency", "transferType"]
+      },
+      "CreateItalyGlobalNetworkAccountIndividual": {
+        "type": "object",
+        "title": "Italy Global Network Individual Account",
+        "properties": {
+          "rail": {
+            "type": "string",
+            "enum": ["offramp"]
+          },
+          "type": {
+            "type": "string",
+            "description": "The type of account to create. The value of this field should match the acount info object field submitted. eg. if the type is `us`, only the `us` account object should be filled.\n",
+            "enum": ["italyGlobalNetwork"]
+          },
+          "accountHolder": {
+            "type": "object",
+            "description": "account holder information.",
+            "$ref": "#/components/schemas/GlobalNetworkIndividualAccountHolder"
+          },
+          "italyGlobalNetwork": {
+            "type": "object",
+            "description": "Italy Global Network account.",
+            "$ref": "#/components/schemas/ItalyGlobalNetworkAccount"
+          }
+        },
+        "required": ["rail", "type", "accountHolder", "italyGlobalNetwork"]
+      },
+      "CreateItalyGlobalNetworkAccountBusiness": {
+        "type": "object",
+        "title": "Italy Global Network Business Account",
+        "properties": {
+          "rail": {
+            "type": "string",
+            "enum": ["offramp"]
+          },
+          "type": {
+            "type": "string",
+            "description": "The type of account to create. The value of this field should match the acount info object field submitted. eg. if the type is `us`, only the `us` account object should be filled.\n",
+            "enum": ["italyGlobalNetwork"]
+          },
+          "accountHolder": {
+            "type": "object",
+            "description": "account holder information.",
+            "$ref": "#/components/schemas/GlobalNetworkBusinessAccountHolder"
+          },
+          "italyGlobalNetwork": {
+            "type": "object",
+            "description": "Italy Global Network account.",
+            "$ref": "#/components/schemas/ItalyGlobalNetworkAccount"
+          }
+        },
+        "required": ["rail", "type", "accountHolder", "italyGlobalNetwork"]
+      },
+      "ItalyGlobalNetworkAccount": {
+        "type": "object",
+        "title": "Italy Global Network Account",
+        "properties": {
+          "transferType": {
+            "type": "string",
+            "enum": ["swift"],
+            "description": "Transfer type of the account. `swift` is the default transfer type if not provided."
+          },
+          "currency": {
+            "type": "string",
+            "enum": ["usd"],
             "description": "The currency for the account"
           }
         },
-        "required": ["currency"]
+        "required": [
+          "currency",
+          "transferType",
+          "bankName",
+          "iban",
+          "swiftCode"
+        ]
+      },
+      "CreateSpainGlobalNetworkAccountIndividual": {
+        "type": "object",
+        "title": "Spain Global Network Individual Account",
+        "properties": {
+          "rail": {
+            "type": "string",
+            "enum": ["offramp"]
+          },
+          "type": {
+            "type": "string",
+            "description": "The type of account to create. The value of this field should match the acount info object field submitted. eg. if the type is `us`, only the `us` account object should be filled.\n",
+            "enum": ["spainGlobalNetwork"]
+          },
+          "accountHolder": {
+            "type": "object",
+            "description": "account holder information.",
+            "$ref": "#/components/schemas/GlobalNetworkIndividualAccountHolder"
+          },
+          "spainGlobalNetwork": {
+            "type": "object",
+            "description": "Spain Global Network account.",
+            "$ref": "#/components/schemas/SpainGlobalNetworkAccount"
+          }
+        },
+        "required": ["rail", "type", "accountHolder", "spainGlobalNetwork"]
+      },
+      "CreateSpainGlobalNetworkAccountBusiness": {
+        "type": "object",
+        "title": "Spain Global Network Business Account",
+        "properties": {
+          "rail": {
+            "type": "string",
+            "enum": ["offramp"]
+          },
+          "type": {
+            "type": "string",
+            "description": "The type of account to create. The value of this field should match the acount info object field submitted. eg. if the type is `us`, only the `us` account object should be filled.\n",
+            "enum": ["spainGlobalNetwork"]
+          },
+          "accountHolder": {
+            "type": "object",
+            "description": "account holder information.",
+            "$ref": "#/components/schemas/GlobalNetworkBusinessAccountHolder"
+          },
+          "spainGlobalNetwork": {
+            "type": "object",
+            "description": "Spain Global Network account.",
+            "$ref": "#/components/schemas/SpainGlobalNetworkAccount"
+          }
+        },
+        "required": ["rail", "type", "accountHolder", "spainGlobalNetwork"]
+      },
+      "SpainGlobalNetworkAccount": {
+        "type": "object",
+        "title": "Spain Global Network Account",
+        "properties": {
+          "transferType": {
+            "type": "string",
+            "enum": ["swift"],
+            "description": "Transfer type of the account. `swift` is the default transfer type if not provided."
+          },
+          "currency": {
+            "type": "string",
+            "enum": ["usd"],
+            "description": "The currency for the account"
+          }
+        },
+        "required": [
+          "currency",
+          "transferType",
+          "bankName",
+          "iban",
+          "swiftCode"
+        ]
+      },
+      "CreateGermanyGlobalNetworkAccountIndividual": {
+        "type": "object",
+        "title": "Germany Global Network Individual Account",
+        "properties": {
+          "rail": {
+            "type": "string",
+            "enum": ["offramp"]
+          },
+          "type": {
+            "type": "string",
+            "description": "The type of account to create. The value of this field should match the acount info object field submitted. eg. if the type is `us`, only the `us` account object should be filled.\n",
+            "enum": ["germanyGlobalNetwork"]
+          },
+          "accountHolder": {
+            "type": "object",
+            "description": "account holder information.",
+            "$ref": "#/components/schemas/GlobalNetworkIndividualAccountHolder"
+          },
+          "germanyGlobalNetwork": {
+            "type": "object",
+            "description": "Germany Global Network account.",
+            "$ref": "#/components/schemas/GermanyGlobalNetworkAccount"
+          }
+        },
+        "required": ["rail", "type", "accountHolder", "germanyGlobalNetwork"]
+      },
+      "CreateGermanyGlobalNetworkAccountBusiness": {
+        "type": "object",
+        "title": "Germany Global Network Business Account",
+        "properties": {
+          "rail": {
+            "type": "string",
+            "enum": ["offramp"]
+          },
+          "type": {
+            "type": "string",
+            "description": "The type of account to create. The value of this field should match the acount info object field submitted. eg. if the type is `us`, only the `us` account object should be filled.\n",
+            "enum": ["germanyGlobalNetwork"]
+          },
+          "accountHolder": {
+            "type": "object",
+            "description": "account holder information.",
+            "$ref": "#/components/schemas/GlobalNetworkBusinessAccountHolder"
+          },
+          "germanyGlobalNetwork": {
+            "type": "object",
+            "description": "Germany Global Network account.",
+            "$ref": "#/components/schemas/GermanyGlobalNetworkAccount"
+          }
+        },
+        "required": ["rail", "type", "accountHolder", "germanyGlobalNetwork"]
+      },
+      "GermanyGlobalNetworkAccount": {
+        "type": "object",
+        "title": "Germany Global Network Account",
+        "properties": {
+          "transferType": {
+            "type": "string",
+            "enum": ["swift"],
+            "description": "Transfer type of the account. `swift` is the default transfer type if not provided."
+          },
+          "currency": {
+            "type": "string",
+            "enum": ["usd"],
+            "description": "The currency for the account"
+          }
+        },
+        "required": [
+          "currency",
+          "transferType",
+          "bankName",
+          "iban",
+          "swiftCode"
+        ]
+      },
+      "CreateUnitedArabEmiratesGlobalNetworkAccountIndividual": {
+        "type": "object",
+        "title": "United Arab Emirates Global Network Individual Account",
+        "properties": {
+          "rail": {
+            "type": "string",
+            "enum": ["offramp"]
+          },
+          "type": {
+            "type": "string",
+            "description": "The type of account to create. The value of this field should match the acount info object field submitted. eg. if the type is `us`, only the `us` account object should be filled.\n",
+            "enum": ["unitedArabEmiratesGlobalNetwork"]
+          },
+          "accountHolder": {
+            "type": "object",
+            "description": "account holder information.",
+            "$ref": "#/components/schemas/GlobalNetworkBusinessAccountHolder"
+          },
+          "unitedArabEmiratesGlobalNetwork": {
+            "type": "object",
+            "description": "United Arab Emirates Global Network account.",
+            "$ref": "#/components/schemas/UnitedArabEmiratesGlobalNetworkAccount"
+          }
+        },
+        "required": [
+          "rail",
+          "type",
+          "accountHolder",
+          "unitedArabEmiratesGlobalNetwork"
+        ]
+      },
+      "CreateUnitedArabEmiratesGlobalNetworkAccountBusiness": {
+        "type": "object",
+        "title": "United Arab Emirates Global Network Business Account",
+        "properties": {
+          "rail": {
+            "type": "string",
+            "enum": ["offramp"]
+          },
+          "type": {
+            "type": "string",
+            "description": "The type of account to create. The value of this field should match the acount info object field submitted. eg. if the type is `us`, only the `us` account object should be filled.\n",
+            "enum": ["unitedArabEmiratesGlobalNetwork"]
+          },
+          "accountHolder": {
+            "type": "object",
+            "description": "account holder information.",
+            "$ref": "#/components/schemas/GlobalNetworkBusinessAccountHolder"
+          },
+          "unitedArabEmiratesGlobalNetwork": {
+            "type": "object",
+            "description": "United Arab Emirates Global Network account.",
+            "$ref": "#/components/schemas/UnitedArabEmiratesGlobalNetworkAccount"
+          }
+        },
+        "required": [
+          "rail",
+          "type",
+          "accountHolder",
+          "unitedArabEmiratesGlobalNetwork"
+        ]
+      },
+      "UnitedArabEmiratesGlobalNetworkAccount": {
+        "type": "object",
+        "title": "United Arab Emirates Global Network Account",
+        "properties": {
+          "transferType": {
+            "type": "string",
+            "enum": ["swift"],
+            "description": "Transfer type of the account. `swift` is the default transfer type if not provided."
+          },
+          "currency": {
+            "type": "string",
+            "enum": ["usd"],
+            "description": "The currency for the account"
+          }
+        },
+        "required": [
+          "currency",
+          "transferType",
+          "bankName",
+          "iban",
+          "swiftCode"
+        ]
+      },
+      "CreateSaudiArabiaGlobalNetworkAccountIndividual": {
+        "type": "object",
+        "title": "Saudi Arabia Global Network Individual Account",
+        "properties": {
+          "rail": {
+            "type": "string",
+            "enum": ["offramp"]
+          },
+          "type": {
+            "type": "string",
+            "description": "The type of account to create. The value of this field should match the acount info object field submitted. eg. if the type is `us`, only the `us` account object should be filled.\n",
+            "enum": ["saudiArabiaGlobalNetwork"]
+          },
+          "accountHolder": {
+            "type": "object",
+            "description": "account holder information.",
+            "$ref": "#/components/schemas/GlobalNetworkIndividualAccountHolder"
+          },
+          "saudiArabiaGlobalNetwork": {
+            "type": "object",
+            "description": "Saudi Arabia Global Network account.",
+            "$ref": "#/components/schemas/SaudiArabiaGlobalNetworkAccount"
+          }
+        },
+        "required": [
+          "rail",
+          "type",
+          "accountHolder",
+          "saudiArabiaGlobalNetwork"
+        ]
+      },
+      "CreateSaudiArabiaGlobalNetworkAccountBusiness": {
+        "type": "object",
+        "title": "Saudi Arabia Global Network Business Account",
+        "properties": {
+          "rail": {
+            "type": "string",
+            "enum": ["offramp"]
+          },
+          "type": {
+            "type": "string",
+            "description": "The type of account to create. The value of this field should match the acount info object field submitted. eg. if the type is `us`, only the `us` account object should be filled.\n",
+            "enum": ["saudiArabiaGlobalNetwork"]
+          },
+          "accountHolder": {
+            "type": "object",
+            "description": "account holder information.",
+            "$ref": "#/components/schemas/GlobalNetworkBusinessAccountHolder"
+          },
+          "saudiArabiaGlobalNetwork": {
+            "type": "object",
+            "description": "Saudi Arabia Global Network account.",
+            "$ref": "#/components/schemas/SaudiArabiaGlobalNetworkAccount"
+          }
+        },
+        "required": [
+          "rail",
+          "type",
+          "accountHolder",
+          "saudiArabiaGlobalNetwork"
+        ]
+      },
+      "SaudiArabiaGlobalNetworkAccount": {
+        "type": "object",
+        "title": "Saudi Arabia Global Network Account",
+        "properties": {
+          "transferType": {
+            "type": "string",
+            "enum": ["swift"],
+            "description": "Transfer type of the account. `swift` is the default transfer type if not provided."
+          },
+          "bankName": {
+            "type": "string",
+            "description": "Bank name for the account"
+          },
+          "iban": {
+            "type": "string",
+            "description": "IBAN number"
+          },
+          "swiftCode": {
+            "type": "string",
+            "description": "Bank code"
+          },
+          "currency": {
+            "type": "string",
+            "enum": ["usd"],
+            "description": "The currency for the account"
+          }
+        },
+        "required": [
+          "currency",
+          "transferType",
+          "bankName",
+          "iban",
+          "swiftCode"
+        ]
       },
       "CreateNigeriaGlobalNetworkAccountIndividual": {
         "type": "object",
@@ -3238,6 +3917,11 @@
         "type": "object",
         "title": "China Global Network Account",
         "properties": {
+          "transferType": {
+            "type": "string",
+            "enum": ["swift"],
+            "description": "Transfer type of the account. `swift` is the default transfer type if not provided."
+          },
           "bankName": {
             "type": "string",
             "description": "Bank name for the account"
@@ -3256,7 +3940,7 @@
             "description": "The currency for the account"
           }
         },
-        "required": ["currency"]
+        "required": ["currency", "transferType"]
       },
       "CreateSingaporeGlobalNetworkAccountIndividual": {
         "type": "object",
@@ -3314,6 +3998,11 @@
         "type": "object",
         "title": "Singapore Global Network Account",
         "properties": {
+          "transferType": {
+            "type": "string",
+            "enum": ["bank", "swift"],
+            "description": "Transfer type of the account. `bank` is the default transfer type for sgd, `swift` is the default transfer type for usd."
+          },
           "bankName": {
             "type": "string",
             "description": "Bank name for the account"
@@ -3332,12 +4021,17 @@
             "description": "The currency for the account"
           }
         },
-        "required": ["currency"]
+        "required": ["currency", "transferType"]
       },
       "MexicoGlobalNetworkAccount": {
         "type": "object",
         "title": "Mexico Global Network Account",
         "properties": {
+          "transferType": {
+            "type": "string",
+            "enum": ["spei"],
+            "description": "Transfer type of the account. `spei` is the default transfer type if not provided."
+          },
           "speiClabe": {
             "type": "string",
             "description": "SPEI CLABE number for the account"
@@ -3348,12 +4042,17 @@
             "description": "The currency for the account"
           }
         },
-        "required": ["currency"]
+        "required": ["currency", "transferType"]
       },
       "NigeriaGlobalNetworkAccount": {
         "type": "object",
         "title": "Nigeria Global Network Account",
         "properties": {
+          "transferType": {
+            "type": "string",
+            "enum": ["bank"],
+            "description": "Transfer type of the account. `bank` is the default transfer type if not provided."
+          },
           "bankName": {
             "type": "string",
             "description": "Bank name for the account"
@@ -3368,7 +4067,7 @@
             "description": "The currency for the account"
           }
         },
-        "required": ["currency"]
+        "required": ["currency", "transferType"]
       },
       "CreateColombiaAccount": {
         "type": "object",
@@ -3680,14 +4379,7 @@
             "description": "Three-letter country code (ISO 3166-1 alpha-3)"
           }
         },
-        "required": [
-          "name",
-          "type",
-          "address",
-          "dateOfBirth",
-          "idNumber",
-          "nationality"
-        ]
+        "required": ["name", "type", "address"]
       },
       "GlobalNetworkBusinessAccountHolder": {
         "type": "object",
@@ -3740,7 +4432,7 @@
             "description": "Government issued ID number"
           }
         },
-        "required": ["name", "type", "address", "formationDate", "idNumber"]
+        "required": ["name", "type", "address"]
       },
       "UsAccount": {
         "type": "object",
@@ -4022,6 +4714,10 @@
           "externalWalletId": {
             "type": "string",
             "description": "Either `externalWalletId` or `destinationChain` must be provided.\n"
+          },
+          "transferType": {
+            "type": "string",
+            "enum": ["ach", "wire", "swift"]
           }
         },
         "required": ["sourceCurrency", "destinationCurrency"]
@@ -4774,6 +5470,649 @@
           }
         },
         "required": ["message"]
+      },
+      "FiatAccount": {
+        "type": "object",
+        "title": "Fiat Account",
+        "properties": {
+          "accountId": {
+            "type": "string",
+            "description": "ID of the fiat account"
+          },
+          "userId": {
+            "type": "string",
+            "description": "ID of the user who owns the account"
+          },
+          "accountNumber": {
+            "type": "string",
+            "description": "Account number"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["active", "inactive", "pending"],
+            "description": "Status of the account"
+          },
+          "profileType": {
+            "type": "string",
+            "enum": ["individual", "business"],
+            "description": "Type of profile (individual or business)"
+          },
+          "currency": {
+            "type": "string",
+            "enum": ["USD"],
+            "description": "Currency of the account"
+          },
+          "wireDetails": {
+            "type": "object",
+            "properties": {
+              "routingNumber": {
+                "type": "string",
+                "description": "Routing number for wire transfers"
+              },
+              "accountNumber": {
+                "type": "string",
+                "description": "Account number"
+              },
+              "bankName": {
+                "type": "string",
+                "description": "Name of the bank"
+              },
+              "bankAddress": {
+                "type": "string",
+                "description": "Address of the bank"
+              },
+              "ddaNumber": {
+                "type": "string",
+                "description": "DDA number"
+              }
+            }
+          }
+        },
+        "required": [
+          "accountId",
+          "userId",
+          "accountNumber",
+          "status",
+          "profileType",
+          "currency",
+          "wireDetails"
+        ]
+      },
+      "FiatAccountBalance": {
+        "type": "object",
+        "title": "Fiat Account Balance",
+        "properties": {
+          "accountId": {
+            "type": "string",
+            "description": "ID of the fiat account"
+          },
+          "userId": {
+            "type": "string",
+            "description": "ID of the user who owns the account"
+          },
+          "accountNumber": {
+            "type": "string",
+            "description": "Account number"
+          },
+          "balance": {
+            "type": "number",
+            "description": "Current account balance in USD"
+          },
+          "currency": {
+            "type": "string",
+            "enum": ["USD"],
+            "description": "Currency of the account"
+          }
+        },
+        "required": [
+          "accountId",
+          "userId",
+          "accountNumber",
+          "balance",
+          "currency"
+        ]
+      },
+      "CreateBeneficiary": {
+        "type": "object",
+        "title": "Create Beneficiary",
+        "properties": {
+          "beneficiaryType": {
+            "type": "string",
+            "enum": ["INDIVIDUAL", "BUSINESS"],
+            "description": "Type of beneficiary"
+          },
+          "currencyId": {
+            "type": "number",
+            "description": "Currency ID (5 for USD)"
+          },
+          "firstName": {
+            "type": "string",
+            "description": "First name (required for INDIVIDUAL)"
+          },
+          "lastName": {
+            "type": "string",
+            "description": "Last name (required for INDIVIDUAL)"
+          },
+          "businessName": {
+            "type": "string",
+            "description": "Business name (required for BUSINESS)"
+          },
+          "phone": {
+            "type": "string",
+            "description": "Phone number"
+          },
+          "addressLine1": {
+            "type": "string",
+            "description": "Address line 1"
+          },
+          "addressLine2": {
+            "type": "string",
+            "description": "Address line 2 (optional)"
+          },
+          "city": {
+            "type": "string",
+            "description": "City"
+          },
+          "postal_code": {
+            "type": "string",
+            "description": "Postal code (optional)"
+          },
+          "state": {
+            "type": "string",
+            "description": "State or province"
+          },
+          "country": {
+            "type": "string",
+            "description": "Country code"
+          },
+          "bank_account_number": {
+            "type": "string",
+            "description": "Bank account number (numbers only, no dashes or special characters)"
+          },
+          "routing_code": {
+            "type": "string",
+            "description": "Routing code"
+          },
+          "swift_code": {
+            "type": "string",
+            "description": "SWIFT code (optional)"
+          }
+        },
+        "required": [
+          "beneficiaryType",
+          "currencyId",
+          "phone",
+          "addressLine1",
+          "city",
+          "state",
+          "country",
+          "bank_account_number",
+          "routing_code"
+        ]
+      },
+      "Beneficiary": {
+        "type": "object",
+        "title": "Beneficiary",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID of the beneficiary"
+          },
+          "user_id": {
+            "type": "string",
+            "description": "ID of the user"
+          },
+          "account_id": {
+            "type": "string",
+            "description": "ID of the fiat account"
+          },
+          "profile_id": {
+            "type": "string",
+            "description": "ID of the profile"
+          },
+          "beneficiary_type": {
+            "type": "string",
+            "enum": ["individual", "business"],
+            "description": "Type of beneficiary"
+          },
+          "currency_id": {
+            "type": "number",
+            "description": "Currency ID"
+          },
+          "first_name": {
+            "type": "string",
+            "description": "First name"
+          },
+          "last_name": {
+            "type": "string",
+            "description": "Last name"
+          },
+          "business_name": {
+            "type": "string",
+            "description": "Business name"
+          },
+          "phone": {
+            "type": "string",
+            "description": "Phone number"
+          },
+          "address_line_1": {
+            "type": "string",
+            "description": "Address line 1"
+          },
+          "address_line_2": {
+            "type": "string",
+            "description": "Address line 2"
+          },
+          "city": {
+            "type": "string",
+            "description": "City"
+          },
+          "postal_code": {
+            "type": "string",
+            "description": "Postal code"
+          },
+          "state": {
+            "type": "string",
+            "description": "State or province"
+          },
+          "country": {
+            "type": "string",
+            "description": "Country code"
+          },
+          "bank_account_number": {
+            "type": "string",
+            "description": "Bank account number"
+          },
+          "routing_code": {
+            "type": "string",
+            "description": "Routing code"
+          },
+          "swift_code": {
+            "type": "string",
+            "description": "SWIFT code"
+          },
+          "reference_id": {
+            "type": "string",
+            "description": "Reference ID"
+          },
+          "beneficiary_account_number": {
+            "type": "string",
+            "description": "Account number for the beneficiary"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["PENDING", "ACTIVE", "DECLINED"],
+            "description": "Status of the beneficiary"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Creation timestamp"
+          }
+        }
+      },
+      "BeneficiaryList": {
+        "type": "object",
+        "title": "Beneficiary List",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Success indicator"
+          },
+          "message": {
+            "type": "string",
+            "description": "Response message"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "accountNumber": {
+                "type": "string",
+                "description": "Account number"
+              },
+              "beneficiaries": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Beneficiary"
+                },
+                "description": "List of beneficiaries"
+              }
+            }
+          }
+        },
+        "required": ["success", "message", "data"]
+      },
+      "SendFunds": {
+        "type": "object",
+        "title": "Send Funds",
+        "properties": {
+          "beneficiaryId": {
+            "type": "string",
+            "description": "ID of the beneficiary"
+          },
+          "amount": {
+            "type": "number",
+            "description": "Amount to send in USD"
+          },
+          "purpose": {
+            "type": "string",
+            "description": "Purpose or description of the payment"
+          }
+        },
+        "required": ["beneficiaryId", "amount", "purpose"]
+      },
+      "SendFundsResponse": {
+        "type": "object",
+        "title": "Send Funds Response",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Success indicator"
+          },
+          "message": {
+            "type": "string",
+            "description": "Response message"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "paymentId": {
+                "type": "string",
+                "description": "Payment identifier"
+              },
+              "correlationId": {
+                "type": "string",
+                "description": "Correlation ID for tracking"
+              },
+              "status": {
+                "type": "string",
+                "enum": ["PENDING", "COMPLETED", "FAILED"],
+                "description": "Status of the payment"
+              },
+              "amount": {
+                "type": "number",
+                "description": "Amount sent"
+              },
+              "fromAccount": {
+                "type": "string",
+                "description": "Source account number"
+              },
+              "toAccount": {
+                "type": "string",
+                "description": "Destination account number"
+              },
+              "purpose": {
+                "type": "string",
+                "description": "Purpose of the payment"
+              }
+            },
+            "required": [
+              "paymentId",
+              "correlationId",
+              "status",
+              "amount",
+              "fromAccount",
+              "toAccount",
+              "purpose"
+            ]
+          }
+        },
+        "required": ["success", "message", "data"]
+      },
+      "AttachWallet": {
+        "type": "object",
+        "title": "Attach Wallet",
+        "properties": {
+          "walletId": {
+            "type": "string",
+            "description": "ID of the wallet to attach"
+          }
+        },
+        "required": ["walletId"]
+      },
+      "AttachWalletResponse": {
+        "type": "object",
+        "title": "Attach Wallet Response",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Success indicator"
+          },
+          "message": {
+            "type": "string",
+            "description": "Response message"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "accountId": {
+                "type": "string",
+                "description": "ID of the fiat account"
+              },
+              "walletId": {
+                "type": "string",
+                "description": "ID of the attached wallet"
+              },
+              "status": {
+                "type": "string",
+                "enum": ["attached"],
+                "description": "Status of the attachment"
+              }
+            }
+          }
+        },
+        "required": ["success", "message", "data"]
+      },
+      "WalletList": {
+        "type": "object",
+        "title": "Wallet List",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Success indicator"
+          },
+          "message": {
+            "type": "string",
+            "description": "Response message"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "accountId": {
+                "type": "string",
+                "description": "ID of the fiat account"
+              },
+              "wallets": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "walletId": {
+                      "type": "string",
+                      "description": "ID of the wallet"
+                    },
+                    "chain": {
+                      "type": "string",
+                      "description": "Blockchain network"
+                    },
+                    "address": {
+                      "type": "string",
+                      "description": "Wallet address"
+                    }
+                  }
+                },
+                "description": "List of attached wallets"
+              }
+            }
+          }
+        },
+        "required": ["success", "message", "data"]
+      },
+      "MintStablecoins": {
+        "type": "object",
+        "title": "Mint Stablecoins",
+        "properties": {
+          "amount": {
+            "type": "number",
+            "description": "Amount to mint in USD"
+          },
+          "currency": {
+            "type": "string",
+            "enum": ["USDC", "USDT"],
+            "description": "Type of stablecoin to mint"
+          },
+          "chain": {
+            "type": "string",
+            "enum": ["POLYGON", "ETHEREUM", "SOLANA", "BASE"],
+            "description": "Blockchain network to mint on"
+          },
+          "walletId": {
+            "type": "string",
+            "description": "ID of the wallet to receive the stablecoins"
+          }
+        },
+        "required": ["amount", "currency", "chain", "walletId"]
+      },
+      "MintStablecoinsResponse": {
+        "type": "object",
+        "title": "Mint Stablecoins Response",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Success indicator"
+          },
+          "message": {
+            "type": "string",
+            "description": "Response message"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "accountId": {
+                "type": "string",
+                "description": "ID of the fiat account"
+              },
+              "mintId": {
+                "type": "string",
+                "description": "ID of the mint transaction"
+              },
+              "status": {
+                "type": "string",
+                "enum": ["pending", "completed", "failed"],
+                "description": "Status of the mint"
+              },
+              "amount": {
+                "type": "number",
+                "description": "Amount minted"
+              },
+              "currency": {
+                "type": "string",
+                "description": "Type of stablecoin"
+              },
+              "chain": {
+                "type": "string",
+                "description": "Blockchain network"
+              }
+            }
+          }
+        },
+        "required": ["success", "message", "data"]
+      },
+      "CreateFiatAccountTransfer": {
+        "type": "object",
+        "properties": {
+          "requestId": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "number"
+          },
+          "reference": {
+            "type": "string"
+          },
+          "beneficiaryId": {
+            "type": "string"
+          }
+        },
+        "required": ["requestId", "amount", "reference", "beneficiaryId"]
+      },
+      "FiatTransferResponse": {
+        "type": "object",
+        "title": "Fiat Transfer Response",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Success indicator"
+          },
+          "message": {
+            "type": "string",
+            "description": "Response message"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "transferId": {
+                "type": "string",
+                "description": "ID of the transfer"
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "pending",
+                  "quoted",
+                  "accepted",
+                  "processing",
+                  "completed",
+                  "failed"
+                ],
+                "description": "Status of the transfer"
+              },
+              "amount": {
+                "type": "number",
+                "description": "Transfer amount"
+              },
+              "beneficiaryId": {
+                "type": "string",
+                "description": "ID of the beneficiary"
+              },
+              "quote": {
+                "type": "object",
+                "nullable": true,
+                "properties": {
+                  "quoteId": {
+                    "type": "string",
+                    "description": "ID of the quote"
+                  },
+                  "expiresAt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Quote expiration timestamp"
+                  },
+                  "fees": {
+                    "type": "number",
+                    "description": "Transfer fees"
+                  },
+                  "totalAmount": {
+                    "type": "number",
+                    "description": "Total amount including fees"
+                  }
+                }
+              },
+              "createdAt": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Transfer creation timestamp"
+              },
+              "updatedAt": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Last update timestamp"
+              }
+            },
+            "required": ["transferId", "status", "amount"]
+          }
+        },
+        "required": ["success", "message", "data"]
       },
       "Unauthorized": {
         "type": "object",
@@ -6177,7 +7516,8 @@
           "SOUTH_AMERICA_STANDARD",
           "AFRICA_GENERAL",
           "AFRICA_NIGERIA",
-          "GLOBAL_NETWORK"
+          "GLOBAL_NETWORK",
+          "USD_FIAT"
         ]
       },
       "KycStatusEnum": {
@@ -10015,7 +11355,8 @@
               "housing",
               "school-fees",
               "other"
-            ]
+            ],
+            "description": "Refer to [here](https://docs.hifibridge.com/transactions/offramps#purpose-of-payment-code) for more details on the purpose of payment code to provide.\n"
           },
           "supportingDocumentType": {
             "type": "string",
@@ -10078,7 +11419,8 @@
               "housing",
               "school-fees",
               "other"
-            ]
+            ],
+            "description": "Refer to [here](https://docs.hifibridge.com/transactions/offramps#purpose-of-payment-code) for more details on the purpose of payment code to provide.\n"
           },
           "supportingDocumentType": {
             "type": "string",
@@ -14688,7 +16030,7 @@
           },
           "transferType": {
             "type": "string",
-            "enum": ["ach", "wire"],
+            "enum": ["ach", "wire", "swift"],
             "description": "payment network type\n\n* this field is used when onramping from usd, default is `ach`\n"
           },
           "accountId": {
@@ -15158,7 +16500,7 @@
           },
           "calculationInterval": {
             "type": "string",
-            "enum": ["day", "week", "month", "quarter", "year"],
+            "enum": ["day", "week", "month"],
             "description": "The calculation interval used"
           },
           "dateRange": {
@@ -15236,6 +16578,11 @@
           "params": {
             "$ref": "#/components/schemas/MetricParams"
           },
+          "description": {
+            "type": "string",
+            "nullable": true,
+            "description": "Optional description for the metric"
+          },
           "createdAt": {
             "type": "string",
             "format": "date-time",
@@ -15273,7 +16620,7 @@
           },
           "calculationInterval": {
             "type": "string",
-            "enum": ["day", "week", "month", "quarter", "year"],
+            "enum": ["day", "week", "month"],
             "description": "Time interval for aggregation"
           },
           "userIds": {
@@ -15313,9 +16660,9 @@
                 "PENDING",
                 "QUOTE_FAILED",
                 "REJECTED"
-              ],
-              "description": "Filter by transaction statuses (for TRANSACTION_COUNT template)"
-            }
+              ]
+            },
+            "description": "Filter by transaction statuses"
           },
           "breakdowns": {
             "type": "array",
@@ -15329,7 +16676,7 @@
           "limit": {
             "type": "integer",
             "minimum": 1,
-            "maximum": 500,
+            "maximum": 10000,
             "default": 500,
             "description": "Maximum number of records to return"
           }
@@ -15353,6 +16700,12 @@
           },
           "params": {
             "$ref": "#/components/schemas/MetricParams"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 500,
+            "description": "Optional description for the metric"
           }
         },
         "required": ["template", "name", "params"]
@@ -15370,6 +16723,12 @@
           "params": {
             "$ref": "#/components/schemas/MetricParams",
             "description": "Updated metric parameters"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 500,
+            "description": "Updated metric description (can be set to null to clear)"
           }
         }
       },
@@ -15404,23 +16763,27 @@
             "type": "string",
             "description": "Template description"
           },
-          "params": {
+          "supportedParams": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/MetricParamDefinition"
             },
             "description": "Available parameters for this template"
           },
-          "supportsBreakdowns": {
-            "type": "boolean",
-            "description": "Whether this template supports breakdown dimensions"
-          },
-          "breakdownOptions": {
+          "rules": {
             "type": "array",
             "items": {
               "type": "string"
             },
-            "description": "Available breakdown dimensions for this template"
+            "description": "Cross-field validation rules"
+          },
+          "breakdownOptions": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string"
+            },
+            "description": "Available breakdown dimensions for this template (null if no breakdowns supported)"
           }
         }
       },
@@ -19398,7 +20761,11 @@
                 }
               ],
               "rules": ["createdBefore must be after createdAfter"],
-              "breakdownOptions": ["transactionType", "userId"]
+              "breakdownOptions": [
+                "transactionType",
+                "transactionStatus",
+                "userId"
+              ]
             },
             {
               "template": "TRANSACTION_COUNT",
@@ -19445,21 +20812,20 @@
                   "multiple": true,
                   "options": [
                     "AWAITING_FUNDS",
+                    "COMPLETED",
+                    "CRYPTO_FAILED",
+                    "CRYPTO_INITIATED",
+                    "CRYPTO_PENDING",
+                    "FAILED",
+                    "FIAT_FAILED",
                     "FIAT_INITIATED",
                     "FIAT_PENDING",
                     "FIAT_PROCESSED",
-                    "CRYPTO_INITIATED",
-                    "CRYPTO_PENDING",
-                    "FIAT_FAILED",
-                    "CRYPTO_FAILED",
-                    "QUOTE_FAILED",
-                    "NOT_INITIATED",
                     "FIAT_RETURNED",
-                    "COMPLETED",
-                    "PENDING_APPROVAL",
                     "INITIATED",
+                    "NOT_INITIATED",
                     "PENDING",
-                    "FAILED",
+                    "QUOTE_FAILED",
                     "REJECTED"
                   ]
                 },
@@ -19622,7 +20988,11 @@
               }
             ],
             "rules": ["createdBefore must be after createdAfter"],
-            "breakdownOptions": ["transactionType", "userId"]
+            "breakdownOptions": [
+              "transactionType",
+              "transactionStatus",
+              "userId"
+            ]
           },
           "metadata": {}
         }
@@ -20701,7 +22071,7 @@
     "/v2/users/{userId}/accounts": {
       "post": {
         "summary": "Create an account",
-        "description": "Create an onramp or offramp account for different account types by providing your bank account information.\n",
+        "description": "Create an onramp or offramp account for different account types by providing your bank account information.\n\n**Note for fiat accounts:** When `type` is `fiat` and `rail` is `offramp`, this endpoint adds an offramp beneficiary to an existing fiat account. The user must have an active fiat account (created via POST /v2/users/{userId}/fiat-accounts) before adding a beneficiary. Beneficiaries are used to send funds from the fiat account via the transfer endpoint.\n",
         "tags": ["Account"],
         "parameters": [
           {
@@ -21256,6 +22626,214 @@
             "$ref": "#/components/responses/PingResponse"
           },
           "401": {
+            "$ref": "#/components/responses/UnauthorizedResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        }
+      }
+    },
+    "/v2/users/{userId}/fiat-accounts": {
+      "post": {
+        "summary": "Create a fiat account",
+        "description": "Create or retrieve a fiat account for a user. This endpoint checks if the user has an existing fiat account and returns it, or creates a new one if needed.\n\nThe user must have:\n- Access to the USD_FIAT rail\n- Active KYC status for USD fiat accounts\n",
+        "tags": ["Fiat Account"],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/UserIdPathParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/CreateFiatAccountResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/UnauthorizedResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/UnauthorizedResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        }
+      },
+      "get": {
+        "summary": "List fiat accounts",
+        "description": "Retrieve all fiat accounts for a user, including account information and profile details.\n\nThe user must have:\n- Access to the USD_FIAT rail\n- Active KYC status for USD fiat accounts\n",
+        "tags": ["Fiat Account"],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/UserIdPathParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GetFiatAccountsResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/UnauthorizedResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/UnauthorizedResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        }
+      }
+    },
+    "/v2/users/{userId}/fiat-accounts/{accountId}": {
+      "get": {
+        "summary": "Retrieve a fiat account",
+        "description": "Retrieve fiat account details for a specific account, including account information and wire transfer details.\n\nThe user must have:\n- Access to the USD_FIAT rail\n- Active KYC status for USD fiat accounts\n",
+        "tags": ["Fiat Account"],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/UserIdPathParameter"
+          },
+          {
+            "$ref": "#/components/parameters/AccountIdPathParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GetFiatAccountResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/UnauthorizedResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/UnauthorizedResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        }
+      }
+    },
+    "/v2/users/{userId}/fiat-accounts/{accountId}/balance": {
+      "get": {
+        "summary": "Retrieve fiat account balance",
+        "description": "Retrieve the current balance for a fiat account.\n\nThe user must have:\n- Access to the USD_FIAT rail\n- Active KYC status for USD fiat accounts\n",
+        "tags": ["Fiat Account"],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/UserIdPathParameter"
+          },
+          {
+            "$ref": "#/components/parameters/AccountIdPathParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GetFiatAccountBalanceResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/UnauthorizedResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/UnauthorizedResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        }
+      }
+    },
+    "/v2/users/{userId}/fiat-accounts/{accountId}/transfers": {
+      "post": {
+        "summary": "Create a fiat transfer",
+        "description": "Create a new transfer from a fiat account to a beneficiary. The transfer will be processed immediately after creation.\n\nThe user must have:\n- Access to the USD_FIAT rail\n- Active KYC status for USD fiat accounts\n- An active fiat account with sufficient balance\n- A beneficiary associated with the account\n",
+        "tags": ["Fiat Account"],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/UserIdPathParameter"
+          },
+          {
+            "$ref": "#/components/parameters/AccountIdPathParameter"
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/CreateFiatAccountTransferBody"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/CreateFiatTransferResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/UnauthorizedResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/UnauthorizedResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        }
+      }
+    },
+    "/v2/users/{userId}/fiat-accounts/{accountId}/transfers/{transferId}": {
+      "get": {
+        "summary": "Retrieve a fiat transfer",
+        "description": "Retrieve details of a specific transfer, including its status and payment information.\n",
+        "tags": ["Fiat Account"],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/UserIdPathParameter"
+          },
+          {
+            "$ref": "#/components/parameters/AccountIdPathParameter"
+          },
+          {
+            "$ref": "#/components/parameters/TransferIdPathParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GetFiatTransferResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/UnauthorizedResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedResponse"
+          },
+          "403": {
             "$ref": "#/components/responses/UnauthorizedResponse"
           },
           "404": {
@@ -23028,6 +24606,9 @@
           },
           {
             "$ref": "#/components/parameters/UserEmailParameter"
+          },
+          {
+            "$ref": "#/components/parameters/UserSearchParameter"
           },
           {
             "$ref": "#/components/parameters/LimitParameter"
