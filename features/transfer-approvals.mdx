@@ -6,7 +6,7 @@ title: "Transfer Approvals"
 
 <Info>
   Transfer approvals apply to on-chain stablecoin transfers (wallet transfers,
-  batch transfers, and bridging) only. Onramps and offramps do not support
+  batch transfers, and bridging) and offramps. Onramps do not support
   approval workflows.
 </Info>
 
@@ -41,6 +41,7 @@ When transfers are created in the HIFI Dashboard:
 - **Members** can initiate wallet transfers
 - **Member-initiated transfers** require Admin approval before execution
 - **Admin-initiated transfers** execute without approval
+- **Members** can initiate offramp transactions, and these will **always** enter the transfer approval flow (require Admin approval)
 - **Email notifications** sent for approvals and rejections
 
 ### API Approvals
@@ -49,7 +50,8 @@ When using the API:
 
 - Include `requireApproval: true` when creating transfers
 - Transfers enter approval workflow until approved or rejected
-- Supported on wallet transfers, batch transfers, and bridging
+- Supported on wallet transfers, batch transfers, bridging, and offramps
+- **Offramp transactions** will enter the transfer approval flow **only** if `requireApproval: true` is set in the request body
 - Can be integrated into your application's approval logic
 
 ## Creating Transfers with Approval
@@ -112,9 +114,10 @@ The `requireApproval` parameter works with:
 | `POST /v2/wallets/transfers`         | Single wallet transfers               |
 | `POST /v2/wallets/transfers/batches` | Batch transfers (up to 50 recipients) |
 | `POST /v2/wallets/bridges`           | Cross-chain bridging transfers        |
+| `POST /v2/offramps`                  | Offramp transfers (stablecoin to fiat) |
 
 <Info>
-  **Bridging Note:** For bridging transfers, quotes are generated **after**
+  **Bridging and Offramp Note:** For bridging transfers and offramps, quotes are generated **after**
   approval. This prevents quotes from expiring while awaiting review.
 </Info>
 
@@ -243,6 +246,14 @@ Transfers with `requireApproval: true` follow this status progression:
 | **REJECTED**         | Transfer rejected and cancelled               |
 
 After approval, transfers move to normal execution statuses (`CREATED`, `INITIATED`, `PENDING`, `COMPLETED`).
+
+<Warning>
+  **Expiration Times:** Transfers in `PENDING_APPROVAL` status will automatically expire if not approved or rejected within the following timeframes:
+  - **Onchain transfers** (wallet transfers, batch transfers, bridging): Expire after **1 week**
+  - **Offramps**: Expire after **1 day**
+  
+  Expired transfers are automatically cancelled and cannot be executed.
+</Warning>
 
 <Note>
   **Status Updates:** Subscribe to `TRANSFER.APPROVAL.PENDING`,
