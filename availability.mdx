@@ -1,0 +1,75 @@
+---
+title: "Availability"
+description: "This page outlines processing windows and settlement times for all supported payment methods."
+tag: "NEW"
+---
+
+<Note>
+  **Business days:** We operate on weekdays - Monday through Friday, excluding
+  Federal Reserve holidays (for USD transactions).
+</Note>
+
+## USD Payments
+
+### Wire transfers
+
+Wire transfers can be processed Monday through Friday, from 9:00 PM ET of the previous business day through 7:00 PM ET of the current business day.
+
+**Cut-off times:**
+
+- Wire requests received before 3:00 PM ET are typically processed the same business day
+
+- Requests received after 3:00 PM ET may be processed the next business day
+
+- Processing after 5:00 PM ET cannot be guaranteed
+
+**Holds:**
+
+- Outgoing and incoming wires placed on hold before 3:00 PM ET are generally cleared the same business day
+
+- Wires on hold after 3:00 PM ET may be cleared the next business day
+
+- Manual hold clearance is available 9:00 AM to 5:00 PM ET, Monday through Friday
+
+<Note>
+  **Instant Onramps:** Once received, onramps are processed and converted to
+  USDC in under 10 minutes via CRNow.
+</Note>
+
+### ACH (Automated Clearing House)
+
+ACH payments process according to NACHA's Same-Day ACH settlement windows:
+
+**Same Day ACH:**
+
+- Morning window: 10:00 AM ET cut-off
+
+- Afternoon window: 1:00 PM ET cut-off
+
+- Evening window: 4:00 PM ET cut-off
+
+**Standard ACH:** Requests after Same Day cut-offs settle the next business day.
+
+**Settlement:** Same Day ACH settles the current business day. Standard ACH settles the next business day.
+
+<Note>
+  **Federal Reserve holiday schedule:** For holidays falling on Saturday, banks
+  are open the preceding Friday. For holidays falling on Sunday, banks are
+  closed the following Monday.
+</Note>
+
+---
+
+## International Payments
+
+### SWIFT
+
+SWIFT (Society for Worldwide Interbank Financial Telecommunication) enables secure international payments through a global messaging network between financial institutions.
+
+**Settlement:** Typically under T+2
+
+### Local rails
+
+Local payment rails like CHATS (Hong Kong) or Mobile Money (Kenya) route payments through banks in the recipient's country.
+
+**Settlement:** Typically under T+2
