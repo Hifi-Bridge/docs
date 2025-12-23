@@ -1,16 +1,16 @@
 ---
-title: "Transfer Approvals"
+title: "Transaction Approvals"
 ---
 
-**Transfer approvals** provide multi-party authorization for transfers, adding security and compliance controls to your organization's transaction workflow. Require approval before executing high-value or sensitive transfers.
+**Transaction approvals** provide multi-party authorization for transactions, adding security and compliance controls to your organization's transaction workflow. Require approval before executing high-value or sensitive transactions.
 
 <Info>
-  Transfer approvals apply to on-chain stablecoin transfers (wallet transfers,
+  Transaction approvals apply to on-chain stablecoin transfers (wallet transfers,
   batch transfers, and bridging) and offramps. Onramps do not support
   approval workflows.
 </Info>
 
-## How Transfer Approvals Work
+## How Transaction Approvals Work
 
 <Steps>
   <Step title="Create transfer with approval">
@@ -32,7 +32,7 @@ title: "Transfer Approvals"
 
 ## Implementation Options
 
-Transfer approvals work differently depending on where transfers are initiated:
+Transaction approvals work differently depending on where transactions are initiated:
 
 ### Dashboard Approvals
 
@@ -54,9 +54,9 @@ When using the API:
 - **Offramp transactions** will enter the transfer approval flow **only** if `requireApproval: true` is set in the request body
 - Can be integrated into your application's approval logic
 
-## Creating Transfers with Approval
+## Creating Transactions with Approval
 
-Add the `requireApproval` parameter to any supported transfer endpoint.
+Add the `requireApproval` parameter to any supported transaction endpoint.
 
 **Request:**
 
@@ -123,7 +123,7 @@ The `requireApproval` parameter works with:
 
 ## Listing Pending Approvals
 
-Retrieve all transfers awaiting approval using the [List Transfer Approvals](https://docs.hifibridge.com/api-reference/transfer-approval/list-transfer-approvals) endpoint.
+Retrieve all transactions awaiting approval using the [List Transaction Approvals](https://docs.hifibridge.com/api-reference/transfer-approval/list-transfer-approvals) endpoint.
 
 **Request:**
 
@@ -233,26 +233,26 @@ curl -X POST "https://sandbox.hifi.com/v2/transfer-approvals/apv_abc123/reject" 
 }
 ```
 
-Rejected transfers are cancelled and will not execute.
+Rejected transactions are cancelled and will not execute.
 
 ## Approval Status Flow
 
-Transfers with `requireApproval: true` follow this status progression:
+Transactions with `requireApproval: true` follow this status progression:
 
-| Status               | Description                                   |
-| :------------------- | :-------------------------------------------- |
-| **PENDING_APPROVAL** | Transfer awaiting admin approval              |
-| **APPROVED**         | Transfer approved and proceeding to execution |
-| **REJECTED**         | Transfer rejected and cancelled               |
+| Status               | Description                                      |
+| :------------------- | :----------------------------------------------- |
+| **PENDING_APPROVAL** | Transaction awaiting admin approval              |
+| **APPROVED**         | Transaction approved and proceeding to execution |
+| **REJECTED**         | Transaction rejected and cancelled               |
 
-After approval, transfers move to normal execution statuses (`CREATED`, `INITIATED`, `PENDING`, `COMPLETED`).
+After approval, transactions move to normal execution statuses (`CREATED`, `INITIATED`, `PENDING`, `COMPLETED`).
 
 <Warning>
-  **Expiration Times:** Transfers in `PENDING_APPROVAL` status will automatically expire if not approved or rejected within the following timeframes:
+  **Expiration Times:** Transactions in `PENDING_APPROVAL` status will automatically expire if not approved or rejected within the following timeframes:
   - **Onchain transfers** (wallet transfers, batch transfers, bridging): Expire after **1 week**
   - **Offramps**: Expire after **1 day**
   
-  Expired transfers are automatically cancelled and cannot be executed.
+  Expired transactions are automatically cancelled and cannot be executed.
 </Warning>
 
 <Note>
@@ -268,31 +268,31 @@ After approval, transfers move to normal execution statuses (`CREATED`, `INITIAT
 
 **Admins receive notifications when:**
 
-- A transfer requires approval (Member-initiated)
-- A transfer needs their review
+- A transaction requires approval (Member-initiated)
+- A transaction needs their review
 
 **Members receive notifications when:**
 
-- Their transfer request is approved
-- Their transfer request is rejected (with reason if provided)
+- Their transaction request is approved
+- Their transaction request is rejected (with reason if provided)
 
 ### Webhook Events
 
 Subscribe to approval events for automated workflows:
 
-| Event Type                     | Description                                |
-| :----------------------------- | :----------------------------------------- |
-| **TRANSFER.APPROVAL.PENDING**  | Transfer created, awaiting approval        |
-| **TRANSFER.APPROVAL.APPROVED** | Transfer approved, proceeding to execution |
-| **TRANSFER.APPROVAL.REJECTED** | Transfer rejected and cancelled            |
+| Event Type                     | Description                                   |
+| :----------------------------- | :-------------------------------------------- |
+| **TRANSFER.APPROVAL.PENDING**  | Transaction created, awaiting approval        |
+| **TRANSFER.APPROVAL.APPROVED** | Transaction approved, proceeding to execution |
+| **TRANSFER.APPROVAL.REJECTED** | Transaction rejected and cancelled             |
 
 ## Sample Code
 
 Here's a complete approval workflow implementation:
 
 <Steps>
-  <Step title="Create a High-Value Transfer That Requires Approval">
-    To trigger an approval workflow for transfers over a certain threshold (e.g., $10k), include `requireApproval: true` in your request:
+  <Step title="Create a High-Value Transaction That Requires Approval">
+    To trigger an approval workflow for transactions over a certain threshold (e.g., $10k), include `requireApproval: true` in your request:
     ```javascript
     async function createHighValueTransfer(amount, destinationUserId) {
       const requireApproval = amount > 10000;
@@ -319,12 +319,12 @@ Here's a complete approval workflow implementation:
       return transfer;
     }
     ```
-    If the transfer is flagged for approval, notify approvers (e.g., by email or internal notification).
+    If the transaction is flagged for approval, notify approvers (e.g., by email or internal notification).
 
   </Step>
 
   <Step title="List Pending Approvals (for Admin Review)">
-    Fetch all pending transfer approvals to display in an admin dashboard:
+    Fetch all pending transaction approvals to display in an admin dashboard:
     ```javascript
     async function fetchPendingApprovals() {
       const approvals = await fetch(
@@ -344,8 +344,8 @@ Here's a complete approval workflow implementation:
     ```
   </Step>
 
-  <Step title="Approve a Pending Transfer">
-    Admins can approve a pending transfer by submitting an approval action:
+  <Step title="Approve a Pending Transaction">
+    Admins can approve a pending transaction by submitting an approval action:
     ```javascript
     async function approveTransfer(approvalId, adminComment) {
       const approval = await fetch(
@@ -362,7 +362,7 @@ Here's a complete approval workflow implementation:
         }
       ).then(r => r.json());
       
-      console.log('Transfer approved:', approval.approvalId);
+      console.log('Transaction approved:', approval.approvalId);
       return approval;
     }
     ```
@@ -375,7 +375,7 @@ Here's a complete approval workflow implementation:
       switch (event.eventType) {
         case 'TRANSFER.APPROVAL.PENDING':
           sendSlackNotification({
-            message: `Transfer ${event.data.transferId} requires approval`,
+            message: `Transaction ${event.data.transferId} requires approval`,
             amount: event.data.amount,
             destination: event.data.destination
           });

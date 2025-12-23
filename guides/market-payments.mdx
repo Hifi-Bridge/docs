@@ -15,7 +15,7 @@ This recipe demonstrates a marketplace payment where:
 - ✅ USDC is transferred to User B wallet
 - ✅ USDC is converted to HKD and sent to User B’s bank account
 
-This flow will demonstrate the use of transfer approvals to hold funds until transfers are approved. Marketplaces may use approval steps for things like confirming delivery, holding funds during a dispute window, or simply adding a release step before paying out a seller.
+This flow will demonstrate the use of transaction approvals to hold funds until transactions are approved. Marketplaces may use approval steps for things like confirming delivery, holding funds during a dispute window, or simply adding a release step before paying out a seller.
 
 ---
 
@@ -161,7 +161,7 @@ Now you can send the wallet transfer payment from User A (US) to Business B (Hon
   Transfers can be sent to other HIFI users or external wallet addresses. For
   this example, we will send to another HIFI user (Business B).
 </Note>
-For this recipe, we will demonstrate the use of Transfer Approvals.
+For this recipe, we will demonstrate the use of Transaction Approvals.
 
 This is a two-step process:
 
@@ -340,17 +340,17 @@ Destination of the transfer (Business B)
   </Expandable>
 </ResponseField>
 
-### Understanding Transfer Approvals
+### Understanding Transaction Approvals
 
-After submitting a transfer request with `requireApproval: true`:
+After submitting a transaction request with `requireApproval: true`:
 
-- The transfer status becomes **PENDING_APPROVAL** and does not execute
+- The transaction status becomes **PENDING_APPROVAL** and does not execute
 - Dashboard admins receive email notifications about the pending approval
-- Authorized admins review and either approve or reject the transfer
-- If approved → transfer executes normally. If rejected, transfer is cancelled
+- Authorized admins review and either approve or reject the transaction
+- If approved → transaction executes normally. If rejected, transaction is cancelled
 
 For detailed instructions on the approval workflow, see:  
-👉 **[Transfer Approvals Guide](https://docs.hifibridge.com/features/transfer-approvals)**
+👉 **[Transaction Approvals Guide](https://docs.hifibridge.com/features/transfer-approvals)**
 
   </Accordion>
 
@@ -386,7 +386,7 @@ For detailed instructions on creating an offramp transaction, see our [Offramp G
 You've successfully completed a marketplace payment! By following this recipe, you can now:
 
 - ✅ Create virtual accounts for fiat-to-crypto conversion
-- ✅ Execute marketplace payments with transfer approvals
+- ✅ Execute marketplace payments with transaction approvals
 - ✅ Provide transparent fee structures and quote expiration
 
 ### Next Steps
@@ -396,6 +396,6 @@ Ready to build a full marketplace payment platform? Here's what to explore next:
 - **[Webhooks](/docs/webhooks)** - Set up real-time notifications for transaction status updates and user engagement
 - **[Offramp Guide](/docs/transactions/offramps)** - Deep dive into offramp transactions and compliance requirements
 - **[Onchain Transfers](/docs/transactions/transfers)** - Learn how to initiate and track onchain wallet-to-wallet transfers
-- **[Transfer Approvals](/docs/features/transfer-approvals)** - Configure optional approvals for higher-control transfer workflows
+- **[Transaction Approvals](/docs/features/transfer-approvals)** - Configure optional approvals for higher-control transaction workflows
 - **[Error Handling](/docs/api/errors)** - Implement robust error handling for failed transactions and expired quotes
 - **[API Reference](https://docs.hifibridge.com/api-reference)** - Explore all available endpoints and parameters for advanced features

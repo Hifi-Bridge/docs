@@ -7,24 +7,24 @@ rss: true
 
 <Update label="December 13, 2025" description="New feature">
 
-## Transfer Approvals for Offramps
+## Transaction Approvals for Offramps
 
-Transfer approvals are now available for offramp transactions. You can require approval before executing offramp transfers (stablecoin to fiat conversions) to add an extra layer of security and compliance control.
+Transaction approvals are now available for offramp transactions. You can require approval before executing offramp transactions (stablecoin to fiat conversions) to add an extra layer of security and compliance control.
 
 **Dashboard Approvals:**
 - Members can now initiate offramp transactions
-- All member-initiated offramp transactions will **always** enter the transfer approval flow and require Admin approval
+- All member-initiated offramp transactions will **always** enter the transaction approval flow and require Admin approval
 
 **API Approvals:**
-- Offramp transactions will enter the transfer approval flow **only** if `requireApproval: true` is set in the request body
+- Offramp transactions will enter the transaction approval flow **only** if `requireApproval: true` is set in the request body
 
 **Additional details:**
 - For offramps with `requireApproval: true`, quotes are generated **after** approval to prevent quotes from expiring while awaiting review. This matches the behavior for bridging transfers.
-- **Expiration times:** Transfers in `PENDING_APPROVAL` status will automatically expire if not approved or rejected:
+- **Expiration times:** Transactions in `PENDING_APPROVAL` status will automatically expire if not approved or rejected:
   - **Onchain transfers** (wallet transfers, batch transfers, bridging): Expire after **1 week**
   - **Offramps**: Expire after **1 day**
 
-See the [Transfer Approvals documentation](/features/transfer-approvals) for more details.
+See the [Transaction Approvals documentation](/features/transfer-approvals) for more details.
 
 </Update>
 
