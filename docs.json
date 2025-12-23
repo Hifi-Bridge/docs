@@ -163,7 +163,7 @@
         "pages": [
           {
             "group": "Introduction",
-            "pages": ["overview", "sandbox", "dashboard"]
+            "pages": ["overview", "sandbox", "dashboard", "availability"]
           },
           {
             "group": "Core concepts",
@@ -222,7 +222,6 @@
               },
               {
                 "group": "Reporting",
-                "tag": "NEW",
                 "pages": ["reporting/metrics"]
               }
             ]
