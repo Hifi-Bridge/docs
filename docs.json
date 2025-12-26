@@ -232,7 +232,7 @@
               "features/kyc-links",
               "features/exchange-rates",
               "features/batch-transfers",
-              "features/transfer-approvals",
+              "features/transaction-approvals",
               "features/developer-fees",
               "features/settlement-rules"
             ]
@@ -450,7 +450,7 @@
                 ]
               },
               {
-                "group": "Transfer Approvals",
+                "group": "Transaction Approvals",
                 "pages": [
                   "GET /v2/transfer-approvals",
                   "GET /v2/transfer-approvals/{approvalId}",
@@ -558,7 +558,7 @@
     },
     {
       "source": "/docs/transfers/features/transfer-approvals",
-      "destination": "/features/transfer-approvals"
+      "destination": "/features/transaction-approvals"
     },
     {
       "source": "/docs/transfers/features/developer-fees",
@@ -674,7 +674,7 @@
     },
     {
       "source": "/docs/features/transfer-approvals",
-      "destination": "/features/transfer-approvals"
+      "destination": "/features/transaction-approvals"
     },
     {
       "source": "/docs/guides",
