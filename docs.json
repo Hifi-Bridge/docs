@@ -232,7 +232,7 @@
               "features/kyc-links",
               "features/exchange-rates",
               "features/batch-transfers",
-              "features/transaction-approvals",
+              "features/transfer-approvals",
               "features/developer-fees",
               "features/settlement-rules"
             ]
@@ -450,7 +450,7 @@
                 ]
               },
               {
-                "group": "Transaction Approvals",
+                "group": "Transfer Approvals",
                 "pages": [
                   "GET /v2/transfer-approvals",
                   "GET /v2/transfer-approvals/{approvalId}",
