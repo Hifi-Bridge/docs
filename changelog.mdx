@@ -5,7 +5,7 @@ description: "Product updates and announcements"
 rss: true
 ---
 
-<Update label="December 13, 2025" description="New feature">
+<Update label="December 23, 2025" description="New feature">
 
 ## Transaction Approvals for Offramps
 
@@ -19,12 +19,12 @@ Transaction approvals are now available for offramp transactions. You can requir
 - Offramp transactions will enter the transaction approval flow **only** if `requireApproval: true` is set in the request body
 
 **Additional details:**
-- For offramps with `requireApproval: true`, quotes are generated **after** approval to prevent quotes from expiring while awaiting review. This matches the behavior for bridging transfers.
+- For offramps that enter the transaction approval flow, quotes are generated **after** approval to prevent quotes from expiring while awaiting review. This matches the behavior for bridging transfers.
 - **Expiration times:** Transactions in `PENDING_APPROVAL` status will automatically expire if not approved or rejected:
   - **Onchain transfers** (wallet transfers, batch transfers, bridging): Expire after **1 week**
   - **Offramps**: Expire after **1 day**
 
-See the [Transaction Approvals documentation](/features/transfer-approvals) for more details.
+See the [Transaction Approvals documentation](/features/transaction-approvals) for more details.
 
 </Update>
 
@@ -70,6 +70,7 @@ The following fields have been updated for Global Network accounts:
 - Fixed an issue disabling production access for some customers.
 
 </Update>
+
 
 <Update label="December 12, 2025" description="New feature">
 
