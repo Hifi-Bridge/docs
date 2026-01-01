@@ -10,7 +10,7 @@ You can expect to receive webhook events whenever an offramp transfer is created
 
 | Event Type                       | Description                                       |
 | :------------------------------- | :------------------------------------------------ |
-| **OFFRAMP.TRANSACTION.CREATE**   | Offramp request created successfully              |
+| **OFFRAMP.TRANSACTION.CREATED**  | Offramp request created successfully              |
 | **OFFRAMP.STATUS.NOT_INITIATED** | Transaction not initiated due to validation error |
 | **OFFRAMP.STATU.OPEN_QUOTE**     | Quote generated and awaiting acceptance           |
 | **OFFRAMP.STATU.IN_REVIEW**      | Transaction under review by monitoring systems    |
@@ -51,7 +51,7 @@ The data object is expected to have the same structure as the response from the 
   "eventId": "evt_195713eb5185a84f7d",
   "eventCategory": "OFFRAMP",
   "eventType": "OFFRAMP.STATUS.CRYPTO_INITIATED",
-  "eventAction": "CREATE",
+  "eventAction": "CRYPTO_INITIATED",
   "data": {
     "transferType": "OFFRAMP",
     "transferDetails": {
