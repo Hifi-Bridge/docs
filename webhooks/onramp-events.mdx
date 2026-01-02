@@ -43,6 +43,15 @@ You can expect to receive webhook events whenever an onramp transfer is created 
 | **ONRAMP.RFI.OPEN**   | An RFI case has been opened for this transaction. An email with next steps has been sent by the HIFI Compliance team. |
 | **ONRAMP.RFI.CLOSED** | The RFI case for this transaction has been resolved by the HIFI Compliance team.                                      |
 
+## Legacy Types:
+
+- **ONRAMP.CREATE**: Creation for onramps.
+- **ONRAMP.UPDATE**: Updates for onramps.
+
+<Warning>
+  Legacy event types will be deprecated on Friday, February 13, 2026.
+</Warning>
+
 ## Data
 
 The data object is expected to have the same structure as the response from the [Retrieve an onramp endpoint](https://docs.hifibridge.com/api-reference/onramp/retrieve-an-onramp)
