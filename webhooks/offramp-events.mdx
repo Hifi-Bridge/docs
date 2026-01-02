@@ -8,33 +8,33 @@ You can expect to receive webhook events whenever an offramp transfer is created
 
 ### System Events
 
-| Event Type                       | Description                                       |
-| :------------------------------- | :------------------------------------------------ |
-| **OFFRAMP.TRANSACTION.CREATED**  | Offramp request created successfully              |
-| **OFFRAMP.STATUS.NOT_INITIATED** | Transaction not initiated due to validation error |
-| **OFFRAMP.STATU.OPEN_QUOTE**     | Quote generated and awaiting acceptance           |
-| **OFFRAMP.STATU.IN_REVIEW**      | Transaction under review by monitoring systems    |
-| **OFFRAMP.STATU.QUOTE_FAILED**   | Quote expired or invalid                          |
-| **OFFRAMP.STATU.AWAITING_FUNDS** | Awaiting for crypto deposit                       |
+| Event Type                        | Description                                       |
+| :-------------------------------- | :------------------------------------------------ |
+| **OFFRAMP.TRANSACTION.CREATED**   | Offramp request created successfully              |
+| **OFFRAMP.STATUS.NOT_INITIATED**  | Transaction not initiated due to validation error |
+| **OFFRAMP.STATUS.OPEN_QUOTE**     | Quote generated and awaiting acceptance           |
+| **OFFRAMP.STATUS.IN_REVIEW**      | Transaction under review by monitoring systems    |
+| **OFFRAMP.STATUS.QUOTE_FAILED**   | Quote expired or invalid                          |
+| **OFFRAMP.STATUS.AWAITING_FUNDS** | Awaiting for crypto deposit                       |
 
 ### Crypto Processing Events
 
-| Status                             | Description                                            |
-| :--------------------------------- | :----------------------------------------------------- |
-| **OFFRAMP.STATU.CRYPTO_INITIATED** | Converting stablecoins, blockchain transaction started |
-| **OFFRAMP.STATU.CRYPTO_PENDING**   | Blockchain transaction awaiting confirmation           |
-| **OFFRAMP.STATU.CRYPTO_PROCESSED** | Stablecoins successfully converted                     |
-| **OFFRAMP.STATU.CRYPTO_FAILED**    | Blockchain transaction failed                          |
-| **OFFRAMP.STATU.CRYPTO_RETURNED**  | Failed transaction refunded to user's wallet           |
+| Status                              | Description                                            |
+| :---------------------------------- | :----------------------------------------------------- |
+| **OFFRAMP.STATUS.CRYPTO_INITIATED** | Converting stablecoins, blockchain transaction started |
+| **OFFRAMP.STATUS.CRYPTO_PENDING**   | Blockchain transaction awaiting confirmation           |
+| **OFFRAMP.STATUS.CRYPTO_PROCESSED** | Stablecoins successfully converted                     |
+| **OFFRAMP.STATUS.CRYPTO_FAILED**    | Blockchain transaction failed                          |
+| **OFFRAMP.STATUS.CRYPTO_RETURNED**  | Failed transaction refunded to user's wallet           |
 
 ### Fiat Processing Events
 
-| Status                           | Description                                 |
-| :------------------------------- | :------------------------------------------ |
-| **OFFRAMP.STATU.FIAT_INITIATED** | Fiat payout process started                 |
-| **OFFRAMP.STATU.FIAT_PENDING**   | Fiat transaction awaiting settlement        |
-| **OFFRAMP.STATU.FIAT_FAILED**    | Fiat transaction failed                     |
-| **OFFRAMP.STATU.COMPLETED**      | Fiat successfully delivered to bank account |
+| Status                            | Description                                 |
+| :-------------------------------- | :------------------------------------------ |
+| **OFFRAMP.STATUS.FIAT_INITIATED** | Fiat payout process started                 |
+| **OFFRAMP.STATUS.FIAT_PENDING**   | Fiat transaction awaiting settlement        |
+| **OFFRAMP.STATUS.FIAT_FAILED**    | Fiat transaction failed                     |
+| **OFFRAMP.STATUS.COMPLETED**      | Fiat successfully delivered to bank account |
 
 ### RFI Events
 
