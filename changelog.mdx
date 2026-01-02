@@ -5,6 +5,56 @@ description: "Product updates and announcements"
 rss: true
 ---
 
+<Update label="January 2, 2026" description="New webhook events">
+
+## New Webhook Events
+
+Starting Monday Jan 5, we're introducing new webhook events to help you track the status of onramp and offramp transactions more efficiently.
+
+**New events for transaction creation:**
+
+- `ONRAMP.TRANSACTION.CREATE`
+- `OFFRAMP.TRANSACTION.CREATE`
+
+**New events for transaction status changes:**
+
+- `ONRAMP.STATUS.*`
+- `OFFRAMP.STATUS.*`
+
+**New events for managing RFIs:**
+
+- `ONRAMP.RFI.OPEN`
+- `ONRAMP.RFI.CLOSED`
+- `OFFRAMP.RFI.OPEN`
+- `OFFRAMP.RFI.CLOSED`
+
+## ⚠️ Breaking Changes
+
+Legacy transaction events (`ONRAMP.UPDATE`, `OFFRAMP.UPDATE`, `ONRAMP.CREATE`, `OFFRAMP.CREATE`) will be deprecated by Friday, Feb 13 2026.
+
+To avoid service disruptions, please update your integrations to use the new events. If you have any questions, please let us know or refer to the documentation.
+
+Learn more: [Onramp events](/webhooks/onramp-events), [Offramp events](/webhooks/offramp-events)
+
+</Update>
+
+<Update label="December 26, 2025" description="Updates and fixes">
+
+## Dashboard Updates
+
+- Added support for deleting offramp accounts.
+- Enabled updating the compliance contact email from Developer > Team.
+- Micro-deposits are now displayed in the Virtual accounts drawer.
+
+## Fixes & Stability
+
+- Resolved multiple KYC Link issues that prevented form submissions.
+- Fixed a bug with accepting organisation invites.
+- Fixed return-address issues affecting offramp quote generation.
+- Resolved inconsistencies with wallet transfer errors.
+
+</Update>
+
 <Update label="December 23, 2025" description="New feature">
 
 ## Transaction Approvals for Offramps
@@ -12,13 +62,16 @@ rss: true
 Transaction approvals are now available for offramp transactions. You can require approval before executing offramp transactions (stablecoin to fiat conversions) to add an extra layer of security and compliance control.
 
 **Dashboard Approvals:**
+
 - Members can now initiate offramp transactions
 - All member-initiated offramp transactions will **always** enter the transaction approval flow and require Admin approval
 
 **API Approvals:**
+
 - Offramp transactions will enter the transaction approval flow **only** if `requireApproval: true` is set in the request body
 
 **Additional details:**
+
 - For offramps that enter the transaction approval flow, quotes are generated **after** approval to prevent quotes from expiring while awaiting review. This matches the behavior for bridging transfers.
 - **Expiration times:** Transactions in `PENDING_APPROVAL` status will automatically expire if not approved or rejected:
   - **Onchain transfers** (wallet transfers, batch transfers, bridging): Expire after **1 week**
@@ -70,7 +123,6 @@ The following fields have been updated for Global Network accounts:
 - Fixed an issue disabling production access for some customers.
 
 </Update>
-
 
 <Update label="December 12, 2025" description="New feature">
 
