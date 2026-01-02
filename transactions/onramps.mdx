@@ -14,10 +14,7 @@ HIFI supports two onramp methods:
 | **Onramp API**      | One-time virtual account per transaction | USD and Africa currencies via API        |
 
 <Info>
-  **Virtual Accounts for USD:** For recurring USD deposits, use reusable
-  [Virtual Accounts](/docs/accounts/virtual-accounts) which provide permanent
-  bank account numbers. The Onramp API generates one-time virtual accounts per
-  transaction and currently supports USD and Africa currencies.
+  **Virtual Accounts for USD:** For recurring USD deposits, use reusable [Virtual Accounts](/docs/accounts/virtual-accounts) which provide permanent bank account numbers. The Onramp API generates one-time virtual accounts per transaction and currently supports USD and Africa currencies.
 </Info>
 
 ## Using the Onramp API
@@ -53,61 +50,59 @@ curl -X POST "https://sandbox.hifibridge.com/v2/onramps" \
 The response contains the onramp quote and deposit information:
 
 <Accordion title="Response">
-
-```json
-{
-  "transferType": "ONRAMP",
-  "transferDetails": {
-    "id": "onr_abc123",
-    "requestId": "e1047def-6942-4fd7-be04-e62eb41813b6",
-    "createdAt": "2025-02-03T17:15:31.927121+00:00",
-    "updatedAt": "2025-02-03T17:15:35.882+00:00",
-    "status": "AWAITING_FUNDS",
-    "source": {
-      "userId": "usr_abc123",
-      "currency": "usd",
-      "amount": 100,
-      "transferType": "ach"
-    },
-    "destination": {
-      "userId": "usr_abc123",
-      "currency": "usdc",
-      "chain": "POLYGON",
-      "walletAddress": "0x848732f6c834E05b17C56fa01E83EE095f72C3c3"
-    },
-    "quoteInformation": {
-      "sendGross": {
-        "amount": "100.00",
-        "currency": "usd"
+  ```json
+  {
+    "transferType": "ONRAMP",
+    "transferDetails": {
+      "id": "onr_abc123",
+      "requestId": "e1047def-6942-4fd7-be04-e62eb41813b6",
+      "createdAt": "2025-02-03T17:15:31.927121+00:00",
+      "updatedAt": "2025-02-03T17:15:35.882+00:00",
+      "status": "AWAITING_FUNDS",
+      "source": {
+        "userId": "usr_abc123",
+        "currency": "usd",
+        "amount": 100,
+        "transferType": "ach"
       },
-      "receiveNet": {
-        "amount": "100.00",
-        "currency": "usdc"
+      "destination": {
+        "userId": "usr_abc123",
+        "currency": "usdc",
+        "chain": "POLYGON",
+        "walletAddress": "0x848732f6c834E05b17C56fa01E83EE095f72C3c3"
       },
-      "rate": "1.0000",
-      "expiresAt": "2025-02-04T17:15:31.927Z"
-    },
-    "depositInfo": {
-      "bankName": "Cross River Bank",
-      "bankAddress": "885 Teaneck Road, Teaneck, NJ 07666",
-      "accountNumber": "11223344556677",
-      "routingNumber": "021214891",
-      "beneficiary": {
-        "name": "HIFI Bridge",
-        "address": "123 Main St, New York, NY 10010"
+      "quoteInformation": {
+        "sendGross": {
+          "amount": "100.00",
+          "currency": "usd"
+        },
+        "receiveNet": {
+          "amount": "100.00",
+          "currency": "usdc"
+        },
+        "rate": "1.0000",
+        "expiresAt": "2025-02-04T17:15:31.927Z"
       },
-      "referenceId": "BRGWX4J5BB7MP693BT8Z",
-      "amount": "100.0",
-      "currency": "usd",
-      "instruction": "Please deposit the exact amount to the bank account provided. Use the reference ID as the deposit reference."
-    },
-    "receipt": {
-      "transactionHash": null
+      "depositInfo": {
+        "bankName": "Cross River Bank",
+        "bankAddress": "885 Teaneck Road, Teaneck, NJ 07666",
+        "accountNumber": "11223344556677",
+        "routingNumber": "021214891",
+        "beneficiary": {
+          "name": "HIFI Bridge",
+          "address": "123 Main St, New York, NY 10010"
+        },
+        "referenceId": "BRGWX4J5BB7MP693BT8Z",
+        "amount": "100.0",
+        "currency": "usd",
+        "instruction": "Please deposit the exact amount to the bank account provided. Use the reference ID as the deposit reference."
+      },
+      "receipt": {
+        "transactionHash": null
+      }
     }
   }
-}
-```
-
+  ```
 </Accordion>
 
 <ResponseField name="transferDetails.id" type="string">
@@ -115,12 +110,12 @@ The response contains the onramp quote and deposit information:
 </ResponseField>
 
 <ResponseField name="transferDetails.status" type="string">
-  Current status. `AWAITING_FUNDS` means the quote is ready and waiting for your
-  deposit.
+  Current status. `AWAITING_FUNDS` means the quote is ready and waiting for your deposit.
 </ResponseField>
 
 <ResponseField name="transferDetails.quoteInformation" type="object">
   Conversion details including rates and amounts.
+
   <Expandable title="properties">
     <ResponseField name="sendGross" type="object">
       Total fiat amount to send
@@ -139,10 +134,10 @@ The response contains the onramp quote and deposit information:
 
 <ResponseField name="transferDetails.depositInfo" type="object">
   **Most Important:** Bank account details for sending your fiat deposit.
+
   <Expandable title="properties">
     <ResponseField name="referenceId" type="string">
-      **Critical:** Include this reference ID with your bank transfer. Without
-      it, your deposit cannot be matched to this onramp.
+      **Critical:** Include this reference ID with your bank transfer. Without it, your deposit cannot be matched to this onramp.
     </ResponseField>
     <ResponseField name="accountNumber" type="string">
       Bank account number for deposit
@@ -170,9 +165,7 @@ After receiving the quote, send the exact amount specified in `depositInfo` to t
 - **Send before expiration** - Deposit must arrive before `quoteInformation.expiresAt`
 
 <Warning>
-  **Reference ID Required:** Always include the reference ID with your deposit.
-  Deposits without the correct reference ID cannot be matched to your onramp and
-  may be lost or delayed.
+  **Reference ID Required:** Always include the reference ID with your deposit. Deposits without the correct reference ID cannot be matched to your onramp and may be lost or delayed.
 </Warning>
 
 ### Processing
@@ -227,9 +220,7 @@ Onramps progress through several phases:
 ## Tracking Onramps
 
 <Note>
-  **Status Updates:** Subscribe to `ONRAMP.CREATE` and `ONRAMP.UPDATE` webhook
-  events to receive real-time status notifications. See
-  [Webhooks](/docs/webhooks) for setup instructions.
+  **Status Updates:** Subscribe to `ONRAMP` webhook events to receive real-time status notifications. See [Webhooks](/webhooks/onramp-events) for setup instructions.
 </Note>
 
 Monitor onramp status using the [Retrieve Onramp](https://docs.hifibridge.com/api-reference/onramp/retrieve-an-onramp) endpoint. The response structure matches the create endpoint shown above.
@@ -258,10 +249,7 @@ If your quote expires (status becomes `QUOTE_FAILED`):
 3. Complete the deposit with the new reference ID
 
 <Info>
-  **Quote Expiration:** The `expiresAt` timestamp in `quoteInformation` shows
-  exactly when the quote expires for your specific currency. Always check this
-  timestamp and plan to send your deposit with enough time for bank processing
-  before this deadline.
+  **Quote Expiration:** The `expiresAt` timestamp in `quoteInformation` shows exactly when the quote expires for your specific currency. Always check this timestamp and plan to send your deposit with enough time for bank processing before this deadline.
 </Info>
 
 ## Key Concepts
@@ -269,48 +257,37 @@ If your quote expires (status becomes `QUOTE_FAILED`):
 <AccordionGroup>
   <Accordion title="Virtual Account vs Onramp API">
     Both methods use virtual accounts, but with different characteristics:
-    
+
     **Virtual Accounts** (reusable):
+
     - Permanent bank account number
     - Can be used for multiple deposits
     - USD currency only
     - Created via Virtual Accounts API
-    
+
     **Onramp API** (one-time):
+
     - One-time virtual account per transaction
     - Generated per transaction via Onramps API
     - Currently supports USD and Africa currencies
     - Bank details valid only for that transaction
   </Accordion>
+  {" "}
 
-{" "}
+  <Accordion title="Reference ID Requirements">
+    The Onramp API works like one-time virtual accounts. The reference ID functions similarly to how deposits are matched to virtual accounts: - Each onramp generates a unique reference ID - Include it in your bank transfer memo/reference field - HIFI uses it to match your deposit to the correct transaction - Missing reference IDs cause delays or lost funds **Where to
+    include it:** Most banks have a "memo," "reference," or "description" field for transfers. Put the reference ID there.
+  </Accordion>
+  {" "}
 
-<Accordion title="Reference ID Requirements">
-  The Onramp API works like one-time virtual accounts. The reference ID
-  functions similarly to how deposits are matched to virtual accounts: - Each
-  onramp generates a unique reference ID - Include it in your bank transfer
-  memo/reference field - HIFI uses it to match your deposit to the correct
-  transaction - Missing reference IDs cause delays or lost funds **Where to
-  include it:** Most banks have a "memo," "reference," or "description" field
-  for transfers. Put the reference ID there.
-</Accordion>
+  <Accordion title="Exact Amount Matching">
+    The deposit amount must match exactly: - Send the exact amount shown in `depositInfo.amount` - Include all decimal places (e.g., $100.00, not $100) - Don't round or adjust for fees - Mismatched amounts may be rejected or require manual intervention
+  </Accordion>
+  {" "}
 
-{" "}
-
-<Accordion title="Exact Amount Matching">
-  The deposit amount must match exactly: - Send the exact amount shown in
-  `depositInfo.amount` - Include all decimal places (e.g., $100.00, not $100) -
-  Don't round or adjust for fees - Mismatched amounts may be rejected or require
-  manual intervention
-</Accordion>
-
-{" "}
-
-<Accordion title="USDT Fee">
-  USDT onramps incur an additional 0.1% exchange fee beyond standard rates. This
-  fee appears on your monthly invoice, not deducted from the transaction amount.
-</Accordion>
-
+  <Accordion title="USDT Fee">
+    USDT onramps incur an additional 0.1% exchange fee beyond standard rates. This fee appears on your monthly invoice, not deducted from the transaction amount.
+  </Accordion>
   <Accordion title="External Wallets">
     By default, stablecoins go to the user's HIFI wallet. To send to an external wallet instead, include `externalWalletId` in the destination.
   </Accordion>
@@ -318,7 +295,7 @@ If your quote expires (status becomes `QUOTE_FAILED`):
 
 ## Getting Help
 
-- 📧 **Email:** support@hifi.com
+- 📧 **Email:** [support@hifi.com](mailto:support@hifi.com)
 - 💬 **Slack:** Message us in our shared Slack channel
 
 ## Related Resources
