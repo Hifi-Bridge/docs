@@ -6,15 +6,51 @@ You can expect to receive webhook events whenever an onramp transfer is created 
 
 ## Types
 
+### System Statuses
+
+| Status                           | Description                                       |
+| :------------------------------- | :------------------------------------------------ |
+| **ONRAMP.TRANSACTION.CREATED**   | Onramp request created successfully               |
+| **ONRAMP.STATUS.NOT_INITIATED**  | Transaction not initiated due to validation error |
+| **ONRAMP.STATUS.OPEN_QUOTE**     | Quote generated and awaiting deposit              |
+| **ONRAMP.STATUS.IN_REVIEW**      | Transaction under review by monitoring systems    |
+| **ONRAMP.STATUS.QUOTE_FAILED**   | Quote expired before deposit was received         |
+| **ONRAMP.STATUS.AWAITING_FUNDS** | Waiting for fiat deposit with reference ID        |
+
+### Fiat Processing Phase
+
+| Status                           | Description                                                                            |
+| :------------------------------- | :------------------------------------------------------------------------------------- |
+| **ONRAMP.STATUS.FIAT_INITIATED** | Deposit detected, fiat processing started                                              |
+| **ONRAMP.STATUS.FIAT_PENDING**   | Fiat clearing and validation in progress                                               |
+| **ONRAMP.STATUS.FIAT_PROCESSED** | Fiat successfully received and validated                                               |
+| **ONRAMP.STATUS.FIAT_FAILED**    | Fiat processing failed (e.g., invalid amount, missing reference, complaince rejection) |
+| **ONRAMP.STATUS.FIAT_RETURNED**  | Fiat returned to sender after failure                                                  |
+
+### Crypto Processing Phase
+
+| Status                             | Description                                           |
+| :--------------------------------- | :---------------------------------------------------- |
+| **ONRAMP.STATUS.CRYPTO_INITIATED** | Converting fiat to stablecoins                        |
+| **ONRAMP.STATUS.CRYPTO_PENDING**   | Sending stablecoins on blockchain                     |
+| **ONRAMP.STATUS.CRYPTO_FAILED**    | Blockchain transaction failed                         |
+| **ONRAMP.STATUS.COMPLETED**        | Stablecoins delivered to wallet, transaction complete |
+
+### RFI Events
+
+| Status                | Description                                                                                                           |
+| :-------------------- | :-------------------------------------------------------------------------------------------------------------------- |
+| **ONRAMP.RFI.OPEN**   | An RFI case has been opened for this transaction. An email with next steps has been sent by the HIFI Compliance team. |
+| **ONRAMP.RFI.CLOSED** | The RFI case for this transaction has been resolved by the HIFI Compliance team.                                      |
+
+## Legacy Types:
+
 - **ONRAMP.CREATE**: Creation for onramps.
 - **ONRAMP.UPDATE**: Updates for onramps.
 
-## Sandbox
-
-<Note>
-  In the Sandbox environment, we simulate the transaction status update process
-  by sending a series of webhook events.
-</Note>
+<Warning>
+  Legacy event types will be deprecated on Friday, February 13, 2026.
+</Warning>
 
 ## Data
 
@@ -24,8 +60,8 @@ The data object is expected to have the same structure as the response from the 
 {
   "eventId": "evt_1957139631552d0e38",
   "eventCategory": "ONRAMP",
-  "eventType": "ONRAMP.CREATE",
-  "eventAction": "CREATE",
+  "eventType": "ONRAMP.STATUS.CRYPTO_INITIATED",
+  "eventAction": "CRYPTO_INITIATED",
   "data": {
     "transferType": "ONRAMP",
     "transferDetails": {
@@ -42,7 +78,7 @@ The data object is expected to have the same structure as the response from the 
         "currency": "usd",
         "accountId": null
       },
-      "status": "CREATED",
+      "status": "CRYPTO_INITIATED",
       "receipt": {
         "transactionHash": null
       },

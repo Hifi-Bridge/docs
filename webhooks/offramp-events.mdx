@@ -6,15 +6,51 @@ You can expect to receive webhook events whenever an offramp transfer is created
 
 ## Types
 
-- **OFFRAMP.CREATE**: Creation for offramps.
-- **OFFRAMP.UPDATE**: Updates for offramps.
+### System Events
 
-## Sandbox
+| Event Type                       | Description                                       |
+| :------------------------------- | :------------------------------------------------ |
+| **OFFRAMP.TRANSACTION.CREATED**  | Offramp request created successfully              |
+| **OFFRAMP.STATUS.NOT_INITIATED** | Transaction not initiated due to validation error |
+| **OFFRAMP.STATU.OPEN_QUOTE**     | Quote generated and awaiting acceptance           |
+| **OFFRAMP.STATU.IN_REVIEW**      | Transaction under review by monitoring systems    |
+| **OFFRAMP.STATU.QUOTE_FAILED**   | Quote expired or invalid                          |
+| **OFFRAMP.STATU.AWAITING_FUNDS** | Awaiting for crypto deposit                       |
 
-<Note>
-  In the Sandbox environment, we simulate the transaction status update process
-  by sending a series of webhook events.
-</Note>
+### Crypto Processing Events
+
+| Status                             | Description                                            |
+| :--------------------------------- | :----------------------------------------------------- |
+| **OFFRAMP.STATU.CRYPTO_INITIATED** | Converting stablecoins, blockchain transaction started |
+| **OFFRAMP.STATU.CRYPTO_PENDING**   | Blockchain transaction awaiting confirmation           |
+| **OFFRAMP.STATU.CRYPTO_PROCESSED** | Stablecoins successfully converted                     |
+| **OFFRAMP.STATU.CRYPTO_FAILED**    | Blockchain transaction failed                          |
+| **OFFRAMP.STATU.CRYPTO_RETURNED**  | Failed transaction refunded to user's wallet           |
+
+### Fiat Processing Events
+
+| Status                           | Description                                 |
+| :------------------------------- | :------------------------------------------ |
+| **OFFRAMP.STATU.FIAT_INITIATED** | Fiat payout process started                 |
+| **OFFRAMP.STATU.FIAT_PENDING**   | Fiat transaction awaiting settlement        |
+| **OFFRAMP.STATU.FIAT_FAILED**    | Fiat transaction failed                     |
+| **OFFRAMP.STATU.COMPLETED**      | Fiat successfully delivered to bank account |
+
+### RFI Events
+
+| Status                 | Description                                                                                                           |
+| :--------------------- | :-------------------------------------------------------------------------------------------------------------------- |
+| **OFFRAMP.RFI.OPEN**   | An RFI case has been opened for this transaction. An email with next steps has been sent by the HIFI Compliance team. |
+| **OFFRAMP.RFI.CLOSED** | The RFI case for this transaction has been resolved by the HIFI Compliance team.                                      |
+
+## Legacy Types:
+
+- **OFFRAMP.CREATE**: Creation for onramps.
+- **OFFRAMP.UPDATE**: Updates for onramps.
+
+<Warning>
+  Legacy event types will be deprecated on Friday, February 13, 2026.
+</Warning>
 
 ## Data
 
@@ -24,8 +60,8 @@ The data object is expected to have the same structure as the response from the 
 {
   "eventId": "evt_195713eb5185a84f7d",
   "eventCategory": "OFFRAMP",
-  "eventType": "OFFRAMP.CREATE",
-  "eventAction": "CREATE",
+  "eventType": "OFFRAMP.STATUS.CRYPTO_INITIATED",
+  "eventAction": "CRYPTO_INITIATED",
   "data": {
     "transferType": "OFFRAMP",
     "transferDetails": {
@@ -37,13 +73,13 @@ The data object is expected to have the same structure as the response from the 
           "firstName": "William",
           "businessName": null
         },
-        "chain": "POLYGON_AMOY",
+        "chain": "POLYGON",
         "amount": 100,
         "userId": "c5a11cdb-2696-4a2e-ac58-3e17fb230288",
-        "currency": "usdHifi",
+        "currency": "usdc",
         "walletAddress": "0xa8A642FBA80749318036C97344fC73aE0B64c608"
       },
-      "status": "CREATED",
+      "status": "CRYPTO_INITIATED",
       "receipt": {
         "transactionHash": null
       },
@@ -59,7 +95,7 @@ The data object is expected to have the same structure as the response from the 
         },
         "amount": 0,
         "userId": "c5a11cdb-2696-4a2e-ac58-3e17fb230288",
-        "currency": "brl",
+        "currency": "usd",
         "accountId": "d45ac419-c460-438e-ba63-6ffb706c9683"
       },
       "developerFee": null,
