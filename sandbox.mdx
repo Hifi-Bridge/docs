@@ -37,13 +37,12 @@ curl -X GET "https://sandbox.hifibridge.com/v2/ping" \
 
 The sandbox environment is designed to simulate production behavior while providing a safe testing environment:
 
-| Feature            | Sandbox                                                       | Production                          |
-| :----------------- | :------------------------------------------------------------ | :---------------------------------- |
-| **API Base URL**   | `https://sandbox.hifibridge.com`                              | `https://production.hifibridge.com` |
-| **Money Movement** | Simulated                                                     | Real                                |
-| **KYC Processing** | Typically auto-approved (may be blocked by compliance checks) | Manual review (1-3 business days)   |
-| **Blockchain**     | Testnet                                                       | Mainnet                             |
-| **Tokens**         | No real value                                                 | Real cryptocurrency                 |
+| Feature            | Sandbox                          | Production                          |
+| :----------------- | :------------------------------- | :---------------------------------- |
+| **API Base URL**   | `https://sandbox.hifibridge.com` | `https://production.hifibridge.com` |
+| **KYC Processing** | Auto-approved                    | Real-world compliance checks        |
+| **Blockchain**     | Testnet                          | Mainnet                             |
+| **Tokens**         | No real value                    | Real cryptocurrency                 |
 
 ### Automated KYC Approval
 
@@ -58,7 +57,7 @@ In sandbox, the KYC process is streamlined for testing:
 </Warning>
 
 <Info>
-  In production, KYC applications undergo real compliance review and typically take 1-3 business days to process.
+  In production, KYC applications undergo real compliance review
 </Info>
 
 ### Simulated Transactions
@@ -66,8 +65,7 @@ In sandbox, the KYC process is streamlined for testing:
 All money movement in sandbox is simulated:
 
 - **Virtual Deposits** - Use an endpoint to mimic bank deposits
-- **Instant Processing** - Transfers complete immediately for testing
-- **No Real Funds** - No actual money or cryptocurrency moves
+- **Testnet Token** - Transaction uses testnet tokens and is processed on a testnet network
 - **Testnet Wallets** - All wallet addresses are on blockchain testnets
 
 ---
