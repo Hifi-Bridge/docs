@@ -4,11 +4,10 @@ description: "This page outlines processing windows and settlement times for all
 ---
 
 <Note>
-  **Business days:** We operate on weekdays - Monday through Friday, excluding
-  Federal Reserve holidays (for USD transactions).
+  **Business days:** We operate on weekdays - Monday through Friday, excluding Federal Reserve holidays (for USD transactions).
 </Note>
 
-## USD Payments
+## USD Domestic Payments
 
 ### Wire transfers
 
@@ -17,34 +16,23 @@ Wire transfers can be processed Monday through Friday, from 9:00 PM ET of the pr
 **Cut-off times:**
 
 - Wire requests received before 3:00 PM ET are typically processed the same business day
-
 - Requests received after 3:00 PM ET may be processed the next business day
-
 - Processing after 5:00 PM ET cannot be guaranteed
 
 **Holds:**
 
 - Outgoing and incoming wires placed on hold before 3:00 PM ET are generally cleared the same business day
-
 - Wires on hold after 3:00 PM ET may be cleared the next business day
-
 - Manual hold clearance is available 9:00 AM to 5:00 PM ET, Monday through Friday
-
-<Note>
-  **Instant Onramps:** Once received, onramps are processed and converted to
-  USDC in under 10 minutes via CRNow.
-</Note>
 
 ### ACH (Automated Clearing House)
 
-ACH payments process according to NACHA's Same-Day ACH settlement windows:
+ACH payments process according to NACHA's ACH settlement windows:
 
 **Same Day ACH:**
 
 - Morning window: 10:00 AM ET cut-off
-
-- Afternoon window: 1:00 PM ET cut-off
-
+- Afternoon window: 2:00 PM ET cut-off
 - Evening window: 4:00 PM ET cut-off
 
 **Standard ACH:** Requests after Same Day cut-offs settle the next business day.
@@ -52,9 +40,7 @@ ACH payments process according to NACHA's Same-Day ACH settlement windows:
 **Settlement:** Same Day ACH settles the current business day. Standard ACH settles the next business day.
 
 <Note>
-  **Federal Reserve holiday schedule:** For holidays falling on Saturday, banks
-  are open the preceding Friday. For holidays falling on Sunday, banks are
-  closed the following Monday.
+  **Federal Reserve holiday schedule:** For holidays falling on Saturday, banks are open the preceding Friday. For holidays falling on Sunday, banks are closed the following Monday.
 </Note>
 
 ---
@@ -71,4 +57,4 @@ SWIFT (Society for Worldwide Interbank Financial Telecommunication) enables secu
 
 Local payment rails like CHATS (Hong Kong) or Mobile Money (Kenya) route payments through banks in the recipient's country.
 
-**Settlement:** Typically under T+2
+**Settlement:** Instant to T+2, depending on the local clearing system.
