@@ -335,6 +335,152 @@ curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/virtual-account
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
+### Microdeposits
+
+When you fetch a virtual account, the response includes a `microDeposits` object containing information about small payments often used for account confirmation. These microdeposits help verify bank account ownership.
+
+**Fetch a virtual account:**
+
+```bash
+curl -X GET "https://sandbox.hifibridge.com/v2/users/usr_abc123/virtual-accounts/va_abc123" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+**Response (excerpt showing microDeposits):**
+
+```json
+{
+  "id": "va_abc123",
+  "userId": "usr_abc123",
+  "status": "activated",
+  "microDeposits": {
+    "count": 2,
+    "data": [
+      {
+        "createdAt": "2024-01-15T10:30:00Z",
+        "currency": "usd",
+        "amount": 1,
+        "sourceBankInfo": {
+          "bankName": "Chase Bank",
+          "senderName": "John Doe",
+          "routingNumber": "021000021",
+          "accountNumber": "516843515316",
+          "accountType": "checking",
+          "fedBatchId": "20240115-001",
+          "imad": "20240115103000001",
+          "omad": "20240115103000002",
+          "traceNumber": "123456789012",
+          "bankAddress": "270 Park Avenue, New York, NY 10017",
+          "description": "Microdeposit verification",
+          "paymentRail": "ach"
+        }
+      },
+      {
+        "createdAt": "2024-01-15T10:31:00Z",
+        "currency": "usd",
+        "amount": 2,
+        "sourceBankInfo": {
+          "bankName": "Chase Bank",
+          "senderName": "John Doe",
+          "routingNumber": "021000021",
+          "accountNumber": "516843515316",
+          "accountType": "checking",
+          "fedBatchId": "20240115-002",
+          "imad": "20240115103100001",
+          "omad": "20240115103100002",
+          "traceNumber": "123456789013",
+          "bankAddress": "270 Park Avenue, New York, NY 10017",
+          "description": "Microdeposit verification",
+          "paymentRail": "ach"
+        }
+      }
+    ]
+  }
+}
+```
+
+<Expandable title="microDeposits Response Fields">
+  <ResponseField name="microDeposits.count" type="integer">
+    Total number of microdeposits recorded for this virtual account.
+  </ResponseField>
+
+  <ResponseField name="microDeposits.data" type="array">
+    Array of microdeposit records.
+    <Expandable title="data item properties">
+      <ResponseField name="createdAt" type="string">
+        Timestamp when the microdeposit was created (ISO 8601 format).
+      </ResponseField>
+
+      <ResponseField name="currency" type="string">
+        Currency of the microdeposit (typically `usd`).
+      </ResponseField>
+
+      <ResponseField name="amount" type="integer">
+        Amount of the microdeposit in cents. Common values are 1-2 cents for verification purposes.
+      </ResponseField>
+
+      <ResponseField name="sourceBankInfo" type="object">
+        Information about the source bank account that sent the microdeposit.
+        <Expandable title="sourceBankInfo properties">
+          <ResponseField name="bankName" type="string">
+            Name of the bank that sent the microdeposit.
+          </ResponseField>
+
+          <ResponseField name="senderName" type="string">
+            Name of the account holder who sent the microdeposit.
+          </ResponseField>
+
+          <ResponseField name="routingNumber" type="string">
+            Bank routing number of the source account.
+          </ResponseField>
+
+          <ResponseField name="accountNumber" type="string">
+            Account number of the source account (may be partially masked).
+          </ResponseField>
+
+          <ResponseField name="accountType" type="string">
+            Type of account (e.g., `checking`, `savings`).
+          </ResponseField>
+
+          <ResponseField name="fedBatchId" type="string">
+            Federal batch identifier for the microdeposit transaction.
+          </ResponseField>
+
+          <ResponseField name="imad" type="string">
+            Incoming Message Authentication Data (IMAD) for ACH transactions.
+          </ResponseField>
+
+          <ResponseField name="omad" type="string">
+            Outgoing Message Authentication Data (OMAD) for ACH transactions.
+          </ResponseField>
+
+          <ResponseField name="traceNumber" type="string">
+            Trace number used to identify and track the transaction.
+          </ResponseField>
+
+          <ResponseField name="bankAddress" type="string">
+            Physical address of the source bank.
+          </ResponseField>
+
+          <ResponseField name="description" type="string">
+            Description or memo associated with the microdeposit transaction.
+          </ResponseField>
+
+          <ResponseField name="paymentRail" type="string">
+            Payment method used for the microdeposit. One of: `ach`, `wire`, `rtp`.
+          </ResponseField>
+        </Expandable>
+      </ResponseField>
+    </Expandable>
+
+  </ResponseField>
+</Expandable>
+
+<Note>
+  **Dashboard Access:** When you open a virtual account in the dashboard, you
+  can find microdeposits information displayed alongside other account details.
+</Note>
+
 ## Key Concepts
 
 <AccordionGroup>
