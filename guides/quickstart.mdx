@@ -43,7 +43,7 @@ Before you start, make sure you have:
 Here's what we'll accomplish in this guide:
 
 1. **User Creation** - Create a user and accept Terms of Service
-2. **KYC Process** - Complete verification to unlock fiat rails
+2. **KYC Process** - Complete verification to enable fiat payments
 3. **Set Up Virtual Account** - Create a virtual account for receiving deposits
 4. **Simulate Deposit** - Fund the wallet by simulating a deposit (onramp)
 5. **Execute a Transfer** - Send stablecoins between wallets
@@ -209,20 +209,10 @@ Now that you have a user, the next step is to complete KYC verification to unloc
 
 ## Complete KYC
 
-To move money between stablecoins and fiat currencies, users must complete KYC verification to unlock a **Rail**.
-
-**What is a Rail?** A rail is a payment corridor that enables specific currency conversions. For example, the USD rail enables conversions between USD (fiat) and stablecoins like USDC.
-
-In this quickstart, we'll complete KYC for the **USD rail**, which allows your user to:
+To move money between stablecoins and fiat currencies, users must complete KYC verification. This enables your user to:
 
 - Deposit USD and receive USDC (onramp)
 - Send USDC and receive USD (offramp)
-
-<Note>
-  **Rail-Specific Requirements:** Each rail has different KYC requirements based
-  on regulatory needs. Visit our [Rails page](/docs/rails) to learn about
-  available rails and their specific requirements.
-</Note>
 
 ### Recommended: Use KYC Links
 
@@ -239,7 +229,6 @@ curl --request POST \
      --data '
 {
   "userId": "32051b2f-0798-55a7-9c42-b08da4192c97",
-  "rails": ["USD"],
   "redirectUrl": "https://yourapp.com/kyc-complete"
 }
 '
@@ -290,7 +279,7 @@ After your user completes KYC (via KYC Link or programmatic submission), check t
 
 ```bash
 curl --request GET \
-     --url 'https://sandbox.hifibridge.com/v2/users/32051b2f-0798-55a7-9c42-b08da4192c97/kyc/status?rails=USD' \
+     --url 'https://sandbox.hifibridge.com/v2/users/32051b2f-0798-55a7-9c42-b08da4192c97/kyc/status' \
      --header 'accept: application/json' \
      --header 'authorization: Bearer YOUR_API_KEY'
 ```
@@ -310,7 +299,7 @@ curl --request GET \
 }
 ```
 
-✅ **KYC approved!** When status is `ACTIVE`, the USD rail is unlocked and the user can proceed with transfers.
+✅ **KYC approved!** When status is `ACTIVE`, the user can proceed with transfers.
 
 <Note>
   **Sandbox Auto-Approval:** In the sandbox environment, KYC applications are
@@ -911,7 +900,7 @@ curl --request POST \
 You've successfully completed the HIFI API quickstart! By following the steps above, you can now:
 
 - ✅ Create users and handle Terms of Service acceptance
-- ✅ Complete the KYC process to unlock fiat rails
+- ✅ Complete the KYC process to enable fiat payments
 - ✅ Set up virtual accounts for receiving deposits
 - ✅ Simulate deposits to fund wallets
 - ✅ Execute transfers between wallets
@@ -925,6 +914,5 @@ Ready to build your integration? Here's what to explore next:
 - **[Receive Money](/docs/guides/receive-money)** - Convert fiat to stablecoins
 - **[Send Money](/docs/guides/send-money)** - Convert stablecoins to fiat
 - **[Webhooks](/docs/webhooks)** - Set up real-time event notifications for transaction updates
-- **[Rails Overview](/docs/rails)** - Learn about additional currency rails
 - **[Error Handling](/docs/api/errors)** - Understand error codes and how to handle failures
 - **[API Reference](https://docs.hifibridge.com/api-reference)** - Explore all available endpoints and parameters

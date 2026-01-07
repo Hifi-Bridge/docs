@@ -2,7 +2,7 @@
 title: "Submit KYC"
 ---
 
-This guide shows you how to submit KYC (Know Your Customer) information programmatically using the HIFI API. Users must complete KYC verification to unlock **rails** (payment corridors that enable currency conversions between fiat and stablecoins).
+This guide shows you how to submit KYC (Know Your Customer) information programmatically using the HIFI API. Users must complete KYC verification to enable currency conversions between fiat and stablecoins.
 
 <Note>
   **Recommended:** For most use cases, use [KYC Links](/docs/features/kyc-links)
@@ -23,7 +23,7 @@ This guide shows you how to submit KYC (Know Your Customer) information programm
 
 ## Process Overview
 
-1. **Retrieve KYC Requirements** - Get required information for your target rail
+1. **Retrieve KYC Requirements** - Get required information for KYC verification
 2. **Update KYC Information** - Provide personal information
 3. **Upload KYC Documents** - Submit identity verification documents
 4. **Submit KYC** - Submit the application for review
@@ -33,13 +33,13 @@ This guide shows you how to submit KYC (Know Your Customer) information programm
 
 ## Retrieve KYC Requirements
 
-First, find out what information is needed for your target rail by calling the [Retrieve KYC Requirements](https://docs.hifibridge.com/v2/reference/get_v2-users-userid-kyc-requirements) endpoint.
+First, find out what information is needed for KYC verification by calling the [Retrieve KYC Requirements](https://docs.hifibridge.com/v2/reference/get_v2-users-userid-kyc-requirements) endpoint.
 
 **Request:**
 
 ```bash
 curl --request GET \
-     --url 'https://sandbox.hifibridge.com/v2/users/32051b2f-0798-55a7-9c42-b08da4192c97/kyc/requirements?rails=USD' \
+     --url 'https://sandbox.hifibridge.com/v2/users/32051b2f-0798-55a7-9c42-b08da4192c97/kyc/requirements' \
      --header 'accept: application/json' \
      --header 'authorization: Bearer YOUR_API_KEY'
 ```
@@ -49,7 +49,6 @@ curl --request GET \
 ```json
 {
   "userId": "32051b2f-0798-55a7-9c42-b08da4192c97",
-  "rails": "USD",
   "type": "individual",
   "required": {
     "firstName": "string",
@@ -100,7 +99,7 @@ curl --request GET \
 **Response Fields:**
 
 <ResponseField name="required" type="object">
-  All mandatory KYC fields needed for the rail. These must be provided
+  All mandatory KYC fields needed for verification. These must be provided
   before submission.
 
   <Expandable title="properties">
@@ -176,12 +175,6 @@ curl --request GET \
     </ResponseField>
   </Expandable>
 </ResponseField>
-
-<Note>
-  **Rail-Specific Requirements:** Each rail has different KYC requirements based
-  on regulatory needs. Visit our [Rails page](/docs/rails) to learn about
-  available rails and their specific requirements.
-</Note>
 
 ---
 
@@ -387,7 +380,7 @@ curl --request POST \
 
 ## Submit KYC
 
-With all fields and documents provided, submit the KYC application to unlock the rail using the [Submit KYC](https://docs.hifibridge.com/api-reference/kyc/submit-kyc) endpoint.
+With all fields and documents provided, submit the KYC application for review using the [Submit KYC](https://docs.hifibridge.com/api-reference/kyc/submit-kyc) endpoint.
 
 **Request:**
 
@@ -397,17 +390,15 @@ curl --request POST \
      --header 'accept: application/json' \
      --header 'authorization: Bearer YOUR_API_KEY' \
      --header 'content-type: application/json' \
-     --data '{"rails": "USD"}'
+     --data '{}'
 ```
 
 **Response:**
 
 ```json
 {
-  "USD": {
-    "status": "CREATED",
-    "message": "Your KYC application has been successfully created. We will review it shortly."
-  }
+  "status": "CREATED",
+  "message": "Your KYC application has been successfully created. We will review it shortly."
 }
 ```
 
@@ -436,13 +427,13 @@ You can either:
 
 ## Check KYC Status
 
-Check the current KYC status for the rail using the [Retrieve KYC Status](https://docs.hifibridge.com/api-reference/kyc/retrieve-kyc-status) endpoint.
+Check the current KYC status using the [Retrieve KYC Status](https://docs.hifibridge.com/api-reference/kyc/retrieve-kyc-status) endpoint.
 
 **Request:**
 
 ```bash
 curl --request GET \
-     --url 'https://sandbox.hifibridge.com/v2/users/32051b2f-0798-55a7-9c42-b08da4192c97/kyc/status?rails=USD' \
+     --url 'https://sandbox.hifibridge.com/v2/users/32051b2f-0798-55a7-9c42-b08da4192c97/kyc/status' \
      --header 'accept: application/json' \
      --header 'authorization: Bearer YOUR_API_KEY'
 ```
@@ -512,7 +503,7 @@ curl --request GET \
 }
 ```
 
-✅ **KYC approved!** The status is `ACTIVE`, which means the rail is now unlocked and the user can:
+✅ **KYC approved!** The status is `ACTIVE`, which means the user can now:
 
 - Onramp fiat to stablecoins
 - Offramp stablecoins to fiat
@@ -520,10 +511,10 @@ curl --request GET \
 **Response Fields:**
 
 <ResponseField name="status" type="string">
-  Overall KYC status for the rail. Possible values: - `CREATED` - Application
-  submitted, not yet reviewed - `PENDING` - Being reviewed by compliance team -
-  `ACTIVE` - Approved, rail is unlocked - `REJECTED` - Not approved (see
-  rejectReasons for details)
+  Overall KYC status. Possible values: - `CREATED` - Application submitted, not
+  yet reviewed - `PENDING` - Being reviewed by compliance team - `ACTIVE` -
+  Approved, user can use fiat payment functionalities - `REJECTED` - Not
+  approved (see rejectReasons for details)
 </ResponseField>
 
 <ResponseField name="reviewResult" type="object">
@@ -566,7 +557,7 @@ curl --request GET \
 
 ## Next Steps
 
-Now that your user has completed KYC and unlocked the rail, you can:
+Now that your user has completed KYC verification, you can:
 
 - **[Set up Virtual Accounts](/docs/accounts/virtual-accounts)** - For receiving fiat deposits (onramping)
 - **[Add Offramp Accounts](/docs/accounts/offramp-accounts)** - For sending fiat withdrawals (offramping)
@@ -576,6 +567,5 @@ Now that your user has completed KYC and unlocked the rail, you can:
 
 - **[KYC Links](/docs/features/kyc-links)** - Use hosted KYC flow for easier implementation
 - **[KYC Requirements](/docs/kyc/kyc-requirements)** - Detailed information about KYC requirements
-- **[Rails Overview](/docs/rails)** - Learn about available rails and their requirements
 - **[Webhooks](/docs/webhooks/kyc-events)** - Monitor KYC status changes in real-time
 - **[API Reference](https://docs.hifibridge.com/api-reference)** - Complete endpoint documentation
