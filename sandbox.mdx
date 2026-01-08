@@ -60,6 +60,38 @@ In sandbox, the KYC process is streamlined for testing:
   In production, KYC applications undergo real compliance review
 </Info>
 
+### Forcing KYC Outcomes in Sandbox
+
+You can force specific KYC outcomes in sandbox by setting the applicant's last name to one of these reserved keywords:
+
+| Last Name | Outcome |
+| :-------- | :------ |
+| `PENDING`  | KYC application will remain in `PENDING` status |
+| `APPROVAL` | KYC application will be automatically approved (`ACTIVE` status) |
+| `REJECTION` | KYC application will be automatically rejected (`REJECTED` status) |
+
+**Example: Force approval**
+
+```bash
+curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/kyc" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "firstName": "John",
+    "lastName": "APPROVAL",
+    "email": "john@example.com",
+    "dateOfBirth": "1990-01-01",
+    "nationality": "USA",
+    "taxIdentificationNumber": "123456789"
+  }'
+```
+
+After submitting KYC with one of these last names, the application will automatically transition to the corresponding status, allowing you to test different KYC states without waiting for manual review.
+
+<Note>
+  **Sandbox Only:** This feature only works in the sandbox environment. In production, KYC outcomes are determined by real compliance review.
+</Note>
+
 ### Simulated Transactions
 
 All money movement in sandbox is simulated:
