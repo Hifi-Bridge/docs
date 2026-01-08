@@ -13,7 +13,8 @@ Our sandbox environment provides a safe testing space to integrate our APIs. All
 3. **Create New Key** - Click the "New API Key" button under Sandbox
 
 <Warning>
-  Keep your sandbox API key secure and never commit it to version control. Use environment variables to store API keys in your applications.
+  Keep your sandbox API key secure and never commit it to version control. Use
+  environment variables to store API keys in your applications.
 </Warning>
 
 ### Sandbox Base URL
@@ -53,44 +54,12 @@ In sandbox, the KYC process is streamlined for testing:
 - **Dummy Data** - Use any test personal information and documents
 
 <Warning>
-  While KYC is typically auto-approved in sandbox, certain compliance checks may still block approval. For example, PEP (Politically Exposed Person) screening can prevent sandbox users from unlocking rails even in the test environment.
+  While KYC is typically auto-approved in sandbox, certain compliance checks may
+  still block approval. For example, PEP (Politically Exposed Person) screening
+  can prevent sandbox users from unlocking rails even in the test environment.
 </Warning>
 
-<Info>
-  In production, KYC applications undergo real compliance review
-</Info>
-
-### Forcing KYC Outcomes in Sandbox
-
-You can force specific KYC outcomes in sandbox by setting the applicant's last name to one of these reserved keywords:
-
-| Last Name | Outcome |
-| :-------- | :------ |
-| `PENDING`  | KYC application will remain in `PENDING` status |
-| `APPROVAL` | KYC application will be automatically approved (`ACTIVE` status) |
-| `REJECTION` | KYC application will be automatically rejected (`REJECTED` status) |
-
-**Example: Force approval**
-
-```bash
-curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/kyc" \
-  -H "Authorization: Bearer YOUR_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "firstName": "John",
-    "lastName": "APPROVAL",
-    "email": "john@example.com",
-    "dateOfBirth": "1990-01-01",
-    "nationality": "USA",
-    "taxIdentificationNumber": "123456789"
-  }'
-```
-
-After submitting KYC with one of these last names, the application will automatically transition to the corresponding status, allowing you to test different KYC states without waiting for manual review.
-
-<Note>
-  **Sandbox Only:** This feature only works in the sandbox environment. In production, KYC outcomes are determined by real compliance review.
-</Note>
+<Info>In production, KYC applications undergo real compliance review</Info>
 
 ### Simulated Transactions
 
@@ -114,7 +83,8 @@ When you're ready to move from sandbox to production:
 6. **Test thoroughly** - Start with small transactions before scaling
 
 <Warning>
-  Never use sandbox API keys in production or production keys in sandbox. They are environment-specific and won't work cross-environment.
+  Never use sandbox API keys in production or production keys in sandbox. They
+  are environment-specific and won't work cross-environment.
 </Warning>
 
 ---
@@ -127,5 +97,7 @@ If you encounter issues or have suggestions for improving the sandbox experience
 - 💬 **Slack:** Message us in our shared Slack channel
 
 <Info>
-  The sandbox environment is continuously updated to reflect production changes. If you notice discrepancies between sandbox and production behavior, please let us know.
+  The sandbox environment is continuously updated to reflect production changes.
+  If you notice discrepancies between sandbox and production behavior, please
+  let us know.
 </Info>
