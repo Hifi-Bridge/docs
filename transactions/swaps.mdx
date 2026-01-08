@@ -1,22 +1,25 @@
 ---
 title: "Swaps"
+description: "Exchange one cryptocurrency for another instantly. Convert between USDC, USDT, and USDG."
 ---
 
-**Swaps** exchange one cryptocurrency for another within the same blockchain network. Convert between stablecoins like USDC and USDT without bridging across chains.
+## Overview
 
-## How Swaps Work
-
-Swaps execute immediately upon creation:
+Swaps let you exchange one stablecoin for another without moving assets across chains. All swaps follow a two-step process: create the swap request, then accept it to execute the exchange.
 
 <Steps>
   <Step title="Create swap request">
-    Specify source currency, destination currency, and amount to exchange.
+    Specify source currency, destination currency, and amount to exchange. The
+    swap is created with `PENDING` status.
   </Step>
-  <Step title="Automatic execution">
-    HIFI executes the swap at the current market rate.
+  <Step title="Accept the swap">
+    Accept the swap using the [Accept
+    Swap](https://docs.hifibridge.com/api-reference/swap/accept-a-swap) endpoint
+    to execute the exchange.
   </Step>
   <Step title="Completion">
-    Receive the swapped currency in the destination wallet.
+    Receive the swapped currency in the destination wallet once the swap is
+    accepted and executed.
   </Step>
 </Steps>
 
@@ -67,7 +70,7 @@ curl -X POST "https://sandbox.hifibridge.com/v2/wallets/swaps" \
 
 </CodeGroup>
 
-The response contains the swap details and execution results:
+The response contains the swap details. Swaps are created in `PENDING` status and require acceptance:
 
 <Accordion title="Response">
 
@@ -77,7 +80,7 @@ The response contains the swap details and execution results:
   "transferDetails": {
     "id": "swp_abc123",
     "requestId": "1ab3e6e0-4839-4dbe-89c3-b06d9645ae86",
-    "status": "COMPLETED",
+    "status": "PENDING",
     "createdAt": "2025-08-20T03:55:29.437108+00:00",
     "updatedAt": "2025-08-20T03:55:31.837+00:00",
     "source": {
@@ -139,8 +142,8 @@ The response contains the swap details and execution results:
 </ResponseField>
 
 <ResponseField name="transferDetails.status" type="string">
-  Swap status. Swaps typically complete immediately. See [Transaction
-  Status](#transaction-status) for details.
+  Swap status. Swaps are created with `PENDING` status and must be accepted
+  before execution. See [Transaction Status](#transaction-status) for details.
 </ResponseField>
 
 <ResponseField name="transferDetails.source" type="object">
@@ -193,9 +196,96 @@ The response contains the swap details and execution results:
   reference.
 </Info>
 
+## Accepting Swaps
+
+All swaps are created in `PENDING` status and require explicit acceptance before execution. Use the [Accept Swap](https://docs.hifibridge.com/api-reference/swap/accept-a-swap) endpoint to accept and execute a swap.
+
+**Request:**
+
+```bash
+curl -X POST "https://sandbox.hifibridge.com/v2/wallets/swaps/swp_abc123/accept" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+The accept endpoint returns the same swap details structure as the create endpoint, with updated status:
+
+<Accordion title="Response">
+
+```json
+{
+  "transferType": "WALLET.SWAP",
+  "transferDetails": {
+    "id": "swp_abc123",
+    "requestId": "1ab3e6e0-4839-4dbe-89c3-b06d9645ae86",
+    "status": "COMPLETED",
+    "createdAt": "2025-08-20T03:55:29.437108+00:00",
+    "updatedAt": "2025-08-20T04:08:10.837+00:00",
+    "source": {
+      "currency": "usdc",
+      "amount": 100,
+      "chain": "POLYGON",
+      "userId": "usr_abc123"
+    },
+    "destination": {
+      "currency": "usdt",
+      "userId": "usr_abc123",
+      "amount": 100,
+      "chain": "POLYGON",
+      "walletAddress": "0xe5727a4B1d93A26D6A7Adfaae145EFa41ED7f204"
+    },
+    "quoteInformation": {
+      "sendGross": {
+        "amount": "100",
+        "currency": "usdc"
+      },
+      "sendNet": {
+        "amount": "100",
+        "currency": "usdc"
+      },
+      "receiveGross": {
+        "amount": "100",
+        "currency": "usdt"
+      },
+      "receiveNet": {
+        "amount": "100",
+        "currency": "usdt"
+      },
+      "rate": "1",
+      "expiresAt": "2025-08-20T03:55:59.539+00:00"
+    },
+    "billingInformation": {
+      "fees": [
+        {
+          "id": "fee_xyz789",
+          "amount": 0.01,
+          "currency": "USD",
+          "type": "EXCHANGE_FEE",
+          "timing": "ON_INVOICE"
+        }
+      ]
+    },
+    "error": null,
+    "errorDetails": null
+  }
+}
+```
+
+</Accordion>
+
+<ResponseField name="transferDetails.status" type="string">
+  Swap status after acceptance. Transitions from `PENDING` to `COMPLETED` upon
+  successful acceptance. See [Transaction Status](#transaction-status) for
+  details.
+</ResponseField>
+
+<Note>
+  **Required Step:** All swaps must be accepted before execution. After creating
+  a swap, always call the accept endpoint to execute the exchange.
+</Note>
+
 ## Transaction Status
 
-Swaps typically complete within seconds:
+Swaps progress through the following statuses:
 
 | Status        | Description                                                  |
 | :------------ | :----------------------------------------------------------- |
@@ -249,6 +339,174 @@ The retrieve response includes current swap status:
   possible statuses.
 </ResponseField>
 
+## Listing Swaps
+
+Retrieve a list of all swaps associated with users under your organization using the [List Swaps](https://docs.hifibridge.com/api-reference/swap/list-all-swaps) endpoint. Swaps are returned sorted by creation date, with the most recent swaps appearing first.
+
+**Request:**
+
+```bash
+curl -X GET "https://sandbox.hifibridge.com/v2/wallets/swaps?userId=usr_abc123&limit=10" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+**Query Parameters:**
+
+<ResponseField name="userId" type="string" required={false}>
+  Filter swaps by a specific user ID. If omitted, returns swaps for all users
+  under your organization.
+</ResponseField>
+
+<ResponseField name="limit" type="string" required={false}>
+  Number of swaps to return. Defaults to 10, maximum is 100.
+</ResponseField>
+
+<ResponseField name="createdBefore" type="string" required={false}>
+  Filter swaps created before this date. ISO format: YYYY-MM-DD.
+</ResponseField>
+
+<ResponseField name="createdAfter" type="string" required={false}>
+  Filter swaps created after this date. ISO format: YYYY-MM-DD.
+</ResponseField>
+
+**Response:**
+
+<Accordion title="Response">
+
+```json
+{
+  "count": 2,
+  "data": [
+    {
+      "transferType": "WALLET.SWAP",
+      "transferDetails": {
+        "id": "swp_abc123",
+        "requestId": "1ab3e6e0-4839-4dbe-89c3-b06d9645ae86",
+        "status": "COMPLETED",
+        "createdAt": "2025-08-20T03:55:29.437108+00:00",
+        "updatedAt": "2025-08-20T04:08:10.837+00:00",
+        "source": {
+          "currency": "usdc",
+          "amount": 100,
+          "chain": "POLYGON",
+          "userId": "usr_abc123"
+        },
+        "destination": {
+          "currency": "usdt",
+          "userId": "usr_abc123",
+          "amount": 100,
+          "chain": "POLYGON",
+          "walletAddress": "0xe5727a4B1d93A26D6A7Adfaae145EFa41ED7f204"
+        },
+        "quoteInformation": {
+          "sendGross": {
+            "amount": "100",
+            "currency": "usdc"
+          },
+          "sendNet": {
+            "amount": "100",
+            "currency": "usdc"
+          },
+          "receiveGross": {
+            "amount": "100",
+            "currency": "usdt"
+          },
+          "receiveNet": {
+            "amount": "100",
+            "currency": "usdt"
+          },
+          "rate": "1",
+          "expiresAt": "2025-08-20T03:55:59.539+00:00"
+        },
+        "billingInformation": {
+          "fees": [
+            {
+              "id": "fee_xyz789",
+              "amount": 0.01,
+              "currency": "USD",
+              "type": "EXCHANGE_FEE",
+              "timing": "ON_INVOICE"
+            }
+          ]
+        },
+        "error": null,
+        "errorDetails": null
+      }
+    },
+    {
+      "transferType": "WALLET.SWAP",
+      "transferDetails": {
+        "id": "swp_def456",
+        "requestId": "2cd4f7f1-5940-5ecf-9ad4-c17e0756bf97",
+        "status": "PENDING",
+        "createdAt": "2025-08-20T02:30:15.123456+00:00",
+        "updatedAt": "2025-08-20T02:30:15.123456+00:00",
+        "source": {
+          "currency": "usdt",
+          "amount": 50,
+          "chain": "POLYGON",
+          "userId": "usr_abc123"
+        },
+        "destination": {
+          "currency": "usdc",
+          "userId": "usr_abc123",
+          "chain": "POLYGON",
+          "walletAddress": "0xe5727a4B1d93A26D6A7Adfaae145EFa41ED7f204"
+        },
+        "quoteInformation": {
+          "sendGross": {
+            "amount": "50",
+            "currency": "usdt"
+          },
+          "sendNet": {
+            "amount": "50",
+            "currency": "usdt"
+          },
+          "receiveGross": {
+            "amount": "50",
+            "currency": "usdc"
+          },
+          "receiveNet": {
+            "amount": "50",
+            "currency": "usdc"
+          },
+          "rate": "1",
+          "expiresAt": "2025-08-20T02:35:15.123456+00:00"
+        },
+        "billingInformation": {
+          "fees": []
+        },
+        "error": null,
+        "errorDetails": null
+      }
+    }
+  ],
+  "nextCursor": "2025-08-20T02:30:15.123456+00:00"
+}
+```
+
+</Accordion>
+
+<ResponseField name="count" type="integer">
+  Total number of swaps returned in this response.
+</ResponseField>
+
+<ResponseField name="data" type="array">
+  Array of swap objects. Each object follows the same structure as the swap
+  details returned by the retrieve endpoint.
+</ResponseField>
+
+<ResponseField name="nextCursor" type="string">
+  Timestamp cursor for pagination. Use this value with `createdBefore` parameter
+  to fetch the next page of results.
+</ResponseField>
+
+<Note>
+  **Pagination:** To fetch more swaps, use the `nextCursor` value as the
+  `createdBefore` parameter in your next request. Continue until `count` is less
+  than your `limit`, indicating you've reached the end.
+</Note>
+
 ## Supported Swap Pairs
 
 Currently supported swap combinations:
@@ -300,6 +558,7 @@ Currently supported swap combinations:
   </Accordion>
 
 {" "}
+
 <Accordion title="Exchange Rates">
   The `quoteInformation.rate` shows the exchange rate between currencies: -
   **1:1 stablecoins** (USDC ↔ USDT): Rate is typically "1" - **Market rates**:
@@ -308,6 +567,7 @@ Currently supported swap combinations:
 </Accordion>
 
 {" "}
+
 <Accordion title="Billing Information">
   The `billingInformation.fees` array shows all applicable fees:
   **EXCHANGE_FEE**: Conversion fee for the swap - **timing: ON_INVOICE**: Billed
@@ -381,11 +641,23 @@ Currently supported swap combinations:
         }
       }'
     ```
+    
+    The response will show status `PENDING`. Save the swap `id` from the response.
   </Step>
 
 {" "}
+
+<Step title="Accept the swap">
+  Accept the swap to execute the exchange: ```bash curl -X POST
+  "https://sandbox.hifibridge.com/v2/wallets/swaps/swp_abc123/accept" \ -H
+  "Authorization: Bearer YOUR_API_KEY" ``` The response will show status
+  `COMPLETED` for successful swaps.
+</Step>
+
+{" "}
+
 <Step title="Verify completion">
-  The response will show status `COMPLETED` for successful swaps. Check: -
+  Check the swap details to confirm: - `status` - Should be `COMPLETED` -
   `destination.amount` - Amount received - `quoteInformation.rate` - Exchange
   rate used - `billingInformation.fees` - Any applicable fees
 </Step>
@@ -422,10 +694,20 @@ Currently supported swap combinations:
         }
       }'
     ```
+    
+    The response will show status `PENDING`. Save the swap `id` from the response.
   </Step>
 
+{" "}
+
+<Step title="Accept the swap">
+  Accept the swap to execute: ```bash curl -X POST
+  "https://sandbox.hifibridge.com/v2/wallets/swaps/swp_abc123/accept" \ -H
+  "Authorization: Bearer YOUR_API_KEY" ```
+</Step>
+
   <Step title="Check source amount used">
-    The response shows how much source currency was needed:
+    After acceptance, the response shows how much source currency was needed:
     - `source.amount` - Amount deducted from source wallet
     - `quoteInformation.sendNet` - Net amount sent after fees
   </Step>
