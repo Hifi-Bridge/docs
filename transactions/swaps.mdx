@@ -1,6 +1,7 @@
 ---
 title: "Swaps"
-description: "Exchange one cryptocurrency for another instantly. Convert between USDC, USDT, and USDG."
+description: "Exchange one cryptocurrency for another instantly."
+tag: "New"
 ---
 
 ## Overview
@@ -22,6 +23,19 @@ Swaps let you exchange one stablecoin for another without moving assets across c
     accepted and executed.
   </Step>
 </Steps>
+
+## Supported Pairs
+
+| Chain        | Supported Pairs                       |
+| :----------- | :------------------------------------ |
+| **Polygon**  | USDC ↔ USDT, USDC ↔ USDG, USDT ↔ USDG |
+| **Ethereum** | USDC ↔ USDT, USDC ↔ USDG, USDT ↔ USDG |
+| **Solana**   | USDC ↔ USDT                           |
+
+<Info>
+  **Coming Soon:** Additional chains and token pairs will be added. Contact
+  support if you need specific swap pairs.
+</Info>
 
 ## Creating Swaps
 
@@ -507,21 +521,6 @@ curl -X GET "https://sandbox.hifibridge.com/v2/wallets/swaps?userId=usr_abc123&l
   than your `limit`, indicating you've reached the end.
 </Note>
 
-## Supported Swap Pairs
-
-Currently supported swap combinations:
-
-| Chain        | Supported Pairs                       |
-| :----------- | :------------------------------------ |
-| **Polygon**  | USDC ↔ USDT, USDC ↔ USDG, USDT ↔ USDG |
-| **Ethereum** | USDC ↔ USDT, USDC ↔ USDG, USDT ↔ USDG |
-| **Solana**   | USDC ↔ USDT                           |
-
-<Info>
-  **Coming Soon:** Additional chains and token pairs will be added. Contact
-  support if you need specific swap pairs.
-</Info>
-
 ## Key Concepts
 
 <AccordionGroup>
@@ -557,16 +556,12 @@ Currently supported swap combinations:
     Provide amount in only one side - the system calculates the other based on the current rate.
   </Accordion>
 
-{" "}
-
 <Accordion title="Exchange Rates">
   The `quoteInformation.rate` shows the exchange rate between currencies: -
   **1:1 stablecoins** (USDC ↔ USDT): Rate is typically "1" - **Market rates**:
   Rates may vary slightly based on liquidity Always verify `receiveNet` to see
   the exact amount you'll receive after any fees.
 </Accordion>
-
-{" "}
 
 <Accordion title="Billing Information">
   The `billingInformation.fees` array shows all applicable fees:
@@ -645,16 +640,12 @@ Currently supported swap combinations:
     The response will show status `PENDING`. Save the swap `id` from the response.
   </Step>
 
-{" "}
-
 <Step title="Accept the swap">
   Accept the swap to execute the exchange: ```bash curl -X POST
   "https://sandbox.hifibridge.com/v2/wallets/swaps/swp_abc123/accept" \ -H
   "Authorization: Bearer YOUR_API_KEY" ``` The response will show status
   `COMPLETED` for successful swaps.
 </Step>
-
-{" "}
 
 <Step title="Verify completion">
   Check the swap details to confirm: - `status` - Should be `COMPLETED` -
@@ -697,8 +688,6 @@ Currently supported swap combinations:
     
     The response will show status `PENDING`. Save the swap `id` from the response.
   </Step>
-
-{" "}
 
 <Step title="Accept the swap">
   Accept the swap to execute: ```bash curl -X POST
