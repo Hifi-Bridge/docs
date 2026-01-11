@@ -5,6 +5,73 @@ description: "Product updates and announcements"
 rss: true
 ---
 
+<Update label="January 10, 2026" description="New features and breaking changes">
+
+## New Features
+
+### Dashboard Swaps
+
+Swapping is now available on the Dashboard, enabling you to convert between USDC and USDT.
+
+### Sandbox KYC Simulations
+
+You can now test specific KYC outcomes by setting the user's last name to a reserved keyword.
+
+- **PENDING** – Simulate applications awaiting review
+- **APPROVAL** – Test approved verification flows
+- **REJECTION** – Test declined verification scenarios
+
+Please use these to build robust error handling before going live.
+
+## ⚠️ Breaking Changes
+
+### New IN_REVIEW Status – Effective February 13, 2026
+
+We're introducing an `IN_REVIEW` status for onramp, offramp, and crypto transfers to explicitly surface the transaction monitoring step.
+
+**Previous behavior:**
+Transactions under review remained in transfer-related statuses:
+
+- Onramp: `FIAT_PENDING`
+- Offramp: `CRYPTO_INITIATED`
+- Crypto: `INITIATED`
+
+**New behavior:**
+Transactions now enter `IN_REVIEW` during monitoring before progressing to transfer statuses.
+
+**Updated flows:**
+
+- Onramp: `IN_REVIEW` (if applicable) → `FIAT_PENDING`
+- Offramp: `IN_REVIEW` (if applicable) → `CRYPTO_INITIATED`
+- Crypto: `IN_REVIEW` (if applicable) → `INITIATED`
+
+**Action required:**
+Please update your status handling logic to account for `IN_REVIEW`.
+
+## Bug Fixes & Improvements
+
+### Onramps
+
+- Fixed: Bug affecting onramp transaction flows in African markets
+
+### Offramps
+
+- Fixed: `amount_in_usd` now correctly populates for all offramp transactions
+- Fixed: USD offramp processing issues in Brazil related to billing configuration
+- Updated: Documentation to resolve field inconsistencies
+
+### Swaps
+
+- Fixed: Amount mismatches and webhook delivery issues
+- Added: Balance validation checks before swap initiation to prevent failed transactions
+
+### Sandbox
+
+- Simplified: Financial institution support in Sandbox for improved stability
+- Updated: Documentation reflects the streamlined Sandbox setup
+
+</Update>
+
 <Update label="January 8, 2026" description="New feature">
 
 ## Wallet Swaps
