@@ -163,14 +163,22 @@
         "pages": [
           {
             "group": "Introduction",
-            "pages": ["overview", "sandbox", "dashboard", "availability"]
+            "pages": [
+              "overview",
+              "sandbox",
+              "dashboard",
+              "availability"
+            ]
           },
           {
             "group": "Core concepts",
             "pages": [
               {
                 "group": "Users",
-                "pages": ["users/overview", "users/tos"]
+                "pages": [
+                  "users/overview",
+                  "users/tos"
+                ]
               },
               "wallets",
               {
@@ -215,6 +223,7 @@
                   "webhooks/user-events",
                   "webhooks/kyc-events",
                   "webhooks/wallet-events",
+                  "webhooks/onramp-events-copied-1",
                   "webhooks/account-events",
                   "webhooks/onramp-events",
                   "webhooks/offramp-events"
@@ -222,7 +231,9 @@
               },
               {
                 "group": "Reporting",
-                "pages": ["reporting/metrics"]
+                "pages": [
+                  "reporting/metrics"
+                ]
               }
             ]
           },
@@ -314,14 +325,20 @@
       },
       {
         "tab": "Changelog",
-        "pages": ["changelog"]
+        "pages": [
+          "changelog"
+        ]
       },
       {
         "tab": "API Reference",
         "pages": [
           {
             "group": "Overview",
-            "pages": ["api/authentication", "api/responses", "api/errors"]
+            "pages": [
+              "api/authentication",
+              "api/responses",
+              "api/errors"
+            ]
           },
           {
             "group": "Endpoints",
@@ -329,7 +346,9 @@
             "pages": [
               {
                 "group": "Common",
-                "pages": ["GET /v2/ping"]
+                "pages": [
+                  "GET /v2/ping"
+                ]
               },
               {
                 "group": "Users",
@@ -364,7 +383,9 @@
               },
               {
                 "group": "File",
-                "pages": ["POST /v2/files"]
+                "pages": [
+                  "POST /v2/files"
+                ]
               },
               {
                 "group": "Wallets",

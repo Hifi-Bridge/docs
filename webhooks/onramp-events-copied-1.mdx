@@ -1,0 +1,69 @@
+---
+title: "Swap Events"
+---
+
+You can expect to receive webhook events whenever an token swap is created or its status is updated.
+
+## Types
+
+| Status                              | Description                                                  |
+| :---------------------------------- | :----------------------------------------------------------- |
+| **WALLET.SWAP.TRANSACTION.CREATE**  | Swap quote requested                                         |
+| **WALLET.SWAP.STATUS.OPEN_QUOTE**   | Swap quote requested and waiting for acceptance              |
+| **WALLET.SWAP.STATUS.CREATED**      | Swap request accepted                                        |
+| **WALLET.SWAP.STATUS.PENDING**      | Swap processing                                              |
+| **WALLET.SWAP.STATUS.COMPLETED**    | Swap successfully executed                                   |
+| **WALLET.SWAP.STATUS.FAILED**       | Swap failed (check `error` and `errorDetails` for specifics) |
+| **WALLET.SWAP.STATUS.QUOTE_FAILED** | Swap quote is expired or invalid                             |
+
+## Data
+
+The data object is expected to have the same structure as the response from the [Retrieve a Swap](https://docs.hifibridge.com/api-reference/token-swap/retrieve-a-swap)
+
+```json
+{
+  "transferType": "WALLET.SWAP",
+  "transferDetails": {
+    "id": "swp_abc123",
+    "requestId": "1ab3e6e0-4839-4dbe-89c3-b06d9645ae86",
+    "status": "COMPLETED",
+    "createdAt": "2025-08-20T03:55:29.437108+00:00",
+    "updatedAt": "2025-08-20T03:55:31.837+00:00",
+    "source": {
+      "currency": "usdc",
+      "amount": 100,
+      "chain": "POLYGON",
+      "userId": "usr_abc123"
+    },
+    "destination": {
+      "currency": "usdt",
+      "userId": "usr_abc123",
+      "amount": 100,
+      "chain": "POLYGON",
+      "walletAddress": "0xe5727a4B1d93A26D6A7Adfaae145EFa41ED7f204"
+    },
+    "quoteInformation": {
+      "sendGross": {
+        "amount": "100",
+        "currency": "usdc"
+      },
+      "sendNet": {
+        "amount": "100",
+        "currency": "usdc"
+      },
+      "receiveGross": {
+        "amount": "100",
+        "currency": "usdt"
+      },
+      "receiveNet": {
+        "amount": "100",
+        "currency": "usdt"
+      },
+      "rate": "1",
+      "expiresAt": "2025-08-20T03:55:59.539+00:00"
+    },
+    "error": null,
+    "errorDetails": null
+  }
+}
+```
