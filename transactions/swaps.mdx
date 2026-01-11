@@ -278,13 +278,14 @@ The accept endpoint returns the same swap details structure as the create endpoi
 
 Swaps progress through the following statuses:
 
-| Status         | Description                                                  |
-| :------------- | :----------------------------------------------------------- |
-| **OPEN_QUOTE** | Swap quote requested and waiting for acceptance              |
-| **CREATED**    | Swap request accepted                                        |
-| **PENDING**    | Swap processing                                              |
-| **COMPLETED**  | Swap successfully executed                                   |
-| **FAILED**     | Swap failed (check `error` and `errorDetails` for specifics) |
+| Status           | Description                                                  |
+| :--------------- | :----------------------------------------------------------- |
+| **OPEN_QUOTE**   | Swap quote requested and waiting for acceptance              |
+| **CREATED**      | Swap request accepted                                        |
+| **PENDING**      | Swap processing                                              |
+| **COMPLETED**    | Swap successfully executed                                   |
+| **FAILED**       | Swap failed (check `error` and `errorDetails` for specifics) |
+| **QUOTE_FAILED** | Swap quote is expired or invalid                             |
 
 <Note>
   **Status Updates:** Subscribe to `SWAP.CREATE` and `SWAP.UPDATE` webhook events to receive real-time status notifications. See [Webhooks](/docs/webhooks) for setup instructions.
@@ -599,8 +600,8 @@ curl -X GET "https://sandbox.hifibridge.com/v2/wallets/swaps?userId=usr_abc123&l
   </Step>
   <Step title="Accept the swap">
     Accept the swap to execute the exchange: `bash curl -X POST
-          "https://sandbox.hifibridge.com/v2/wallets/swaps/swp_abc123/accept" \ -H
-          "Authorization: Bearer YOUR_API_KEY" ` The response will show status `COMPLETED` for successful swaps.
+              "https://sandbox.hifibridge.com/v2/wallets/swaps/swp_abc123/accept" \ -H
+              "Authorization: Bearer YOUR_API_KEY" ` The response will show status `COMPLETED` for successful swaps.
   </Step>
   <Step title="Verify completion">
     Check the swap details to confirm: - `status` - Should be `COMPLETED` - `destination.amount` - Amount received - `quoteInformation.rate` - Exchange rate used - `billingInformation.fees` - Any applicable fees
@@ -644,8 +645,8 @@ curl -X GET "https://sandbox.hifibridge.com/v2/wallets/swaps?userId=usr_abc123&l
   </Step>
   <Step title="Accept the swap">
     Accept the swap to execute: `bash curl -X POST
-          "https://sandbox.hifibridge.com/v2/wallets/swaps/swp_abc123/accept" \ -H
-          "Authorization: Bearer YOUR_API_KEY" `
+              "https://sandbox.hifibridge.com/v2/wallets/swaps/swp_abc123/accept" \ -H
+              "Authorization: Bearer YOUR_API_KEY" `
   </Step>
   <Step title="Check source amount used">
     After acceptance, the response shows how much source currency was needed:
