@@ -6,18 +6,21 @@ tag: "New"
 
 ## Overview
 
-Swaps let you exchange one stablecoin for another within HIFI wallet. All swaps follow a two-step process: create the swap request, then accept it to execute the exchange.
+Swaps let you exchange one stablecoin for another within HIFI wallets. All swaps follow a two-step process: create the swap request, then accept it to execute the exchange.
 
 <Steps>
   <Step title="Create swap request">
-    Specify source currency, destination currency, and amount to exchange. The swap is created with `OPEN_QUOTE` status.
+    Specify source currency, destination currency, and amount to exchange. The
+    swap is created with `OPEN_QUOTE` status.
   </Step>
   <Step title="Accept the swap">
     Accept the swap using the [Accept
-    Swap](https://docs.hifibridge.com/api-reference/swap/accept-a-swap) endpoint to execute the exchange.
+    Swap](https://docs.hifibridge.com/api-reference/swap/accept-a-swap) endpoint
+    to execute the exchange.
   </Step>
   <Step title="Completion">
-    Receive the swapped currency in the destination wallet once the swap is accepted and executed.
+    Receive the swapped currency in the destination wallet once the swap is
+    accepted and executed.
   </Step>
 </Steps>
 
@@ -35,11 +38,7 @@ Swaps let you exchange one stablecoin for another within HIFI wallet. All swaps 
 | **Solana - USDG**   | Polygon (USDC, USDT), Ethereum (USDC, USDT), Solana (USDC, USDT) |
 
 <Info>
-  **Coming Soon:** Additional chains and token pairs will be added. Contact support if you need specific swap pairs.
-</Info>
-
-<Info>
-  USDG swapping is available upon request—please contact support to get access.
+  USDG swapping is available upon request. Please contact support to get access.
 </Info>
 
 ## Creating Swaps
@@ -67,7 +66,6 @@ curl -X POST "https://sandbox.hifibridge.com/v2/wallets/swaps" \
     }
   }'
 ```
-
 
 ```bash Swap with Destination Amount
 curl -X POST "https://sandbox.hifibridge.com/v2/wallets/swaps" \
@@ -145,11 +143,13 @@ The response contains the swap details. Swaps are created in `PENDING` status an
 
 <ResponseField name="transferDetails.id" type="string">
   Unique swap ID. Use this to check status using the [Retrieve
-  Swap](https://docs.hifibridge.com/api-reference/swap/retrieve-a-swap) endpoint.
+  Swap](https://docs.hifibridge.com/api-reference/token-swap/retrieve-a-swap)
+  endpoint.
 </ResponseField>
 
 <ResponseField name="transferDetails.status" type="string">
-  Swap status. Swaps are created with `OPEN_QUOTE` status and must be accepted before execution. See [Transaction Status](#transaction-status) for details.
+  Swap status. Swaps are created with `OPEN_QUOTE` status and must be accepted
+  before execution. See [Transaction Status](#transaction-status) for details.
 </ResponseField>
 
 <ResponseField name="transferDetails.source" type="object">
@@ -157,7 +157,8 @@ The response contains the swap details. Swaps are created in `PENDING` status an
 </ResponseField>
 
 <ResponseField name="transferDetails.destination" type="object">
-  Destination wallet details including currency, amount received, chain, and user information.
+  Destination wallet details including currency, amount received, chain, and
+  user information.
 </ResponseField>
 
 <ResponseField name="transferDetails.quoteInformation" type="object">
@@ -187,7 +188,8 @@ The response contains the swap details. Swaps are created in `PENDING` status an
 
 <Info>
   For detailed field documentation, see the [Create
-  Swap](https://docs.hifibridge.com/api-reference/swap/create-a-swap) API reference.
+  Swap](https://docs.hifibridge.com/api-reference/token-swap/create-a-swap) API
+  reference.
 </Info>
 
 ## Accepting Swaps
@@ -254,11 +256,14 @@ The accept endpoint returns the same swap details structure as the create endpoi
 </Accordion>
 
 <ResponseField name="transferDetails.status" type="string">
-  Swap status after acceptance. Transitions from `PENDING` to `COMPLETED` upon successful acceptance. See [Transaction Status](#transaction-status) for details.
+  Swap status after acceptance. Transitions from `PENDING` to `COMPLETED` upon
+  successful acceptance. See [Transaction Status](#transaction-status) for
+  details.
 </ResponseField>
 
 <Note>
-  **Required Step:** All swaps must be accepted before execution. After creating a swap, always call the accept endpoint to execute the exchange.
+  **Required Step:** All swaps must be accepted before execution. After creating
+  a swap, always call the accept endpoint to execute the exchange.
 </Note>
 
 ## Transaction Status
@@ -275,12 +280,14 @@ Swaps progress through the following statuses:
 | **QUOTE_FAILED** | Swap quote is expired or invalid                             |
 
 <Note>
-  **Status Updates:** Subscribe to `SWAP.TRANSACTION.CREATE` and `SWAP.STATUS.*` webhook events to receive real-time status notifications. See [Webhooks](/docs/webhooks) for setup instructions.
+  **Status Updates:** Subscribe to `SWAP.TRANSACTION.CREATE` and `SWAP.STATUS.*`
+  webhook events to receive real-time status notifications. See
+  [Webhooks](/docs/webhooks) for setup instructions.
 </Note>
 
 ## Tracking Swaps
 
-Monitor swap status using the [Retrieve Swap](https://docs.hifibridge.com/api-reference/swap/retrieve-a-swap) endpoint.
+Monitor swap status using the [Retrieve Swap](https://docs.hifibridge.com/api-reference/token-swap/retrieve-a-swap) endpoint.
 
 **Request:**
 
@@ -342,12 +349,13 @@ The retrieve response includes current swap status:
 </Accordion>
 
 <ResponseField name="transferDetails.status" type="string">
-  Current swap status. See [Transaction Status](#transaction-status) for all possible statuses.
+  Current swap status. See [Transaction Status](#transaction-status) for all
+  possible statuses.
 </ResponseField>
 
 ## Listing Swaps
 
-Retrieve a list of all swaps associated with users under your organization using the [List Swaps](https://docs.hifibridge.com/api-reference/swap/list-all-swaps) endpoint. Swaps are returned sorted by creation date, with the most recent swaps appearing first.
+Retrieve a list of all swaps associated with users under your organization using the [List Swaps](https://docs.hifibridge.com/api-reference/token-swap/list-all-swaps) endpoint. Swaps are returned sorted by creation date, with the most recent swaps appearing first.
 
 **Request:**
 
@@ -359,7 +367,8 @@ curl -X GET "https://sandbox.hifibridge.com/v2/wallets/swaps?userId=usr_abc123&l
 **Query Parameters:**
 
 <ResponseField name="userId" type="string" required="false">
-  Filter swaps by a specific user ID. If omitted, returns swaps for all users under your organization.
+  Filter swaps by a specific user ID. If omitted, returns swaps for all users
+  under your organization.
 </ResponseField>
 
 <ResponseField name="limit" type="string" required="false">
@@ -481,15 +490,19 @@ curl -X GET "https://sandbox.hifibridge.com/v2/wallets/swaps?userId=usr_abc123&l
 </ResponseField>
 
 <ResponseField name="data" type="array">
-  Array of swap objects. Each object follows the same structure as the swap details returned by the retrieve endpoint.
+  Array of swap objects. Each object follows the same structure as the swap
+  details returned by the retrieve endpoint.
 </ResponseField>
 
 <ResponseField name="nextCursor" type="string">
-  Timestamp cursor for pagination. Use this value with `createdBefore` parameter to fetch the next page of results.
+  Timestamp cursor for pagination. Use this value with `createdBefore` parameter
+  to fetch the next page of results.
 </ResponseField>
 
 <Note>
-  **Pagination:** To fetch more swaps, use the `nextCursor` value as the `createdBefore` parameter in your next request. Continue until `count` is less than your `limit`, indicating you've reached the end.
+  **Pagination:** To fetch more swaps, use the `nextCursor` value as the
+  `createdBefore` parameter in your next request. Continue until `count` is less
+  than your `limit`, indicating you've reached the end.
 </Note>
 
 ## Key Concepts
@@ -527,6 +540,7 @@ curl -X GET "https://sandbox.hifibridge.com/v2/wallets/swaps?userId=usr_abc123&l
     ```
 
     Provide amount in only one side - the system calculates the other based on the current rate.
+
   </Accordion>
   <Accordion title="Exchange Rates">
     The `quoteInformation.rate` shows the exchange rate between currencies. Rates may vary slightly based on liquidity Always verify `receiveNet` to see the exact amount you'll receive after any fees.
@@ -555,6 +569,7 @@ curl -X GET "https://sandbox.hifibridge.com/v2/wallets/swaps?userId=usr_abc123&l
       }
     }
     ```
+
   </Accordion>
   <Accordion title="Swap vs Bridge vs Transfer">
     Understanding the differences:
@@ -564,6 +579,7 @@ curl -X GET "https://sandbox.hifibridge.com/v2/wallets/swaps?userId=usr_abc123&l
     **Bridges**: Move same currency across chains (USDC on Polygon → USDC on Ethereum)
 
     **Transfers**: Move same currency to another wallet on same chain (USDC wallet A → USDC wallet B on Polygon)
+
   </Accordion>
 </AccordionGroup>
 
@@ -594,6 +610,7 @@ curl -X GET "https://sandbox.hifibridge.com/v2/wallets/swaps?userId=usr_abc123&l
     ```
 
     The response will show status `OPEN_QUOTE`. Save the swap `id` from the response.
+
   </Step>
   <Step title="Accept the swap">
     Accept the swap to execute the exchange:
@@ -604,12 +621,14 @@ curl -X GET "https://sandbox.hifibridge.com/v2/wallets/swaps?userId=usr_abc123&l
     ```
 
     The response will show status `CRAETED` for successful swap request acceptance.
+
   </Step>
   <Step title="Verify completion">
     Review the swap details to confirm:
 
     - **Status** – should be `COMPLETED`
     - **Destination Amount** – the amount received
+
   </Step>
   <Step title="Handle errors">
     If status is `FAILED`:
@@ -617,6 +636,7 @@ curl -X GET "https://sandbox.hifibridge.com/v2/wallets/swaps?userId=usr_abc123&l
     - Check `error` field for error type
     - Review `errorDetails` for specific failure reason
     - Common issues: insufficient balance, unsupported pair, not enough liquidity
+
   </Step>
 </Steps>
 
@@ -631,4 +651,4 @@ curl -X GET "https://sandbox.hifibridge.com/v2/wallets/swaps?userId=usr_abc123&l
 - [Bridging](/docs/transactions/bridging) - Cross-chain asset movement
 - [Wallets](/docs/wallets) - Understand wallet addresses and balances
 - [Webhooks](/docs/webhooks) - Real-time swap status notifications
-- [API Reference](https://docs.hifibridge.com/api-reference/swap/create-a-swap) - Complete endpoint documentation
+- [API Reference](https://docs.hifibridge.com/api-reference/token-swap/create-a-swap) - Complete endpoint documentation
