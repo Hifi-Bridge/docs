@@ -246,17 +246,6 @@ The accept endpoint returns the same swap details structure as the create endpoi
         "rate": "1",
         "expiresAt": "2025-08-20T03:55:59.539+00:00"
       },
-      "billingInformation": {
-        "fees": [
-          {
-            "id": "fee_xyz789",
-            "amount": 0.01,
-            "currency": "USD",
-            "type": "EXCHANGE_FEE",
-            "timing": "ON_INVOICE"
-          }
-        ]
-      },
       "error": null,
       "errorDetails": null
     }
@@ -344,17 +333,6 @@ The retrieve response includes current swap status:
         },
         "rate": "1",
         "expiresAt": "2025-08-20T03:55:59.539+00:00"
-      },
-      "billingInformation": {
-        "fees": [
-          {
-            "id": "fee_xyz789",
-            "amount": 0.01,
-            "currency": "USD",
-            "type": "EXCHANGE_FEE",
-            "timing": "ON_INVOICE"
-          }
-        ]
       },
       "error": null,
       "errorDetails": null
@@ -444,17 +422,6 @@ curl -X GET "https://sandbox.hifibridge.com/v2/wallets/swaps?userId=usr_abc123&l
             "rate": "1",
             "expiresAt": "2025-08-20T03:55:59.539+00:00"
           },
-          "billingInformation": {
-            "fees": [
-              {
-                "id": "fee_xyz789",
-                "amount": 0.01,
-                "currency": "USD",
-                "type": "EXCHANGE_FEE",
-                "timing": "ON_INVOICE"
-              }
-            ]
-          },
           "error": null,
           "errorDetails": null
         }
@@ -498,9 +465,6 @@ curl -X GET "https://sandbox.hifibridge.com/v2/wallets/swaps?userId=usr_abc123&l
             },
             "rate": "1",
             "expiresAt": "2025-08-20T02:35:15.123456+00:00"
-          },
-          "billingInformation": {
-            "fees": []
           },
           "error": null,
           "errorDetails": null
