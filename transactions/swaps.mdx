@@ -187,16 +187,6 @@ The response contains the swap details. Swaps are created in `PENDING` status an
   </Expandable>
 </ResponseField>
 
-<ResponseField name="transferDetails.billingInformation" type="object">
-  Fee information for the swap. Contains an array of fees with their timing (ON_INVOICE or ON_TRANSACTION).
-
-  <Expandable title="properties">
-    <ResponseField name="fees" type="array">
-      Array of fee objects. Each fee contains `id`, `amount`, `currency`, `type` (EXCHANGE_FEE or GAS_FEE), and `timing`.
-    </ResponseField>
-  </Expandable>
-</ResponseField>
-
 <Info>
   For detailed field documentation, see the [Create
   Swap](https://docs.hifibridge.com/api-reference/swap/create-a-swap) API reference.
@@ -288,12 +278,13 @@ The accept endpoint returns the same swap details structure as the create endpoi
 
 Swaps progress through the following statuses:
 
-| Status        | Description                                                  |
-| :------------ | :----------------------------------------------------------- |
-| **PENDING**   | Swap request created and processing                          |
-| **COMPLETED** | Swap successfully executed                                   |
-| **FAILED**    | Swap failed (check `error` and `errorDetails` for specifics) |
-| **CANCELLED** | Swap was cancelled before execution                          |
+| Status         | Description                                                  |
+| :------------- | :----------------------------------------------------------- |
+| **OPEN_QUOTE** | Swap quote requested and waiting for acceptance              |
+| **CREATED**    | Swap request accepted                                        |
+| **PENDING**    | Swap processing                                              |
+| **COMPLETED**  | Swap successfully executed                                   |
+| **FAILED**     | Swap failed (check `error` and `errorDetails` for specifics) |
 
 <Note>
   **Status Updates:** Subscribe to `SWAP.CREATE` and `SWAP.UPDATE` webhook events to receive real-time status notifications. See [Webhooks](/docs/webhooks) for setup instructions.
@@ -608,8 +599,8 @@ curl -X GET "https://sandbox.hifibridge.com/v2/wallets/swaps?userId=usr_abc123&l
   </Step>
   <Step title="Accept the swap">
     Accept the swap to execute the exchange: `bash curl -X POST
-      "https://sandbox.hifibridge.com/v2/wallets/swaps/swp_abc123/accept" \ -H
-      "Authorization: Bearer YOUR_API_KEY" ` The response will show status `COMPLETED` for successful swaps.
+          "https://sandbox.hifibridge.com/v2/wallets/swaps/swp_abc123/accept" \ -H
+          "Authorization: Bearer YOUR_API_KEY" ` The response will show status `COMPLETED` for successful swaps.
   </Step>
   <Step title="Verify completion">
     Check the swap details to confirm: - `status` - Should be `COMPLETED` - `destination.amount` - Amount received - `quoteInformation.rate` - Exchange rate used - `billingInformation.fees` - Any applicable fees
@@ -653,8 +644,8 @@ curl -X GET "https://sandbox.hifibridge.com/v2/wallets/swaps?userId=usr_abc123&l
   </Step>
   <Step title="Accept the swap">
     Accept the swap to execute: `bash curl -X POST
-      "https://sandbox.hifibridge.com/v2/wallets/swaps/swp_abc123/accept" \ -H
-      "Authorization: Bearer YOUR_API_KEY" `
+          "https://sandbox.hifibridge.com/v2/wallets/swaps/swp_abc123/accept" \ -H
+          "Authorization: Bearer YOUR_API_KEY" `
   </Step>
   <Step title="Check source amount used">
     After acceptance, the response shows how much source currency was needed:
