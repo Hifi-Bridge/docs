@@ -41,6 +41,13 @@ Swaps let you exchange one stablecoin for another within HIFI wallets. All swaps
   USDG swapping is available upon request. Please contact support to get access.
 </Info>
 
+## Fees
+
+The Swap endpoint uses a two-part billing model:
+
+- **Market quote fees**: Fees are included in the swap quote response. Check the `quoteInformation` fields (`sendNet`, `receiveNet`) to see the amounts after market fees are applied.
+- **Gas fees**: Network gas fees are charged separately on your invoice and are not included in the quote response.
+
 ## Creating Swaps
 
 Use the [Create Swap](https://docs.hifibridge.com/api-reference/swap/create-a-swap) endpoint to exchange currencies on the same chain.
