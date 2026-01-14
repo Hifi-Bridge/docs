@@ -326,7 +326,7 @@
           },
           {
             "group": "Endpoints",
-            "openapi": "openapi.json",
+            "openapi": "https://api.hifibridge.com/v2/openapi.json",
             "pages": [
               {
                 "group": "Common",
