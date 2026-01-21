@@ -1,8 +1,8 @@
 ---
 title: "USD Rail"
+sidebarTitle: "USD"
+description: "The USD Rail enables pay-ins and pay-outs from stablecoins to USD. It also enables Virtual Accounts for recurring payments."
 ---
-
-The USD Rail enables pay-ins and pay-outs from stablecoins to USD. It also enables Virtual Accounts for recurring payments.
 
 ## Payment Methods
 
@@ -12,57 +12,28 @@ The USD Rail enables pay-ins and pay-outs from stablecoins to USD. It also enabl
 | ACH            | Pay-in, Pay-out | 1-3 business days |
 | SWIFT          | Pay-out         | 1-5 business days |
 
-<Note>
-  RTP and FedNow are due in Q1 2026.
-</Note>
+<Note>RTP and FedNow are due in Q1 2026.</Note>
 
 ## Payout Countries
 
 SWIFT payouts are available to the following countries:
 
 <Accordion title="Payout Countries">
-  | Code | Country              |
-  | :--- | :------------------- |
-  | ARE  | United Arab Emirates |
-  | AUS  | Australia            |
-  | AUT  | Austria              |
-  | BEL  | Belgium              |
-  | BRA  | Brazil               |
-  | CAN  | Canada               |
-  | HRV  | Croatia              |
-  | EST  | Estonia              |
-  | FIN  | Finland              |
-  | FRA  | France               |
-  | DEU  | Germany              |
-  | GRC  | Greece               |
-  | IND  | India                |
-  | IRL  | Ireland              |
-  | ITA  | Italy                |
-  | JPN  | Japan                |
-  | LTU  | Lithuania            |
-  | LUX  | Luxembourg           |
-  | MEX  | Mexico               |
-  | MYS  | Malaysia             |
-  | NLD  | Netherlands          |
-  | NZL  | New Zealand          |
-  | NOR  | Norway               |
-  | OMN  | Oman                 |
-  | PHL  | Philippines          |
-  | PRT  | Portugal             |
-  | SAU  | Saudi Arabia         |
-  | SVN  | Slovenia             |
-  | ESP  | Spain                |
-  | SWE  | Sweden               |
-  | GBR  | United Kingdom       |
-  | COL  | Colombia             |
-  | GTM  | Guatemala            |
-  | URY  | Uruguay              |
-  | USA  | United States        |
+  | Code | Country | | :--- | :------------------- | | ARE | United Arab
+  Emirates | | AUS | Australia | | AUT | Austria | | BEL | Belgium | | BRA |
+  Brazil | | CAN | Canada | | HRV | Croatia | | EST | Estonia | | FIN | Finland
+  | | FRA | France | | DEU | Germany | | GRC | Greece | | IND | India | | IRL |
+  Ireland | | ITA | Italy | | JPN | Japan | | LTU | Lithuania | | LUX |
+  Luxembourg | | MEX | Mexico | | MYS | Malaysia | | NLD | Netherlands | | NZL |
+  New Zealand | | NOR | Norway | | OMN | Oman | | PHL | Philippines | | PRT |
+  Portugal | | SAU | Saudi Arabia | | SVN | Slovenia | | ESP | Spain | | SWE |
+  Sweden | | GBR | United Kingdom | | COL | Colombia | | GTM | Guatemala | | URY
+  | Uruguay | | USA | United States |
 </Accordion>
 
 <Note>
-  USD SWIFT payouts are currently limited to US origination.\
-  Use the [Global Network](/rails/global-network) for US and non-US origination.
+  USD SWIFT payouts are currently limited to US origination.\ Use the [Global
+  Network](/rails/global-network) for US and non-US origination.
 </Note>
 
 ## Individual
@@ -90,7 +61,10 @@ The USD rail for individual users requires comprehensive KYC (Know Your Customer
 | **identity**   | 1         | DRIVERS, ID_CARD, PASSPORT, RESIDENCE_PERMIT | `Required` |
 
 <Accordion title="Document types">
-  | Document Type | Description | | :--------------- | :--------------------------- | | DRIVERS | Drivers license | | ID_CARD | Identification card | | PASSPORT | National passport | | RESIDENCE_PERMIT | Residence permit or document |
+  | Document Type | Description | | :--------------- |
+  :--------------------------- | | DRIVERS | Drivers license | | ID_CARD |
+  Identification card | | PASSPORT | National passport | | RESIDENCE_PERMIT |
+  Residence permit or document |
 </Accordion>
 
 ## Business
@@ -145,17 +119,26 @@ The USD rail for business users requires comprehensive KYB (Know Your Business) 
 | **controlStructure**   | 1         | DIRECTORS_REGISTRY, TRUST_AGREEMENT, INFORMATION_STATEMENT, STATE_REGISTRY   | `Required` |
 
 <Accordion title="Document types">
-  | Document Type | Description | | :--------------------- | :--------------------------------- | | INCORPORATION_ARTICLES | Incorporation articles document | | INCORPORATION_CERT | Incorporation certificate document | | STATE_REGISTRY | State registry document | | SHAREHOLDER_REGISTRY | Shareholder registry document | | TRUST_AGREEMENT | Trust agreement document | | INFORMATION_STATEMENT | Information statement document | | PROOF_OF_ADDRESS | Proof of address document | | DIRECTORS_REGISTRY | Directors registry document |
+  | Document Type | Description | | :--------------------- |
+  :--------------------------------- | | INCORPORATION_ARTICLES | Incorporation
+  articles document | | INCORPORATION_CERT | Incorporation certificate document
+  | | STATE_REGISTRY | State registry document | | SHAREHOLDER_REGISTRY |
+  Shareholder registry document | | TRUST_AGREEMENT | Trust agreement document |
+  | INFORMATION_STATEMENT | Information statement document | | PROOF_OF_ADDRESS
+  | Proof of address document | | DIRECTORS_REGISTRY | Directors registry
+  document |
 </Accordion>
 
 ### UBOs
 
 <Info>
-  **Role Requirements:** The combined `roles` across all provided UBOs must include at least one `DIRECTOR` and one `UBO`.
+  **Role Requirements:** The combined `roles` across all provided UBOs must
+  include at least one `DIRECTOR` and one `UBO`.
 </Info>
 
 <Info>
-  **Share Threshold:** Only UBOs with a share proportion greater than 25% need to be provided.
+  **Share Threshold:** Only UBOs with a share proportion greater than 25% need
+  to be provided.
 </Info>
 
 | Fields                        | Description                                                                                                                                                    | `Required` |

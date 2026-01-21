@@ -1,7 +1,7 @@
 {
   "$schema": "https://hifibridge.com/docs.json",
   "theme": "almond",
-  "name": "HIFI Developer Docs",
+  "name": "HIFI Docs",
   "description": "Developer Documentation for HIFI",
   "colors": {
     "primary": "#222222",
@@ -13,27 +13,21 @@
   "favicon": "/favicon.svg",
   "seo": {
     "metatags": {
-      "title": "HIFI Developer Docs",
+      "title": "HIFI Docs",
       "description": "Build modern payment workflows and automate money movement.",
       "keywords": "HIFI, payments API, programmable money, payment orchestration, payment workflows, automated flows, composable payments, workflow builder, payment automation, orchestration layer, flow composition, fintech API, stablecoins, USDC, USDT, bank transfers, ACH, SWIFT, RTP, KYC, KYB, compliance, virtual accounts, payouts, webhooks, developer documentation",
       "author": "HIFI",
       "robots": "index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1",
-      "og:title": "HIFI Developer Docs",
+      "og:title": "HIFI Docs",
       "og:type": "website",
       "og:url": "https://docs.hifibridge.com/",
-      "og:image": "https://docs.hifibridge.com/og.png",
-      "og:image:width": "1200",
-      "og:image:height": "630",
-      "og:image:alt": "HIFI Developer Docs",
       "og:description": "Build modern payment workflows and automate money movement.",
       "og:site_name": "HIFI Docs",
       "og:locale": "en_US",
-      "twitter:card": "summary_large_image",
+      "twitter:card": "summary",
       "twitter:site": "@hifibridge",
-      "twitter:title": "HIFI Developer Docs",
+      "twitter:title": "HIFI Docs",
       "twitter:description": "Build modern payment workflows and automate money movement.",
-      "twitter:image": "https://docs.hifibridge.com/og.png",
-      "twitter:image:alt": "HIFI Developer Docs",
       "theme-color": "#33171E",
       "application-name": "HIFI Docs",
       "apple-mobile-web-app-title": "HIFI Docs"
@@ -103,7 +97,7 @@
       {
         "@context": "https://schema.org",
         "@type": "WebSite",
-        "name": "HIFI Developer Docs",
+        "name": "HIFI Docs",
         "url": "https://docs.hifibridge.com/",
         "potentialAction": {
           "@type": "SearchAction",
