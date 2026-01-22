@@ -4,36 +4,60 @@ sidebarTitle: "USD"
 description: "The USD Rail enables pay-ins and pay-outs from stablecoins to USD. It also enables Virtual Accounts for recurring payments."
 ---
 
-## Payment Methods
+### Payment Methods
 
 | Payment Method | Direction       | Typical Duration  |
 | :------------- | :-------------- | :---------------- |
-| Wire           | Pay-in, Pay-out | \< 1 business day |
-| ACH            | Pay-in, Pay-out | 1-3 business days |
-| SWIFT          | Pay-out         | 1-5 business days |
+| Wire           | Payin, Payout | \< 1 business day |
+| ACH            | Payin, Payout | 1-3 business days |
+| SWIFT          | Payout         | 1-5 business days |
 
 <Note>RTP and FedNow are due in Q1 2026.</Note>
 
-## Payout Countries
+## Currency Support
 
-SWIFT payouts are available to the following countries:
+| Country             | Currency | Direction  | Payment Methods    |
+| :------------------ | :------- | :--------- | :---------------- |
+| United States       | USD      | Payin, Payout | Wire, ACH, SWIFT |
+| United Arab Emirates| USD      | Payout    | SWIFT             |
+| Australia           | USD      | Payout    | SWIFT             |
+| Austria             | USD      | Payout    | SWIFT             |
+| Belgium             | USD      | Payout    | SWIFT             |
+| Brazil              | USD      | Payout    | SWIFT             |
+| Canada              | USD      | Payout    | SWIFT             |
+| Croatia             | USD      | Payout    | SWIFT             |
+| Estonia             | USD      | Payout    | SWIFT             |
+| Finland             | USD      | Payout    | SWIFT             |
+| France              | USD      | Payout    | SWIFT             |
+| Germany             | USD      | Payout    | SWIFT             |
+| Greece              | USD      | Payout    | SWIFT             |
+| India               | USD      | Payout    | SWIFT             |
+| Ireland             | USD      | Payout    | SWIFT             |
+| Italy               | USD      | Payout    | SWIFT             |
+| Japan               | USD      | Payout    | SWIFT             |
+| Lithuania           | USD      | Payout    | SWIFT             |
+| Luxembourg          | USD      | Payout    | SWIFT             |
+| Mexico              | USD      | Payout    | SWIFT             |
+| Malaysia            | USD      | Payout    | SWIFT             |
+| Netherlands         | USD      | Payout    | SWIFT             |
+| New Zealand         | USD      | Payout    | SWIFT             |
+| Norway              | USD      | Payout    | SWIFT             |
+| Oman                | USD      | Payout    | SWIFT             |
+| Philippines         | USD      | Payout    | SWIFT             |
+| Portugal            | USD      | Payout    | SWIFT             |
+| Saudi Arabia        | USD      | Payout    | SWIFT             |
+| Slovenia            | USD      | Payout    | SWIFT             |
+| Spain               | USD      | Payout    | SWIFT             |
+| Sweden              | USD      | Payout    | SWIFT             |
+| United Kingdom      | USD      | Payout    | SWIFT             |
+| Colombia            | USD      | Payout    | SWIFT             |
+| Guatemala           | USD      | Payout    | SWIFT             |
+| Uruguay             | USD      | Payout    | SWIFT             |
 
-<Accordion title="Payout Countries">
-  | Code | Country | | :--- | :------------------- | | ARE | United Arab
-  Emirates | | AUS | Australia | | AUT | Austria | | BEL | Belgium | | BRA |
-  Brazil | | CAN | Canada | | HRV | Croatia | | EST | Estonia | | FIN | Finland
-  | | FRA | France | | DEU | Germany | | GRC | Greece | | IND | India | | IRL |
-  Ireland | | ITA | Italy | | JPN | Japan | | LTU | Lithuania | | LUX |
-  Luxembourg | | MEX | Mexico | | MYS | Malaysia | | NLD | Netherlands | | NZL |
-  New Zealand | | NOR | Norway | | OMN | Oman | | PHL | Philippines | | PRT |
-  Portugal | | SAU | Saudi Arabia | | SVN | Slovenia | | ESP | Spain | | SWE |
-  Sweden | | GBR | United Kingdom | | COL | Colombia | | GTM | Guatemala | | URY
-  | Uruguay | | USA | United States |
-</Accordion>
 
 <Note>
-  USD SWIFT payouts are currently limited to US origination.\ Use the [Global
-  Network](/rails/global-network) for US and non-US origination.
+  USD SWIFT payouts are currently limited to countries incorporated in the US. Use the [Global
+  Network](/rails/global-network) rail for other countries.
 </Note>
 
 ## Individual
