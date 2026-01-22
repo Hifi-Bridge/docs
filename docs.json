@@ -157,7 +157,7 @@
         "pages": [
           {
             "group": "Introduction",
-            "pages": ["overview", "sandbox", "dashboard", "availability"]
+            "pages": ["overview", "sandbox", "dashboard", "availability", "coverage"]
           },
           {
             "group": "Core concepts",
