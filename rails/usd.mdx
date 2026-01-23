@@ -6,54 +6,54 @@ description: "The USD Rail enables pay-ins and pay-outs from stablecoins to USD.
 
 ### Payment Methods
 
-| Payment Method | Direction       | Typical Duration  |
-| :------------- | :-------------- | :---------------- |
+| Payment Method | Direction     | Typical Duration  |
+| :------------- | :------------ | :---------------- |
 | Wire           | Payin, Payout | \< 1 business day |
 | ACH            | Payin, Payout | 1-3 business days |
-| SWIFT          | Payout         | 1-5 business days |
+| SWIFT          | Payout        | 1-5 business days |
 
-<Note>RTP and FedNow are due in Q1 2026.</Note>
+<Note>
+  RTP and FedNow are due in Q1 2026.
+</Note>
 
 ## Currency Support
 
-| Country             | Currency | Direction  | Payment Methods    |
-| :------------------ | :------- | :--------- | :---------------- |
-| United States       | USD      | Payin, Payout | Wire, ACH, SWIFT |
-| United Arab Emirates| USD      | Payout    | SWIFT             |
-| Australia           | USD      | Payout    | SWIFT             |
-| Austria             | USD      | Payout    | SWIFT             |
-| Belgium             | USD      | Payout    | SWIFT             |
-| Canada              | USD      | Payout    | SWIFT             |
-| Estonia             | USD      | Payout    | SWIFT             |
-| Finland             | USD      | Payout    | SWIFT             |
-| France              | USD      | Payout    | SWIFT             |
-| Germany             | USD      | Payout    | SWIFT             |
-| Greece              | USD      | Payout    | SWIFT             |
-| India               | USD      | Payout    | SWIFT             |
-| Ireland             | USD      | Payout    | SWIFT             |
-| Italy               | USD      | Payout    | SWIFT             |
-| Japan               | USD      | Payout    | SWIFT             |
-| Lithuania           | USD      | Payout    | SWIFT             |
-| Luxembourg          | USD      | Payout    | SWIFT             |
-| Mexico              | USD      | Payout    | SWIFT             |
-| Malaysia            | USD      | Payout    | SWIFT             |
-| Netherlands         | USD      | Payout    | SWIFT             |
-| New Zealand         | USD      | Payout    | SWIFT             |
-| Norway              | USD      | Payout    | SWIFT             |
-| Oman                | USD      | Payout    | SWIFT             |
-| Philippines         | USD      | Payout    | SWIFT             |
-| Portugal            | USD      | Payout    | SWIFT             |
-| Slovenia            | USD      | Payout    | SWIFT             |
-| Spain               | USD      | Payout    | SWIFT             |
-| United Kingdom      | USD      | Payout    | SWIFT             |
-| Colombia            | USD      | Payout    | SWIFT             |
-| Guatemala           | USD      | Payout    | SWIFT             |
-| Uruguay             | USD      | Payout    | SWIFT             |
-
+| Country              | Currency | Direction     | Payment Methods  |
+| :------------------- | :------- | :------------ | :--------------- |
+| United States        | USD      | Payin, Payout | Wire, ACH, SWIFT |
+| United Arab Emirates | USD      | Payout        | SWIFT            |
+| Australia            | USD      | Payout        | SWIFT            |
+| Austria              | USD      | Payout        | SWIFT            |
+| Belgium              | USD      | Payout        | SWIFT            |
+| Canada               | USD      | Payout        | SWIFT            |
+| Estonia              | USD      | Payout        | SWIFT            |
+| Finland              | USD      | Payout        | SWIFT            |
+| France               | USD      | Payout        | SWIFT            |
+| Germany              | USD      | Payout        | SWIFT            |
+| Greece               | USD      | Payout        | SWIFT            |
+| India                | USD      | Payout        | SWIFT            |
+| Ireland              | USD      | Payout        | SWIFT            |
+| Italy                | USD      | Payout        | SWIFT            |
+| Japan                | USD      | Payout        | SWIFT            |
+| Lithuania            | USD      | Payout        | SWIFT            |
+| Luxembourg           | USD      | Payout        | SWIFT            |
+| Mexico               | USD      | Payout        | SWIFT            |
+| Malaysia             | USD      | Payout        | SWIFT            |
+| Netherlands          | USD      | Payout        | SWIFT            |
+| New Zealand          | USD      | Payout        | SWIFT            |
+| Norway               | USD      | Payout        | SWIFT            |
+| Oman                 | USD      | Payout        | SWIFT            |
+| Philippines          | USD      | Payout        | SWIFT            |
+| Portugal             | USD      | Payout        | SWIFT            |
+| Slovenia             | USD      | Payout        | SWIFT            |
+| Spain                | USD      | Payout        | SWIFT            |
+| United Kingdom       | USD      | Payout        | SWIFT            |
+| Colombia             | USD      | Payout        | SWIFT            |
+| Guatemala            | USD      | Payout        | SWIFT            |
+| Uruguay              | USD      | Payout        | SWIFT            |
 
 <Note>
-  USD SWIFT payouts are currently limited to countries incorporated in the US. Use the [Global
-  Network](/rails/global-network) rail for other regions.
+  USD SWIFT payouts are currently limited to companies incorporated in the US. Use the [Global Network](/rails/global-network) rail for other regions.
 </Note>
 
 ## Individual
@@ -81,10 +81,7 @@ The USD rail for individual users requires comprehensive KYC (Know Your Customer
 | **identity**   | 1         | DRIVERS, ID_CARD, PASSPORT, RESIDENCE_PERMIT | `Required` |
 
 <Accordion title="Document types">
-  | Document Type | Description | | :--------------- |
-  :--------------------------- | | DRIVERS | Drivers license | | ID_CARD |
-  Identification card | | PASSPORT | National passport | | RESIDENCE_PERMIT |
-  Residence permit or document |
+  | Document Type | Description | | :--------------- | :--------------------------- | | DRIVERS | Drivers license | | ID_CARD | Identification card | | PASSPORT | National passport | | RESIDENCE_PERMIT | Residence permit or document |
 </Accordion>
 
 ## Business
@@ -139,26 +136,17 @@ The USD rail for business users requires comprehensive KYB (Know Your Business) 
 | **controlStructure**   | 1         | DIRECTORS_REGISTRY, TRUST_AGREEMENT, INFORMATION_STATEMENT, STATE_REGISTRY   | `Required` |
 
 <Accordion title="Document types">
-  | Document Type | Description | | :--------------------- |
-  :--------------------------------- | | INCORPORATION_ARTICLES | Incorporation
-  articles document | | INCORPORATION_CERT | Incorporation certificate document
-  | | STATE_REGISTRY | State registry document | | SHAREHOLDER_REGISTRY |
-  Shareholder registry document | | TRUST_AGREEMENT | Trust agreement document |
-  | INFORMATION_STATEMENT | Information statement document | | PROOF_OF_ADDRESS
-  | Proof of address document | | DIRECTORS_REGISTRY | Directors registry
-  document |
+  | Document Type | Description | | :--------------------- | :--------------------------------- | | INCORPORATION_ARTICLES | Incorporation articles document | | INCORPORATION_CERT | Incorporation certificate document | | STATE_REGISTRY | State registry document | | SHAREHOLDER_REGISTRY | Shareholder registry document | | TRUST_AGREEMENT | Trust agreement document | | INFORMATION_STATEMENT | Information statement document | | PROOF_OF_ADDRESS | Proof of address document | | DIRECTORS_REGISTRY | Directors registry document |
 </Accordion>
 
 ### UBOs
 
 <Info>
-  **Role Requirements:** The combined `roles` across all provided UBOs must
-  include at least one `DIRECTOR` and one `UBO`.
+  **Role Requirements:** The combined `roles` across all provided UBOs must include at least one `DIRECTOR` and one `UBO`.
 </Info>
 
 <Info>
-  **Share Threshold:** Only UBOs with a share proportion greater than 25% need
-  to be provided.
+  **Share Threshold:** Only UBOs with a share proportion greater than 25% need to be provided.
 </Info>
 
 | Fields                        | Description                                                                                                                                                    | `Required` |
