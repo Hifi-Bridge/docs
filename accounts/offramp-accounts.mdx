@@ -3,21 +3,17 @@ title: "Offramp Accounts"
 description: "An Offramp Account is a user's external bank account where they receive fiat money from stablecoin conversions. When users offramp, their stablecoins are converted to fiat and sent directly to this registered account."
 ---
 
-
 ## How Offramp Accounts Work
 
 <Steps>
   <Step title="Register bank account">
-    Add the user's external bank account to HIFI by providing account details
-    and account holder information.
+    Add the user's external bank account to HIFI by providing account details and account holder information.
   </Step>
   <Step title="Create offramp">
-    Initiate an offramp transfer to get a conversion quote with current exchange
-    rates and fees.
+    Initiate an offramp transfer to get a conversion quote with current exchange rates and fees.
   </Step>
   <Step title="Accept quote">
-    Accept the quote to execute the conversion. Stablecoins are converted to
-    fiat and delivered to the registered bank account.
+    Accept the quote to execute the conversion. Stablecoins are converted to fiat and delivered to the registered bank account.
   </Step>
 </Steps>
 
@@ -26,9 +22,7 @@ Each offramp account is configured for a specific currency and region (e.g., USD
 ## Prerequisites
 
 <Warning>
-  **KYC Required:** Users must complete KYC verification for the relevant rail
-  before creating offramp accounts. For example, to create a USD offramp
-  account, the user must have an active USD rail.
+  **KYC Required:** Users must complete KYC verification for the relevant rail before creating offramp accounts. For example, to create a USD offramp account, the user must have an active USD rail.
 </Warning>
 
 ## Creating Offramp Accounts
@@ -82,6 +76,7 @@ curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/accounts" \
 
 <ResponseField name="accountHolder" type="object" required>
   Account holder information. Must match user's KYC data for compliance.
+
   <Expandable title="properties">
     <ResponseField name="type" type="string" required>
       Account holder type: `individual` or `business`
@@ -103,6 +98,7 @@ curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/accounts" \
 
 <ResponseField name="us" type="object" required>
   US-specific bank account details.
+
   <Expandable title="properties">
     <ResponseField name="transferType" type="string" required>
       Payment method: `wire` or `ach`
@@ -139,13 +135,11 @@ curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/accounts" \
 **Response Fields:**
 
 <ResponseField name="id" type="string">
-  Unique account ID. **Save this** for creating offramp transfers to this
-  account.
+  Unique account ID. **Save this** for creating offramp transfers to this account.
 </ResponseField>
 
 <ResponseField name="status" type="string">
-  Account status: `ACTIVE` (ready to use), `PENDING` (being validated), or
-  `REJECTED` (validation failed)
+  Account status: `ACTIVE` (ready to use), `PENDING` (being validated), or `REJECTED` (validation failed)
 </ResponseField>
 
 <ResponseField name="invalidFields" type="array">
@@ -187,14 +181,14 @@ Global Network accounts support multiple countries including China, Hong Kong, B
         }
       }'
     ```
-    
+
     **Additional Fields Required:**
+
     - `dateOfBirth` - Account holder's date of birth
     - `idNumber` - Chinese national ID number
     - `nationality` - Must be `CHN`
     - `swiftCode` - Bank's SWIFT code
   </Accordion>
-
   <Accordion title="Hong Kong (HKD)">
     ```bash
     curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/accounts" \
@@ -225,14 +219,14 @@ Global Network accounts support multiple countries including China, Hong Kong, B
         }
       }'
     ```
-    
+
     **Additional Fields Required:**
+
     - `dateOfBirth` - Account holder's date of birth
     - `idNumber` - Hong Kong ID number
     - `nationality` - Must be `HKG`
     - `swiftCode` - Bank's SWIFT code
   </Accordion>
-
   <Accordion title="Brazil (BRL) - PIX">
     ```bash
     curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/accounts" \
@@ -261,14 +255,14 @@ Global Network accounts support multiple countries including China, Hong Kong, B
         }
       }'
     ```
-    
+
     **Additional Fields Required:**
+
     - `dateOfBirth` - Account holder's date of birth
     - `idNumber` - CPF (Brazilian tax ID)
     - `nationality` - Must be `BRA`
     - `pix` - PIX key (email, phone, or CPF)
   </Accordion>
-
   <Accordion title="Mexico (MXN) - SPEI">
     ```bash
     curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/accounts" \
@@ -297,14 +291,14 @@ Global Network accounts support multiple countries including China, Hong Kong, B
         }
       }'
     ```
-    
+
     **Additional Fields Required:**
+
     - `dateOfBirth` - Account holder's date of birth
     - `idNumber` - CURP (Mexican national ID)
     - `nationality` - Must be `MEX`
     - `speiClabe` - 18-digit CLABE number for SPEI transfers
   </Accordion>
-
   <Accordion title="Nigeria (NGN)">
     ```bash
     curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/accounts" \
@@ -334,8 +328,9 @@ Global Network accounts support multiple countries including China, Hong Kong, B
         }
       }'
     ```
-    
+
     **Additional Fields Required:**
+
     - `dateOfBirth` - Account holder's date of birth
     - `idNumber` - Nigerian national ID or BVN
     - `nationality` - Must be `NGA`
@@ -399,8 +394,7 @@ curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/accounts" \
 </ResponseField>
 
 <Note>
-  Check the [Africa Rail documentation](/docs/rails/africa) for supported
-  combinations of country, currency, and financial institution.
+  Check the [Africa Rail documentation](/docs/rails/africa) for supported combinations of country, currency, and financial institution.
 </Note>
 
 ## Using Offramp Accounts
@@ -433,8 +427,7 @@ The `accountId` from the account creation response tells HIFI which bank account
 
 <Info>
   **Complete Offramp Flow:** See the [Offramps
-  documentation](/docs/transactions/offramps) for the full process including
-  quote acceptance, status tracking, and settlement timing.
+  documentation](/docs/transactions/offramps) for the full process including quote acceptance, status tracking, and settlement timing.
 </Info>
 
 ## Account Validation
@@ -452,43 +445,34 @@ After creating an offramp account, HIFI validates the account details:
 <AccordionGroup>
   <Accordion title="Multiple Accounts Per User">
     Users can have multiple offramp accounts for different currencies, regions, or payment methods. Each account has a unique ID referenced when creating offramps.
-    
+
     **Example scenarios:**
+
     - One USD account for wire transfers
     - One BRL account for PIX transfers
     - One MXN account for SPEI transfers
     - Multiple accounts in the same currency for different banks
   </Accordion>
+  {" "}
 
-{" "}
-<Accordion title="Account Types vs Transfer Types">
-  Don't confuse these two concepts: - **Account Type** (`type` field): The
-  region or country (e.g., `us`, `brazil`, `mexico`) - **Transfer Type** (within
-  account-specific fields): The payment method (e.g., `wire`, `ach`, `pix`,
-  `spei`) Not all transfer types are available in all regions. Check the API
-  reference for supported combinations.
-</Accordion>
+  <Accordion title="Account Types vs Transfer Types">
+    Don't confuse these two concepts: - **Account Type** (`type` field): The region or country (e.g., `us`, `brazil`, `mexico`) - **Transfer Type** (within account-specific fields): The payment method (e.g., `wire`, `ach`, `pix`, `spei`) Not all transfer types are available in all regions. Check the API reference for supported combinations.
+  </Accordion>
+  {" "}
 
-{" "}
-<Accordion title="First Party vs Third Party Payments">
-  Offramp accounts support two payment scenarios: **First Party Payments:**
-  Funds sent to the account holder (the user who completed KYC). This is the
-  standard case where users receive money in their own bank account. **Third
-  Party Payments:** Funds sent to someone other than the account holder. This
-  enables use cases like: - Sending money to family members - Paying business
-  partners or vendors - Disbursing funds to beneficiaries Both are supported,
-  but third party payments may require additional compliance verification.
-</Accordion>
-
+  <Accordion title="First Party vs Third Party Payments">
+    Offramp accounts support two payment scenarios: **First Party Payments:** Funds sent to the account holder (the user who completed KYC). This is the standard case where users receive money in their own bank account. **Third
+    Party Payments:** Funds sent to someone other than the account holder. This enables use cases like: - Sending money to family members - Paying business partners or vendors - Disbursing funds to beneficiaries Both are supported, but third party payments may require additional compliance verification.
+  </Accordion>
   <Accordion title="Regional Payment Methods">
     Different regions support different payment methods:
-    
+
     - **US**: Wire, ACH
     - **Brazil**: PIX (instant payments)
     - **Mexico**: SPEI (electronic transfers)
     - **Africa**: Mobile money (momo) or bank transfers depending on country
     - **China/Hong Kong**: Bank transfers with SWIFT codes
-    
+
     Choose the payment method that best fits your users' needs and local banking infrastructure.
   </Accordion>
 </AccordionGroup>
@@ -530,22 +514,21 @@ After creating an offramp account, HIFI validates the account details:
       }'
     ```
   </Step>
-
   <Step title="Check validation status">
     The response includes the status. If `ACTIVE`, the account is ready immediately. If `PENDING`, wait for validation to complete or subscribe to account webhooks.
-    
+
     ```json
     {
       "status": "ACTIVE",
       "id": "acc_abc123"
     }
     ```
-    
+
     For `REJECTED` status, check the `invalidFields` array to see which fields need correction.
   </Step>
-
   <Step title="Use for offramps">
     Once active, use the account ID when creating offramp transfers:
+
     ```bash
     curl -X POST "https://sandbox.hifibridge.com/v2/offramps" \
       -H "Authorization: Bearer YOUR_API_KEY" \
@@ -573,8 +556,9 @@ After creating an offramp account, HIFI validates the account details:
 <Steps>
   <Step title="Create accounts for each region">
     Create separate accounts for each region where you need to send payouts (offramps) to the user:
-    
+
     <CodeGroup>
+
     ```bash USD
     curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/accounts" \
       -H "Authorization: Bearer YOUR_API_KEY" \
@@ -603,6 +587,7 @@ After creating an offramp account, HIFI validates the account details:
         }
       }'
     ```
+
     
     ```bash BRL
     curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/accounts" \
@@ -631,6 +616,7 @@ After creating an offramp account, HIFI validates the account details:
         }
       }'
     ```
+
     
     ```bash MXN
     curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/accounts" \
@@ -659,6 +645,7 @@ After creating an offramp account, HIFI validates the account details:
         }
       }'
     ```
+
     
     ```bash NGN
     curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/accounts" \
@@ -688,6 +675,7 @@ After creating an offramp account, HIFI validates the account details:
         }
       }'
     ```
+
     
     ```bash HKD
     curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/accounts" \
@@ -718,6 +706,7 @@ After creating an offramp account, HIFI validates the account details:
         }
       }'
     ```
+
     
     ```bash CNY
     curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/accounts" \
@@ -748,9 +737,9 @@ After creating an offramp account, HIFI validates the account details:
         }
       }'
     ```
+
     </CodeGroup>
   </Step>
-
   <Step title="Let users choose destination">
     If a user has multiple accounts, let them select which account to use when creating an offramp. Pass the appropriate `accountId` based on their selection.
   </Step>
@@ -758,7 +747,7 @@ After creating an offramp account, HIFI validates the account details:
 
 ## Getting Help
 
-- 📧 **Email:** support@hifi.com
+- 📧 **Email:** [support@hifi.com](mailto:support@hifi.com)
 - 💬 **Slack:** Message us in our shared Slack channel
 
 ## Related Resources
