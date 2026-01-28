@@ -1,0 +1,71 @@
+---
+title: "Overview"
+description: "HIFI supports five types of transactions: transfers, onramps, offramps, bridging, and swaps. Each type serves a distinct purpose for moving value between wallets, fiat, and chains."
+sidebarTitle: "Overview"
+---
+
+## Transaction Types
+
+HIFI supports five types of transactions. Each type moves value in a different way:
+
+| Type          | Direction                   | What it does                                                                          |
+| :------------ | :-------------------------- | :------------------------------------------------------------------------------------ |
+| **Transfers** | Wallet → Wallet             | Send stablecoins between HIFI users or to external wallet addresses on the same chain |
+| **Onramps**   | Fiat → Stablecoins          | Convert fiat (e.g. USD) into stablecoins and credit a user's wallet                   |
+| **Offramps**  | Stablecoins → Fiat          | Convert stablecoins to fiat and send to a registered bank account                     |
+| **Bridging**  | Chain A → Chain B           | Move stablecoins from one blockchain to another (e.g. Polygon → Ethereum)             |
+| **Swaps**     | Stablecoin A → Stablecoin B | Exchange one stablecoin for another within HIFI wallets (e.g. USDC → USDT)            |
+
+## When to Use Each Type
+
+<AccordionGroup>
+  <Accordion title="Transfers">
+    Use **transfers** when you need to send stablecoins from one wallet to another. Supports single payments or batch transfers (up to 50 recipients). Destinations can be another HIFI user or an external wallet address. All movement stays on the same blockchain.
+  </Accordion>
+
+<Accordion title="Onramps">
+  Use **onramps** when a user wants to deposit fiat and receive stablecoins. The
+  user sends fiat (e.g. via ACH or bank transfer) to a virtual account or
+  one-time account; once received, HIFI credits their wallet with the equivalent
+  stablecoins. Requires KYC for the relevant rail.
+</Accordion>
+
+<Accordion title="Offramps">
+  Use **offramps** when a user wants to withdraw stablecoins as fiat. The user’s
+  stablecoin balance is converted to fiat and sent to a registered offramp
+  (bank) account. Requires a linked offramp account.
+</Accordion>
+
+<Accordion title="Bridging">
+  Use **bridging** when stablecoins need to move from one chain to another (e.g.
+  Polygon USDC → Ethereum USDC). The same stablecoin is moved across networks;
+  no currency conversion. Useful when the destination wallet or product is on a
+  different chain.
+</Accordion>
+
+  <Accordion title="Swaps">
+    Use **swaps** when a user needs to exchange one stablecoin for another (e.g. USDC for USDT, or USDC on Polygon for USDT on Ethereum). Supports same-chain and cross-chain pairs. Requires a two-step flow: create swap request, then accept the quote to execute.
+  </Accordion>
+</AccordionGroup>
+
+## Fiat vs. On-Chain
+
+| Category     | Transaction types          | KYC / accounts                    |
+| :----------- | :------------------------- | :-------------------------------- |
+| **On-chain** | Transfers, Bridging, Swaps | No fiat rails; wallet-only flows  |
+| **Fiat in**  | Onramps                    | KYC + virtual or one-time account |
+| **Fiat out** | Offramps                   | KYC + registered offramp account  |
+
+On-chain transactions (transfers, bridging, swaps) move value between wallets and chains without touching traditional bank accounts. Onramps and offramps connect fiat banking to stablecoins and require user verification and linked accounts.
+
+## Transaction Approvals
+
+Transfers, bridging, and offramps can use an optional **approval workflow**. When enabled, a transaction is created in a pending state and must be approved by an admin before it is executed. This supports compliance and multi-party authorization. See [Transaction Approvals](/docs/features/transfer-approvals) for details.
+
+## Related Documentation
+
+- [Transfers](/docs/transactions/transfers) - Send stablecoins between wallets
+- [Onramps](/docs/transactions/onramps) - Deposit fiat, receive stablecoins
+- [Offramps](/docs/transactions/offramps) - Withdraw stablecoins to fiat
+- [Bridging](/docs/transactions/bridging) - Move stablecoins across chains
+- [Swaps](/docs/transactions/swaps) - Exchange one stablecoin for another

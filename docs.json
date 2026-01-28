@@ -195,6 +195,7 @@
               {
                 "group": "Transactions",
                 "pages": [
+                  "transactions/overview",
                   "transactions/transfers",
                   "transactions/onramps",
                   "transactions/offramps",
