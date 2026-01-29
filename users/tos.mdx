@@ -65,16 +65,19 @@ async function handlePrivacyPolicyAcceptance() {
   const sessionToken = urlParams.get("sessionToken");
 
   // Accept ToS programmatically in the background
-  await fetch(`https://sandbox.hifi.com/v2/tos-link/${sessionToken}`, {
-    method: "POST",
-    headers: {
-      Authorization: "Bearer YOUR_API_KEY",
-      "Content-Type": "application/json",
+  await fetch(
+    `https://sandbox.hifi.com/v2/tos-link/:signedAgreementId/accept`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer YOUR_API_KEY",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        sessionToken: sessionToken,
+      }),
     },
-    body: JSON.stringify({
-      sessionToken: sessionToken,
-    }),
-  });
+  );
 
   // Store signedAgreementId for user creation
   return agreementId;
