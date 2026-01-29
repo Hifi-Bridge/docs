@@ -3,7 +3,6 @@ title: "Terms of Service"
 description: "Users must accept HIFI's terms before you can create their account. You have two options for collecting this consent:"
 ---
 
-
 1. **Use HIFI's ToS Link** - Generate a ToS link and have users accept via HIFI-hosted pages (redirect or embedded)
 2. **Reference HIFI's Terms in Your Privacy Policy** - Include HIFI's terms by reference in your own ToS/privacy policy and collect acceptance through your existing flow
 
@@ -31,6 +30,12 @@ We use HIFI to process financial transactions. By using our service,
 you also agree to HIFI's [Terms & Conditions](https://www.hifi.com/terms-conditions)
 and [Privacy Policy](https://www.hifi.com/privacy-policy).
 ```
+
+<Note>
+  After updating your Terms of Service, please contact us with documentation or
+  evidence of the update. Our team will conduct periodic reviews to ensure
+  continued compliance.
+</Note>
 
 When the user accepts your privacy policy (which includes HIFI's terms by reference), generate a signed agreement ID in the background:
 
@@ -60,7 +65,7 @@ async function handlePrivacyPolicyAcceptance() {
   const sessionToken = urlParams.get("sessionToken");
 
   // Accept ToS programmatically in the background
-  await fetch(`https://sandbox.hifi.com/v2/tos/${sessionToken}`, {
+  await fetch(`https://sandbox.hifi.com/v2/tos-link/${sessionToken}`, {
     method: "POST",
     headers: {
       Authorization: "Bearer YOUR_API_KEY",
