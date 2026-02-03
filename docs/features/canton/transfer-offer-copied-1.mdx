@@ -233,3 +233,13 @@ This field contains the corresponding Canton transfer offer that has been create
   }
 }
 ```
+
+You can use the `walletId` under the `destination` object and the `offerId` from the `associatedCantonOffer` to accept the offer:
+
+```shellscript
+curl -X POST "https://api.hifibridge.com/v2/wallets/<walletId>/offers/<offerId>/accept" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json"
+```
+
+For more details, please refer to the **Accept Transfer Offer** section.
