@@ -3,7 +3,6 @@ title: "Wallets"
 description: "A Wallet is a cryptocurrency account that holds and moves digital assets on the HIFI platform. Every wallet belongs to a user and can hold balances in supported stablecoins across multiple blockchain networks."
 ---
 
-
 ## Automatic Provisioning
 
 Wallets are automatically created when a user is created - no separate setup required. Each user receives wallet addresses on Polygon and Ethereum. Other chains can be added later.
@@ -14,21 +13,31 @@ Wallets are automatically created when a user is created - no separate setup req
   <Accordion title="Custodial">
     HIFI wallets are custodial, meaning HIFI manages the private keys for security and regulatory compliance. This allows for features like account recovery and compliance monitoring while users maintain full control over their funds through the API.
   </Accordion>
+  {" "}
 
-{" "}
-
-<Accordion title="Multi-Chain">
-  Each user has a unique wallet address on every supported blockchain. HIFI
-  currently supports Polygon, Ethereum, Solana, and Base, with additional chains
-  available based on customer demand. Each blockchain has its own address - for
-  example, a single user has separate addresses for USDC on Polygon, USDC on
-  Ethereum, and USDC on Solana.
-</Accordion>
-
+  <Accordion title="Multi-Chain">
+    Each user has a unique wallet address on every supported blockchain. HIFI currently supports Polygon, Ethereum, Solana, and Base, with additional chains available based on customer demand. Each blockchain has its own address - for example, a single user has separate addresses for USDC on Polygon, USDC on Ethereum, and USDC on Solana.
+  </Accordion>
   <Accordion title="Multi-Currency">
     Wallets can hold multiple stablecoins simultaneously. Supported currencies include USDC and USDT, with additional stablecoins available based on customer needs.
   </Accordion>
 </AccordionGroup>
+
+## Support Chain and Currencies
+
+| Chain           | Currencies              |                        |
+| --------------- | ----------------------- | ---------------------- |
+| Ethereum        | USDT, USDC, USDG, PYUSD |                        |
+| Polygon PoS     | USDT, USDC              |                        |
+| Solana          | USDT, USDC, USDG, PYUSD |                        |
+| Base            | USDC                    |                        |
+| Arbitrum        | USDC                    | available upon request |
+| Optimism        | USDC                    | available upon request |
+| Canton          | USDCx                   | available upon request |
+| Flow Evm        | PYUSD0                  | available upon request |
+| Tron            | USDT                    | coming soon...         |
+| BNB Smart Chain | USDT                    | coming soon...         |
+| XRPL            | USDC, RLUSD             | coming soon...         |
 
 ## Checking Balances
 
@@ -45,8 +54,8 @@ curl -X GET "https://sandbox.hifibridge.com/v2/users/usr_abc123/wallets/balance?
 
 | Parameter  | Type   | Required | Description                     | Example Values                          |
 | :--------- | :----- | :------- | :------------------------------ | :-------------------------------------- |
-| `chain`    | string | ✅       | Blockchain network              | `POLYGON`, `ETHEREUM`, `SOLANA`, `BASE` |
-| `currency` | string | ✅       | Stablecoin to check balance for | `usdc`, `usdt`                          |
+| `chain`    | string | ✅        | Blockchain network              | `POLYGON`, `ETHEREUM`, `SOLANA`, `BASE` |
+| `currency` | string | ✅        | Stablecoin to check balance for | `usdc`, `usdt`                          |
 
 **Response:**
 
@@ -84,9 +93,7 @@ curl -X GET "https://sandbox.hifibridge.com/v2/users/usr_abc123/wallets/balance?
 </ResponseField>
 
 <Note>
-  **Balance Units:** The `balance` field returns the amount in the token's
-  smallest unit. For USDC (6 decimals), a balance of "10000" equals 0.01 USDC.
-  Use `displayBalance` for user-facing displays.
+  **Balance Units:** The `balance` field returns the amount in the token's smallest unit. For USDC (6 decimals), a balance of "10000" equals 0.01 USDC. Use `displayBalance` for user-facing displays.
 </Note>
 
 ## Receiving Funds
@@ -209,8 +216,7 @@ curl -X GET "https://sandbox.hifibridge.com/v2/users/usr_abc123/wallets/deposits
 </ResponseField>
 
 <Note>
-  **Real-Time Updates:** Subscribe to `WALLET.DEPOSIT` webhook events to receive
-  immediate notifications when deposits are detected on the blockchain.
+  **Real-Time Updates:** Subscribe to `WALLET.DEPOSIT` webhook events to receive immediate notifications when deposits are detected on the blockchain.
 </Note>
 
 ## Sending Funds
@@ -262,9 +268,7 @@ curl -X POST "https://sandbox.hifibridge.com/v2/wallets/transfers" \
 ```
 
 <Note>
-  **No Registration Required:** You can send to any external wallet address
-  directly without registering it first. Simply provide the address in the
-  `destination.address` field.
+  **No Registration Required:** You can send to any external wallet address directly without registering it first. Simply provide the address in the `destination.address` field.
 </Note>
 
 ### Fiat Offramps
@@ -281,36 +285,30 @@ See [Offramp](/docs/transactions/offramps) for detailed instructions.
 <AccordionGroup>
   <Accordion title="Wallet Types">
     Each wallet has a `walletType` that indicates its purpose:
+
     - **INDIVIDUAL** - Personal wallet for individual users
     - **BUSINESS** - Business wallet for corporate users
-    
+
     The wallet type affects compliance requirements and transaction limits.
   </Accordion>
+  {" "}
 
-{" "}
+  <Accordion title="Chain-Specific Addresses">
+    Each blockchain network has its own address format: - **Ethereum/Polygon/Base** - 0x format (e.g., `0x1b932E54...`) - **Solana** - Base58 format (e.g., `9xQeWvG816...`) Always use the correct address for the target blockchain to avoid lost funds.
+  </Accordion>
+  {" "}
 
-<Accordion title="Chain-Specific Addresses">
-  Each blockchain network has its own address format: -
-  **Ethereum/Polygon/Base** - 0x format (e.g., `0x1b932E54...`) - **Solana** -
-  Base58 format (e.g., `9xQeWvG816...`) Always use the correct address for the
-  target blockchain to avoid lost funds.
-</Accordion>
-
-{" "}
-
-<Accordion title="Token Decimals">
-  Stablecoins use different decimal places: - **USDC** - 6 decimals (1 USDC =
-  1,000,000 micro-USDC) - **USDT** - 6 decimals Always check the `decimals`
-  field in API responses to correctly display amounts.
-</Accordion>
-
+  <Accordion title="Token Decimals">
+    Stablecoins use different decimal places: - **USDC** - 6 decimals (1 USDC = 1,000,000 micro-USDC) - **USDT** - 6 decimals Always check the `decimals` field in API responses to correctly display amounts.
+  </Accordion>
   <Accordion title="Confirmation Times">
     Blockchain transfer speeds vary by network:
+
     - **Polygon** - ~2 seconds
-    - **Ethereum** - ~12 seconds  
+    - **Ethereum** - ~12 seconds
     - **Solana** - ~0.4 seconds
     - **Base** - ~2 seconds
-    
+
     HIFI credits deposits after the blockchain confirms the transaction.
   </Accordion>
 </AccordionGroup>
@@ -327,9 +325,7 @@ See [Offramp](/docs/transactions/offramps) for detailed instructions.
     ```
 
     Check that `displayBalance` is greater than or equal to the amount you want to send. If insufficient, the transfer will fail with an insufficient balance error.
-
   </Step>
-
   <Step title="Monitor deposit status">
     List recent deposits using the [Get Inbound Deposits](https://docs.hifibridge.com/api-reference/wallet/get-inbound-deposits) endpoint.
 
@@ -339,14 +335,13 @@ See [Offramp](/docs/transactions/offramps) for detailed instructions.
     ```
 
     Look for the deposit record with the matching `transactionHash`. The `status` field shows:
+
     - `PENDING` - Waiting for blockchain confirmation
     - `COMPLETED` - Funds credited to wallet
     - `FAILED` - Transaction failed (funds not received)
 
     Alternatively, set up `WALLET.DEPOSIT` webhook events for real-time notifications instead of polling the API.
-
   </Step>
-
   <Step title="Display balance to users">
     Convert the raw balance response to a user-friendly display format.
 
@@ -358,24 +353,23 @@ See [Offramp](/docs/transactions/offramps) for detailed instructions.
         headers: { Authorization: "Bearer YOUR_API_KEY" },
       }
     );
-
+    
     const data = await response.json();
-
+    
     // Use displayBalance for user-facing displays
     console.log(`Balance: ${data.displayBalance} USDC`);
-
+    
     // Or calculate manually from raw balance and decimals
     const displayAmount =
       parseFloat(data.balance) / Math.pow(10, data.tokenInfo.decimals);
     console.log(`Balance: ${displayAmount.toFixed(2)} USDC`);
     ```
-
   </Step>
 </Steps>
 
 ## Getting Help
 
-- 📧 **Email:** support@hifi.com
+- 📧 **Email:** [support@hifi.com](mailto:support@hifi.com)
 - 💬 **Slack:** Message us in our shared Slack channel
 
 ## Related Resources
