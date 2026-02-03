@@ -157,14 +157,23 @@
         "pages": [
           {
             "group": "Introduction",
-            "pages": ["overview", "sandbox", "dashboard", "availability", "coverage"]
+            "pages": [
+              "overview",
+              "sandbox",
+              "dashboard",
+              "availability",
+              "coverage"
+            ]
           },
           {
             "group": "Core concepts",
             "pages": [
               {
                 "group": "Users",
-                "pages": ["users/overview", "users/tos"]
+                "pages": [
+                  "users/overview",
+                  "users/tos"
+                ]
               },
               "wallets",
               {
@@ -218,13 +227,22 @@
               },
               {
                 "group": "Reporting",
-                "pages": ["reporting/metrics"]
+                "pages": [
+                  "reporting/metrics"
+                ]
               }
             ]
           },
           {
             "group": "Features",
             "pages": [
+              {
+                "group": "Canton",
+                "tag": "NEW",
+                "pages": [
+                  "docs/features/canton/untitled-page"
+                ]
+              },
               "features/kyc-links",
               "features/exchange-rates",
               "features/batch-transfers",
@@ -310,14 +328,20 @@
       },
       {
         "tab": "Changelog",
-        "pages": ["changelog"]
+        "pages": [
+          "changelog"
+        ]
       },
       {
         "tab": "API Reference",
         "pages": [
           {
             "group": "Overview",
-            "pages": ["api/authentication", "api/responses", "api/errors"]
+            "pages": [
+              "api/authentication",
+              "api/responses",
+              "api/errors"
+            ]
           },
           {
             "group": "Endpoints",
@@ -325,7 +349,9 @@
             "pages": [
               {
                 "group": "Common",
-                "pages": ["GET /v2/ping"]
+                "pages": [
+                  "GET /v2/ping"
+                ]
               },
               {
                 "group": "Users",
@@ -360,7 +386,9 @@
               },
               {
                 "group": "File",
-                "pages": ["POST /v2/files"]
+                "pages": [
+                  "POST /v2/files"
+                ]
               },
               {
                 "group": "Wallets",
