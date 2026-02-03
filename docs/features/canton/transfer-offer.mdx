@@ -119,18 +119,6 @@ curl -X GET "https://api.hifibridge.com/v2/wallets/:walletId/offers/:offerId" \
 }
 ```
 
-### Webhook Notifications
-
-HIFI sends webhook events to notify your system of transfer offer state changes.
-
-- Event format: `WALLET.OFFER.{status}`
-- `{status}` will be one of: `RECEIVED`, `PENDING`, `ACCEPTED`, `REJECTED`
-- The webhook payload uses the **same schema as the GET transfer offer endpoint**
-
-<Note>
-  Listen to the `WALLET.OFFER.RECEIVED` webhook events to be notified whenever a new incoming transfer offer is available for action.
-</Note>
-
 ## Action Transfer Offer
 
 Once a transfer offer has been received, the recipient can **accept or reject** the offer. The choice determines whether the asset will be credited into recipient's wallet or not.
@@ -233,9 +221,24 @@ curl -X POST "https://api.hifibridge.com/v2/wallets/<walletId>/offers/<offerId>/
 
 Each Canton transfer offer has a `status` that reflects its current state:
 
-| Status     | Description                                                                                                     |
-| ---------- | --------------------------------------------------------------------------------------------------------------- |
-| `RECEIVED` | The offer has been received by the destination wallet and is ready to be acted upon.                             |
-| `PENDING`  | The offer is currently in the process of being accepted or rejected.                                             |
-| `ACCEPTED` | The recipient has accepted the offer. The transfer has been executed and the asset has been moved.               |
+| Status     | Description                                                                                                            |
+| ---------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `RECEIVED` | The offer has been received by the destination wallet and is ready to be acted upon.                                   |
+| `PENDING`  | The offer is currently in the process of being accepted or rejected.                                                   |
+| `ACCEPTED` | The recipient has accepted the offer. The transfer has been executed and the asset has been moved.                     |
 | `REJECTED` | The recipient has rejected the offer. No transfer occurred, and the locked asset has been released back to the sender. |
+
+## Webhook Notifications
+
+HIFI sends webhook events to notify your system of transfer offer state changes.
+
+| Webhook Event           | Description                                                                                     |
+| ----------------------- | ----------------------------------------------------------------------------------------------- |
+| `WALLET.OFFER.RECEIVED` | A new transfer offer has been received by the destination wallet and is ready to be acted upon. |
+| `WALLET.OFFER.PENDING`  | The transfer offer is currently being accepted or rejected.                                     |
+| `WALLET.OFFER.ACCEPTED` | The recipient has accepted the offer. The transfer has been executed and the asset moved.       |
+| `WALLET.OFFER.REJECTED` | The recipient has rejected the offer. No transfer occurred, and the locked asset is released.   |
+
+<Note>
+  Listen to the `WALLET.OFFER.RECEIVED` webhook events to be notified whenever a new incoming transfer offer is available for action.
+</Note>
