@@ -174,3 +174,18 @@ The data object is expected to have the same structure as the response from the 
   "version": "v2"
 }
 ```
+
+## WALLET.OFFER
+
+Transfer offer events are sent when the status of a transfer offer changes. The event format follows the pattern `WALLET.OFFER.{status}`.
+
+### Event Types
+
+| Event Type | Description |
+|------------|-------------|
+| `WALLET.OFFER.RECEIVED` | Transfer offer has been received |
+| `WALLET.OFFER.PENDING` | Transfer offer is pending action |
+| `WALLET.OFFER.ACCEPTED` | Transfer offer has been accepted |
+| `WALLET.OFFER.REJECTED` | Transfer offer has been rejected |
+
+The webhook payload uses the same schema as the GET transfer offer endpoint.
