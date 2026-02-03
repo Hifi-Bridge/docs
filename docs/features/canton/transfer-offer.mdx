@@ -135,6 +135,10 @@ HIFI sends webhook events to notify your system of transfer offer state changes.
 
 Once a transfer offer has been received, the recipient can **accept or reject** the offer. The choice determines whether the asset will be credited into recipient's wallet or not.
 
+<Note>
+  A transfer offer must be **accepted or rejected** by the recipient before it expires. Once the expiration time passes, the offer is no longer valid.
+</Note>
+
 ### Accept a Transfer Offer
 
 Accepting a transfer offer executes the asset transfer and finalizes the transaction.
@@ -224,3 +228,14 @@ curl -X POST "https://api.hifibridge.com/v2/wallets/<walletId>/offers/<offerId>/
 - Transaction status changes from `PENDING` → `REJECTED`
 - `executionTransactionHash` is set once the rejection is recorded
 - Your system can listen to the `WALLET.OFFER.REJECTED` webhook to trigger downstream actions
+
+## Offer Statuses
+
+Each Canton transfer offer has a `status` that reflects its current state:
+
+| Status     | Description                                                                                                     |
+| ---------- | --------------------------------------------------------------------------------------------------------------- |
+| `RECEIVED` | The offer has been received by the destination wallet and is ready to be acted upon.                             |
+| `PENDING`  | The offer is currently in the process of being accepted or rejected.                                             |
+| `ACCEPTED` | The recipient has accepted the offer. The transfer has been executed and the asset has been moved.               |
+| `REJECTED` | The recipient has rejected the offer. No transfer occurred, and the locked asset has been released back to the sender. |
