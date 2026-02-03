@@ -240,7 +240,8 @@
                 "group": "Canton",
                 "tag": "NEW",
                 "pages": [
-                  "docs/features/canton/untitled-page"
+                  "docs/features/canton/overview",
+                  "docs/features/canton/transfer-offer"
                 ]
               },
               "features/kyc-links",
