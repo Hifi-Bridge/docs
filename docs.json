@@ -241,7 +241,8 @@
                 "tag": "NEW",
                 "pages": [
                   "docs/features/canton/overview",
-                  "docs/features/canton/transfer-offer"
+                  "docs/features/canton/transfer-offer",
+                  "docs/features/canton/transfer-offer-copied-1"
                 ]
               },
               "features/kyc-links",
