@@ -66,7 +66,7 @@
       },
       {
         "rel": "preconnect",
-        "href": "https://dashboard.hifibridge.com",
+        "href": "https://app.hifi.com",
         "crossorigin": ""
       }
     ],
@@ -140,7 +140,7 @@
     "primary": {
       "type": "button",
       "label": "Dashboard",
-      "href": "https://dashboard.hifibridge.com"
+      "href": "https://app.hifi.com"
     }
   },
   "footer": {
@@ -170,10 +170,7 @@
             "pages": [
               {
                 "group": "Users",
-                "pages": [
-                  "users/overview",
-                  "users/tos"
-                ]
+                "pages": ["users/overview", "users/tos"]
               },
               "wallets",
               {
@@ -227,9 +224,7 @@
               },
               {
                 "group": "Reporting",
-                "pages": [
-                  "reporting/metrics"
-                ]
+                "pages": ["reporting/metrics"]
               }
             ]
           },
@@ -330,20 +325,14 @@
       },
       {
         "tab": "Changelog",
-        "pages": [
-          "changelog"
-        ]
+        "pages": ["changelog"]
       },
       {
         "tab": "API Reference",
         "pages": [
           {
             "group": "Overview",
-            "pages": [
-              "api/authentication",
-              "api/responses",
-              "api/errors"
-            ]
+            "pages": ["api/authentication", "api/responses", "api/errors"]
           },
           {
             "group": "Endpoints",
@@ -351,9 +340,7 @@
             "pages": [
               {
                 "group": "Common",
-                "pages": [
-                  "GET /v2/ping"
-                ]
+                "pages": ["GET /v2/ping"]
               },
               {
                 "group": "Users",
@@ -388,9 +375,7 @@
               },
               {
                 "group": "File",
-                "pages": [
-                  "POST /v2/files"
-                ]
+                "pages": ["POST /v2/files"]
               },
               {
                 "group": "Wallets",
