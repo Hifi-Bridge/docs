@@ -458,6 +458,15 @@
                 ]
               },
               {
+                "group": "Wallet Offers",
+                "pages": [
+                  "GET /v2/wallets/{walletId}/offers",
+                  "GET /v2/wallets/{walletId}/offers/{offerId}",
+                  "POST /v2/wallets/{walletId}/offers/{offerId}/accept",
+                  "POST /v2/wallets/{walletId}/offers/{offerId}/reject"
+                ]
+              },
+              {
                 "group": "Wallet Bridges",
                 "pages": [
                   "GET /v2/wallets/bridges",
