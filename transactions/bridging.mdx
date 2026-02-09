@@ -340,19 +340,13 @@ Currently supported bridging routes:
       }'
     ```
   </Step>
-
-{" "}
-
-<Step title="Monitor progress">
-  Poll the retrieve endpoint or subscribe to `WALLET.BRIDGE.UPDATE` webhooks.
-  Track through statuses: 1. SOURCE_INITIATED → SOURCE_PENDING →
-  SOURCE_PROCESSED 2. DESTINATION_INITIATED → DESTINATION_PENDING → COMPLETED
-</Step>
-
+  <Step title="Monitor progress">
+    Poll the retrieve endpoint or subscribe to `WALLET.BRIDGE.UPDATE` webhooks.
+    Track through statuses: 1. SOURCE_INITIATED → SOURCE_PENDING →
+    SOURCE_PROCESSED 2. DESTINATION_INITIATED → DESTINATION_PENDING → COMPLETED
+  </Step>
   <Step title="Verify on block explorers">
-    Once COMPLETED, use transaction hashes from `receipt.operations` to verify:
-    - Check burn transaction on source chain explorer (Polygonscan)
-    - Check mint transaction on destination chain explorer (Etherscan)
+    Once COMPLETED, use transaction hashes from `receipt.operations` to verify: Check burn transaction on source chain explorer (Polygonscan); check mint transaction on destination chain explorer (Etherscan).
   </Step>
 </Steps>
 
@@ -382,16 +376,12 @@ Currently supported bridging routes:
       }'
     ```
   </Step>
-
-{" "}
-
-<Step title="Review pending bridge">
-  The bridge enters `PENDING_APPROVAL` status. Dashboard admins are notified to
-  approve or reject via email and webhook.
-</Step>
-
+  <Step title="Review pending bridge">
+    The bridge enters `PENDING_APPROVAL` status. Dashboard admins are notified to
+    approve or reject via email and webhook.
+  </Step>
   <Step title="Execution or rejection">
-    If approved, the bridge proceeds through normal processing. If rejected, it's cancelled.
+    If approved, the bridge proceeds through normal processing. If rejected, it is cancelled.
   </Step>
 </Steps>
 
