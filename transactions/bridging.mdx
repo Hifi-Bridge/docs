@@ -3,7 +3,6 @@ title: "Bridging"
 description: "Bridging transfers stablecoins across different blockchain networks. Move assets from one chain to another, such as transferring USDC from Ethereum to Polygon or Solana."
 ---
 
-
 ## How Bridging Works
 
 Bridging follows a straightforward process:
@@ -110,13 +109,15 @@ The response contains the bridge request details:
 </Accordion>
 
 <ResponseField name="transferDetails.id" type="string">
-  Unique bridge ID. Use this to check status using the [Retrieve Bridge](https://docs.hifibridge.com/api-reference/cross-chain-bridge/retrieve-a-bridging-request)
+  Unique bridge ID. Use this to check status using the [Retrieve
+  Bridge](https://docs.hifibridge.com/api-reference/cross-chain-bridge/retrieve-a-bridging-request)
   endpoint.
 </ResponseField>
 
 <ResponseField name="transferDetails.status" type="string">
   Bridge status. Progression: `CREATED` → `SOURCE_INITIATED` →
-  `SOURCE_PROCESSED` → `DESTINATION_INITIATED` → `COMPLETED`. See [Transaction Status](#transaction-status) for details.
+  `SOURCE_PROCESSED` → `DESTINATION_INITIATED` → `COMPLETED`. See [Transaction
+  Status](#transaction-status) for details.
 </ResponseField>
 
 <ResponseField name="transferDetails.source" type="object">
@@ -142,7 +143,8 @@ The response contains the bridge request details:
 </ResponseField>
 
 <Info>
-  For detailed field documentation, see the [Create Bridge](https://docs.hifibridge.com/api-reference/bridge/create-a-bridge) API
+  For detailed field documentation, see the [Create
+  Bridge](https://docs.hifibridge.com/api-reference/bridge/create-a-bridge) API
   reference.
 </Info>
 
