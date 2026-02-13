@@ -33,8 +33,14 @@
       "apple-mobile-web-app-title": "HIFI Docs"
     },
     "links": [
-      { "rel": "canonical", "href": "https://docs.hifibridge.com/" },
-      { "rel": "sitemap", "href": "https://docs.hifibridge.com/sitemap.xml" },
+      {
+        "rel": "canonical",
+        "href": "https://docs.hifibridge.com/"
+      },
+      {
+        "rel": "sitemap",
+        "href": "https://docs.hifibridge.com/sitemap.xml"
+      },
       {
         "rel": "alternate",
         "href": "https://docs.hifibridge.com/",
@@ -45,8 +51,15 @@
         "href": "https://docs.hifibridge.com/",
         "hreflang": "en"
       },
-      { "rel": "manifest", "href": "/site.webmanifest" },
-      { "rel": "icon", "href": "/favicon.svg", "type": "image/svg+xml" },
+      {
+        "rel": "manifest",
+        "href": "/site.webmanifest"
+      },
+      {
+        "rel": "icon",
+        "href": "/favicon.svg",
+        "type": "image/svg+xml"
+      },
       {
         "rel": "icon",
         "href": "/favicon-32x32.png",
@@ -77,51 +90,31 @@
         "name": "HIFI",
         "url": "https://hifibridge.com",
         "logo": "https://docs.hifibridge.com/og.png",
-        "sameAs": ["https://twitter.com/hifibridge"]
-      },
-      {
-        "@context": "https://schema.org",
-        "@type": "SoftwareApplication",
-        "name": "HIFI Payment Orchestration API",
-        "applicationCategory": "DeveloperApplication",
-        "operatingSystem": "Web",
-        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-        "aggregateRating": {
-          "@type": "AggregateRating",
-          "ratingValue": "5",
-          "ratingCount": "12"
-        },
-        "url": "https://hifibridge.com",
-        "description": "Compose payment workflows and automate money movement with our APIs and tools. Connect KYC/KYB, virtual accounts, transfers, and webhooks into intelligent flows that orchestrate stablecoins and fiat rails."
+        "sameAs": [
+          "https://x.com/hifibridge",
+          "https://github.com/Hifi-Bridge",
+          "https://www.linkedin.com/company/hifibridge"
+        ]
       },
       {
         "@context": "https://schema.org",
         "@type": "WebSite",
         "name": "HIFI Docs",
         "url": "https://docs.hifibridge.com/",
+        "description": "Build modern payment workflows and automate money movement.",
+        "publisher": {
+          "@type": "Organization",
+          "name": "HIFI",
+          "url": "https://hifibridge.com"
+        },
         "potentialAction": {
           "@type": "SearchAction",
-          "target": "https://docs.hifibridge.com/search?q={query}",
-          "query-input": "required name=query"
-        }
-      },
-      {
-        "@context": "https://schema.org",
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-          {
-            "@type": "ListItem",
-            "position": 1,
-            "name": "Getting Started",
-            "item": "https://docs.hifibridge.com/getting-started"
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "https://docs.hifibridge.com/search?q={search_term_string}"
           },
-          {
-            "@type": "ListItem",
-            "position": 2,
-            "name": "API Reference",
-            "item": "https://docs.hifibridge.com/reference"
-          }
-        ]
+          "query-input": "required name=search_term_string"
+        }
       }
     ],
     "verifications": {
@@ -511,398 +504,5 @@
       }
     ]
   },
-  "redirects": [
-    {
-      "source": "/docs/compliance/documents/overview",
-      "destination": "/compliance/documents"
-    },
-    {
-      "source": "/docs/compliance/documents/supported-identity-documents",
-      "destination": "/references/identity-documents"
-    },
-    {
-      "source": "/docs/rails/overview",
-      "destination": "/rails"
-    },
-    {
-      "source": "/docs/rails/usd-individual",
-      "destination": "/rails/usd"
-    },
-    {
-      "source": "/docs/rails/usd-business",
-      "destination": "/rails/usd"
-    },
-    {
-      "source": "/docs/compliance/currencies",
-      "destination": "/references/currencies"
-    },
-    {
-      "source": "/docs/compliance/references/:path*",
-      "destination": "/references/:path*"
-    },
-    {
-      "source": "/docs/transfers/wallets",
-      "destination": "/transactions/transfer"
-    },
-    {
-      "source": "/transfers/onchain",
-      "destination": "/transactions/transfer"
-    },
-    {
-      "source": "/transfers/onramps",
-      "destination": "/transactions/onramps"
-    },
-    {
-      "source": "/transfers/offramps",
-      "destination": "/transactions/offramps"
-    },
-    {
-      "source": "/transfers/bridging",
-      "destination": "/transactions/bridging"
-    },
-    {
-      "source": "/transfers/swaps",
-      "destination": "/transactions/swaps"
-    },
-    {
-      "source": "/docs/users/features/kyc-link",
-      "destination": "/features/kyc-links"
-    },
-    {
-      "source": "/docs/transfers/features/batch-transfers",
-      "destination": "/features/batch-transfers"
-    },
-    {
-      "source": "/docs/transfers/features/virtual-accounts",
-      "destination": "/accounts/virtual-accounts"
-    },
-    {
-      "source": "/docs/transfers/features/transfer-approvals",
-      "destination": "/features/transaction-approvals"
-    },
-    {
-      "source": "/docs/transfers/features/developer-fees",
-      "destination": "/features/developer-fees"
-    },
-    {
-      "source": "/docs/transfers/features/settlement-rules",
-      "destination": "/features/settlement-rules"
-    },
-    {
-      "source": "/features/tos-links",
-      "destination": "/users/tos"
-    },
-    {
-      "source": "/docs/api/postman",
-      "destination": "/postman"
-    },
-    {
-      "source": "/docs/webhooks/user",
-      "destination": "/webhooks/user-events"
-    },
-    {
-      "source": "/docs/webhooks/kyc",
-      "destination": "/webhooks/kyc-events"
-    },
-    {
-      "source": "/docs/webhooks/account",
-      "destination": "/webhooks/account-events"
-    },
-    {
-      "source": "/docs/webhooks/onramp",
-      "destination": "/webhooks/onramp-events"
-    },
-    {
-      "source": "/docs/webhooks/offramp",
-      "destination": "/webhooks/offramp-events"
-    },
-    {
-      "source": "/docs/webhooks/wallet",
-      "destination": "/webhooks/wallet-events"
-    },
-    {
-      "source": "/docs/accounts/offramp-accounts",
-      "destination": "/accounts/offramp-accounts"
-    },
-    {
-      "source": "/docs/accounts/virtual-accounts",
-      "destination": "/accounts/virtual-accounts"
-    },
-    {
-      "source": "/docs/api/authentication",
-      "destination": "/api/authentication"
-    },
-    {
-      "source": "/docs/api/errors",
-      "destination": "/api/errors"
-    },
-    {
-      "source": "/docs/api/responses",
-      "destination": "/api/responses"
-    },
-    {
-      "source": "/docs/compliance/documents/identity",
-      "destination": "/compliance/documents/identity"
-    },
-    {
-      "source": "/docs/compliance/documents",
-      "destination": "/compliance/documents"
-    },
-    {
-      "source": "/docs/compliance/documents/proof-of-address",
-      "destination": "/compliance/documents/proof-of-address"
-    },
-    {
-      "source": "/docs/compliance/industries",
-      "destination": "/compliance/industries"
-    },
-    {
-      "source": "/docs/compliance/regions",
-      "destination": "/compliance/regions"
-    },
-    {
-      "source": "/docs/dashboard",
-      "destination": "/dashboard"
-    },
-    {
-      "source": "/docs/dashboard/roles",
-      "destination": "/dashboard/roles"
-    },
-    {
-      "source": "/docs/features/batch-transfers",
-      "destination": "/features/batch-transfers"
-    },
-    {
-      "source": "/docs/features/developer-fees",
-      "destination": "/features/developer-fees"
-    },
-    {
-      "source": "/docs/features/exchange-rates",
-      "destination": "/features/exchange-rates"
-    },
-    {
-      "source": "/docs/features/kyc-links",
-      "destination": "/features/kyc-links"
-    },
-    {
-      "source": "/docs/features/settlement-rules",
-      "destination": "/features/settlement-rules"
-    },
-    {
-      "source": "/docs/features/tos-links",
-      "destination": "/features/tos-links"
-    },
-    {
-      "source": "/docs/features/transfer-approvals",
-      "destination": "/features/transaction-approvals"
-    },
-    {
-      "source": "/docs/guides",
-      "destination": "/guides"
-    },
-    {
-      "source": "/docs",
-      "destination": "/"
-    },
-    {
-      "source": "/docs/overview",
-      "destination": "/overview"
-    },
-    {
-      "source": "/docs/postman",
-      "destination": "/postman"
-    },
-    {
-      "source": "/quickstart",
-      "destination": "/guides/quickstart"
-    },
-    {
-      "source": "/docs/quickstart",
-      "destination": "/guides/quickstart"
-    },
-    {
-      "source": "/docs/rails/africa",
-      "destination": "/rails/africa"
-    },
-    {
-      "source": "/docs/rails/global-network",
-      "destination": "/rails/global-network"
-    },
-    {
-      "source": "/docs/rails",
-      "destination": "/rails"
-    },
-    {
-      "source": "/docs/rails/usd",
-      "destination": "/rails/usd"
-    },
-    {
-      "source": "/docs/references/account-purposes",
-      "destination": "/references/account-purposes"
-    },
-    {
-      "source": "/docs/references/business-industries/administrative-support-services",
-      "destination": "/references/business-industries/administrative-support-services"
-    },
-    {
-      "source": "/docs/references/business-industries/agriculture-forestry",
-      "destination": "/references/business-industries/agriculture-forestry"
-    },
-    {
-      "source": "/docs/references/business-industries/arts-recreation-entertainment",
-      "destination": "/references/business-industries/arts-recreation-entertainment"
-    },
-    {
-      "source": "/docs/references/business-industries/construction",
-      "destination": "/references/business-industries/construction"
-    },
-    {
-      "source": "/docs/references/business-industries/education",
-      "destination": "/references/business-industries/education"
-    },
-    {
-      "source": "/docs/references/business-industries/finance-insurance",
-      "destination": "/references/business-industries/finance-insurance"
-    },
-    {
-      "source": "/docs/references/business-industries/health-social-services",
-      "destination": "/references/business-industries/health-social-services"
-    },
-    {
-      "source": "/docs/references/business-industries/hospitality-food",
-      "destination": "/references/business-industries/hospitality-food"
-    },
-    {
-      "source": "/docs/references/business-industries",
-      "destination": "/references/business-industries"
-    },
-    {
-      "source": "/docs/references/business-industries/information-media",
-      "destination": "/references/business-industries/information-media"
-    },
-    {
-      "source": "/docs/references/business-industries/manufacturing",
-      "destination": "/references/business-industries/manufacturing"
-    },
-    {
-      "source": "/docs/references/business-industries/mining-energy",
-      "destination": "/references/business-industries/mining-energy"
-    },
-    {
-      "source": "/docs/references/business-industries/other-services",
-      "destination": "/references/business-industries/other-services"
-    },
-    {
-      "source": "/docs/references/business-industries/professional-technical-services",
-      "destination": "/references/business-industries/professional-technical-services"
-    },
-    {
-      "source": "/docs/references/business-industries/public-administration",
-      "destination": "/references/business-industries/public-administration"
-    },
-    {
-      "source": "/docs/references/business-industries/real-estate-leasing",
-      "destination": "/references/business-industries/real-estate-leasing"
-    },
-    {
-      "source": "/docs/references/business-industries/transportation-logistics",
-      "destination": "/references/business-industries/transportation-logistics"
-    },
-    {
-      "source": "/docs/references/business-industries/wholesale-retail-trade",
-      "destination": "/references/business-industries/wholesale-retail-trade"
-    },
-    {
-      "source": "/docs/references/currencies",
-      "destination": "/references/currencies"
-    },
-    {
-      "source": "/docs/references/export-categories",
-      "destination": "/references/export-categories"
-    },
-    {
-      "source": "/docs/references/identity-documents",
-      "destination": "/references/identity-documents"
-    },
-    {
-      "source": "/docs/references/occupations",
-      "destination": "/references/occupations"
-    },
-    {
-      "source": "/docs/references/product-service-categories",
-      "destination": "/references/product-service-categories"
-    },
-    {
-      "source": "/docs/sandbox",
-      "destination": "/sandbox"
-    },
-    {
-      "source": "/docs/transfers/bridging",
-      "destination": "/transactions/bridging"
-    },
-    {
-      "source": "/docs/transfers/offramps",
-      "destination": "/transactions/offramps"
-    },
-    {
-      "source": "/docs/transfers/onchain",
-      "destination": "/transactions/transfer"
-    },
-    {
-      "source": "/docs/transfers/onramps",
-      "destination": "/transactions/onramps"
-    },
-    {
-      "source": "/docs/transfers/swaps",
-      "destination": "/transactions/swaps"
-    },
-    {
-      "source": "/docs/users",
-      "destination": "/users"
-    },
-    {
-      "source": "/docs/users/kyc",
-      "destination": "/users/kyc"
-    },
-    {
-      "source": "/docs/wallets/balances",
-      "destination": "/wallets/balances"
-    },
-    {
-      "source": "/docs/wallets/deposits",
-      "destination": "/wallets/deposits"
-    },
-    {
-      "source": "/docs/wallets",
-      "destination": "/wallets"
-    },
-    {
-      "source": "/docs/webhooks/account-events",
-      "destination": "/webhooks/account-events"
-    },
-    {
-      "source": "/docs/webhooks",
-      "destination": "/webhooks"
-    },
-    {
-      "source": "/docs/webhooks/kyc-events",
-      "destination": "/webhooks/kyc-events"
-    },
-    {
-      "source": "/docs/webhooks/offramp-events",
-      "destination": "/webhooks/offramp-events"
-    },
-    {
-      "source": "/docs/webhooks/onramp-events",
-      "destination": "/webhooks/onramp-events"
-    },
-    {
-      "source": "/docs/webhooks/user-events",
-      "destination": "/webhooks/user-events"
-    },
-    {
-      "source": "/docs/webhooks/wallet-events",
-      "destination": "/webhooks/wallet-events"
-    }
-  ]
+  "redirects": []
 }

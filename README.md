@@ -12,6 +12,10 @@ Click the green **Use this template** button at the top of this repo to copy the
 
 **[Follow the full quickstart guide](https://starter.mintlify.com/quickstart)**
 
+## Project structure
+
+Documentation files (`.mdx`) live in the project root. We avoid a `docs/` subfolder because the site is served at docs.hifibridge.com—a `/docs` path would create redundant URLs like docs.hifibridge.com/docs. Add new pages at the root and reference them in `docs.json` navigation.
+
 ## Development
 
 Install the [Mintlify CLI](https://www.npmjs.com/package/mint) to preview your documentation changes locally. To install, use the following command:
@@ -40,5 +44,6 @@ Install our GitHub app from your [dashboard](https://dashboard.mintlify.com/sett
 - If a page loads as a 404: Make sure you are running in a folder with a valid `docs.json`.
 
 ### Resources
+
 - [Mintlify documentation](https://mintlify.com/docs)
 - [Mintlify community](https://mintlify.com/community)
