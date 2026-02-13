@@ -14,7 +14,7 @@ Click the green **Use this template** button at the top of this repo to copy the
 
 ## Project structure
 
-Documentation files (`.mdx`) live in the project root. We avoid a `docs/` subfolder because the site is served at docs.hifibridge.com—a `/docs` path would create redundant URLs like docs.hifibridge.com/docs. Add new pages at the root and reference them in `docs.json` navigation.
+Documentation files (`.mdx`) live in the project root. We avoid a `docs/` subfolder because the site is served at docs.hifi.com—a `/docs` path would create redundant URLs like docs.hifi.com/docs. Add new pages at the root and reference them in `docs.json` navigation.
 
 ## Development
 

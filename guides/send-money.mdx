@@ -36,7 +36,7 @@ Sending money is a two-step process:
 
 ## Step 1: Create Offramp Request
 
-Create an offramp request using the [Create an offramp](https://docs.hifibridge.com/api-reference/offramp/create-an-offramp) endpoint:
+Create an offramp request using the [Create an offramp](https://docs.hifi.com/api-reference/offramp/create-an-offramp) endpoint:
 
 **Request:**
 
@@ -226,7 +226,7 @@ curl --request POST \
 
 ## Step 2: Accept the Quote
 
-After reviewing the quote, accept it to start the offramp process using the [Accept Quote](https://docs.hifibridge.com/api-reference/offramp/accept-quote) endpoint:
+After reviewing the quote, accept it to start the offramp process using the [Accept Quote](https://docs.hifi.com/api-reference/offramp/accept-quote) endpoint:
 
 **Request:**
 
@@ -274,7 +274,7 @@ curl --request POST \
 
 **Monitor via:**
 
-- **Polling:** Call [Retrieve an offramp](https://docs.hifibridge.com/api-reference/offramp/retrieve-an-offramp) with the transaction ID
+- **Polling:** Call [Retrieve an offramp](https://docs.hifi.com/api-reference/offramp/retrieve-an-offramp) with the transaction ID
 - **Webhooks:** Subscribe to `OFFRAMP.UPDATE` events for real-time notifications
 
 <Note>
@@ -288,4 +288,4 @@ curl --request POST \
 - **[Receive Money](/docs/guides/receive-money)** - Convert fiat to stablecoins
 - **[Offramps](/docs/transactions/offramps)** - Detailed offramp documentation
 - **[Webhooks](/docs/webhooks)** - Real-time transaction monitoring
-- **[API Reference](https://docs.hifibridge.com/api-reference)** - Complete endpoint documentation
+- **[API Reference](https://docs.hifi.com/api-reference)** - Complete endpoint documentation

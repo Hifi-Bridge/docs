@@ -13,7 +13,7 @@ tag: "New"
   </Step>
   <Step title="Accept the swap">
     Accept the swap using the [Accept
-    Swap](https://docs.hifibridge.com/api-reference/swap/accept-a-swap) endpoint
+    Swap](https://docs.hifi.com/api-reference/swap/accept-a-swap) endpoint
     to execute the exchange.
   </Step>
   <Step title="Completion">
@@ -48,7 +48,7 @@ The Swap endpoint uses a two-part billing model:
 
 ## Creating Swaps
 
-Use the [Create Swap](https://docs.hifibridge.com/api-reference/swap/create-a-swap) endpoint to exchange currencies on the same chain.
+Use the [Create Swap](https://docs.hifi.com/api-reference/swap/create-a-swap) endpoint to exchange currencies on the same chain.
 
 <CodeGroup>
 
@@ -148,7 +148,7 @@ The response contains the swap details. Swaps are created in `PENDING` status an
 
 <ResponseField name="transferDetails.id" type="string">
   Unique swap ID. Use this to check status using the [Retrieve
-  Swap](https://docs.hifibridge.com/api-reference/token-swap/retrieve-a-swap)
+  Swap](https://docs.hifi.com/api-reference/token-swap/retrieve-a-swap)
   endpoint.
 </ResponseField>
 
@@ -193,13 +193,13 @@ The response contains the swap details. Swaps are created in `PENDING` status an
 
 <Info>
   For detailed field documentation, see the [Create
-  Swap](https://docs.hifibridge.com/api-reference/token-swap/create-a-swap) API
+  Swap](https://docs.hifi.com/api-reference/token-swap/create-a-swap) API
   reference.
 </Info>
 
 ## Accepting Swaps
 
-All swaps are created in `PENDING` status and require explicit acceptance before execution. Use the [Accept Swap](https://docs.hifibridge.com/api-reference/swap/accept-a-swap) endpoint to accept and execute a swap.
+All swaps are created in `PENDING` status and require explicit acceptance before execution. Use the [Accept Swap](https://docs.hifi.com/api-reference/swap/accept-a-swap) endpoint to accept and execute a swap.
 
 **Request:**
 
@@ -292,7 +292,7 @@ Swaps progress through the following statuses:
 
 ## Tracking Swaps
 
-Monitor swap status using the [Retrieve Swap](https://docs.hifibridge.com/api-reference/token-swap/retrieve-a-swap) endpoint.
+Monitor swap status using the [Retrieve Swap](https://docs.hifi.com/api-reference/token-swap/retrieve-a-swap) endpoint.
 
 **Request:**
 
@@ -360,7 +360,7 @@ The retrieve response includes current swap status:
 
 ## Listing Swaps
 
-Retrieve a list of all swaps associated with users under your organization using the [List Swaps](https://docs.hifibridge.com/api-reference/token-swap/list-all-swaps) endpoint. Swaps are returned sorted by creation date, with the most recent swaps appearing first.
+Retrieve a list of all swaps associated with users under your organization using the [List Swaps](https://docs.hifi.com/api-reference/token-swap/list-all-swaps) endpoint. Swaps are returned sorted by creation date, with the most recent swaps appearing first.
 
 **Request:**
 
@@ -656,4 +656,4 @@ curl -X GET "https://sandbox.hifibridge.com/v2/wallets/swaps?userId=usr_abc123&l
 - [Bridging](/docs/transactions/bridging) - Cross-chain asset movement
 - [Wallets](/docs/wallets) - Understand wallet addresses and balances
 - [Webhooks](/docs/webhooks) - Real-time swap status notifications
-- [API Reference](https://docs.hifibridge.com/api-reference/token-swap/create-a-swap) - Complete endpoint documentation
+- [API Reference](https://docs.hifi.com/api-reference/token-swap/create-a-swap) - Complete endpoint documentation

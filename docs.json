@@ -20,7 +20,7 @@
       "robots": "index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1",
       "og:title": "HIFI Docs",
       "og:type": "website",
-      "og:url": "https://docs.hifibridge.com/",
+      "og:url": "https://docs.hifi.com/",
       "og:description": "Build modern payment workflows and automate money movement.",
       "og:site_name": "HIFI Docs",
       "og:locale": "en_US",
@@ -35,20 +35,20 @@
     "links": [
       {
         "rel": "canonical",
-        "href": "https://docs.hifibridge.com/"
+        "href": "https://docs.hifi.com/"
       },
       {
         "rel": "sitemap",
-        "href": "https://docs.hifibridge.com/sitemap.xml"
+        "href": "https://docs.hifi.com/sitemap.xml"
       },
       {
         "rel": "alternate",
-        "href": "https://docs.hifibridge.com/",
+        "href": "https://docs.hifi.com/",
         "hreflang": "x-default"
       },
       {
         "rel": "alternate",
-        "href": "https://docs.hifibridge.com/",
+        "href": "https://docs.hifi.com/",
         "hreflang": "en"
       },
       {
@@ -89,7 +89,7 @@
         "@type": "Organization",
         "name": "HIFI",
         "url": "https://hifibridge.com",
-        "logo": "https://docs.hifibridge.com/og.png",
+        "logo": "https://docs.hifi.com/og.png",
         "sameAs": [
           "https://x.com/hifibridge",
           "https://github.com/Hifi-Bridge",
@@ -100,7 +100,7 @@
         "@context": "https://schema.org",
         "@type": "WebSite",
         "name": "HIFI Docs",
-        "url": "https://docs.hifibridge.com/",
+        "url": "https://docs.hifi.com/",
         "description": "Build modern payment workflows and automate money movement.",
         "publisher": {
           "@type": "Organization",
@@ -111,7 +111,7 @@
           "@type": "SearchAction",
           "target": {
             "@type": "EntryPoint",
-            "urlTemplate": "https://docs.hifibridge.com/search?q={search_term_string}"
+            "urlTemplate": "https://docs.hifi.com/search?q={search_term_string}"
           },
           "query-input": "required name=search_term_string"
         }

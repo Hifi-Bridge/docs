@@ -1,6 +1,6 @@
 ---
 title: "KYB Status"
-description: "To check where a business's verification stands, diagnose issues, and confirm when they're ready to use a rail, use the [KYC Status endpoint](https://docs.hifibridge.com/api-reference/kyc/retrieve-kyc-status). This guide focuses on interpreting the business-specific response."
+description: "To check where a business's verification stands, diagnose issues, and confirm when they're ready to use a rail, use the [KYC Status endpoint](https://docs.hifi.com/api-reference/kyc/retrieve-kyc-status). This guide focuses on interpreting the business-specific response."
 ---
 
 
@@ -10,7 +10,7 @@ description: "To check where a business's verification stands, diagnose issues, 
 
 <Note>
   This guide focuses on the USD rail. Requirements and response structure differ for other rails—see the [API
-  Reference](https://docs.hifibridge.com/api-reference/kyc/retrieve-kyc-status) for complete details.
+  Reference](https://docs.hifi.com/api-reference/kyc/retrieve-kyc-status) for complete details.
 </Note>
 
 ## Status Overview
@@ -335,7 +335,7 @@ The `details` object returns the compliance review outcome for each information 
     ```
   </Tab>
   <Tab title="INACTIVE">
-    No KYB submission made yet. Call the [Submit KYC endpoint](https://docs.hifibridge.com/api-reference/kyc/submit-kyc) to begin verification.
+    No KYB submission made yet. Call the [Submit KYC endpoint](https://docs.hifi.com/api-reference/kyc/submit-kyc) to begin verification.
 
     ```json
     {
@@ -484,9 +484,9 @@ The `details` object returns the compliance review outcome for each information 
 
     1. Check the `reviewResult` in each compliance category for `DECLINED` items
     2. Read the `comment` field for specific guidance
-    3. For company data: Use [**Update KYC**](https://docs.hifibridge.com/api-reference/kyc/update-kyc-information) to update non-document information, or [**Update Document**](https://docs.hifibridge.com/api-reference/kyc/update-a-document) / [**Add Document**](https://docs.hifibridge.com/api-reference/kyc/add-documents) to update documentation.
-    4. For UBO data: Update the specific UBO's information using their `id` with [Update UBO](https://docs.hifibridge.com/api-reference/kyc/update-a-ubo) or [**Update Document**](https://docs.hifibridge.com/api-reference/kyc/update-a-document) / [**Add Document**](https://docs.hifibridge.com/api-reference/kyc/add-documents) to update documentation.
-    5. Call [Submit KYC](https://docs.hifibridge.com/api-reference/kyc/submit-kyc) to trigger a new review
+    3. For company data: Use [**Update KYC**](https://docs.hifi.com/api-reference/kyc/update-kyc-information) to update non-document information, or [**Update Document**](https://docs.hifi.com/api-reference/kyc/update-a-document) / [**Add Document**](https://docs.hifi.com/api-reference/kyc/add-documents) to update documentation.
+    4. For UBO data: Update the specific UBO's information using their `id` with [Update UBO](https://docs.hifi.com/api-reference/kyc/update-a-ubo) or [**Update Document**](https://docs.hifi.com/api-reference/kyc/update-a-document) / [**Add Document**](https://docs.hifi.com/api-reference/kyc/add-documents) to update documentation.
+    5. Call [Submit KYC](https://docs.hifi.com/api-reference/kyc/submit-kyc) to trigger a new review
 
     **Business compliance category mapping:**
 
@@ -494,10 +494,10 @@ The `details` object returns the compliance review outcome for each information 
     | ------------------------ | -------------------------------------------------------------------------------------------------------- |
     | companyInfo              | Business name, address, registration number, tax ID                                                      |
     | questionnaire            | Source of funds and intended use responses                                                               |
-    | legalPresence            | [Legal presence documentation](https://docs.hifibridge.com/compliance/documents#business-documents)      |
-    | ownershipStructure       | [Ownership structure documentation](https://docs.hifibridge.com/compliance/documents#business-documents) |
-    | companyDetails           | [Company details documentation](https://docs.hifibridge.com/compliance/documents#business-documents)     |
-    | controlStructure         | [Control structure documentation](https://docs.hifibridge.com/compliance/documents#business-documents)   |
+    | legalPresence            | [Legal presence documentation](https://docs.hifi.com/compliance/documents#business-documents)      |
+    | ownershipStructure       | [Ownership structure documentation](https://docs.hifi.com/compliance/documents#business-documents) |
+    | companyDetails           | [Company details documentation](https://docs.hifi.com/compliance/documents#business-documents)     |
+    | controlStructure         | [Control structure documentation](https://docs.hifi.com/compliance/documents#business-documents)   |
     | ultimateBeneficialOwners | Individual KYC for each UBO (see [KYC Status](/kyc/kyc-status))                                          |
 
     <Info>

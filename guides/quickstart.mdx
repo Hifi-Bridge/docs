@@ -66,7 +66,7 @@ Once created, users are automatically provisioned with cryptocurrency wallet add
 <AccordionGroup>
   <Accordion title="Generate Terms of Service Link">
 
-Before creating a user, they must accept HIFI's Terms of Service. Generate a unique acceptance link using the [Generate Terms of Service Link](https://docs.hifibridge.com/v2/reference/post_v2-tos-link) endpoint.
+Before creating a user, they must accept HIFI's Terms of Service. Generate a unique acceptance link using the [Generate Terms of Service Link](https://docs.hifi.com/v2/reference/post_v2-tos-link) endpoint.
 
 You'll provide an `idempotencyKey` (any [UUID](https://www.uuidgenerator.net/)), which will become your `signedAgreementId` after the user accepts the terms.
 
@@ -109,7 +109,7 @@ curl --request POST \
 
   <Accordion title="Create User">
 
-Once your user has accepted the Terms of Service (and you've received the webhook event or confirmed acceptance), create the user account with the [Create User](https://docs.hifibridge.com/api-reference/user/create-a-user) endpoint.
+Once your user has accepted the Terms of Service (and you've received the webhook event or confirmed acceptance), create the user account with the [Create User](https://docs.hifi.com/api-reference/user/create-a-user) endpoint.
 
 **Request:**
 
@@ -320,7 +320,7 @@ curl --request GET \
 
 You can monitor KYC status by:
 
-1. **Polling** the [Retrieve KYC Status](https://docs.hifibridge.com/api-reference/kyc/retrieve-kyc-status) endpoint
+1. **Polling** the [Retrieve KYC Status](https://docs.hifi.com/api-reference/kyc/retrieve-kyc-status) endpoint
 2. **Listening** for `KYC.STATUS_UPDATE` [webhook events](/docs/webhooks/kyc-events)
 
 ---
@@ -521,7 +521,7 @@ HIFI creates an onramp transaction when a deposit is detected. You'll receive a 
 **Monitor via:**
 
 - **Webhooks:** Subscribe to `ONRAMP.UPDATE` events for real-time notifications
-- **Polling:** Call [Retrieve an onramp](https://docs.hifibridge.com/api-reference/onramp/retrieve-an-onramp) with the transaction ID
+- **Polling:** Call [Retrieve an onramp](https://docs.hifi.com/api-reference/onramp/retrieve-an-onramp) with the transaction ID
 
 <Info>
   **Learn More:** For detailed information about receiving money, see the
@@ -544,7 +544,7 @@ Now that your user has funds in their wallet, you can execute a **transfer** - s
 
 ### Create Transfer
 
-Send stablecoins from one user to another using the [Create a crypto transfer](https://docs.hifibridge.com/api-reference/crypto-transfer/create-a-crypto-transfer) endpoint.
+Send stablecoins from one user to another using the [Create a crypto transfer](https://docs.hifi.com/api-reference/crypto-transfer/create-a-crypto-transfer) endpoint.
 
 **Request:**
 
@@ -661,7 +661,7 @@ curl --request POST \
 
 <ResponseField name="transferDetails.id" type="string">
   Unique transfer ID. **Save this** to check status using the [Retrieve a crypto
-  transfer](https://docs.hifibridge.com/api-reference/crypto-transfer/retrieve-a-crypto-transfer)
+  transfer](https://docs.hifi.com/api-reference/crypto-transfer/retrieve-a-crypto-transfer)
   endpoint.
 </ResponseField>
 
@@ -683,7 +683,7 @@ curl --request POST \
 **Monitor via:**
 
 - **Webhooks:** Subscribe to `WALLET.TRANSFER.UPDATE` events for real-time notifications
-- **Polling:** Call [Retrieve a crypto transfer](https://docs.hifibridge.com/api-reference/crypto-transfer/retrieve-a-crypto-transfer) with the transfer ID
+- **Polling:** Call [Retrieve a crypto transfer](https://docs.hifi.com/api-reference/crypto-transfer/retrieve-a-crypto-transfer) with the transfer ID
 
 <Info>
   **Learn More:** For detailed information about other transaction types, see: -
@@ -706,7 +706,7 @@ Now let's convert stablecoins back to USD using an **offramp**. An offramp conve
 
 Before creating an offramp, users need to register their bank account as an **offramp account**. This account will receive fiat currency when stablecoins are converted.
 
-Create an offramp account using the [Create Account](https://docs.hifibridge.com/api-reference/account/create-an-account) endpoint:
+Create an offramp account using the [Create Account](https://docs.hifi.com/api-reference/account/create-an-account) endpoint:
 
 <Tabs>
   <Tab title="USD (US Bank Account)">
@@ -833,7 +833,7 @@ Account status indicates whether the account is ready to use:
 - `PENDING` - Account is being validated (wait for activation)
 - `REJECTED` - Validation failed (check `invalidFields` for details)
 
-Monitor via webhooks (`ACCOUNT.UPDATE`) or by polling the [Retrieve an account](https://docs.hifibridge.com/api-reference/account/retrieve-an-account) endpoint.
+Monitor via webhooks (`ACCOUNT.UPDATE`) or by polling the [Retrieve an account](https://docs.hifi.com/api-reference/account/retrieve-an-account) endpoint.
 
 <Info>
   **More Account Types:** For additional regions and currencies (China, Hong
@@ -896,7 +896,7 @@ curl --request POST \
      --header 'authorization: Bearer YOUR_API_KEY'
 ```
 
-✅ **Offramp initiated!** Monitor status via webhooks (`OFFRAMP.UPDATE`) or by polling the [Retrieve an offramp](https://docs.hifibridge.com/api-reference/offramp/retrieve-an-offramp) endpoint.
+✅ **Offramp initiated!** Monitor status via webhooks (`OFFRAMP.UPDATE`) or by polling the [Retrieve an offramp](https://docs.hifi.com/api-reference/offramp/retrieve-an-offramp) endpoint.
 
 <Info>
   **Learn More:** For detailed offramp information, see the [Send Money
@@ -927,4 +927,4 @@ Ready to build your integration? Here's what to explore next:
 - **[Webhooks](/docs/webhooks)** - Set up real-time event notifications for transaction updates
 - **[Rails Overview](/docs/rails)** - Learn about additional currency rails
 - **[Error Handling](/docs/api/errors)** - Understand error codes and how to handle failures
-- **[API Reference](https://docs.hifibridge.com/api-reference)** - Explore all available endpoints and parameters
+- **[API Reference](https://docs.hifi.com/api-reference)** - Explore all available endpoints and parameters
