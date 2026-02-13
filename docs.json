@@ -79,7 +79,7 @@
       },
       {
         "rel": "preconnect",
-        "href": "https://dashboard.hifibridge.com",
+        "href": "https://app.hifi.com",
         "crossorigin": ""
       }
     ],
@@ -133,7 +133,7 @@
     "primary": {
       "type": "button",
       "label": "Dashboard",
-      "href": "https://dashboard.hifibridge.com"
+      "href": "https://app.hifi.com"
     }
   },
   "footer": {

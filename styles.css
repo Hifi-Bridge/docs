@@ -1,7 +1,7 @@
 /* Font Face Declaration for Space Mono */
 @font-face {
   font-family: "Space Mono";
-  src: url("http://dashboard.hifibridge.com/fonts/rhithmic/SpaceMono-Regular.woff2")
+  src: url("http://app.hifi.com/fonts/rhithmic/SpaceMono-Regular.woff2")
     format("woff2");
   font-weight: normal;
   font-style: normal;
@@ -44,7 +44,8 @@
 /* Apply Inter font to the entire site */
 body,
 html {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 /* Override heading font weights to normal */
@@ -54,7 +55,8 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-weight: 400 !important;
 }
 
@@ -65,7 +67,8 @@ pre,
 .code-block,
 .highlight,
 .language-* {
-  font-family: "Space Mono", "SF Mono", "Monaco", "Inconsolata", "Roboto Mono",
+  font-family:
+    "Space Mono", "SF Mono", "Monaco", "Inconsolata", "Roboto Mono",
     "Source Code Pro", monospace;
   font-weight: 400;
 }
@@ -106,7 +109,8 @@ pre,
   left: 0;
   right: 0;
   bottom: 0;
-  background: radial-gradient(
+  background:
+    radial-gradient(
       circle at 20px 20px,
       rgba(255, 255, 255, 0.15) 1px,
       transparent 1px
@@ -117,7 +121,9 @@ pre,
       transparent 1px
     );
   background-size: 40px 40px;
-  background-position: 0 0, 20px 20px;
+  background-position:
+    0 0,
+    20px 20px;
   background-attachment: fixed;
   pointer-events: none;
 }
@@ -179,7 +185,12 @@ pre,
 }
 
 .hero-title {
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+  font-family:
+    "Inter",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
     sans-serif;
   font-size: 1.2rem;
   font-weight: 700;
@@ -194,7 +205,12 @@ pre,
 }
 
 .hero-description {
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+  font-family:
+    "Inter",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
     sans-serif;
   font-size: 1rem;
   line-height: 1.6;
