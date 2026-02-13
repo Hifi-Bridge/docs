@@ -96,7 +96,7 @@ The response contains the transfer details:
 
 <ResponseField name="transferDetails.id" type="string">
   Unique transfer ID. Use this to check status using the [Retrieve a crypto
-  transfer](https://docs.hifibridge.com/api-reference/crypto-transfer/retrieve-a-crypto-transfer)
+  transfer](https://docs.hifi.com/api-reference/crypto-transfer/retrieve-a-crypto-transfer)
   endpoint.
 </ResponseField>
 
@@ -125,7 +125,7 @@ The response contains the transfer details:
 
 <Info>
   For detailed response field documentation, see the [Create Crypto
-  Transfer](https://docs.hifibridge.com/api-reference/crypto-transfer/create-a-crypto-transfer)
+  Transfer](https://docs.hifi.com/api-reference/crypto-transfer/create-a-crypto-transfer)
   API reference.
 </Info>
 
@@ -160,7 +160,7 @@ curl -X POST "https://sandbox.hifibridge.com/v2/wallets/transfers/batch" \
 <Warning>
   **External Wallet Registration:** External wallet addresses in batch transfers
   must be registered before use. Register them using the [External Wallets
-  API](https://docs.hifibridge.com/api-reference/wallet/add-external-wallets-to-a-user).
+  API](https://docs.hifi.com/api-reference/wallet/add-external-wallets-to-a-user).
 </Warning>
 
 Let's take a look at the response:
@@ -210,7 +210,7 @@ Let's take a look at the response:
 <ResponseField name="transferDetails.id" type="string">
   Unique batch transfer ID. Use this to check status using the [Retrieve a
   crypto
-  transfer](https://docs.hifibridge.com/api-reference/crypto-transfer/retrieve-a-crypto-transfer)
+  transfer](https://docs.hifi.com/api-reference/crypto-transfer/retrieve-a-crypto-transfer)
   endpoint.
 </ResponseField>
 
@@ -235,7 +235,7 @@ Let's take a look at the response:
 
 <Info>
   For detailed field documentation, see the [Create Batch
-  Transfer](https://docs.hifibridge.com/api-reference/crypto-transfer/create-a-batch-transfer)
+  Transfer](https://docs.hifi.com/api-reference/crypto-transfer/create-a-batch-transfer)
   API reference.
 </Info>
 
@@ -261,7 +261,7 @@ Wallet transfets progress through several statuses:
   for setup instructions.
 </Note>
 
-Monitor transaction status using the [Retrieve Crypto Transfer](https://docs.hifibridge.com/api-reference/crypto-transfer/retrieve-a-crypto-transfer) endpoint. The response structure matches the create endpoint shown above.
+Monitor transaction status using the [Retrieve Crypto Transfer](https://docs.hifi.com/api-reference/crypto-transfer/retrieve-a-crypto-transfer) endpoint. The response structure matches the create endpoint shown above.
 
 ```bash
 curl -X GET "https://sandbox.hifibridge.com/v2/wallets/transfers/xfr_abc123" \
@@ -375,7 +375,7 @@ When approval is required, the response includes approval details:
     **HIFI transactions** use `userId` as the destination while **external transactions** use a `walletAddress` as the destination.
     
     <Warning>
-    **Registration Required:** External wallet addresses must be registered before use. Create an external wallet record using the [External Wallets API](https://docs.hifibridge.com/api-reference/wallet/add-external-wallets-to-a-user) before including the address in transaction requests.
+    **Registration Required:** External wallet addresses must be registered before use. Create an external wallet record using the [External Wallets API](https://docs.hifi.com/api-reference/wallet/add-external-wallets-to-a-user) before including the address in transaction requests.
     </Warning>
   </Accordion>
 
@@ -406,5 +406,5 @@ When approval is required, the response includes approval details:
 
 - [Wallets](/docs/wallets) - Understand wallet addresses and balances
 - [Webhooks](/docs/webhooks) - Real-time transaction status notifications
-- [API: Single Transfer](https://docs.hifibridge.com/api-reference/crypto-transfer/create-a-crypto-transfer) - Complete single transfer documentation
-- [API: Batch Transfer](https://docs.hifibridge.com/api-reference/crypto-transfer/create-a-batch-crypto-transfer) - Complete batch transfer documentation
+- [API: Single Transfer](https://docs.hifi.com/api-reference/crypto-transfer/create-a-crypto-transfer) - Complete single transfer documentation
+- [API: Batch Transfer](https://docs.hifi.com/api-reference/crypto-transfer/create-a-batch-crypto-transfer) - Complete batch transfer documentation

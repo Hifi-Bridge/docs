@@ -364,7 +364,7 @@ This is a two-step process:
 <AccordionGroup>
   <Accordion title="Create Offramp Request">
 
-Create an offramp request to get a quote for converting 10 USDC to HKD using the [Create an offramp](https://docs.hifibridge.com/api-reference/offramp/create-an-offramp) endpoint.
+Create an offramp request to get a quote for converting 10 USDC to HKD using the [Create an offramp](https://docs.hifi.com/api-reference/offramp/create-an-offramp) endpoint.
 
 **Request:**
 
@@ -726,7 +726,7 @@ In this example:
 
   <Accordion title="Accept Quote and Execute Payment">
 
-After reviewing the quote, exchange rate, and fees, accept it to execute the cross-border payment using the [Accept Quote](https://docs.hifibridge.com/api-reference/offramp/accept-quote) endpoint.
+After reviewing the quote, exchange rate, and fees, accept it to execute the cross-border payment using the [Accept Quote](https://docs.hifi.com/api-reference/offramp/accept-quote) endpoint.
 
 **Request:**
 
@@ -827,7 +827,7 @@ The status has changed from `OPEN_QUOTE` to `CRYPTO_INITIATED`, meaning the tran
 
 Track the payment progress using:
 
-- **Polling:** Call [Retrieve an offramp](https://docs.hifibridge.com/api-reference/offramp/retrieve-an-offramp) with the transaction ID (`63b7f9de-31e9-4726-bf5c-b4f21a6af796`)
+- **Polling:** Call [Retrieve an offramp](https://docs.hifi.com/api-reference/offramp/retrieve-an-offramp) with the transaction ID (`63b7f9de-31e9-4726-bf5c-b4f21a6af796`)
 - **Webhooks:** Subscribe to `OFFRAMP.UPDATE` events for real-time status notifications
 
 **Settlement Times:**
@@ -867,4 +867,4 @@ Ready to build a full cross-border payment platform? Here's what to explore next
 - **[Offramp Guide](/docs/transactions/offramps)** - Deep dive into offramp transactions, compliance requirements, and settlement rules
 - **[Business User Guide](/docs/users)** - Learn about KYB requirements, UBO verification, and business document management
 - **[Error Handling](/docs/api/errors)** - Implement robust error handling for failed transactions, expired quotes, and compliance issues
-- **[API Reference](https://docs.hifibridge.com/api-reference)** - Explore all available endpoints and parameters for advanced features
+- **[API Reference](https://docs.hifi.com/api-reference)** - Explore all available endpoints and parameters for advanced features

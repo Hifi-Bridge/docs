@@ -33,7 +33,7 @@ description: "This guide shows you how to submit KYC (Know Your Customer) inform
 
 ## Retrieve KYC Requirements
 
-First, find out what information is needed for your target rail by calling the [Retrieve KYC Requirements](https://docs.hifibridge.com/v2/reference/get_v2-users-userid-kyc-requirements) endpoint.
+First, find out what information is needed for your target rail by calling the [Retrieve KYC Requirements](https://docs.hifi.com/v2/reference/get_v2-users-userid-kyc-requirements) endpoint.
 
 **Request:**
 
@@ -187,7 +187,7 @@ curl --request GET \
 
 ## Update KYC Information
 
-Provide the missing personal information using the [Update KYC](https://docs.hifibridge.com/v2/reference/post_v2-users-userid-kyc) endpoint.
+Provide the missing personal information using the [Update KYC](https://docs.hifi.com/v2/reference/post_v2-users-userid-kyc) endpoint.
 
 **Request:**
 
@@ -245,7 +245,7 @@ Now we need to upload identity verification documents. This is a two-step proces
 
 ### Upload a File
 
-First, upload the identity document (driver's license, passport, etc.) using the [Upload a File](https://docs.hifibridge.com/v2/reference/post_v2-files) endpoint.
+First, upload the identity document (driver's license, passport, etc.) using the [Upload a File](https://docs.hifi.com/v2/reference/post_v2-files) endpoint.
 
 **Request:**
 
@@ -291,7 +291,7 @@ curl --request POST \
 
 ### Add Documents to KYC
 
-Now attach the uploaded file(s) to the user's KYC application using the [Add Documents](https://docs.hifibridge.com/v2/reference/post_v2-users-userid-kyc-documents) endpoint.
+Now attach the uploaded file(s) to the user's KYC application using the [Add Documents](https://docs.hifi.com/v2/reference/post_v2-users-userid-kyc-documents) endpoint.
 
 <Note>
   **Driver's License Requirements:** Most identity documents require both front
@@ -387,7 +387,7 @@ curl --request POST \
 
 ## Submit KYC
 
-With all fields and documents provided, submit the KYC application to unlock the rail using the [Submit KYC](https://docs.hifibridge.com/api-reference/kyc/submit-kyc) endpoint.
+With all fields and documents provided, submit the KYC application to unlock the rail using the [Submit KYC](https://docs.hifi.com/api-reference/kyc/submit-kyc) endpoint.
 
 **Request:**
 
@@ -429,14 +429,14 @@ curl --request POST \
 
 You can either:
 
-1. **Poll** the [Retrieve KYC Status](https://docs.hifibridge.com/api-reference/kyc/retrieve-kyc-status) endpoint
+1. **Poll** the [Retrieve KYC Status](https://docs.hifi.com/api-reference/kyc/retrieve-kyc-status) endpoint
 2. **Listen** for `KYC.STATUS_UPDATE` [webhook events](/docs/webhooks/kyc-events)
 
 ---
 
 ## Check KYC Status
 
-Check the current KYC status for the rail using the [Retrieve KYC Status](https://docs.hifibridge.com/api-reference/kyc/retrieve-kyc-status) endpoint.
+Check the current KYC status for the rail using the [Retrieve KYC Status](https://docs.hifi.com/api-reference/kyc/retrieve-kyc-status) endpoint.
 
 **Request:**
 
@@ -578,4 +578,4 @@ Now that your user has completed KYC and unlocked the rail, you can:
 - **[KYC Requirements](/docs/kyc/kyc-requirements)** - Detailed information about KYC requirements
 - **[Rails Overview](/docs/rails)** - Learn about available rails and their requirements
 - **[Webhooks](/docs/webhooks/kyc-events)** - Monitor KYC status changes in real-time
-- **[API Reference](https://docs.hifibridge.com/api-reference)** - Complete endpoint documentation
+- **[API Reference](https://docs.hifi.com/api-reference)** - Complete endpoint documentation

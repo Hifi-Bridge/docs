@@ -6,7 +6,7 @@ description: "Use the KYC Status endpoint to check where a user's verification s
 
 <Note>
   This guide focuses on the USD rail. Requirements and response structure differ for other rails—see the [API
-  Reference](https://docs.hifibridge.com/api-reference/kyc/retrieve-kyc-status) for complete details.
+  Reference](https://docs.hifi.com/api-reference/kyc/retrieve-kyc-status) for complete details.
 </Note>
 
 ## Status Overview
@@ -209,7 +209,7 @@ The `details` object returns the compliance review outcome for each KYC category
     ```
   </Tab>
   <Tab title="INACTIVE">
-    No KYC submission made yet. Call the [Submit KYC endpoint](https://docs.hifibridge.com/api-reference/kyc/submit-kyc) to begin verification.
+    No KYC submission made yet. Call the [Submit KYC endpoint](https://docs.hifi.com/api-reference/kyc/submit-kyc) to begin verification.
 
     ```json
     {
@@ -322,8 +322,8 @@ The `details` object returns the compliance review outcome for each KYC category
 
     1. Check the `reviewResult` in each compliance category for `DECLINED` items
     2. Read the `comment` field for specific guidance
-    3. Use [**Update KYC**](https://docs.hifibridge.com/api-reference/kyc/update-kyc-information) to update non-document information, or [**Update Document**](https://docs.hifibridge.com/api-reference/kyc/update-a-document)** / **[**Add Document**](https://docs.hifibridge.com/api-reference/kyc/add-documents) to update documentation.
-    4. Call [Submit KYC](https://docs.hifibridge.com/api-reference/kyc/submit-kyc) to trigger a new review
+    3. Use [**Update KYC**](https://docs.hifi.com/api-reference/kyc/update-kyc-information) to update non-document information, or [**Update Document**](https://docs.hifi.com/api-reference/kyc/update-a-document)** / **[**Add Document**](https://docs.hifi.com/api-reference/kyc/add-documents) to update documentation.
+    4. Call [Submit KYC](https://docs.hifi.com/api-reference/kyc/submit-kyc) to trigger a new review
 
     **Compliance category mapping:**
 

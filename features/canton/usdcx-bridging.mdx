@@ -38,7 +38,7 @@ HIFI currently supports the following USDCx bridging functionalities:
 
 ## Mint USDCx to Canton
 
-To mint USDCx on Canton, we will first use the [Create Bridge](https://docs.hifibridge.com/api-reference/bridge/create-a-bridge) endpoint to initiate a cross-chain transfer.
+To mint USDCx on Canton, we will first use the [Create Bridge](https://docs.hifi.com/api-reference/bridge/create-a-bridge) endpoint to initiate a cross-chain transfer.
 
 ### Create Bridging Request
 
@@ -250,7 +250,7 @@ For more details, please refer to [Accept Transfer Offer](/docs/features/canton/
 
 ## Burn USDCx on Canton and Receive on Ethereum
 
-To release USDC back on Ethereum, simply use the [Create Bridge](https://docs.hifibridge.com/api-reference/bridge/create-a-bridge) endpoint to initiate a cross-chain transfer from Canton to Ethereum.
+To release USDC back on Ethereum, simply use the [Create Bridge](https://docs.hifi.com/api-reference/bridge/create-a-bridge) endpoint to initiate a cross-chain transfer from Canton to Ethereum.
 
 This request will burn USDCx on Canton and, once completed, release the corresponding USDC on Ethereum and deposit directly to the recipient's wallet.
 
@@ -427,4 +427,4 @@ curl -X POST "https://sandbox.hifibridge.com/v2/wallets/bridges/:transactionId/a
 - [Bridging](/transactions/bridging) - Cross-chain transfers
 - [Transfer Offers](/docs/features/canton/transfer-offer) - Canton Transfer Offers
 - [Webhooks](/webhooks) - Real-time approval notifications
-- [API Reference](https://docs.hifibridge.com/api/authentication) - Complete endpoint documentation
+- [API Reference](https://docs.hifi.com/api/authentication) - Complete endpoint documentation

@@ -9,10 +9,10 @@ sidebarTitle: "Overview"
 
 <Steps>
   <Step title="Upload file">
-    First, upload the document file using the [Upload File](https://docs.hifibridge.com/api-reference/files/upload-file) endpoint to get a file ID.
+    First, upload the document file using the [Upload File](https://docs.hifi.com/api-reference/files/upload-file) endpoint to get a file ID.
   </Step>
   <Step title="Add document">
-    Then, associate the file with the user by calling [Add Documents](https://docs.hifibridge.com/api-reference/kyc/add-documents) with the file ID, type, subtype, and issued country.
+    Then, associate the file with the user by calling [Add Documents](https://docs.hifi.com/api-reference/kyc/add-documents) with the file ID, type, subtype, and issued country.
   </Step>
   <Step title="KYC approval">
     Once all required documents are uploaded and verified, submit KYC to trigger review.
@@ -117,7 +117,7 @@ Document upload is a two-step process: first upload the file, then associate it 
 
 ### Step 1: Upload File
 
-Upload the document file using the [Upload File](https://docs.hifibridge.com/api-reference/files/upload-file) endpoint.
+Upload the document file using the [Upload File](https://docs.hifi.com/api-reference/files/upload-file) endpoint.
 
 **Request:**
 
@@ -144,7 +144,7 @@ Save the `id` from the response - you'll need it in step 2.
 
 ### Step 2: Add Document
 
-Associate the uploaded file with the user using the [Add Documents](https://docs.hifibridge.com/api-reference/kyc/add-documents) endpoint.
+Associate the uploaded file with the user using the [Add Documents](https://docs.hifi.com/api-reference/kyc/add-documents) endpoint.
 
 **Request:**
 
@@ -183,7 +183,7 @@ curl -X POST "https://sandbox.hifi.com/v2/kyc/documents" \
 ```
 
 <Info>
-For detailed field documentation, see the [Add Documents](https://docs.hifibridge.com/api-reference/kyc/add-documents) API reference.
+For detailed field documentation, see the [Add Documents](https://docs.hifi.com/api-reference/kyc/add-documents) API reference.
 </Info>
 
 ## File Requirements
@@ -473,4 +473,4 @@ Here's a complete document upload workflow for individual KYC:
 - [Users](/docs/users) - Understanding user accounts and KYC status
 - [KYC Link](/docs/features/kyc-links) - Hosted KYC collection flow
 - [Webhooks](/docs/webhooks) - Monitor KYC verification status
-- [API Reference](https://docs.hifibridge.com/api-reference/kyc/add-documents) - Complete endpoint documentation
+- [API Reference](https://docs.hifi.com/api-reference/kyc/add-documents) - Complete endpoint documentation

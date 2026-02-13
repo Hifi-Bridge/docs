@@ -118,7 +118,7 @@ Creating a user involves four steps:
 <AccordionGroup>
   <Accordion title="Generate Terms of Service Link">
 
-Before creating a user, they must accept HIFI's Terms of Service. Generate a unique acceptance link using the [Generate Terms of Service Link](https://docs.hifibridge.com/v2/reference/post_v2-tos-link) endpoint.
+Before creating a user, they must accept HIFI's Terms of Service. Generate a unique acceptance link using the [Generate Terms of Service Link](https://docs.hifi.com/v2/reference/post_v2-tos-link) endpoint.
 
 **Request:**
 
@@ -180,7 +180,7 @@ curl --request POST \
 
   <Accordion title="Create User">
 
-Once your user has accepted the Terms of Service, create the user account with the [Create User](https://docs.hifibridge.com/api-reference/user/create-a-user) endpoint.
+Once your user has accepted the Terms of Service, create the user account with the [Create User](https://docs.hifi.com/api-reference/user/create-a-user) endpoint.
 
 **Request:**
 
@@ -333,7 +333,7 @@ curl --request POST \
 
   <Accordion title="Update KYC Information">
 
-Provide the required personal information for KYC verification using the [Update KYC](https://docs.hifibridge.com/v2/reference/post_v2-users-userid-kyc) endpoint.
+Provide the required personal information for KYC verification using the [Update KYC](https://docs.hifi.com/v2/reference/post_v2-users-userid-kyc) endpoint.
 
 **Request:**
 
@@ -410,7 +410,7 @@ curl --request POST \
 
   <Accordion title="Submit KYC for USD Rail">
 
-Submit the KYC application to unlock the USD rail using the [Submit KYC](https://docs.hifibridge.com/api-reference/kyc/submit-kyc) endpoint.
+Submit the KYC application to unlock the USD rail using the [Submit KYC](https://docs.hifi.com/api-reference/kyc/submit-kyc) endpoint.
 
 **Request:**
 
@@ -743,7 +743,7 @@ This is a two-step process:
 <AccordionGroup>
   <Accordion title="Create Offramp Request">
 
-Create an offramp request to get a quote for converting 11 USDC to MXN using the [Create an offramp](https://docs.hifibridge.com/api-reference/offramp/create-an-offramp) endpoint.
+Create an offramp request to get a quote for converting 11 USDC to MXN using the [Create an offramp](https://docs.hifi.com/api-reference/offramp/create-an-offramp) endpoint.
 
 **Request:**
 
@@ -1073,7 +1073,7 @@ In this example:
 
   <Accordion title="Accept Quote and Execute Remittance">
 
-After reviewing the quote and fees, accept it to execute the remittance using the [Accept Quote](https://docs.hifibridge.com/api-reference/offramp/accept-quote) endpoint.
+After reviewing the quote and fees, accept it to execute the remittance using the [Accept Quote](https://docs.hifi.com/api-reference/offramp/accept-quote) endpoint.
 
 **Request:**
 
@@ -1155,7 +1155,7 @@ The status has changed from `OPEN_QUOTE` to `CRYPTO_INITIATED`, meaning the tran
 
 Track the remittance progress using:
 
-- **Polling:** Call [Retrieve an offramp](https://docs.hifibridge.com/api-reference/offramp/retrieve-an-offramp) with the transaction ID (`e1821e0a-ba62-4022-83b8-aab9866ee0a1`)
+- **Polling:** Call [Retrieve an offramp](https://docs.hifi.com/api-reference/offramp/retrieve-an-offramp) with the transaction ID (`e1821e0a-ba62-4022-83b8-aab9866ee0a1`)
 - **Webhooks:** Subscribe to `OFFRAMP.UPDATE` events for real-time status notifications
 
 **Settlement Times:**
@@ -1190,4 +1190,4 @@ Ready to build a full remittance product? Here's what to explore next:
 - **[Webhooks](/docs/webhooks)** - Set up real-time notifications for transaction status updates and user engagement
 - **[Offramp Guide](/docs/transactions/offramps)** - Deep dive into offramp transactions and compliance requirements
 - **[Error Handling](/docs/api/errors)** - Implement robust error handling for failed transactions and expired quotes
-- **[API Reference](https://docs.hifibridge.com/api-reference)** - Explore all available endpoints and parameters for advanced features
+- **[API Reference](https://docs.hifi.com/api-reference)** - Explore all available endpoints and parameters for advanced features

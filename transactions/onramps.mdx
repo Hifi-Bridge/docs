@@ -23,7 +23,7 @@ The Onramp API generates a one-time virtual account for a specific transaction. 
 
 ### Request Quote
 
-Create an onramp to get a conversion quote using the [Create Onramp](https://docs.hifibridge.com/api-reference/onramp/create-an-onramp) endpoint.
+Create an onramp to get a conversion quote using the [Create Onramp](https://docs.hifi.com/api-reference/onramp/create-an-onramp) endpoint.
 
 **Request:**
 
@@ -224,7 +224,7 @@ Onramps progress through several phases:
   **Status Updates:** Subscribe to `ONRAMP` webhook events to receive real-time status notifications. See [Webhooks](/webhooks/onramp-events) for setup instructions.
 </Note>
 
-Monitor onramp status using the [Retrieve Onramp](https://docs.hifibridge.com/api-reference/onramp/retrieve-an-onramp) endpoint. The response structure matches the create endpoint shown above.
+Monitor onramp status using the [Retrieve Onramp](https://docs.hifi.com/api-reference/onramp/retrieve-an-onramp) endpoint. The response structure matches the create endpoint shown above.
 
 **Request:**
 
@@ -305,4 +305,4 @@ If your quote expires (status becomes `QUOTE_FAILED`):
 - [Virtual Accounts](/docs/accounts/virtual-accounts) - Automatic onramp solution (recommended)
 - [Users](/docs/users) - KYC requirements for onramping
 - [Webhooks](/docs/webhooks) - Real-time onramp status notifications
-- [API Reference](https://docs.hifibridge.com/api-reference/onramp/create-an-onramp) - Complete endpoint documentation
+- [API Reference](https://docs.hifi.com/api-reference/onramp/create-an-onramp) - Complete endpoint documentation
