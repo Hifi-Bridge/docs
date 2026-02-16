@@ -5,6 +5,62 @@ mode: "center"
 rss: true
 ---
 
+<Update label="February 14, 2026" description="RTP and other improvements">
+
+## Real-Time Payments (RTP) Now Live for USD Domestic Transfers
+
+- Users can now select RTP for eligible USD domestic offramp transactions
+- RTP is also supported for eligible Virtual Account (VA) deposits
+- Enables near-instant settlement to support U.S. bank accounts
+- Expands payout rails beyond ACH, Wire, and SWIFT—improving speed and operational flexibility for domestic USD transfers
+
+## Dashboard
+
+- Enhanced light mode for improved visual clarity and usability
+- Optimized performance to reduce load times on the workflows user page
+- Added Request Access functionality to streamline permission management
+- Added bridging workflows directly within the dashboard
+  - Users can initiate and manage bridging operations from the UI
+  - Expands cross-network functionality without requiring API usage
+
+## Documentation
+
+- Updated the Global Network page to reflect the complete and current set of supported payment methods and corridors
+
+## Offramp – Proof of Payment
+
+- Automatic Proof-of-Payment generation for completed offramp transactions
+- Provides downloadable and shareable confirmations for end recipients
+
+## Chain + Token Support Expansion (Global Network)
+
+- Added offramp support for USDC on Base
+- Enabled offramp functionality for additional tokens: PYUSD, USDG, USDT
+
+</Update>
+
+<Update label="February 13, 2026" description="Transaction status and event updates">
+
+We're introducing a new **IN_REVIEW** status and deprecating legacy transaction events.
+
+## New IN_REVIEW Status
+
+Transactions under compliance review will now show an explicit **IN_REVIEW** status before progressing to fund transfer states:
+
+- **Onramp:** IN_REVIEW → FIAT_PENDING
+- **Offramp:** IN_REVIEW → CRYPTO_INITIATED
+- **Crypto Transfers:** IN_REVIEW → INITIATED
+
+Previously, transactions remained in FIAT_PENDING (Onramp) or CRYPTO_INITIATED (Offramp) during review, making monitoring unclear.
+
+## Legacy Events Deprecated
+
+**ONRAMP.UPDATE**, **OFFRAMP.UPDATE**, **ONRAMP.CREATE**, and **OFFRAMP.CREATE** will no longer be supported. Update your integrations to use the new transaction events documented in our [Onramp events](/webhooks/onramp-events) and [Offramp events](/webhooks/offramp-events) sections to avoid service disruptions.
+
+If you have any questions, please [contact us](/contact) or review our documentation.
+
+</Update>
+
 <Update label="February 6, 2026" description="Dashboard improvements and expanded coverage">
 
 ## Dashboard Improvements
