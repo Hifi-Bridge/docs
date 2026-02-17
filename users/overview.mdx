@@ -3,7 +3,6 @@ title: "Overview"
 description: "A User represents an individual or business on the HIFI platform. Users are the foundation of all transaction activity - every onramp, offramp, and transfer is associated with a user."
 ---
 
-
 ## User Types
 
 HIFI supports two types of users:
@@ -149,10 +148,11 @@ Wallet addresses never change and can be shared with other users or external par
 
 Users can have multiple account types for different purposes:
 
-| Account Type        | Purpose               | Direction               |
-| :------------------ | :-------------------- | :---------------------- |
-| **Virtual Account** | Receive fiat deposits | Fiat → Crypto (onramp)  |
-| **Offramp Account** | Send fiat withdrawals | Crypto → Fiat (offramp) |
+| Account Type        | Purpose                             | Direction               |
+| :------------------ | :---------------------------------- | :---------------------- |
+| **Virtual Account** | Dedicated account for fiat deposits | Fiat → Crypto (onramp)  |
+| **Onramp Account**  | One-time account for fiat deposits  | Fiat → Crypto (onramp)  |
+| **Offramp Account** | Account to send fiat withdrawals    | Crypto → Fiat (offramp) |
 
 These accounts are created separately after user creation and require KYC verification to be functional.
 
