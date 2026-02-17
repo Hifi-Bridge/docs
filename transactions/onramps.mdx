@@ -17,6 +17,8 @@ HIFI supports two onramp methods:
   **Virtual Accounts for USD:** For recurring USD deposits, use reusable [Virtual Accounts](/docs/accounts/virtual-accounts) which provide permanent bank account numbers. The Onramp API generates one-time virtual accounts per transaction and currently supports USD and Africa currencies.
 </Info>
 
+When you create an onramp, HIFI generates a **one-time account** (unique deposit details) for that transaction. For **Africa** you must register an onramp account first and pass `source.accountId`; for **USD** you typically omit it and use the one-time deposit instructions in the response. See [Onramp Accounts](/docs/accounts/onramp-accounts) for details.
+
 ## Using the Onramp API
 
 The Onramp API generates a one-time virtual account for a specific transaction. This method currently supports USD and Africa currencies. The flow is similar to regular virtual accounts, but the bank account details are valid only for this single transaction.
@@ -303,6 +305,7 @@ If your quote expires (status becomes `QUOTE_FAILED`):
 
 - [Quickstart Guide](/docs/quickstart) - Complete onramp tutorial
 - [Virtual Accounts](/docs/accounts/virtual-accounts) - Automatic onramp solution (recommended)
+- [Onramp Accounts](/docs/accounts/onramp-accounts) - One-time generated accounts per transaction; registered accounts for Africa
 - [Users](/docs/users) - KYC requirements for onramping
 - [Webhooks](/docs/webhooks) - Real-time onramp status notifications
 - [API Reference](https://docs.hifi.com/api-reference/onramp/create-an-onramp) - Complete endpoint documentation

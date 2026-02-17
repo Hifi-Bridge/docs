@@ -1,0 +1,291 @@
+---
+title: "Onramp Accounts"
+description: "An Onramp Account is a one-time generated account for a single onramp transaction. When you create an onramp, HIFI generates unique deposit details (bank account and reference ID) for that transaction; the user sends fiat to that account and receives stablecoins."
+---
+
+## How Onramp Accounts Work
+
+<Steps>
+  <Step title="Create onramp">
+    Initiate an onramp using the [Create Onramp](https://docs.hifi.com/api-reference/onramp/create-an-onramp) endpoint. HIFI generates a **one-time account** for that transaction—unique deposit details (bank account, routing number, reference ID) valid only for this transfer.
+  </Step>
+  <Step title="User sends fiat">
+    The user sends the exact amount to the generated account details, including the reference ID in the transfer memo so HIFI can match the deposit.
+  </Step>
+  <Step title="Stablecoins delivered">
+    Once HIFI receives and validates the fiat, stablecoins are delivered to the user's wallet.
+  </Step>
+</Steps>
+
+For **USD**, you typically omit `source.accountId` and use the one-time deposit instructions returned in the Create Onramp response. For **Africa** currencies, you must first register an onramp account (Create Account with `rail: "onramp"`) and pass `source.accountId` when creating the onramp.
+
+Each one-time account is valid for a single transaction and the specified amount and currency.
+
+## Prerequisites
+
+<Warning>
+  **KYC Required:** Users must complete KYC verification for the relevant rail before creating onramp accounts. For example, to create a USD onramp account, the user must have an active USD rail. For Africa, the user must have the appropriate Africa rail active.
+</Warning>
+
+## Creating Onramp Accounts (Registered Accounts)
+
+For **Africa**, users must have a registered onramp account before you can create an onramp. For **USD**, the one-time deposit flow does not require a pre-registered account. You can still register USD onramp accounts via the [Create Account](https://docs.hifi.com/api-reference/account/create-an-account) endpoint with `rail: "onramp"`; the required fields vary by region and currency.
+
+### USD Accounts
+
+For USD onramps, you can register an onramp account so it is available when creating onramps. When creating an onramp, omitting `source.accountId` returns one-time deposit instructions for that transaction.
+
+```bash
+curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/accounts" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "rail": "onramp",
+    "type": "us",
+    "accountHolder": {
+      "type": "individual",
+      "name": "John Doe",
+      "phone": "+18573491112",
+      "email": "john@hifibridge.com",
+      "address": {
+        "addressLine1": "123 Main St",
+        "city": "New York",
+        "stateProvinceRegion": "NY",
+        "postalCode": "10010",
+        "country": "USA"
+      }
+    },
+    "us": {
+      "transferType": "ach",
+      "accountType": "checking",
+      "accountNumber": "99485843",
+      "routingNumber": "011002877",
+      "bankName": "HIFI Bank",
+      "currency": "usd"
+    }
+  }'
+```
+
+**Request Fields:**
+
+<ResponseField name="rail" type="string" required>
+  Always `onramp` for onramp accounts.
+</ResponseField>
+
+<ResponseField name="type" type="string" required>
+  Account region. For US accounts, use `us`.
+</ResponseField>
+
+<ResponseField name="accountHolder" type="object" required>
+  Account holder information. Must match user's KYC data for compliance.
+
+  <Expandable title="properties">
+    <ResponseField name="type" type="string" required>
+      Account holder type: `individual` or `business`
+    </ResponseField>
+    <ResponseField name="name" type="string" required>
+      Account holder's full name
+    </ResponseField>
+    <ResponseField name="phone" type="string" required>
+      Contact phone number
+    </ResponseField>
+    <ResponseField name="email" type="string" required>
+      Contact email address
+    </ResponseField>
+    <ResponseField name="address" type="object" required>
+      Account holder's address
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="us" type="object" required>
+  US-specific bank account details.
+
+  <Expandable title="properties">
+    <ResponseField name="transferType" type="string" required>
+      Payment method: `ach` or `wire`
+    </ResponseField>
+    <ResponseField name="accountType" type="string" required>
+      Bank account type: `checking` or `savings`
+    </ResponseField>
+    <ResponseField name="accountNumber" type="string" required>
+      Bank account number
+    </ResponseField>
+    <ResponseField name="routingNumber" type="string" required>
+      Bank routing number
+    </ResponseField>
+    <ResponseField name="bankName" type="string" required>
+      Name of the bank
+    </ResponseField>
+    <ResponseField name="currency" type="string" required>
+      Currency code: `usd`
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+**Response:**
+
+```json
+{
+  "status": "ACTIVE",
+  "invalidFields": [],
+  "message": "Account created successfully",
+  "id": "acc_abc123"
+}
+```
+
+**Response Fields:**
+
+<ResponseField name="id" type="string">
+  Unique account ID. **Save this** to pass as `source.accountId` when creating onramps.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  Account status: `ACTIVE` (ready to use), `PENDING` (being validated), or `REJECTED` (validation failed)
+</ResponseField>
+
+<ResponseField name="invalidFields" type="array">
+  List of validation errors. Empty array means all fields are valid.
+</ResponseField>
+
+### Africa Rail Accounts
+
+Africa Rail supports multiple countries with bank accounts and mobile money (momo) as the source of fiat for onramps. **For Africa currencies, a registered onramp account is required** before creating an onramp—you must pass `source.accountId` when calling Create Onramp.
+
+```bash
+curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/accounts" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "rail": "onramp",
+    "type": "africa",
+    "accountHolder": {
+      "type": "individual",
+      "name": "John Doe",
+      "email": "john@example.com",
+      "phone": "+256123456789",
+      "address": {
+        "addressLine1": "Street 123",
+        "city": "Kampala",
+        "stateProvinceRegion": "C",
+        "postalCode": "256",
+        "country": "UGA"
+      }
+    },
+    "africa": {
+      "financialInstitute": "MTN",
+      "accountType": "momo",
+      "accountNumber": "1234567890",
+      "currency": "ugx",
+      "country": "uga"
+    }
+  }'
+```
+
+**Africa-Specific Fields:**
+
+<ResponseField name="africa.financialInstitute" type="string" required>
+  Financial institution name (e.g., `MTN`, `Vodafone`, or specific bank names). See supported institutions in the [Africa Rail documentation](/docs/rails/africa).
+</ResponseField>
+
+<ResponseField name="africa.accountType" type="string" required>
+  Account type: `momo` (mobile money) or `bank`
+</ResponseField>
+
+<ResponseField name="africa.accountNumber" type="string" required>
+  Account or mobile money number
+</ResponseField>
+
+<ResponseField name="africa.currency" type="string" required>
+  Currency code (e.g., `ugx`, `kes`, `ngn`)
+</ResponseField>
+
+<ResponseField name="africa.country" type="string" required>
+  Country code (e.g., `uga`, `ken`, `gha`)
+</ResponseField>
+
+<Note>
+  Check the [Africa Rail documentation](/docs/rails/africa) and [supported institutions](/docs/references/africa-institutions) for onramp-supported combinations of country, currency, and financial institution.
+</Note>
+
+## Using the One-Time Generated Account
+
+Create an onramp with the [Create Onramp](https://docs.hifi.com/api-reference/onramp/create-an-onramp) endpoint. The response includes one-time deposit details (`depositInfo`) for that transaction. For Africa, you must first create an onramp account (see above) and pass its ID in `source.accountId`.
+
+**Request (USD — one-time deposit instructions):**
+
+```bash
+curl -X POST "https://sandbox.hifibridge.com/v2/onramps" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "source": {
+      "userId": "usr_abc123",
+      "currency": "usd",
+      "amount": 100,
+      "transferType": "ach"
+    },
+    "destination": {
+      "userId": "usr_abc123",
+      "currency": "usdc",
+      "chain": "POLYGON"
+    },
+    "requestId": "e1047def-6942-4fd7-be04-e62eb41813b6"
+  }'
+```
+
+The response includes one-time deposit details (bank account, routing number, reference ID) for this transaction. For **Africa**, you must register an onramp account first and pass `source.accountId` when creating the onramp.
+
+<Info>
+  **Complete Onramp Flow:** See the [Onramps documentation](/docs/transactions/onramps) for the full process including quote acceptance, status tracking, and deposit instructions.
+</Info>
+
+## Account Validation
+
+After creating an onramp account, HIFI validates the account details:
+
+| Status       | Description                                                   |
+| :----------- | :------------------------------------------------------------ |
+| **ACTIVE**   | Account validated and ready to use for onramps                |
+| **PENDING**  | Account being validated (typically resolves within minutes)  |
+| **REJECTED** | Validation failed - check `invalidFields` for specific issues |
+
+Monitor status via [Account Events](/docs/webhooks/account-events) webhooks (`ACCOUNT.ONRAMP.CREATE`, `ACCOUNT.ONRAMP.UPDATE`) or by calling the [Retrieve an account](https://docs.hifi.com/api-reference/account/retrieve-an-account) endpoint.
+
+## List, Retrieve, and Delete
+
+- **List accounts:** [GET /v2/users/{userId}/accounts](https://docs.hifi.com/api-reference/account/list-accounts) — use query param `rail=onramp` to filter onramp accounts.
+- **Retrieve one account:** [GET /v2/users/{userId}/accounts/{accountId}](https://docs.hifi.com/api-reference/account/retrieve-an-account)
+- **Delete account:** [DELETE /v2/users/{userId}/accounts/{accountId}](https://docs.hifi.com/api-reference/account/delete-an-account)
+
+## Key Concepts
+
+<AccordionGroup>
+  <Accordion title="USD: One-time generated account">
+    For **USD** onramps, you typically omit `source.accountId`. The Create Onramp response includes a **one-time generated account**—unique bank details and a reference ID for that single transaction. The user sends fiat to those details; HIFI matches the deposit and delivers stablecoins.
+  </Accordion>
+  {" "}
+
+  <Accordion title="Africa: accountId required">
+    For **Africa** currencies, `source.accountId` is required when creating an onramp. The user must have at least one active onramp account (created via Create Account with `rail: "onramp"`) for the chosen currency/country before you can create an onramp.
+  </Accordion>
+  {" "}
+
+  <Accordion title="Onramp accounts vs virtual accounts">
+    **Onramp accounts** (one-time): When you create an onramp, HIFI generates a one-time set of deposit details for that transaction. **Virtual accounts** are reusable HIFI-issued bank account details; the user deposits fiat to the same account number for multiple deposits. Both support fiat-to-crypto; virtual accounts are reusable, while onramp-API flow uses a new one-time account per transaction.
+  </Accordion>
+</AccordionGroup>
+
+## Getting Help
+
+- 📧 **Email:** [support@hifi.com](mailto:support@hifi.com)
+- 💬 **Slack:** Message us in our shared Slack channel
+
+## Related Resources
+
+- [Quickstart Guide](/docs/quickstart) - Step-by-step tutorial
+- [Rails](/docs/rails) - Understand KYC requirements for different rails
+- [Onramps](/docs/transactions/onramps) - Complete guide to onramp transfers
+- [Virtual Accounts](/docs/accounts/virtual-accounts) - Reusable deposit accounts for USD onramps
+- [Account Events](/docs/webhooks/account-events) - Real-time onramp account creation and updates
+- [API Reference](https://docs.hifi.com/api-reference/account/create-an-account) - Complete endpoint documentation
