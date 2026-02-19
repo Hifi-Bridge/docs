@@ -48,7 +48,7 @@ Retrieve all transfer offers for a specific wallet using wallet id.
 **Request**
 
 ```shellscript
-curl -X GET "https://api.hifibridge.com/v2/wallets/:walletId/offers" \
+curl -X GET "https://production.hifibridge.com/v2/wallets/:walletId/offers" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json"
 ```
@@ -90,7 +90,7 @@ Retrieve details for a single transfer offer by ID.
 **Request**
 
 ```shellscript
-curl -X GET "https://api.hifibridge.com/v2/wallets/:walletId/offers/:offerId" \
+curl -X GET "https://production.hifibridge.com/v2/wallets/:walletId/offers/:offerId" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json"
 ```
@@ -137,7 +137,7 @@ Accepting a transfer offer executes the asset transfer and finalizes the transac
 **Request**
 
 ```shellscript
-curl -X POST "https://api.hifibridge.com/v2/wallets/<walletId>/offers/<offerId>/accept" \
+curl -X POST "https://production.hifibridge.com/v2/wallets/<walletId>/offers/<offerId>/accept" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json"
 ```
@@ -182,7 +182,7 @@ Rejecting a transfer offer declines the proposed transfer.
 #### Request
 
 ```
-curl -X POST "https://api.hifibridge.com/v2/wallets/<walletId>/offers/<offerId>/reject" \
+curl -X POST "https://production.hifibridge.com/v2/wallets/<walletId>/offers/<offerId>/reject" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json"
 ```
@@ -217,27 +217,59 @@ curl -X POST "https://api.hifibridge.com/v2/wallets/<walletId>/offers/<offerId>/
 - `executionTransactionHash` is set once the rejection is recorded
 - Your system can listen to the `WALLET.OFFER.REJECTED` webhook to trigger downstream actions
 
+### Withdraw a Transfer Offer
+
+The sender (i.e., the creator of the transfer offer) may withdraw or cancel the transfer offer at any time before it is accepted or rejected.
+
+If a transfer offer is not explicitly withdrawn, it will be locked by the protocol and cannot be used for future transfers.
+
+To withdraw a transfer offer, you must provide the **original on-chain transaction ID**.
+
+**Request**
+
+```shellscript
+curl -X POST "https://production.hifibridge.com/v2/wallets/transfers/<transferId>/cancel" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json"
+```
+
+<Accordion title="Response">
+  ```json
+  {"message": "Transaction cancelled in progress"}
+  ```
+</Accordion>
+
+**Behavior**
+
+- The transaction cancellation is broadcast synchronously.
+- Once the offer withdrawal is confirmed, the original on-chain transaction will transition to a **CANCELLED** state.
+- Your system can listen to the `WALLET.OFFER.WITHDRAWN` webhook to trigger downstream actions
+
 ## Offer Statuses
 
 Each Canton transfer offer has a `status` that reflects its current state:
 
-| Status     | Description                                                                                                            |
-| ---------- | ---------------------------------------------------------------------------------------------------------------------- |
-| `RECEIVED` | The offer has been received by the destination wallet and is ready to be acted upon.                                   |
-| `PENDING`  | The offer is currently in the process of being accepted or rejected.                                                   |
-| `ACCEPTED` | The recipient has accepted the offer. The transfer has been executed and the asset has been moved.                     |
-| `REJECTED` | The recipient has rejected the offer. No transfer occurred, and the locked asset has been released back to the sender. |
+| Status      | Description                                                                                                            |
+| ----------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `RECEIVED`  | The offer has been received by the destination wallet and is ready to be acted upon.                                   |
+| `PENDING`   | The offer is currently in the process of being accepted or rejected.                                                   |
+| `ACCEPTED`  | The recipient has accepted the offer. The transfer has been executed and the asset has been moved.                     |
+| `REJECTED`  | The recipient has rejected the offer. No transfer occurred, and the locked asset has been released back to the sender. |
+| `WITHDRAWN` | The transfer offer has been canceled by the sender.                                                                    |
+| `EXPIRED`   | The transfer offer has already expired and can no longer be accepted or rejected.                                      |
 
 ## Webhook Notifications
 
 HIFI sends webhook events to notify your system of transfer offer state changes.
 
-| Webhook Event           | Description                                                                                     |
-| ----------------------- | ----------------------------------------------------------------------------------------------- |
-| `WALLET.OFFER.RECEIVED` | A new transfer offer has been received by the destination wallet and is ready to be acted upon. |
-| `WALLET.OFFER.PENDING`  | The transfer offer is currently being accepted or rejected.                                     |
-| `WALLET.OFFER.ACCEPTED` | The recipient has accepted the offer. The transfer has been executed and the asset moved.       |
-| `WALLET.OFFER.REJECTED` | The recipient has rejected the offer. No transfer occurred, and the locked asset is released.   |
+| Webhook Event            | Description                                                                                     |
+| ------------------------ | ----------------------------------------------------------------------------------------------- |
+| `WALLET.OFFER.RECEIVED`  | A new transfer offer has been received by the destination wallet and is ready to be acted upon. |
+| `WALLET.OFFER.PENDING`   | The transfer offer is currently being accepted or rejected.                                     |
+| `WALLET.OFFER.ACCEPTED`  | The recipient has accepted the offer. The transfer has been executed and the asset moved.       |
+| `WALLET.OFFER.REJECTED`  | The recipient has rejected the offer. No transfer occurred, and the locked asset is released.   |
+| `WALLET.OFFER.WITHDRAWN` | The transfer offer has been canceled by the sender.                                             |
+| `WALLET.OFFER.EXPIRED`   | The transfer offer has already expired and can no longer be accepted or rejected.               |
 
 <Note>
   Listen to the `WALLET.OFFER.RECEIVED` webhook events to be notified whenever a new incoming transfer offer is available for action.
