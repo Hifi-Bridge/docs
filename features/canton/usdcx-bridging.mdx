@@ -29,7 +29,7 @@ HIFI currently supports the following USDCx bridging functionalities:
     Tokens are either minted on the destination chain (Canton) or released back on Ethereum, depending on the bridging direction.
   </Step>
   <Step title="Accept Transfer Offer on Canton">
-    For bridges minting USDCx on Canton, a corresponding transfer offer is created. The user must accept the offer to receive USDCx in their Canton wallet.
+    For bridges minting USDCx on Canton to an external wallet, a corresponding transfer offer is created. The recipient must accept the offer to receive USDCx in their Canton wallet.
   </Step>
   <Step title="Completion">
     The user’s wallet balance is updated, and a bridging transaction hash is recorded for auditing and reference.
@@ -200,53 +200,11 @@ curl -X POST "https://sandbox.hifibridge.com/v2/wallets/bridges/:transactionId/a
 
 ### Accept Transfer Offer
 
-Once the bridging transaction reaches the `COMPLETED` status, the `destination` object will include an `associatedCantonOffer` field.\
-This field contains the corresponding Canton transfer offer that has been created and is ready to be accepted by the recipient wallet.
-
-<Note>
-  Only destination wallets within the HIFI system will have the `associatedCantonOffer` populated.
-</Note>
+If the destination wallet is external to HIFI’s system, the recipient must explicitly accept the transfer offer created by HIFI’s operational wallet.
 
 <Warning>
   The associated transfer offer will have an expirtation date for 30 days from offer creation, please make sure to accept the offer before the expiration time.
 </Warning>
-
-**Example Completed Bridging Transaction**
-
-```json {17}
-{
-  "transferType": "WALLET.BRIDGE",
-  "transferDetails": {
-    "id": "brg_abc123",
-    "requestId": "1d860428-1d0b-47c5-9e65-98961ff59215",
-    "createdAt": "2025-02-24T17:44:54.781519+00:00",
-    "updatedAt": "2025-02-24T17:44:54.781519+00:00",
-    "amount": 10,
-    "status": "SOURCE_INITIATED",
-    "source": {...},
-    "destination": {
-      "userId": "usr_abc123",
-      "walletAddress": "HIFI-validator-1::1220e636b510224be2c15b4436c0eb72558fdd6a93268b3605fad7f27f58192910e6",
-      "walletId": "wallet_abc456",
-      "chain": "CANTON",
-      "currency": "usdcx",
-	  "associatedCantonOffer": "23860428-121b-47c5-9e65-98gr1ff59215"
-    },
-    "receipt": {...},
-    "quoteInformation": {...}
-  }
-}
-```
-
-You can use the `walletId` under the `destination` object and the `offerId` from the `associatedCantonOffer` to accept the offer:
-
-```shellscript
-curl -X POST "https://api.hifibridge.com/v2/wallets/<walletId>/offers/<offerId>/accept" \
-  -H "Authorization: Bearer YOUR_API_KEY" \
-  -H "Content-Type: application/json"
-```
-
-For more details, please refer to [Accept Transfer Offer](/docs/features/canton/transfer-offer)
 
 ## Burn USDCx on Canton and Receive on Ethereum
 
