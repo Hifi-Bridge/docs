@@ -505,5 +505,10 @@
       }
     ]
   },
-  "redirects": []
+  "redirects": [
+    {
+      "source": "/docs/:slug*",
+      "destination": "/:slug*"
+    }
+  ]
 }
