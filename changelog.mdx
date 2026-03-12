@@ -9,7 +9,10 @@ rss: true
 
 ## Transaction Cancellation
 
-Users can now cancel onramp and offramp transactions while they are in the **IN_REVIEW** state, providing greater control during the review window and allowing quick correction of submission errors.
+Users can now cancel onramp and offramp transactions while they are in the `IN_REVIEW` state, providing greater control during the review window and allowing quick correction of submission errors.
+
+- [Cancel an onramp](https://docs.hifi.com/api-reference/onramp/cancel-an-onramp)
+- [Cancel an offramp](https://docs.hifi.com/api-reference/offramp/cancel-an-offramp)
 
 ## Enhanced Transaction UI / UX
 
@@ -88,17 +91,17 @@ Supported functionality includes:
 
 ## Transaction "In Review" Status
 
-Transactions under compliance review will now show an explicit **IN_REVIEW** status before progressing to fund transfer states:
+Transactions under compliance review will now show an explicit `IN_REVIEW` status before progressing to fund transfer states:
 
-- **Onramp:** IN_REVIEW → FIAT_PENDING
-- **Offramp:** IN_REVIEW → CRYPTO_INITIATED
-- **Crypto Transfers:** IN_REVIEW → INITIATED
+- **Onramp:** `IN_REVIEW` → `FIAT_PENDING`
+- **Offramp:** `IN_REVIEW` → `CRYPTO_INITIATED`
+- **Crypto Transfers:** `IN_REVIEW` → `INITIATED`
 
-Previously, transactions remained in FIAT_PENDING (Onramp) or CRYPTO_INITIATED (Offramp) during review, making monitoring unclear.
+Previously, transactions remained in `FIAT_PENDING` (Onramp) or `CRYPTO_INITIATED` (Offramp) during review, making monitoring unclear.
 
 ## Legacy Events Deprecated
 
-**ONRAMP.UPDATE**, **OFFRAMP.UPDATE**, **ONRAMP.CREATE**, and **OFFRAMP.CREATE** will no longer be supported. Update your integrations to use the new transaction events documented in our [Onramp events](/webhooks/onramp-events) and [Offramp events](/webhooks/offramp-events) sections to avoid service disruptions.
+`ONRAMP.UPDATE`, `OFFRAMP.UPDATE`, `ONRAMP.CREATE`, and `OFFRAMP.CREATE` will no longer be supported. Update your integrations to use the new transaction events documented in our [Onramp events](/webhooks/onramp-events) and [Offramp events](/webhooks/offramp-events) sections to avoid service disruptions.
 
 If you have any questions, please email <a href="mailto:support@hifi.com">support@hifi.com</a>.
 
