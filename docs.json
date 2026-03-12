@@ -411,6 +411,7 @@
                   "GET /v2/onramps/{transferId}",
                   "GET /v2/onramps/rates",
                   "POST /v2/onramps",
+                  "POST /v2/onramps/{transferId}/cancel",
                   "POST /v2/onramps/{transferId}/quote/refresh",
                   "POST /v2/onramps/{transferId}/quote/accept"
                 ]
@@ -422,6 +423,7 @@
                   "GET /v2/offramps/{transferId}",
                   "GET /v2/offramps/rates",
                   "POST /v2/offramps",
+                  "POST /v2/offramps/{transferId}/cancel",
                   "POST /v2/offramps/{transferId}/quote/accept"
                 ]
               },
