@@ -33,10 +33,6 @@ A transfer offer is created by the sender to propose transferring a specified am
 
 Creating a transfer offer utilizes the existing on-chain transfer functionality. For more details please checkout [Creating Single Transfers](https://docs.hifi.com/transactions/transfers#creating-single-transfers)
 
-<Note>
-  The transaction remains in a **PENDING** state until the recipient accepts or rejects the transfer offer.
-</Note>
-
 ## Retrieving Transfer Offers
 
 HIFI provides endpoints to retrieve transfer offers for a wallet, including all incoming offers or a specific offer.
@@ -181,7 +177,7 @@ Rejecting a transfer offer declines the proposed transfer.
 
 #### Request
 
-```
+```text
 curl -X POST "https://production.hifibridge.com/v2/wallets/<walletId>/offers/<offerId>/reject" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json"
