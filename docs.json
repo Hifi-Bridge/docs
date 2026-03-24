@@ -509,6 +509,10 @@
   },
   "redirects": [
     {
+      "source": "/quickstart",
+      "destination": "/guides/quickstart"
+    },
+    {
       "source": "/docs/:slug*",
       "destination": "/:slug*"
     }
