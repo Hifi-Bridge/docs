@@ -202,6 +202,59 @@ const FLOWING_LIGHT_CONFIG = {
   }
 
   // ============================================================================
+  // SECTION 2B: QUICKSTART INTERACTIVE PANEL
+  // ============================================================================
+  // Handles tab-like interactions for the homepage quickstart section.
+  // ============================================================================
+
+  function initQuickstartInteractive() {
+    const actions = Array.from(
+      document.querySelectorAll("[data-quickstart-target]")
+    );
+    const panels = Array.from(
+      document.querySelectorAll("[data-quickstart-panel]")
+    );
+
+    if (!actions.length || !panels.length) return;
+
+    function setActive(target) {
+      actions.forEach((action) => {
+        const isActive = action.getAttribute("data-quickstart-target") === target;
+        action.classList.toggle("is-active", isActive);
+        action.setAttribute("aria-selected", isActive ? "true" : "false");
+        if (isActive) {
+          action.focus({ preventScroll: true });
+        }
+      });
+
+      panels.forEach((panel) => {
+        const isActive = panel.getAttribute("data-quickstart-panel") === target;
+        panel.classList.toggle("is-active", isActive);
+        panel.hidden = !isActive;
+      });
+    }
+
+    actions.forEach((action) => {
+      if (action.dataset.quickstartBound === "true") return;
+      action.dataset.quickstartBound = "true";
+
+      action.addEventListener("click", () => {
+        setActive(action.getAttribute("data-quickstart-target"));
+      });
+
+      action.addEventListener("keydown", (event) => {
+        if (event.key !== "ArrowDown" && event.key !== "ArrowUp") return;
+        event.preventDefault();
+        const index = actions.indexOf(action);
+        const delta = event.key === "ArrowDown" ? 1 : -1;
+        const next = (index + delta + actions.length) % actions.length;
+        const nextTarget = actions[next].getAttribute("data-quickstart-target");
+        setActive(nextTarget);
+      });
+    });
+  }
+
+  // ============================================================================
   // SECTION 3: INITIALIZATION AND BOOT FUNCTIONS
   // ============================================================================
   // Functions that handle the initialization of the flowing light animation
@@ -216,6 +269,7 @@ const FLOWING_LIGHT_CONFIG = {
       document.readyState === "interactive"
     ) {
       startAnimation();
+      initQuickstartInteractive();
     }
 
     // Also listen for DOMContentLoaded
@@ -224,6 +278,7 @@ const FLOWING_LIGHT_CONFIG = {
         "DOMContentLoaded",
         () => {
           startAnimation();
+          initQuickstartInteractive();
         },
         {
           once: true,
@@ -234,11 +289,13 @@ const FLOWING_LIGHT_CONFIG = {
     // Fallback: try after a short delay regardless of ready state
     setTimeout(() => {
       startAnimation();
+      initQuickstartInteractive();
     }, 100);
 
     // Additional fallback for slow-loading content
     setTimeout(() => {
       startAnimation();
+      initQuickstartInteractive();
     }, 500);
   }
   boot();
@@ -263,6 +320,7 @@ const FLOWING_LIGHT_CONFIG = {
                 node.querySelector("#flowing-light-container"))
             ) {
               startAnimation();
+              initQuickstartInteractive();
               return;
             }
           }
@@ -284,6 +342,7 @@ const FLOWING_LIGHT_CONFIG = {
     if (url !== lastUrl) {
       lastUrl = url;
       startAnimation();
+      initQuickstartInteractive();
     }
   }).observe(document, { subtree: true, childList: true });
 

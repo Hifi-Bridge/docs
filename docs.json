@@ -9,7 +9,6 @@
     "dark": "#222222"
   },
   "css": "/styles.css",
-  "js": "/flowing-light.js",
   "favicon": "/favicon.svg",
   "seo": {
     "metatags": {
@@ -151,6 +150,7 @@
           {
             "group": "Introduction",
             "pages": [
+              "index",
               "overview",
               "sandbox",
               "dashboard",
@@ -330,7 +330,7 @@
           },
           {
             "group": "Endpoints",
-            "openapi": "https://production.hifibridge.com/api/v2/openapi.json",
+            "openapi": "openapi.json",
             "pages": [
               {
                 "group": "Common",

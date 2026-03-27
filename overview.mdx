@@ -1,101 +1,80 @@
 ---
-title: "Overview"
-description: "Welcome to HIFI, a developer platform for programming money. Compose APIs for identity, custody, routing, and settlement—and assemble them into any product you want."
+title: "Platform Overview"
+sidebarTitle: "Overview"
+description: "HIFI provides infrastructure for money through three core product pillars: Inflows, Management, and Outflows."
 ---
 
-## Getting started
+---
 
-<Steps>
-  <Step title="Request access">
-    To begin, you'll need access to the HIFI Dashboard where you can try out the product and get your API keys.
+## Inflows
 
-    <Card href="https://app.hifi.com/request-access">
-      Schedule an intro call
-    </Card>
+Inflow APIs help you create entry points for value so funds can move into your system from bank rails and digital assets.
 
-  </Step>
-  <Step title="Implement in Sandbox">
-    Follow this step-by-step guide to learn how to implement a transfer flow using your sandbox API keys. All responses are simulated.
+| Product                                            | Description                                                                                  | Use this to                                                                                  |
+| :------------------------------------------------- | :------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------- |
+| **[Virtual Accounts](/accounts/virtual-accounts)** | Issue unique local account details for supported markets and currencies to receive deposits. | Accept recurring or one-time inbound bank transfers and reconcile funds per user or account. |
+| **[Onramps](/transactions/onramps)**               | Convert fiat into supported stablecoin balances through programmatic transfer flows.         | Bring user or treasury funds on-chain from local bank rails.                                 |
+| **[Wallet Deposits](/wallets)**                    | Provision custodial wallets that can receive and hold supported digital assets.              | Let users or your business receive stablecoin deposits into managed custody.                 |
 
-    <Card href="/quickstart">
-      Explore quickstart
-    </Card>
+---
 
-  </Step>
-  <Step title="Get production keys">
-    Finally, submit your KYB application through the Dashboard to get production keys and bring your flows to life.
+## Management
 
-    <Card href="https://app.hifi.com/">
-      Visit Dashboard
-    </Card>
+Management APIs give you programmable control over how money moves internally across accounts, wallets, chains, and workflows.
 
-  </Step>
-</Steps>
+| Product                                                | Description                                                                     | Use this to                                                                   |
+| :----------------------------------------------------- | :------------------------------------------------------------------------------ | :---------------------------------------------------------------------------- |
+| **[Transfers](/transactions/transfers)**               | Trigger one-time transfer operations across supported rails and counterparties. | Move funds programmatically between entities in your product lifecycle.       |
+| **[Wallet Transfers](/transactions/overview)**         | Manage digital asset movement between wallets and destinations.                 | Power treasury, internal rebalancing, and operational crypto movements.       |
+| **[Bridging](/transactions/bridging)**                 | Move assets across supported chains while keeping workflows unified.            | Route liquidity or settle value across multiple networks.                     |
+| **[Swaps](/transactions/swaps)**                       | Exchange supported assets to meet settlement or treasury requirements.          | Convert one digital asset into another as part of a payment or treasury flow. |
+| **[Settlement Rules](/features/settlement-rules)**     | Configure deterministic routing logic for incoming funds and account behavior.  | Automate value routing and reduce manual operational intervention.            |
+| **[Batch Transfers](/features/batch-transfers)**       | Submit grouped transfer actions in a single orchestration workflow.             | Execute high-volume payouts or internal disbursements efficiently.            |
+| **[Transfer Approvals](/features/transfer-approvals)** | Add policy-based approval steps before transfer execution.                      | Enforce internal controls and governance for sensitive fund movement.         |
 
-## Dive deeper
+---
 
-Explore our APIs to learn more about the platform.
+## Outflows
 
-- [**Test with Postman**](/docs/postman) – Import our Postman collection to explore all endpoints interactively
-- [**Review the API reference**](https://docs.hifi.com/api-reference/common/ping) – Dive deep into our REST API documentation to explore complete specs and examples
+Outflow APIs help you settle to users, partners, and counterparties across bank rails and digital asset destinations.
 
-<Info>
-  All features can be tested in our sandbox environment where transactions are
-  simulated, KYC is typically auto-approved and there's no financial risk.
-</Info>
+| Product                                | Description                                                                 | Use this to                                    |
+| :------------------------------------- | :-------------------------------------------------------------------------- | :--------------------------------------------- |
+| **[Offramps](/transactions/offramps)** | Convert stablecoin balances into fiat and deliver to bank payout endpoints. | Settle users or partners in local currency.    |
+| **[Coverage](/coverage)**              | Explore supported regions, corridors, and payment rails.                    | Plan where and how you can settle payments to. |
 
-## What you can do
+---
 
-- **Send and receive payments:** Move money between fiat and stablecoins across borders through a single API.
-- **Create virtual accounts:** Issue deposit accounts for users in supported currencies to manage deposits.
-- **Provision wallets:** Generate custodial wallets for users or businesses to hold and transfer funds securely.
-- **Manage on-chain assets:** Transfer or swap digital assets between chains using on-chain operations.
-- **Automate fund flows:** Use APIs to manage internal transfers, settlements, and liquidity automatically.
+## Compliance
 
-## Common use cases
+HIFI includes built-in onboarding and compliance primitives so product teams can launch regulated money movement with fewer integration layers.
 
-<AccordionGroup>
-  <Accordion title="Payments">
-    Build comprehensive payment solutions that enable seamless money movement across borders and currencies.
+| Product                              | Description                                                           | Use this to                                                                |
+| :----------------------------------- | :-------------------------------------------------------------------- | :------------------------------------------------------------------------- |
+| **[Users](/users/overview)**         | Create and manage end users or business entities in your integration. | Maintain customer records tied to wallet, account, and transfer activity.  |
+| **[KYC/KYB](/kyc)**                  | Collect and evaluate identity and business verification requirements. | Satisfy onboarding controls before enabling production money movement.     |
+| **[KYC Links](/features/kyc-links)** | Generate hosted onboarding flows for compliance submission.           | Offload document collection and verification UX while keeping API control. |
 
-    **Cross-border payments**
+## Private Transactions
 
-    Enable users to send money internationally through stablecoins with instant settlement. Convert fiat to USDC (onramp), transfer across borders instantly without traditional banking delays, and convert back to local currency (offramp). Leverage HIFI's global network to reach recipients in multiple countries while maintaining low fees and transparent exchange rates.
+For institution-grade settlement between trusted counterparties, HIFI also supports private transaction workflows designed for controlled, compliant value movement.
 
-    **Remittances**
+[Learn more about Private Transactions](https://hifi.com/)
 
-    Build remittance products for users sending money home to family and friends. Support multiple currencies and geographic regions through our extensive network of offramp partners. Provide competitive exchange rates, fast settlement times, and transparent fee structures. Integrate KYC links and compliance workflows to ensure regulatory adherence across different jurisdictions.
+## Where to start
 
-    **Bill payments**
-
-    Facilitate automated bill payment services for utilities, subscriptions, and other recurring expenses. Use virtual accounts to collect payments from users and route funds to billers automatically. Support batch transfers to process multiple payments efficiently, reducing operational overhead while ensuring timely settlements.
-
-  </Accordion>
-  <Accordion title="Marketplaces">
-    Power marketplace platforms with flexible payment infrastructure and automated fee distribution.
-
-    **Marketplace payments**
-
-    Enable crypto-native payments in your marketplace platform. Allow users to onramp fiat currency, make purchases using stablecoins, and offramp earnings back to their bank accounts. Support escrow functionality using HIFI's transfer approval workflows to hold funds until transactions are confirmed. Provide multi-currency support so buyers and sellers can transact in their preferred currencies.
-
-    **Platform fee splits**
-
-    Automate fee collection and distribution through settlement rules and batch transfer capabilities. Configure automatic splits where a percentage of each transaction flows to your platform while the remainder goes to sellers. Use developer fees to seamlessly collect platform revenue without manual reconciliation. Support complex payout structures with multiple recipients per transaction.
-
-  </Accordion>
-  <Accordion title="Fintech">
-    Create innovative fintech applications with digital wallets, peer-to-peer transfers, and comprehensive financial infrastructure.
-
-    **Digital wallet**
-
-    Provision custodial wallets for users or businesses to hold and transfer funds securely. Support multiple currencies including stablecoins and fiat across HIFI's virtual account network. Enable deposits, withdrawals, and internal transfers through a unified API. Integrate balance management and transaction history to give users full visibility into their financial activity. Leverage HIFI's compliance infrastructure to ensure regulatory requirements are met automatically.
-
-    **P2P transfers**
-
-    Build peer-to-peer transfer capabilities that allow users to send money to each other instantly. Support transfers between users within your platform, across different currencies, and to external recipients. Use virtual accounts to enable seamless deposits and withdrawals. Implement transfer approval workflows for added security and control. Support batch transfers for bulk operations and provide real-time notifications through webhooks.
-
-  </Accordion>
-</AccordionGroup>
+<CardGroup cols={2}>
+  <Card
+    title="Request access"
+    icon="phone"
+    href="https://app.hifi.com/request-access"
+  >
+    Schedule a call with our sales team to discuss your needs.
+  </Card>
+  <Card title="Quickstart" icon="rocket" href="/guides/quickstart">
+    Build your first flow in sandbox and learn how things work.
+  </Card>
+</CardGroup>
 
 ## Getting help
 

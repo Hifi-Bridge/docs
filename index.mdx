@@ -1,8 +1,8 @@
 ---
 title: "Welcome to HIFI"
-description: "Welcome to HIFI, a developer platform for programming money. Compose APIs for identity, custody, routing, and settlement—and assemble them into any product you want."
-sidebarTitle: "Introduction"
-mode: "custom"
+description: "Infrastructure for money"
+sidebarTitle: "Welcome"
+mode: "center"
 "og:image": "https://docs.hifi.com/og.png"
 "og:image:width": "1200"
 "og:image:height": "630"
@@ -12,19 +12,64 @@ mode: "custom"
 "twitter:image:alt": "HIFI Docs"
 ---
 
-<div className="hero-section">
-  <div id="flowing-light-container" className="flowing-light-container"></div>
-  <div className="hero-content">
-    <h1 className="hero-title">Welcome to HIFI</h1>
-    <p className="hero-description">Infrastructure for money.</p>
-    <section className="setup-section">
-      <Columns cols={2}>
-        <Card
-          title="Request access"
-          href="https://app.hifi.com/request-access"
-        ></Card>
-        <Card title="Get started" href="/overview"></Card>
-      </Columns>
-    </section>
-  </div>
-</div>
+With HIFI, you can move, convert, route, and compile value across stablecoins and bank rails. Whether you're building cross-border flows, wallet products, or programmable fund movement, HIFI provides a composable API platform to help you go live faster.
+
+## What you can build
+
+<Columns cols={2}>
+  <Card
+    title="Send and receive payments"
+    icon="arrows-left-right"
+    href="/transactions/overview"
+  >
+    Move funds globally using fiat rails, stablecoins, and supported digital
+    assets.
+  </Card>
+  <Card
+    title="Virtual accounts"
+    icon="building-columns"
+    href="/accounts/virtual-accounts"
+  >
+    Issue local deposit accounts for users in supported markets and currencies.
+  </Card>
+  <Card title="Custody funds" icon="wallet" href="/wallets">
+    Provision custodial wallets and manage stablecoin balances securely.
+  </Card>
+  <Card title="On/off-ramp flows" icon="arrows-left-right" href="/rails">
+    Convert between local fiat rails and stablecoin balances through one API.
+  </Card>
+  <Card
+    title="Automated orchestration"
+    icon="bolt"
+    href="/features/settlement-rules"
+  >
+    Build programmable money movement with settlement rules and workflow
+    controls.
+  </Card>
+  <Card title="Platform reporting" icon="chart-bar" href="/reporting/metrics">
+    Monitor operational and financial metrics across your payment flows.
+  </Card>
+</Columns>
+
+## Getting started
+
+<CardGroup cols={2}>
+  <Card title="Quickstart" icon="rocket" href="/guides/quickstart">
+    Get up and running in minutes with your first API flow.
+  </Card>
+  <Card title="Guides" icon="book-open" href="/guides/quickstart">
+    Explore practical integration flows for sending and receiving funds.
+  </Card>
+  <Card title="API Reference" icon="book-open" href="/api/authentication">
+    Review endpoint-level documentation with request and response schemas.
+  </Card>
+  <Card title="Dashboard" icon="play" href="https://app.hifi.com">
+    Access keys, manage environments, and operate your integration.
+  </Card>
+</CardGroup>
+
+## Getting help
+
+We’re happy you’re here! If you have questions, encounter an issue, or need guidance, our team is ready to help — just reach out to us.
+
+[**support@hifi.com**](mailto:support@hifi.com)
