@@ -9,7 +9,6 @@
     "dark": "#222222"
   },
   "css": "/styles.css",
-  "js": "/flowing-light.js",
   "favicon": "/favicon.svg",
   "seo": {
     "metatags": {
@@ -151,6 +150,7 @@
           {
             "group": "Introduction",
             "pages": [
+              "index",
               "overview",
               "sandbox",
               "dashboard",
