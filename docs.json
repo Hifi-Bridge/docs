@@ -33,10 +33,6 @@
     },
     "links": [
       {
-        "rel": "canonical",
-        "href": "https://docs.hifi.com/"
-      },
-      {
         "rel": "sitemap",
         "href": "https://docs.hifi.com/sitemap.xml"
       },
