@@ -95,6 +95,36 @@ If a key is compromised or no longer needed:
   with a new key before deleting the old one.
 </Warning>
 
+## API Key Security Requirements
+
+All customers and integrators are required to handle HIFI API keys in accordance with the following security practices.
+
+### Transmission
+
+- **Only transmit API keys over encrypted channels (HTTPS/TLS).** Never send a key via email, chat, SMS, or any unencrypted medium.
+- When making API requests, always use the `Authorization: Bearer YOUR_API_KEY` header over HTTPS — never include keys in URLs or unencrypted request bodies.
+
+### Storage
+
+- Store API keys in environment variables or a dedicated secrets manager (e.g., AWS Secrets Manager, HashiCorp Vault, GCP Secret Manager).
+- **Never hardcode keys** in application source code or configuration files committed to version control.
+- **Never expose keys** in client-side code, browser bundles, or public repositories.
+- Restrict access to keys using least-privilege principles — only the systems and personnel that require the key should have access to it.
+
+### Rotation
+
+- Rotate API keys **at least once every 12 months** as part of routine key hygiene.
+- Rotate immediately if a key is suspected to be compromised, accidentally exposed, or if a team member with access departs.
+- **Rotation procedure:**
+  1. Generate a new API key in the HIFI Dashboard under **Developer** → **API Keys**
+  2. Update your application or secrets manager with the new key
+  3. Verify the new key is working correctly
+  4. Delete the old key from the dashboard
+
+<Info>
+  If you believe your key has been compromised, delete it immediately and generate a replacement. Contact [support@hifi.com](mailto:support@hifi.com) if you need assistance.
+</Info>
+
 ## Testing Your API Key
 
 Verify your API key is working correctly with the ping endpoint:
