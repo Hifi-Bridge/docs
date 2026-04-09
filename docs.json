@@ -326,11 +326,11 @@
           },
           {
             "group": "Endpoints",
-            "openapi": "https://production.hifibridge.com/api/v2/openapi.json",
+            "openapi": "https://production.hifi.com/api/v2/openapi.json",
             "pages": [
               {
                 "group": "Common",
-                "pages": ["GET /v2/ping"]
+                "pages": ["GET /ping"]
               },
               {
                 "group": "Users",
