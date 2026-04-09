@@ -176,8 +176,7 @@
                 "pages": [
                   "rails",
                   "rails/usd",
-                  "rails/global-network",
-                  "rails/africa"
+                  "rails/global-network"
                 ]
               },
               {
@@ -504,6 +503,10 @@
     ]
   },
   "redirects": [
+    {
+      "source": "/rails/africa",
+      "destination": "/coverage"
+    },
     {
       "source": "/quickstart",
       "destination": "/guides/quickstart"

@@ -24,7 +24,7 @@ Each one-time account is valid for a single transaction and the specified amount
 ## Prerequisites
 
 <Warning>
-  **KYC Required:** Users must complete KYC verification for the relevant rail before creating onramp accounts. For example, to create a USD onramp account, the user must have an active USD rail. For Africa, the user must have the appropriate Africa rail active.
+  **KYC Required:** Users must complete KYC verification for the relevant rail before creating onramp accounts. For example, to create a USD onramp account, the user must have an active USD rail. For supported African onramp corridors, the user must have completed KYC for the corresponding requirements (see [KYC Requirements](/docs/kyc/kyc-requirements)).
 </Warning>
 
 ## Creating Onramp Accounts (Registered Accounts)
@@ -148,9 +148,9 @@ curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/accounts" \
   List of validation errors. Empty array means all fields are valid.
 </ResponseField>
 
-### Africa Rail Accounts
+### Africa accounts
 
-Africa Rail supports multiple countries with bank accounts and mobile money (momo) as the source of fiat for onramps. **For Africa currencies, a registered onramp account is required** before creating an onramp—you must pass `source.accountId` when calling Create Onramp.
+Onramp accounts with `type: "africa"` support multiple countries with bank accounts and mobile money (momo) as the source of fiat for onramps. **For Africa currencies, a registered onramp account is required** before creating an onramp—you must pass `source.accountId` when calling Create Onramp.
 
 ```bash
 curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/accounts" \
@@ -185,7 +185,7 @@ curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/accounts" \
 **Africa-Specific Fields:**
 
 <ResponseField name="africa.financialInstitute" type="string" required>
-  Financial institution name (e.g., `MTN`, `Vodafone`, or specific bank names). See supported institutions in the [Africa Rail documentation](/docs/rails/africa).
+  Financial institution name (e.g., `MTN`, `Vodafone`, or specific bank names). See [supported institutions](/docs/references/africa-institutions) for valid combinations.
 </ResponseField>
 
 <ResponseField name="africa.accountType" type="string" required>
@@ -205,7 +205,7 @@ curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/accounts" \
 </ResponseField>
 
 <Note>
-  Check the [Africa Rail documentation](/docs/rails/africa) and [supported institutions](/docs/references/africa-institutions) for onramp-supported combinations of country, currency, and financial institution.
+  Check [Coverage](/docs/coverage) and [supported institutions](/docs/references/africa-institutions) for onramp-supported combinations of country, currency, and financial institution.
 </Note>
 
 ## Using the One-Time Generated Account
