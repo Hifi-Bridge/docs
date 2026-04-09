@@ -6,501 +6,457 @@ rss: true
 ---
 
 <Update label="April 3, 2026" description="Bug fixes">
+  ## Bug Fixes
 
-## Bug Fixes
-
-- Resolved an issue impacting USD payout flows caused by an unintended update from our downstream provider
-- Identified the root cause of delayed swap transactions linked to deposit issues, which was indirectly affecting onramp and offramp flows
-- Fixed an incorrect offramp preview rate for CNY payouts
-
+  - Resolved an issue impacting USD payout flows caused by an unintended update from our downstream provider
+  - Resolved delayed swap transactions linked to deposit issues, which was indirectly affecting onramp and offramp flows
+  - Fixed an incorrect offramp preview rate for CNY payouts
 </Update>
 
 <Update label="March 27, 2026" description="Supporting docs, TRON sandbox, Dashboard improvements">
+  ## Supporting Documents for Offramps
 
-## Supporting Documents for Offramps
+  - Users can now attach supporting information when creating an offramp transaction via the dashboard or API
+  - API field: `supportingInformation`
+  - Enables faster reviews and improves overall settlement efficiency
+  - Highly recommended to reduce transaction friction due to RFIs
 
-- Users can now attach supporting information when creating an offramp transaction via the dashboard or API
-- API field: `supportingInformation`
-- Enables faster reviews and improves overall settlement efficiency
-- Highly recommended to reduce transaction friction due to RFIs
+  ## TRON USDT Sandbox Support
 
-## TRON USDT Sandbox Support
+  - Added support for USDT on TRON within the sandbox environment
+  - Enables testing of TRON-based USDT flows prior to production use
+  - Expands multi-chain testing coverage for developers
 
-- Added support for USDT on TRON within the sandbox environment
-- Enables testing of TRON-based USDT flows prior to production use
-- Expands multi-chain testing coverage for developers
+  ## Dashboard Improvements
 
-## Dashboard Improvements
+  ### Reports Page
 
-### Reports Page
+  - Enables developers to view and interact with key performance metrics
+  - Establishes a foundation for future custom metrics and analytics
 
-- Enables developers to view and interact with key performance metrics
-- Establishes a foundation for future custom metrics and analytics
+  ### Wallet Balance Update
 
-### Wallet Balance Update
-
-- Updated balance rounding logic to always round down, replacing previous half-up/half-down behavior
-- Ensures more predictable and consistent balance displays
-
+  - Updated balance rounding logic to always round down, replacing previous half-up/half-down behavior
+  - Ensures more predictable and consistent balance displays
 </Update>
 
 <Update label="March 23, 2026" description="Breaking changes">
+  ## ⚠️ Breaking Changes - Testnet USDT
 
-## ⚠️ Breaking Changes - Testnet USDT
+  ### Ethereum Sepolia USDT Token Update
 
-### Ethereum Sepolia USDT Token Update
+  The Ethereum Sepolia USDT token address has been updated to:
 
-The Ethereum Sepolia USDT token address has been updated to:
+  `0x5532B426Bb07Bf73E2e28c106b6a593e7797f07E`
 
-`0x5532B426Bb07Bf73E2e28c106b6a593e7797f07E`
+  - All previous testnet USDT balances on Ethereum Sepolia are no longer supported
+  - Use the new token contract for Ethereum Sepolia testing going forward
 
-- All previous testnet USDT balances on Ethereum Sepolia are no longer supported
-- Use the new token contract for Ethereum Sepolia testing going forward
+  ### Solana Devnet USDT Support
 
-### Solana Devnet USDT Support
+  Testnet USDT is supported on Solana Devnet with the following token address:
 
-Testnet USDT is supported on Solana Devnet with the following token address:
+  `5fkWZrgqU8abXxkPWLjkbnHxofuovHMNQ9usky6W3Hv`
 
-`5fkWZrgqU8abXxkPWLjkbnHxofuovHMNQ9usky6W3Hv`
-
-If you need testnet tokens, please reach out to the HIFI team.
-
+  If you need testnet tokens, please reach out to the HIFI team.
 </Update>
 
 <Update label="March 20, 2026" description="Dashboard home and transaction history export">
+  ## New Features
 
-## New Features
+  ### New Dashboard Home Page
 
-### New Dashboard Home Page
+  - Introduced a redesigned dashboard home page with more relevant and actionable data
+  - Provides clearer visibility into account activity and system state
+  - Improves navigation and first-touch experience
 
-- Introduced a redesigned dashboard home page with more relevant and actionable data
-- Provides clearer visibility into account activity and system state
-- Improves navigation and first-touch experience
+  ### Transaction History Export
 
-### Transaction History Export
-
-- Developers can now download transaction history directly from the dashboard across: Transfers, Swaps, Bridging, Onramps, Offramps
-- Aids reporting, reconciliation, and operational analysis
-
+  - Developers can now download transaction history directly from the dashboard across: Transfers, Swaps, Bridging, Onramps, Offramps
+  - Aids reporting, reconciliation, and operational analysis
 </Update>
 
 <Update label="March 14, 2026" description="Authentication improvements">
+  ## Authentication Improvements
 
-## Authentication Improvements
-
-- Updated the authentication architecture across our platform (both server and dashboard)
-- This update improves overall platform security while simplifying the authentication process
-- Dashboard interactions are ~40% faster as a result
-
+  - Updated the authentication architecture across our platform (both server and dashboard)
+  - This update improves overall platform security while simplifying the authentication process
+  - Dashboard interactions are ~40% faster as a result
 </Update>
 
 <Update label="March 6, 2026" description="Transaction cancellation and enhanced ux">
+  ## Transaction Cancellation
 
-## Transaction Cancellation
+  Users can now cancel onramp and offramp transactions while they are in the `IN_REVIEW` state, providing greater control during the review window and allowing quick correction of submission errors.
 
-Users can now cancel onramp and offramp transactions while they are in the `IN_REVIEW` state, providing greater control during the review window and allowing quick correction of submission errors.
+  - [Cancel an onramp](https://docs.hifi.com/api-reference/onramp/cancel-an-onramp)
+  - [Cancel an offramp](https://docs.hifi.com/api-reference/offramp/cancel-an-offramp)
 
-- [Cancel an onramp](https://docs.hifi.com/api-reference/onramp/cancel-an-onramp)
-- [Cancel an offramp](https://docs.hifi.com/api-reference/offramp/cancel-an-offramp)
+  ## Enhanced Transaction UI / UX
 
-## Enhanced Transaction UI / UX
-
-- Improved transaction flow across the dashboard
-- Simplifies how users create and review transactions across onramp, offramp, swap, and bridging flows
-- Improves clarity, reduces friction, and provides a more intuitive transaction experience
-
+  - Improved transaction flow across the dashboard
+  - Simplifies how users create and review transactions across onramp, offramp, swap, and bridging flows
+  - Improves clarity, reduces friction, and provides a more intuitive transaction experience
 </Update>
 
 <Update label="February 27, 2026" description="TRON support and Dashboard improvements">
+  ## TRON is live!
 
-## TRON is live!
+  We've added support for the TRON network on HIFI, significantly expanding our platform's blockchain coverage.
 
-We've added support for the TRON network on HIFI, significantly expanding our platform's blockchain coverage.
+  Supported functionality includes:
 
-Supported functionality includes:
+  - Transfers
+  - Onramps
+  - Offramps
+  - Swaps
+  - Virtual Accounts
 
-- Transfers
-- Onramps
-- Offramps
-- Swaps
-- Virtual Accounts
+  ## Dashboard Improvements
 
-## Dashboard Improvements
-
-- Introduced a compliance overview section to provide greater transparency and visibility into account status and requirements
-- Improved onboarding experience to show compliance stage clearly
-
+  - Introduced a compliance overview section to provide greater transparency and visibility into account status and requirements
+  - Improved onboarding experience to show compliance stage clearly
 </Update>
 
 <Update label="February 20, 2026" description="Dashboard and authentication improvements">
+  ## Dashboard
 
-## Dashboard
-
-- Replaced magic link login with OTP-based authentication to prevent user lockouts and improve reliability.
-- Enhanced login page design across both light and dark modes for stronger visual consistency and brand alignment.
-- Added transaction search and filtering across all transaction types to improve discoverability and user experience.
-
+  - Replaced magic link login with OTP-based authentication to prevent user lockouts and improve reliability.
+  - Enhanced login page design across both light and dark modes for stronger visual consistency and brand alignment.
+  - Added transaction search and filtering across all transaction types to improve discoverability and user experience.
 </Update>
 
 <Update label="February 14, 2026" description="RTP and other improvements">
+  ## Real-Time Payments (RTP) Now Live for USD Domestic Transfers
 
-## Real-Time Payments (RTP) Now Live for USD Domestic Transfers
+  - Users can now select RTP for eligible USD domestic offramp transactions
+  - RTP is also supported for eligible Virtual Account (VA) deposits
+  - Enables near-instant settlement to support U.S. bank accounts
+  - Expands payout rails beyond ACH, Wire, and SWIFT—improving speed and operational flexibility for domestic USD transfers
 
-- Users can now select RTP for eligible USD domestic offramp transactions
-- RTP is also supported for eligible Virtual Account (VA) deposits
-- Enables near-instant settlement to support U.S. bank accounts
-- Expands payout rails beyond ACH, Wire, and SWIFT—improving speed and operational flexibility for domestic USD transfers
+  ## Dashboard
 
-## Dashboard
+  - Enhanced light mode for improved visual clarity and usability
+  - Optimized performance to reduce load times on the workflows user page
+  - Added Request Access functionality to streamline permission management
+  - Added bridging workflows directly within the dashboard
+    - Users can initiate and manage bridging operations from the UI
+    - Expands cross-network functionality without requiring API usage
 
-- Enhanced light mode for improved visual clarity and usability
-- Optimized performance to reduce load times on the workflows user page
-- Added Request Access functionality to streamline permission management
-- Added bridging workflows directly within the dashboard
-  - Users can initiate and manage bridging operations from the UI
-  - Expands cross-network functionality without requiring API usage
+  ## Documentation
 
-## Documentation
+  - Updated the Global Network page to reflect the complete and current set of supported payment methods and corridors
 
-- Updated the Global Network page to reflect the complete and current set of supported payment methods and corridors
+  ## Offramp – Proof of Payment
 
-## Offramp – Proof of Payment
+  - Automatic Proof-of-Payment generation for completed offramp transactions
+  - Provides downloadable and shareable confirmations for end recipients
 
-- Automatic Proof-of-Payment generation for completed offramp transactions
-- Provides downloadable and shareable confirmations for end recipients
+  ## Chain \+ Token Support Expansion (Global Network)
 
-## Chain + Token Support Expansion (Global Network)
-
-- Added offramp support for USDC on Base
-- Enabled offramp functionality for additional tokens: PYUSD, USDG, USDT
-
+  - Added offramp support for USDC on Base
+  - Enabled offramp functionality for additional tokens: PYUSD, USDG, USDT
 </Update>
 
 <Update label="February 13, 2026" description="Transaction status and event updates">
+  ## Transaction "In Review" Status
 
-## Transaction "In Review" Status
+  Transactions under compliance review will now show an explicit `IN_REVIEW` status before progressing to fund transfer states:
 
-Transactions under compliance review will now show an explicit `IN_REVIEW` status before progressing to fund transfer states:
+  - **Onramp:** `IN_REVIEW` → `FIAT_PENDING`
+  - **Offramp:** `IN_REVIEW` → `CRYPTO_INITIATED`
+  - **Crypto Transfers:** `IN_REVIEW` → `INITIATED`
 
-- **Onramp:** `IN_REVIEW` → `FIAT_PENDING`
-- **Offramp:** `IN_REVIEW` → `CRYPTO_INITIATED`
-- **Crypto Transfers:** `IN_REVIEW` → `INITIATED`
+  Previously, transactions remained in `FIAT_PENDING` (Onramp) or `CRYPTO_INITIATED` (Offramp) during review, making monitoring unclear.
 
-Previously, transactions remained in `FIAT_PENDING` (Onramp) or `CRYPTO_INITIATED` (Offramp) during review, making monitoring unclear.
+  ## Legacy Events Deprecated
 
-## Legacy Events Deprecated
+  `ONRAMP.UPDATE`, `OFFRAMP.UPDATE`, `ONRAMP.CREATE`, and `OFFRAMP.CREATE` will no longer be supported. Update your integrations to use the new transaction events documented in our [Onramp events](/webhooks/onramp-events) and [Offramp events](/webhooks/offramp-events) sections to avoid service disruptions.
 
-`ONRAMP.UPDATE`, `OFFRAMP.UPDATE`, `ONRAMP.CREATE`, and `OFFRAMP.CREATE` will no longer be supported. Update your integrations to use the new transaction events documented in our [Onramp events](/webhooks/onramp-events) and [Offramp events](/webhooks/offramp-events) sections to avoid service disruptions.
+  If you have any questions, please email <a href="mailto:support@hifi.com">[support@hifi.com](mailto:support@hifi.com)</a>
 
-If you have any questions, please email <a href="mailto:support@hifi.com">support@hifi.com</a>.
-
+  .
 </Update>
 
 <Update label="February 6, 2026" description="Dashboard improvements and expanded coverage">
+  ## Dashboard Improvements
 
-## Dashboard Improvements
+  - Added UETR visibility directly within the transaction view
+  - Enabled virtual account deactivation from the dashboard
+  - Added exact source and destination amount controls for off-ramp quotes (supporting both send exact and receive exact flows)
+  - Improved dashboard table search to prevent locking during active searches
+  - Removed optional and non-essential fields from global network off-ramp account creation
+  - Fixed team member invite flow to ensure proper redirection and completion
 
-- Added UETR visibility directly within the transaction view
-- Enabled virtual account deactivation from the dashboard
-- Added exact source and destination amount controls for off-ramp quotes (supporting both send exact and receive exact flows)
-- Improved dashboard table search to prevent locking during active searches
-- Removed optional and non-essential fields from global network off-ramp account creation
-- Fixed team member invite flow to ensure proper redirection and completion
+  ## Expanded Global Network Offramp Coverage
 
-## Expanded Global Network Offramp Coverage
+  Added USD SWIFT Offramp support for:
 
-Added USD SWIFT Offramp support for:
-
-- Mexico
-- Australia
-- Turkey
-- Israel
-- New Zealand
-
+  - Mexico
+  - Australia
+  - Turkey
+  - Israel
+  - New Zealand
 </Update>
 
 <Update label="January 30, 2026" description="Dashboard launch, stability, and new coverage">
+  ## Dashboard Launch
 
-## Dashboard Launch
+  The new Dashboard is now live at [app.hifi.com](https://app.hifi.com)!
 
-The new Dashboard is now live at [app.hifi.com](https://app.hifi.com)!
+  ### Focus Areas and Improvements
 
-### Focus Areas and Improvements
+  Our initial focus has been on delivering a stable experience and swiftly resolving critical issues, including:
 
-Our initial focus has been on delivering a stable experience and swiftly resolving critical issues, including:
+  - Redirects from the legacy Dashboard
+  - Date and timezone handling fixes
+  - Sandbox/production environment switching
+  - Settlement rule rendering
+  - Onboarding flow improvements
 
-- Redirects from the legacy Dashboard
-- Date and timezone handling fixes
-- Sandbox/production environment switching
-- Settlement rule rendering
-- Onboarding flow improvements
+  ### Expanded Coverage
 
-### Expanded Coverage
-
-- Added USD Global Network payout support via SWIFT to the Netherlands
-
+  - Added USD Global Network payout support via SWIFT to the Netherlands
 </Update>
 
 <Update label="January 22, 2026" description="New features and improvements">
+  ## New Dashboard (Pilot)
 
-## New Dashboard (Pilot)
+  We're rolling out a pilot of the new HIFI Dashboard, redesigned to support enhanced developer workflows and faster compliance operations.
 
-We're rolling out a pilot of the new HIFI Dashboard, redesigned to support enhanced developer workflows and faster compliance operations.
+  **What's New:**
 
-**What's New:**
+  - Rebuilt from the ground up for speed and performance
+  - Faster compliance experience with improved error handling
+  - New homepage, reports page, and approvals section
+  - Integrated support to send messages to Slack directly
 
-- Rebuilt from the ground up for speed and performance
-- Faster compliance experience with improved error handling
-- New homepage, reports page, and approvals section
-- Integrated support to send messages to Slack directly
+  **Try it now:** [app.hifi.com](https://app.hifi.com)
 
-**Try it now:** [app.hifi.com](https://app.hifi.com)
+  The current Dashboard will be phased out at the end of February.
 
-The current Dashboard will be phased out at the end of February.
+  ### New KYC Status: RFI Pending
 
-### New KYC Status: RFI Pending
+  We've introduced a new compliance status to provide clearer visibility into review progress.
 
-We've introduced a new compliance status to provide clearer visibility into review progress.
+  - Submissions will briefly be in `PENDING` (~ 2m)
+  - After this, the submission will progress to:
+    - `MANUAL_REVIEW` - Your application is under review by our compliance team
+    - `RFI_PENDING` - Additional information is required (Request sent via email)
+    - `APPROVED`/`REJECTED` - Final state
 
-- Submissions will briefly be in `PENDING` (~ 2m)
-- After this, the submission will progress to:
-  - `MANUAL_REVIEW` - Your application is under review by our compliance team
-  - `RFI_PENDING` - Additional information is required (Request sent via email)
-  - `APPROVED`/`REJECTED` - Final state
+  ## Improvements
 
-## Improvements
+  ### Proof of Address Automation for KYC Process
 
-### Proof of Address Automation for KYC Process
+  The Proof of Address (PoA) request process has been streamlined to reduce email dependency whilst improving turnaround time.
 
-The Proof of Address (PoA) request process has been streamlined to reduce email dependency whilst improving turnaround time.
+  - KYC PoA RFIs will no longer trigger email notifications
+  - Instead, you can submit the PoA directly from the Dashboard or API
 
-- KYC PoA RFIs will no longer trigger email notifications
-- Instead, you can submit the PoA directly from the Dashboard or API
-
-Please refer to this document for a step-by-step guide to the technical integration process.
-
+  Please refer to this document for a step-by-step guide to the technical integration process.
 </Update>
 
 <Update label="January 16, 2026" description="New features and improvements">
+  ## New Features
 
-## New Features
+  ### Solana Support - Global Network
 
-### Solana Support - Global Network
+  You can now offramp directly from Solana wallets to Global Network accounts. This removes the need for an intermediate bridging step.
 
-You can now offramp directly from Solana wallets to Global Network accounts. This removes the need for an intermediate bridging step.
+  ### KYC & Identity
 
-### KYC & Identity
+  Additional PoA document types introduced to improve clarity:
 
-Additional PoA document types introduced to improve clarity:
-
-- `UTILITY_BILL`
-- `BANK_STATEMENT`
-- `RENTAL_AGREEMENT`
-- `TAX_DOCUMENT`
-- `VOTER_REGISTRATION_CARD`
-- `BANK_REFERENCE_LETTER`
-- `LEASE_OR_TENANCY_AGREEMENT`
-- `PROOF_OF_ADDRESS`
-
+  - `UTILITY_BILL`
+  - `BANK_STATEMENT`
+  - `RENTAL_AGREEMENT`
+  - `TAX_DOCUMENT`
+  - `VOTER_REGISTRATION_CARD`
+  - `BANK_REFERENCE_LETTER`
+  - `LEASE_OR_TENANCY_AGREEMENT`
+  - `PROOF_OF_ADDRESS`
 </Update>
 
 <Update label="January 10, 2026" description="New features and improvements">
+  ## New Features
 
-## New Features
+  ### Dashboard Swaps
 
-### Dashboard Swaps
+  Swapping is now available on the Dashboard, enabling you to convert between stablecoins within HIFI wallets. [Learn more](https://docs.hifi.com/transactions/swaps)
 
-Swapping is now available on the Dashboard, enabling you to convert between stablecoins within HIFI wallets. [Learn more](https://docs.hifi.com/transactions/swaps)
+  ### Sandbox KYC Simulations
 
-### Sandbox KYC Simulations
+  You can now test specific KYC outcomes by setting the user's last name to a reserved keyword.
 
-You can now test specific KYC outcomes by setting the user's last name to a reserved keyword.
+  - **PENDING** – Simulate applications awaiting review
+  - **APPROVAL** – Test approved verification flows
+  - **REJECTION** – Test declined verification scenarios
 
-- **PENDING** – Simulate applications awaiting review
-- **APPROVAL** – Test approved verification flows
-- **REJECTION** – Test declined verification scenarios
+  Please use these to build robust error handling before going live.
 
-Please use these to build robust error handling before going live.
+  ## Bug Fixes & Improvements
 
-## Bug Fixes & Improvements
+  ### Onramps
 
-### Onramps
+  - Fixed: Bug affecting onramp transaction flows in African markets
 
-- Fixed: Bug affecting onramp transaction flows in African markets
+  ### Offramps
 
-### Offramps
+  - Fixed: `amount_in_usd` now correctly populates for all offramp transactions
+  - Fixed: USD offramp processing issues in Brazil related to billing configuration
+  - Updated: Documentation to resolve field inconsistencies
 
-- Fixed: `amount_in_usd` now correctly populates for all offramp transactions
-- Fixed: USD offramp processing issues in Brazil related to billing configuration
-- Updated: Documentation to resolve field inconsistencies
+  ### Swaps
 
-### Swaps
+  - Fixed: Amount mismatches and webhook delivery issues
+  - Added: Balance validation checks before swap initiation to prevent failed transactions
 
-- Fixed: Amount mismatches and webhook delivery issues
-- Added: Balance validation checks before swap initiation to prevent failed transactions
+  ### Sandbox
 
-### Sandbox
-
-- Simplified: Financial institution support in Sandbox for improved stability
-- Updated: Documentation reflects the streamlined Sandbox setup
-
+  - Simplified: Financial institution support in Sandbox for improved stability
+  - Updated: Documentation reflects the streamlined Sandbox setup
 </Update>
 
 <Update label="January 8, 2026" description="New feature">
+  ## Wallet Swaps
 
-## Wallet Swaps
+  Exchange one stablecoin for another instantly on the same blockchain network. New endpoints:
 
-Exchange one stablecoin for another instantly on the same blockchain network. New endpoints:
+  - `POST /v2/wallets/swaps` - Create a swap
+  - `POST /v2/wallets/swaps/{swapId}/accept` - Accept a swap
+  - `GET /v2/wallets/swaps` - List swaps
+  - `GET /v2/wallets/swaps/{swapId}` - Retrieve a swap
 
-- `POST /v2/wallets/swaps` - Create a swap
-- `POST /v2/wallets/swaps/{swapId}/accept` - Accept a swap
-- `GET /v2/wallets/swaps` - List swaps
-- `GET /v2/wallets/swaps/{swapId}` - Retrieve a swap
-
-See the [Swaps documentation](/transactions/swaps) and [API Reference](https://docs.hifi.com/api-reference/token-swap/list-all-swaps) for details.
-
+  See the [Swaps documentation](/transactions/swaps) and [API Reference](https://docs.hifi.com/api-reference/token-swap/list-all-swaps) for details.
 </Update>
 
 <Update label="January 2, 2026" description="New webhook events">
+  ## New Webhook Events
 
-## New Webhook Events
+  Starting Monday Jan 5, we're introducing new webhook events to help you track the status of onramp and offramp transactions more efficiently.
 
-Starting Monday Jan 5, we're introducing new webhook events to help you track the status of onramp and offramp transactions more efficiently.
+  **New events for transaction creation:**
 
-**New events for transaction creation:**
+  - `ONRAMP.TRANSACTION.CREATE`
+  - `OFFRAMP.TRANSACTION.CREATE`
 
-- `ONRAMP.TRANSACTION.CREATE`
-- `OFFRAMP.TRANSACTION.CREATE`
+  **New events for transaction status changes:**
 
-**New events for transaction status changes:**
+  - `ONRAMP.STATUS.*`
+  - `OFFRAMP.STATUS.*`
 
-- `ONRAMP.STATUS.*`
-- `OFFRAMP.STATUS.*`
+  **New events for managing RFIs:**
 
-**New events for managing RFIs:**
+  - `ONRAMP.RFI.OPEN`
+  - `ONRAMP.RFI.CLOSED`
+  - `OFFRAMP.RFI.OPEN`
+  - `OFFRAMP.RFI.CLOSED`
 
-- `ONRAMP.RFI.OPEN`
-- `ONRAMP.RFI.CLOSED`
-- `OFFRAMP.RFI.OPEN`
-- `OFFRAMP.RFI.CLOSED`
+  ## ⚠️ Breaking Changes
 
-## ⚠️ Breaking Changes
+  Legacy transaction events (`ONRAMP.UPDATE`, `OFFRAMP.UPDATE`, `ONRAMP.CREATE`, `OFFRAMP.CREATE`) will be deprecated by Friday, Feb 13 2026.
 
-Legacy transaction events (`ONRAMP.UPDATE`, `OFFRAMP.UPDATE`, `ONRAMP.CREATE`, `OFFRAMP.CREATE`) will be deprecated by Friday, Feb 13 2026.
+  To avoid service disruptions, please update your integrations to use the new events. If you have any questions, please let us know or refer to the documentation.
 
-To avoid service disruptions, please update your integrations to use the new events. If you have any questions, please let us know or refer to the documentation.
-
-Learn more: [Onramp events](/webhooks/onramp-events), [Offramp events](/webhooks/offramp-events)
-
+  Learn more: [Onramp events](/webhooks/onramp-events), [Offramp events](/webhooks/offramp-events)
 </Update>
 
 <Update label="December 26, 2025" description="Updates and fixes">
+  ## Dashboard Updates
 
-## Dashboard Updates
+  - Added support for deleting offramp accounts.
+  - Enabled updating the compliance contact email from Developer \> Team.
+  - Micro-deposits are now displayed in the Virtual accounts drawer.
 
-- Added support for deleting offramp accounts.
-- Enabled updating the compliance contact email from Developer > Team.
-- Micro-deposits are now displayed in the Virtual accounts drawer.
+  ## Fixes & Stability
 
-## Fixes & Stability
-
-- Resolved multiple KYC Link issues that prevented form submissions.
-- Fixed a bug with accepting organisation invites.
-- Fixed return-address issues affecting offramp quote generation.
-- Resolved inconsistencies with wallet transfer errors.
-
+  - Resolved multiple KYC Link issues that prevented form submissions.
+  - Fixed a bug with accepting organisation invites.
+  - Fixed return-address issues affecting offramp quote generation.
+  - Resolved inconsistencies with wallet transfer errors.
 </Update>
 
 <Update label="December 23, 2025" description="New feature">
+  ## Transaction Approvals for Offramps
 
-## Transaction Approvals for Offramps
+  Transaction approvals are now available for offramp transactions. You can require approval before executing offramp transactions (stablecoin to fiat conversions) to add an extra layer of security and compliance control.
 
-Transaction approvals are now available for offramp transactions. You can require approval before executing offramp transactions (stablecoin to fiat conversions) to add an extra layer of security and compliance control.
+  **Dashboard Approvals:**
 
-**Dashboard Approvals:**
+  - Members can now initiate offramp transactions
+  - All member-initiated offramp transactions will **always** enter the transaction approval flow and require Admin approval
 
-- Members can now initiate offramp transactions
-- All member-initiated offramp transactions will **always** enter the transaction approval flow and require Admin approval
+  **API Approvals:**
 
-**API Approvals:**
+  - Offramp transactions will enter the transaction approval flow **only** if `requireApproval: true` is set in the request body
 
-- Offramp transactions will enter the transaction approval flow **only** if `requireApproval: true` is set in the request body
+  **Additional details:**
 
-**Additional details:**
+  - For offramps that enter the transaction approval flow, quotes are generated **after** approval to prevent quotes from expiring while awaiting review. This matches the behavior for bridging transfers.
+  - **Expiration times:** Transactions in `PENDING_APPROVAL` status will automatically expire if not approved or rejected:
+    - **Onchain transfers** (wallet transfers, batch transfers, bridging): Expire after **1 week**
+    - **Offramps**: Expire after **1 day**
 
-- For offramps that enter the transaction approval flow, quotes are generated **after** approval to prevent quotes from expiring while awaiting review. This matches the behavior for bridging transfers.
-- **Expiration times:** Transactions in `PENDING_APPROVAL` status will automatically expire if not approved or rejected:
-  - **Onchain transfers** (wallet transfers, batch transfers, bridging): Expire after **1 week**
-  - **Offramps**: Expire after **1 day**
-
-See the [Transaction Approvals documentation](/features/transaction-approvals) for more details.
-
+  See the [Transaction Approvals documentation](/features/transaction-approvals) for more details.
 </Update>
 
 <Update label="December 20, 2025" description="New features and improvements">
+  ## Instant Onramps
 
-## Instant Onramps
+  **CRNow is live**, enabling USDC minting in under **10 minutes** after deposit during business operating hours. To learn more, visit our [Availability page](/availability).
 
-**CRNow is live**, enabling USDC minting in under **10 minutes** after deposit during business operating hours. To learn more, visit our [Availability page](/availability).
+  ## USD SWIFT Expansion
 
-## USD SWIFT Expansion
+  Our **SWIFT coverage** continues to expand. Offramps to Brazil, Saudi Arabia, Italy, Germany, United Arab Emirates, and Spain are now available. See the [USD Rails page](/rails/usd) for the complete list of supported countries.
 
-Our **SWIFT coverage** continues to expand. Offramps to Brazil, Saudi Arabia, Italy, Germany, United Arab Emirates, and Spain are now available. See the [USD Rails page](/rails/usd) for the complete list of supported countries.
+  ## Updates to Accounts API
 
-## Updates to Accounts API
+  The following fields have been updated for Global Network accounts:
 
-The following fields have been updated for Global Network accounts:
+  - `idNumber`: now optional (remains required for MXN)
+  - `dateOfBirth`: now optional
+  - `formationDate`: now optional
 
-- `idNumber`: now optional (remains required for MXN)
-- `dateOfBirth`: now optional
-- `formationDate`: now optional
+  ## Improvements
 
-## Improvements
-
-- KYC Links now autosave, resolving an issue in which forms could reset and lose previously entered data
-- Offramp account holder types are now restricted to individual and business only
-
+  - KYC Links now autosave, resolving an issue in which forms could reset and lose previously entered data
+  - Offramp account holder types are now restricted to individual and business only
 </Update>
 
 <Update label="December 13, 2025" description="Updates and fixes">
+  ## Updates
 
-## Updates
+  - Added a "Find User" feature on the Compliance page to search quickly.
+  - Changed Transfers page on the Dashboard to Transactions. HIFI supports three transaction types: transfers (onchain), onramps and offramps.
+  - Improved legibility in drawers for usernames and lengthy IDs.
+  - Implemented retries for wallet swaps to improve reliability.
 
-- Added a "Find User" feature on the Compliance page to search quickly.
-- Changed Transfers page on the Dashboard to Transactions. HIFI supports three transaction types: transfers (onchain), onramps and offramps.
-- Improved legibility in drawers for usernames and lengthy IDs.
-- Implemented retries for wallet swaps to improve reliability.
+  ## Fixes
 
-## Fixes
-
-- Fixed a bug related to fee charging for refund wallet transfers.
-- Updated the Global Network KYC response object to show a failed status when the sender's country is unsupported, instead of throwing errors.
-- Fixed an issue with required fields for KYC Links.
-- Fixed an issue disabling production access for some customers.
-
+  - Fixed a bug related to fee charging for refund wallet transfers.
+  - Updated the Global Network KYC response object to show a failed status when the sender's country is unsupported, instead of throwing errors.
+  - Fixed an issue with required fields for KYC Links.
+  - Fixed an issue disabling production access for some customers.
 </Update>
 
 <Update label="December 12, 2025" description="New feature">
+  ## Reporting
 
-## Reporting
+  We're excited to share our new **Metrics API**! This powerful addition enables you to generate comprehensive data and reports for your payment operations.
 
-We're excited to share our new **Metrics API**! This powerful addition enables you to generate comprehensive data and reports for your payment operations.
+  With the Metrics API, you can:
 
-With the Metrics API, you can:
+  - Generate metrics on transactions and user activity
+  - Preview report results before finalizing
+  - Create custom reporting templates tailored to your needs
+  - Access detailed reports through the API and Dashboard
 
-- Generate metrics on transactions and user activity
-- Preview report results before finalizing
-- Create custom reporting templates tailored to your needs
-- Access detailed reports through the API and Dashboard
-
-Get started by reading the [Metrics docs](/reporting/metrics), the [Reporting guide](/guides/reporting), or exploring the new endpoints in our [API Reference](/api-reference/reporting).
-
+  Get started by reading the [Metrics docs](/reporting/metrics), the [Reporting guide](/guides/reporting), or exploring the new endpoints in our [API Reference](/api-reference/reporting).
 </Update>
 
 <Update label="December 9, 2025" description="Expansion">
+  ## SWIFT Offramps
 
-## SWIFT Offramps
-
-We now support international SWIFT payouts (USD). Refer to the [USD Rails page](/rails/usd) for more details on supported countries and regions. Or see the [Offramp Accounts guide](/accounts/offramp-accounts) for instructions on how to create an account.
-
+  We now support international SWIFT payouts (USD). Refer to the [USD Rails page](/rails/usd) for more details on supported countries and regions. Or see the [Offramp Accounts guide](/accounts/offramp-accounts) for instructions on how to create an account.
 </Update>
