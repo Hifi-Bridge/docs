@@ -11,17 +11,17 @@ HIFI supports two onramp methods:
 | Method              | Description                              | Best For                                 |
 | :------------------ | :--------------------------------------- | :--------------------------------------- |
 | **Virtual Account** | Reusable bank account for USD deposits   | Recurring USD deposits, simplified flows |
-| **Onramp API**      | One-time virtual account per transaction | USD and Africa currencies via API        |
+| **Onramp API**      | One-time virtual account per transaction | USD and Africa currencies via API (Africa Rail beta)        |
 
 <Info>
-  **Virtual Accounts for USD:** For recurring USD deposits, use reusable [Virtual Accounts](/docs/accounts/virtual-accounts) which provide permanent bank account numbers. The Onramp API generates one-time virtual accounts per transaction and currently supports USD and Africa currencies.
+  **Virtual Accounts for USD:** For recurring USD deposits, use reusable [Virtual Accounts](/docs/accounts/virtual-accounts) which provide permanent bank account numbers. The Onramp API generates one-time virtual accounts per transaction and currently supports USD and Africa currencies (Africa Rail beta).
 </Info>
 
-When you create an onramp, HIFI generates a **one-time account** (unique deposit details) for that transaction. For **Africa** you must register an onramp account first and pass `source.accountId`; for **USD** you typically omit it and use the one-time deposit instructions in the response. See [Onramp Accounts](/docs/accounts/onramp-accounts) for details.
+When you create an onramp, HIFI generates a **one-time account** (unique deposit details) for that transaction. For **Africa** (Africa Rail beta) you must register an onramp account first and pass `source.accountId`; for **USD** you typically omit it and use the one-time deposit instructions in the response. See [Onramp Accounts](/docs/accounts/onramp-accounts) for details.
 
 ## Using the Onramp API
 
-The Onramp API generates a one-time virtual account for a specific transaction. This method currently supports USD and Africa currencies. The flow is similar to regular virtual accounts, but the bank account details are valid only for this single transaction.
+The Onramp API generates a one-time virtual account for a specific transaction. This method currently supports USD and Africa currencies (Africa Rail beta). The flow is similar to regular virtual accounts, but the bank account details are valid only for this single transaction.
 
 ### Request Quote
 
@@ -272,7 +272,7 @@ If your quote expires (status becomes `QUOTE_FAILED`):
 
     - One-time virtual account per transaction
     - Generated per transaction via Onramps API
-    - Currently supports USD and Africa currencies
+    - Currently supports USD and Africa currencies (Africa Rail beta)
     - Bank details valid only for that transaction
   </Accordion>
   {" "}
@@ -305,7 +305,7 @@ If your quote expires (status becomes `QUOTE_FAILED`):
 
 - [Quickstart Guide](/docs/quickstart) - Complete onramp tutorial
 - [Virtual Accounts](/docs/accounts/virtual-accounts) - Automatic onramp solution (recommended)
-- [Onramp Accounts](/docs/accounts/onramp-accounts) - One-time generated accounts per transaction; registered accounts for Africa
+- [Onramp Accounts](/docs/accounts/onramp-accounts) - One-time generated accounts per transaction; registered accounts for Africa (Africa Rail beta)
 - [Users](/docs/users) - KYC requirements for onramping
 - [Webhooks](/docs/webhooks) - Real-time onramp status notifications
 - [API Reference](https://docs.hifi.com/api-reference/onramp/create-an-onramp) - Complete endpoint documentation
