@@ -4,7 +4,6 @@ description: "Documents enable programmatic upload and management of KYC verific
 sidebarTitle: "Overview"
 ---
 
-
 ## How Documents Work
 
 <Steps>
@@ -23,11 +22,11 @@ sidebarTitle: "Overview"
 
 Each document requires three key attributes:
 
-| Attribute         | Description                                              | Example          |
-| :---------------- | :------------------------------------------------------- | :--------------- |
-| **type**          | Category of document being uploaded                      | `PASSPORT`       |
-| **subType**       | Side of document (for multi-sided documents)             | `FRONT_SIDE`     |
-| **issuedCountry** | ISO country code where document was issued               | `US`, `GB`       |
+| Attribute | Description | Example |
+| :-- | :-- | :-- |
+| **type** | Category of document being uploaded | `PASSPORT` |
+| **subType** | Side of document (for multi-sided documents) | `FRONT_SIDE` |
+| **issuedCountry** | ISO country code where document was issued | `US`, `GB` |
 
 ## Document Types
 
@@ -37,42 +36,50 @@ Supported document types vary by user type (individual vs business).
 
 For `individual` user accounts:
 
-| Type                 | Description                            | Document Group |
-| :------------------- | :------------------------------------- | :------------- |
-| **DRIVERS**          | Government-issued driver's license     | Identity       |
-| **ID_CARD**          | National ID card                       | Identity       |
-| **PASSPORT**         | Passport                               | Identity       |
-| **RESIDENCE_PERMIT** | Residence permit or visa               | Identity       |
-| **PROOF_OF_ADDRESS** | Utility bill, bank statement, lease    | Address        |
-| **SELFIE**           | Selfie photo for identity verification | Identity       |
+| Type | Description | Document Group |
+| :-- | :-- | :-- |
+| **DRIVERS** | Government-issued driver's license | Identity |
+| **ID\_CARD** | National ID card | Identity |
+| **PASSPORT** | Passport | Identity |
+| **RESIDENCE\_PERMIT** | Residence permit or visa | Identity |
+| **PROOF\_OF\_ADDRESS** | Utility bill, bank statement, lease | Address |
+| **SELFIE** | Selfie photo for identity verification | Identity |
+| **AUTH\_LETTER** | Authorization letter | Identity |
+| **UTILITY\_BILL** | Utility bill | Address |
+| **BANK\_STATEMENT** | Bank statement | Address |
+| **RENTAL\_AGREEMENT** | Rental agreement | Address |
+| **TAX\_DOCUMENT** | Tax document | Identity |
+| **VOTER\_REGISTRATION\_CARD** | Voter ID card | Identity |
+| **BANK\_REFERENCE\_LETTER** | Bank reference letter | Identity |
+| **LEASE\_TENANCY\_AGREEMENT** | Lease agreement | Address |
 
 ### Business Documents
 
 For `business` user accounts, requirements are organized by document groups. Check your specific rail's requirements (e.g., [USD Rail](/docs/rails/usd)).
 
-| Type                      | Description                        | Document Group         |
-| :------------------------ | :--------------------------------- | :--------------------- |
-| **INCORPORATION_ARTICLES** | Incorporation articles document    | legalPresence          |
-| **INCORPORATION_CERT**    | Incorporation certificate document | legalPresence          |
-| **STATE_REGISTRY**        | State registry document            | legalPresence, ownershipStructure, controlStructure |
-| **SHAREHOLDER_REGISTRY**  | Shareholder registry document      | ownershipStructure     |
-| **TRUST_AGREEMENT**       | Trust agreement document           | ownershipStructure, controlStructure |
-| **INFORMATION_STATEMENT** | Information statement document     | ownershipStructure, controlStructure |
-| **DIRECTORS_REGISTRY**    | Directors registry document        | controlStructure       |
-| **PROOF_OF_ADDRESS**      | Proof of address document          | companyDetails         |
+| Type | Description | Document Group |
+| :-- | :-- | :-- |
+| **INCORPORATION\_ARTICLES** | Incorporation articles document | legalPresence |
+| **INCORPORATION\_CERT** | Incorporation certificate document | legalPresence |
+| **STATE\_REGISTRY** | State registry document | legalPresence, ownershipStructure, controlStructure |
+| **SHAREHOLDER\_REGISTRY** | Shareholder registry document | ownershipStructure |
+| **TRUST\_AGREEMENT** | Trust agreement document | ownershipStructure, controlStructure |
+| **INFORMATION\_STATEMENT** | Information statement document | ownershipStructure, controlStructure |
+| **DIRECTORS\_REGISTRY** | Directors registry document | controlStructure |
+| **PROOF\_OF\_ADDRESS** | Proof of address document | companyDetails |
 
 ## Document SubTypes
 
 SubTypes specify which side of a document you're uploading:
 
-| SubType         | Use For                                              |
-| :-------------- | :--------------------------------------------------- |
-| **FRONT_SIDE**  | Front of ID card or driver's license                 |
-| **BACK_SIDE**   | Back of ID card or driver's license                  |
-| **SINGLE_SIDE** | All other documents (passport, bills, certificates)  |
+| SubType | Use For |
+| :-- | :-- |
+| **FRONT\_SIDE** | Front of ID card or driver's license |
+| **BACK\_SIDE** | Back of ID card or driver's license |
+| **SINGLE\_SIDE** | All other documents (passport, bills, certificates) |
 
 <Info>
-**Multi-sided documents:** Only `ID_CARD` and `DRIVERS` require both `FRONT_SIDE` and `BACK_SIDE`. All other document types use `SINGLE_SIDE` only.
+  **Multi-sided documents:** Only `ID_CARD` and `DRIVERS` require both `FRONT_SIDE` and `BACK_SIDE`. All other document types use `SINGLE_SIDE` only.
 </Info>
 
 ## Document Groups
@@ -84,12 +91,14 @@ Compliance requirements are organized into document groups. Users must satisfy a
 For individual users, typically required:
 
 **Identity Group** (satisfy with one of):
-- Driver's License (front + back)
-- ID Card (front + back)
+
+- Driver's License (front \+ back)
+- ID Card (front \+ back)
 - Passport
 - Residence Permit
 
 **Address Group** (satisfy with one of):
+
 - Utility bill
 - Bank statement
 - Lease agreement
@@ -99,16 +108,18 @@ For individual users, typically required:
 Business document requirements are organized by groups. Requirements vary by rail and jurisdiction.
 
 **For USD Rail**, typically required groups include:
-- **legalPresence** (min 1): INCORPORATION_ARTICLES, INCORPORATION_CERT, or STATE_REGISTRY
-- **ownershipStructure** (min 1): SHAREHOLDER_REGISTRY, TRUST_AGREEMENT, INFORMATION_STATEMENT, or STATE_REGISTRY
-- **companyDetails** (min 1): PROOF_OF_ADDRESS
-- **controlStructure** (min 1): DIRECTORS_REGISTRY, TRUST_AGREEMENT, INFORMATION_STATEMENT, or STATE_REGISTRY
 
-**Beneficial Owner Identity** (for each owner >25% share):
-- Same as individual identity requirements: DRIVERS, ID_CARD, PASSPORT, or RESIDENCE_PERMIT
+- **legalPresence** (min 1): INCORPORATION\_ARTICLES, INCORPORATION\_CERT, or STATE\_REGISTRY
+- **ownershipStructure** (min 1): SHAREHOLDER\_REGISTRY, TRUST\_AGREEMENT, INFORMATION\_STATEMENT, or STATE\_REGISTRY
+- **companyDetails** (min 1): PROOF\_OF\_ADDRESS
+- **controlStructure** (min 1): DIRECTORS\_REGISTRY, TRUST\_AGREEMENT, INFORMATION\_STATEMENT, or STATE\_REGISTRY
+
+**Beneficial Owner Identity** (for each owner \>25% share):
+
+- Same as individual identity requirements: DRIVERS, ID\_CARD, PASSPORT, or RESIDENCE\_PERMIT
 
 <Note>
-Specific requirements vary by rail and jurisdiction. Check the KYC requirements for your specific use case.
+  Specific requirements vary by rail and jurisdiction. Check the KYC requirements for your specific use case.
 </Note>
 
 ## Uploading Documents
@@ -183,23 +194,23 @@ curl -X POST "https://sandbox.hifi.com/v2/kyc/documents" \
 ```
 
 <Info>
-For detailed field documentation, see the [Add Documents](https://docs.hifi.com/api-reference/kyc/add-documents) API reference.
+  For detailed field documentation, see the [Add Documents](https://docs.hifi.com/api-reference/kyc/add-documents) API reference.
 </Info>
 
 ## File Requirements
 
 Documents must meet these requirements:
 
-| Requirement     | Specification                                      |
-| :-------------- | :------------------------------------------------- |
-| **File types**  | PDF, JPG, JPEG, PNG                                |
-| **Max size**    | 10 MB per file                                     |
-| **Resolution**  | Minimum 300 DPI recommended                        |
-| **Quality**     | Clear, legible, all corners visible                |
-| **Color**       | Color or grayscale (no black & white)              |
+| Requirement | Specification |
+| :-- | :-- |
+| **File types** | PDF, JPG, JPEG, PNG |
+| **Max size** | 10 MB per file |
+| **Resolution** | Minimum 300 DPI recommended |
+| **Quality** | Clear, legible, all corners visible |
+| **Color** | Color or grayscale (no black & white) |
 
 <Warning>
-**Document quality matters:** Blurry, cropped, or illegible documents will be rejected. Ensure all text and photos are clearly visible before uploading.
+  **Document quality matters:** Blurry, cropped, or illegible documents will be rejected. Ensure all text and photos are clearly visible before uploading.
 </Warning>
 
 ## Key Concepts
@@ -207,25 +218,28 @@ Documents must meet these requirements:
 <AccordionGroup>
   <Accordion title="Satisfying Document Groups">
     KYC approval requires satisfying all document groups:
-    
+
     **Example for Individual (USD Rail):**
+
     - **Identity group:** Upload ONE of (passport, driver's license, ID card, residence permit)
     - **Address group:** Upload ONE of (utility bill, bank statement, lease)
-    
+
     **Example for Business (USD Rail):**
-    - **legalPresence group:** Upload ONE of (INCORPORATION_ARTICLES, INCORPORATION_CERT, STATE_REGISTRY)
-    - **ownershipStructure group:** Upload ONE of (SHAREHOLDER_REGISTRY, TRUST_AGREEMENT, INFORMATION_STATEMENT, STATE_REGISTRY)
-    - **companyDetails group:** Upload ONE of (PROOF_OF_ADDRESS)
-    - **controlStructure group:** Upload ONE of (DIRECTORS_REGISTRY, TRUST_AGREEMENT, INFORMATION_STATEMENT, STATE_REGISTRY)
-    - **Owner identity:** Upload identity documents for EACH beneficial owner (>25% share)
-    
+
+    - **legalPresence group:** Upload ONE of (INCORPORATION\_ARTICLES, INCORPORATION\_CERT, STATE\_REGISTRY)
+    - **ownershipStructure group:** Upload ONE of (SHAREHOLDER\_REGISTRY, TRUST\_AGREEMENT, INFORMATION\_STATEMENT, STATE\_REGISTRY)
+    - **companyDetails group:** Upload ONE of (PROOF\_OF\_ADDRESS)
+    - **controlStructure group:** Upload ONE of (DIRECTORS\_REGISTRY, TRUST\_AGREEMENT, INFORMATION\_STATEMENT, STATE\_REGISTRY)
+    - **Owner identity:** Upload identity documents for EACH beneficial owner (\>25% share)
+
     You must provide enough documents to satisfy each required group.
   </Accordion>
 
   <Accordion title="Multi-sided Document Upload">
     For driver's licenses and ID cards, upload both sides separately using the two-step process:
-    
+
     **Upload front side:**
+
     ```bash
     # Step 1: Upload front file
     curl -X POST "https://sandbox.hifi.com/v2/files" \
@@ -245,8 +259,9 @@ Documents must meet these requirements:
         "fileId": "file_front123"
       }'
     ```
-    
+
     **Upload back side:**
+
     ```bash
     # Step 1: Upload back file
     curl -X POST "https://sandbox.hifi.com/v2/files" \
@@ -266,19 +281,20 @@ Documents must meet these requirements:
         "fileId": "file_back123"
       }'
     ```
-    
+
     Both uploads must complete successfully for the document to be considered complete.
   </Accordion>
 
   <Accordion title="Issued Country Importance">
     The `issuedCountry` field is critical for compliance:
-    
+
     - Must match the country that issued the document
     - Use ISO 3166-1 alpha-2 codes (e.g., `US`, `GB`, `CA`, `DE`)
     - Affects which documents are accepted
     - Used for sanctions screening and compliance checks
-    
+
     **Common codes:**
+
     - `US` - United States
     - `GB` - United Kingdom
     - `CA` - Canada
@@ -288,30 +304,32 @@ Documents must meet these requirements:
 
   <Accordion title="Document Status">
     Uploaded documents progress through verification:
-    
-    - **PENDING_REVIEW:** Document uploaded, awaiting verification
+
+    - **PENDING\_REVIEW:** Document uploaded, awaiting verification
     - **APPROVED:** Document verified and accepted
     - **REJECTED:** Document rejected (see rejection reason)
     - **EXPIRED:** Document expired and needs replacement
-    
+
     Subscribe to KYC webhook events to track document verification status.
   </Accordion>
 
   <Accordion title="Proof of Address Requirements">
     Proof of address documents must meet specific criteria:
-    
+
     **Accepted documents:**
+
     - Utility bills (electric, gas, water, internet)
     - Bank statements
     - Lease agreements
     - Government correspondence
-    
+
     **Requirements:**
+
     - Dated within last 3 months
     - Shows full name matching KYC information
     - Shows complete address
     - Issued by reputable organization
-    
+
     Screenshots or photos of digital statements are typically rejected.
   </Accordion>
 </AccordionGroup>
@@ -323,7 +341,7 @@ Here's a complete document upload workflow for individual KYC:
 <Steps>
   <Step title="Upload identity document">
     Upload the identity document (passport):
-    
+
     ```javascript
     async function uploadIdentityDocument(userId, passportFile) {
       const formData = new FormData();
@@ -346,10 +364,9 @@ Here's a complete document upload workflow for individual KYC:
     }
     ```
   </Step>
-  
   <Step title="Upload proof of address">
     Upload the proof of address document:
-    
+
     ```javascript
     async function uploadProofOfAddress(userId, utilityBillFile) {
       const formData = new FormData();
@@ -372,10 +389,9 @@ Here's a complete document upload workflow for individual KYC:
     }
     ```
   </Step>
-  
   <Step title="Upload driver's license (both sides)">
     Upload both sides of the driver's license:
-    
+
     ```javascript
     async function uploadDriversLicense(userId, frontFile, backFile) {
       // Upload front
@@ -414,10 +430,9 @@ Here's a complete document upload workflow for individual KYC:
     }
     ```
   </Step>
-  
   <Step title="Complete KYC workflow">
     Complete the KYC workflow:
-    
+
     ```javascript
     async function completeKYC(userId, documents) {
       // Upload identity document
@@ -441,10 +456,9 @@ Here's a complete document upload workflow for individual KYC:
     }
     ```
   </Step>
-  
   <Step title="Handle webhook for document verification">
     Handle webhook events for document verification:
-    
+
     ```javascript
     function handleDocumentWebhook(event) {
       if (event.eventType === 'USER.KYC.UPDATE') {
@@ -465,7 +479,7 @@ Here's a complete document upload workflow for individual KYC:
 
 ## Getting Help
 
-- 📧 **Email:** support@hifi.com
+- 📧 **Email:** [support@hifi.com](mailto:support@hifi.com)
 - 💬 **Slack:** Message us in our shared Slack channel
 
 ## Related Resources
