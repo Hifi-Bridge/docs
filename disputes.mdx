@@ -40,6 +40,39 @@ Disputes are initiated by the Receiver and processed through the ACH network as 
 - Sits with the client (originator)
 - Mitigated via reserves and internal  monitoring
 
+## ACH Credit (Push Payments) Disputes 
+
+## Overview
+
+Disputes are initiated by the Sender after funds have settled.\
+Credits cannot be automatically reversed.
+
+### Handling
+
+1. Recall request received via our sponsor bank
+2. Review:
+   - Funds availability
+   - Fraud / error context
+3. Client notified (if applicable)
+4. Decision:
+   - Funds available → return processed
+   - Funds unavailable → denied
+5. Respond to bank
+
+### Controls (Critical)
+
+- Debit blocks are in place, a manual review is conducted prior to returns being refunded. 
+- Originators cannot pull funds back unilaterally
+- All returns require our review \+ approval
+
+### Timing
+
+- No guaranteed SLA (bank \+ client dependent)
+
+### Risk
+
+- Sits with the sender
+
 ## ACH Reversals (Correction Entries)
 
 ### Overview
