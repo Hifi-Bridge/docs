@@ -262,7 +262,7 @@
             "group": "Payments",
             "pages": [
               {
-                "group": "ACH",
+                "group": "Dispute Handling",
                 "pages": [
                   "disputes"
                 ]
