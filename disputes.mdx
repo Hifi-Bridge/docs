@@ -1,0 +1,90 @@
+---
+title: "ACH Dispute Handling "
+---
+
+This section outlines how disputes are handled for ACH Debit (pull) and ACH Credit (push) transactions, as well as ACH Reversals.
+
+## ACH Debit (Pull Payments) Disputes
+
+### Overview
+
+Disputes are initiated by the Receiver and processed through the ACH network as returns.
+
+### Common Reasons (Return Codes)
+
+- Unauthorized Return codes(R05, R07, R10, R11, R29)
+- Insufficient Funds Return code (R01)
+- Invalid / Closed Account Return code(R02,R03,R04)
+
+### Timeframes
+
+- Standard: 2 business days
+- Unauthorized (consumer): up to 60 days
+
+### Handling
+
+- Returns are automatically processed by the network
+- Funds are debited from our account
+- Client balances may go negative → covered by reserves
+
+### Controls
+
+- Internal Return rate monitoring thresholds(originator-level):
+  - Unauthorized: 0.20%
+  - Administrative: 2%
+  - Overall: 10%
+- Breaches may trigger restrictions or suspension
+
+### Risk
+
+- Sits with the client (originator)
+- Mitigated via reserves and internal  monitoring
+
+## ACH Reversals (Correction Entries)
+
+### Overview
+
+Reversals are new ACH entries sent by the originator to correct an error — they are not the same as returns or recalls.
+
+### When Reversals Are Allowed
+
+- Duplicate payment
+- Incorrect amount
+- Wrong account
+
+### Timeframe
+
+- Must be initiated within a 5-day window from the original transaction
+
+### Key Behavior
+
+- Reversals are not guaranteed to succeed
+- They are subject to:
+  - Receiving bank controls
+  - Account-level restrictions
+
+### Our Controls
+
+- Debit blocks prevent automatic reversal debits
+- Reversals cannot be forced into our accounts
+- Any reversal requires:
+  - Bank coordination
+  - Internal review and approval
+
+### Important Note
+
+- If a reversal is attempted against a blocked account:
+  - It will fail
+  - Originator must submit a formal recall request instead
+
+## Key Differences
+
+|  | **ACH Debit Return** | **ACH Credit Return** | **Reversal** |
+| :-- | :-- | :-- | :-- |
+| **Initiated by** | Receiver | Sender | Originator |
+| **Type** | Return | Recall | Correction entry |
+| **Processing** | Automatic | Manual | New ACH entry |
+| **Timing** | 2 days / 60 days | No guarantee | ≤5 days |
+| **Funds movement** | Forced return | Requires approval | Requires acceptance |
+| **Risk holder** | Client (originator) | Sender | Originator |
+| **Control** | Monitoring | Debit blocks | Debit blocks |

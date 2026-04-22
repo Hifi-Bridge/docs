@@ -159,7 +159,10 @@
             "pages": [
               {
                 "group": "Users",
-                "pages": ["users/overview", "users/tos"]
+                "pages": [
+                  "users/overview",
+                  "users/tos"
+                ]
               },
               "wallets",
               {
@@ -214,7 +217,9 @@
               },
               {
                 "group": "Reporting",
-                "pages": ["reporting/metrics"]
+                "pages": [
+                  "reporting/metrics"
+                ]
               }
             ]
           },
@@ -249,6 +254,17 @@
                   "compliance/documents",
                   "compliance/documents/identity",
                   "compliance/documents/proof-of-address"
+                ]
+              }
+            ]
+          },
+          {
+            "group": "Payments",
+            "pages": [
+              {
+                "group": "ACH",
+                "pages": [
+                  "disputes"
                 ]
               }
             ]
@@ -315,14 +331,20 @@
       },
       {
         "tab": "Changelog",
-        "pages": ["changelog"]
+        "pages": [
+          "changelog"
+        ]
       },
       {
         "tab": "API Reference",
         "pages": [
           {
             "group": "Overview",
-            "pages": ["api/authentication", "api/responses", "api/errors"]
+            "pages": [
+              "api/authentication",
+              "api/responses",
+              "api/errors"
+            ]
           },
           {
             "group": "Endpoints",
@@ -330,7 +352,9 @@
             "pages": [
               {
                 "group": "Common",
-                "pages": ["GET /ping"]
+                "pages": [
+                  "GET /ping"
+                ]
               },
               {
                 "group": "Users",
@@ -365,7 +389,9 @@
               },
               {
                 "group": "File",
-                "pages": ["POST /v2/files"]
+                "pages": [
+                  "POST /v2/files"
+                ]
               },
               {
                 "group": "Wallets",
