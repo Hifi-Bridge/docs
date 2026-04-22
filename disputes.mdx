@@ -4,7 +4,19 @@ title: "ACH Disputes"
 
 This section outlines how disputes are handled for ACH Debit (pull) and ACH Credit (push) transactions, as well as ACH Reversals.
 
-> ACH Pull is restricted across HIFI and a Developer must enter into an additional agreement to enable ACH pull.
+> ACH Pull is restricted across HIFI and a Developer must enter into an additional agreement to enable ACH Pull.
+
+## Key Differences
+
+|  | **ACH Debit Return** | **ACH Credit Return** | **Reversal** |
+| :-- | :-- | :-- | :-- |
+| **Initiated by** | Receiver | Sender | Originator |
+| **Type** | Return | Recall | Correction entry |
+| **Processing** | Automatic | Manual | New ACH entry |
+| **Timing** | 2 days / 60 days | No guarantee | ≤5 days |
+| **Funds movement** | Forced return | Requires approval | Requires acceptance |
+| **Risk holder** | Client (originator) | Sender | Originator |
+| **Control** | Monitoring | Debit blocks | Debit blocks |
 
 ## ACH Debit (Pull Payments) Disputes
 
@@ -14,9 +26,9 @@ Disputes are initiated by the Receiver and processed through the ACH network as 
 
 ### Common Reasons (Return Codes)
 
-- Unauthorized Return codes(R05, R07, R10, R11, R29)
+- Unauthorized Return codes (R05, R07, R10, R11, R29)
 - Insufficient Funds Return code (R01)
-- Invalid / Closed Account Return code(R02,R03,R04)
+- Invalid / Closed Account Return code (R02,R03,R04)
 
 ### Timeframes
 
@@ -31,7 +43,7 @@ Disputes are initiated by the Receiver and processed through the ACH network as 
 
 ### Controls
 
-- Internal Return rate monitoring thresholds(originator-level):
+- Internal Return rate monitoring thresholds (originator-level):
   - Unauthorized: 0.20%
   - Administrative: 2%
   - Overall: 10%
@@ -40,14 +52,13 @@ Disputes are initiated by the Receiver and processed through the ACH network as 
 ### Risk
 
 - Sits with the client (originator)
-- Mitigated via reserves and internal  monitoring
+- Mitigated via reserves and internal monitoring
 
 ## ACH Credit (Push Payments) Disputes 
 
-## Overview
+### Overview
 
-Disputes are initiated by the Sender after funds have settled.\
-Credits cannot be automatically reversed.
+Disputes are initiated by the Sender after funds have settled. Credits cannot be automatically reversed.
 
 ### Handling
 
@@ -106,20 +117,9 @@ Reversals are new ACH entries sent by the originator to correct an error — the
   - Bank coordination
   - Internal review and approval
 
-### Important Note
-
-- If a reversal is attempted against a blocked account:
-  - It will fail
-  - Originator must submit a formal recall request instead
-
-## Key Differences
-
-|  | **ACH Debit Return** | **ACH Credit Return** | **Reversal** |
-| :-- | :-- | :-- | :-- |
-| **Initiated by** | Receiver | Sender | Originator |
-| **Type** | Return | Recall | Correction entry |
-| **Processing** | Automatic | Manual | New ACH entry |
-| **Timing** | 2 days / 60 days | No guarantee | ≤5 days |
-| **Funds movement** | Forced return | Requires approval | Requires acceptance |
-| **Risk holder** | Client (originator) | Sender | Originator |
-| **Control** | Monitoring | Debit blocks | Debit blocks |
+> ### Important Note
+>
+> If a reversal is attempted against a blocked account:
+>
+> - It will fail
+> - Originator must submit a formal recall request instead
