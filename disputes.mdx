@@ -27,7 +27,7 @@ Disputes are initiated by the Receiver and processed through the ACH network as 
 - Funds are debited from our account
 - Client balances may go negative → covered by reserves
 
-### **Controls**
+### Controls
 
 - Internal Return rate monitoring thresholds(originator-level):
   - Unauthorized: 0.20%
@@ -35,35 +35,35 @@ Disputes are initiated by the Receiver and processed through the ACH network as 
   - Overall: 10%
 - Breaches may trigger restrictions or suspension
 
-### **Risk**
+### Risk
 
 - Sits with the client (originator)
 - Mitigated via reserves and internal  monitoring
 
 ## **ACH Reversals (Correction Entries)**
 
-### **Overview**
+### Overview
 
 Reversals are new ACH entries sent by the originator to correct an error — they are not the same as returns or recalls.
 
-### **When Reversals Are Allowed**
+### When Reversals Are Allowed
 
 - Duplicate payment
 - Incorrect amount
 - Wrong account
 
-### **Timeframe**
+### Timeframe
 
 - Must be initiated within a 5-day window from the original transaction
 
-### **Key Behavior**
+### Key Behavior
 
 - Reversals are not guaranteed to succeed
 - They are subject to:
   - Receiving bank controls
   - Account-level restrictions
 
-### **Our Controls**
+### Our Controls
 
 - Debit blocks prevent automatic reversal debits
 - Reversals cannot be forced into our accounts
@@ -71,7 +71,7 @@ Reversals are new ACH entries sent by the originator to correct an error — the
   - Bank coordination
   - Internal review and approval
 
-### **Important Note**
+### Important Note
 
 - If a reversal is attempted against a blocked account:
   - It will fail
