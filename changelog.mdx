@@ -5,6 +5,33 @@ mode: "center"
 rss: true
 ---
 
+<Update label="April 24, 2026" description="TRON Support Enhancements, USDT Fee Observability, Event-based Alerts">
+  ## Proof of Address required from May 22, 2026
+
+  - Starting May 22, 2026, Proof of Address (PoA) will be required for all KYC/KYB submissions via the API and Dashboard
+    - US/Canada residents can submit a government-issued ID with address e.g. Drivers License
+    - Users approved before May 22 will not be affected
+  - This change will speed up verification and significantly reduce Requests for Information (RFIs), improving your compliance experience
+
+  ## No Nested Flows - Effective May 10, 2026 (7AM EST)
+
+  - We're introducing a new required field, `accountHolder.isFintech`, to the [Create an Account](https://docs.hifi.com/api-reference/account/create-an-account) endpoint.
+    - If set to `true`, the account will be flagged and transactions will be blocked, as HIFI's partner banks do not support nested or pass-through payment flows.
+    - All transactions must be initiated by your direct customers only - not on behalf of undisclosed third parties such as PSPs or cryptocurrency exchanges.
+  - **What this means for you:**
+    - End users who intend to send funds must be onboarded directly onto the HIFI platform through the full KYB process.
+
+  ## Dashboard
+
+  - **Customizable KYC Link**
+    - Added the ability for developers to edit the template image used for KYC links
+      - Improves white-label flexibility and user-facing branding customization
+  - **Batch Transfer Dashboard View**
+    - Added a new batch transfer view to the Dashboard
+      - Gives developers visibility into grouped transfer operations and related activity
+      - Improves operational workflows for high-volume transfer use cases
+</Update>
+
 <Update label="April 19, 2026" description="TRON Support Enhancements, USDT Fee Observability, Event-based Alerts">
   ## TRON Support Enhancements
 
@@ -19,7 +46,7 @@ rss: true
   ## Event-Based Alerts
 
   - Introduced email notification settings within the dashboard
-  - Can opt in or out of updates such as rail activations, transaction milestones, etc. 
+  - Can opt in or out of updates such as rail activations, transaction milestones, etc.
 </Update>
 
 <Update label="April 10, 2026" description="TRON Wallet Support, Dashboard Stability Improvements">
