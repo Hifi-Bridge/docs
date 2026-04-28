@@ -6,22 +6,18 @@ rss: true
 ---
 
 <Update label="April 24, 2026" description="TRON Support Enhancements, USDT Fee Observability, Event-based Alerts">
-  ## Proof of Address required from May 22, 2026
+  ## **Proof of Address required from May 22, 2026**
 
   - Starting May 22, 2026, Proof of Address (PoA) will be required for all KYC/KYB submissions via the API and Dashboard
     - US/Canada residents can submit a government-issued ID with address e.g. Drivers License
     - Users approved before May 22 will not be affected
   - This change will speed up verification and significantly reduce Requests for Information (RFIs), improving your compliance experience
 
-  ## No Nested Flows - Effective May 10, 2026 (7AM EST)
+  **Improved Proof of Address (PoA) Submission Experience**
 
-  - We're introducing a new required field, `accountHolder.isFintech`, to the [Create an Account](https://docs.hifi.com/api-reference/account/create-an-account) endpoint.
-    - If set to `true`, the account will be flagged and transactions will be blocked, as HIFI's partner banks do not support nested or pass-through payment flows.
-    - All transactions must be initiated by your direct customers only - not on behalf of undisclosed third parties such as PSPs or cryptocurrency exchanges.
-  - **What this means for you:**
-    - End users who intend to send funds must be onboarded directly onto the HIFI platform through the full KYB process.
+  - Screenshots are now accepted for PoA submissions, making it easier to submit digital documents such as utility bills or bank statements without converting them into formal PDFs
 
-  ## Dashboard
+  **Dashboard**
 
   - **Customizable KYC Link**
     - Added the ability for developers to edit the template image used for KYC links
@@ -30,6 +26,16 @@ rss: true
     - Added a new batch transfer view to the Dashboard
       - Gives developers visibility into grouped transfer operations and related activity
       - Improves operational workflows for high-volume transfer use cases
+
+  **No Nested Flows - Effective May 10, 2026 (7AM EST)**
+
+  - We're introducing a new required field, `accountHolder.isFintech`, to the [Create an Account](https://docs.hifi.com/api-reference/account/create-an-account) endpoint.
+    - If `accountHolder.isFintech = true` → the account will be flagged for review
+    - From there, the intended use case must be clearly defined (e.g., treasury management, invoice payments, internal fund movement)
+    - Payment flows will be assessed to ensure they are not nested or pass-through in nature
+  - **What this means for you:**
+    - End users who intend to send funds must be onboarded directly onto the HIFI platform through the full KYB process.
+    - Payments should not be pooled and processed on behalf of end users, as this constitutes a nested flow. All end users must be onboarded and their transactions processed from their named account
 </Update>
 
 <Update label="April 19, 2026" description="TRON Support Enhancements, USDT Fee Observability, Event-based Alerts">
