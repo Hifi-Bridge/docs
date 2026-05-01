@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /cdn-cgi/
+Allow: /_next/image
+Disallow: /_next/
+Disallow: /mintlify-assets/
+
+Sitemap: https://docs.hifi.com/sitemap.xml
