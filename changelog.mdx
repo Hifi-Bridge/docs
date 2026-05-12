@@ -5,7 +5,51 @@ mode: "center"
 rss: true
 ---
 
-<Update label="May 1, 2026" description="TRON Support Enhancements, USDT Fee Observability, Event-based Alerts">
+<Update label="May 7, 2026" description="Dashboard Enhancement and Breaking Chnanges">
+  **Dashboard**
+
+  - **Dashboard Command Palette & Keyboard Shortcuts**
+    - Added a global Command Palette (`⌘` in Mac, `CTRL` in Windows/Linux) to the dashboard for quickly navigating pages and performing actions such as creating users
+    - Added new keyboard shortcuts including:
+      - `⌘E `**→** switch between Production and Sandbox
+      - `⌘B `**→** toggle sidebar
+      - `d `**→** toggle light/dark theme
+    - Improves workflows and overall dashboard navigation speed
+  - **"What’s New" Feature Popup**
+    - Implemented a "What’s New**"** popup system for newly released dashboard features
+    - Automatically appears on login when developers have unseen updates
+      - Improves feature discoverability and visibility into newly released functionality
+  - **Delete Offramp Account**
+    - Added the ability to “delete” offramp accounts directly from the dashboard
+    - Accessible from the bottom of the offramp account sheet
+      - Simplifies account management and cleanup workflows for operational teams
+
+  **Scheduled Maintenance Notice (May 11, 2026: 9:00 AM - 10:00 AM UTC)**
+
+  - We'll be performing scheduled maintenance that may temporarily affect certain fiat on-ramp and off-ramp services.
+  - During this window, transactions may experience delays or intermittent disruptions. All other platform features will remain available. We recommend planning any time-sensitive transactions before or after this maintenance period.
+  - Any in-progress transactions will be processed once maintenance is complete.
+
+  **Breaking Changes:**\
+  **Proof of Address required from May 22, 2026 (0:00 EST)**
+
+  - Starting May 22, 2026, Proof of Address (PoA) will be required for all KYC/KYB(UBO) submissions via the API and Dashboard
+    - U.S. and Canadian residents may submit a valid government-issued ID displaying their residential address (e.g., driver’s license).
+    - If the address provided in the application does not match the address shown on the ID, an additional Proof of Address will be needed.
+    - Users approved before May 22 will not be affected.
+
+  **No Nested Flows - Effective May 10, 2026 (7:00 AM EST)**
+
+  - We're introducing a new required field, `accountHolder.isFintech`, to the [Create an Account](https://docs.hifi.com/api-reference/account/create-an-account) endpoint.
+    - If `accountHolder.isFintech = true` → the account will be flagged for review
+    - From there, the intended use case must be clearly defined (e.g., treasury management, invoice payments, internal fund movement)
+    - Payment flows will be assessed to ensure they are not nested or pass-through in nature
+  - **What this means for you:**
+    - End users who intend to send funds must be onboarded directly onto the HIFI platform through the full KYB process.
+    - Payments should not be pooled and processed on behalf of end users, as this constitutes a nested flow. All end users must be onboarded and their transactions processed from their named account
+</Update>
+
+<Update label="May 1, 2026" description="Dashboard Enhancement">
   ## **Dashboard**
 
   - **Virtual Account Micro-Deposits**
