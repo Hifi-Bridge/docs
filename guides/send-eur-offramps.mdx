@@ -1,0 +1,263 @@
+---
+title: "Send EUR Offramps"
+description: "Settle stablecoins to EUR through SEPA."
+---
+
+**Time to complete:** 10-15 minutes
+
+<Note>
+  All examples use the sandbox environment (`https://sandbox.hifibridge.com`).
+  Sandbox transactions are simulated and do not move real funds.
+</Note>
+
+## Overview
+
+EUR offramps convert stablecoins, such as USDC, into EUR and send the funds to a recipient bank account through SEPA.
+
+The flow has three steps:
+
+<Steps>
+  <Step title="Create an EUR offramp account">
+    Register the recipient bank account with EUR and SEPA details.
+  </Step>
+  <Step title="Create an offramp quote">
+    Create an offramp request with `destination.currency` set to `eur`.
+  </Step>
+  <Step title="Accept the quote">
+    Accept the quote before it expires to execute the offramp.
+  </Step>
+</Steps>
+
+## Prerequisites
+
+Before creating an EUR offramp, make sure you have:
+
+- A user with Terms of Service accepted
+- KYC or KYB approved for the required rail
+- A wallet funded with a supported stablecoin
+- Recipient bank details, including IBAN and SWIFT/BIC
+- API keys from the Dashboard
+
+<Info>
+  For general offramp behavior, quote acceptance, and status handling, see
+  [Offramps](/docs/transactions/offramps).
+</Info>
+
+## Step 1: Create an EUR Offramp Account
+
+Create an offramp account for the recipient's EUR bank account. For EUR SEPA payouts, set the account currency to `eur` and transfer type to `sepa`.
+
+This example creates a France EUR offramp account. Use the country-specific account type that matches the recipient's bank country.
+
+```bash
+curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/accounts" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "rail": "offramp",
+    "type": "franceGlobalNetwork",
+    "accountHolder": {
+      "type": "individual",
+      "name": "Marie Laurent",
+      "address": {
+        "addressLine1": "10 Rue de Rivoli",
+        "city": "Paris",
+        "stateProvinceRegion": "IDF",
+        "postalCode": "75001",
+        "country": "FRA"
+      }
+    },
+    "franceGlobalNetwork": {
+      "transferType": "sepa",
+      "currency": "eur",
+      "bankName": "Example Bank",
+      "iban": "FR7630006000011234567890189",
+      "swiftCode": "AGRIFRPP"
+    }
+  }'
+```
+
+<Accordion title="EUR SEPA account types and payload shape">
+
+For SEPA payouts in EUR, `type` and the matching nested property name are both `{country}GlobalNetwork` — lower camelCase from the English country name for **where the beneficiary bank is located** (not the account holder's residence, if those differ).
+
+The object at that key always uses this shape for EUR SEPA:
+
+```json
+{
+  "transferType": "sepa",
+  "currency": "eur",
+  "bankName": "string",
+  "iban": "string",
+  "swiftCode": "string"
+}
+```
+
+| Country          | `type` (and nested key)       |
+| :--------------- | :---------------------------- |
+| Albania          | `albaniaGlobalNetwork`        |
+| Andorra          | `andorraGlobalNetwork`        |
+| Austria          | `austriaGlobalNetwork`        |
+| Belgium          | `belgiumGlobalNetwork`        |
+| Bulgaria         | `bulgariaGlobalNetwork`       |
+| Croatia          | `croatiaGlobalNetwork`        |
+| Cyprus           | `cyprusGlobalNetwork`         |
+| Czech Republic   | `czechRepublicGlobalNetwork`  |
+| Denmark          | `denmarkGlobalNetwork`        |
+| Estonia          | `estoniaGlobalNetwork`        |
+| Finland          | `finlandGlobalNetwork`        |
+| France           | `franceGlobalNetwork`         |
+| Germany          | `germanyGlobalNetwork`        |
+| Greece           | `greeceGlobalNetwork`         |
+| Hungary          | `hungaryGlobalNetwork`        |
+| Iceland          | `icelandGlobalNetwork`        |
+| Ireland          | `irelandGlobalNetwork`        |
+| Italy            | `italyGlobalNetwork`          |
+| Latvia           | `latviaGlobalNetwork`         |
+| Liechtenstein    | `liechtensteinGlobalNetwork`  |
+| Lithuania        | `lithuaniaGlobalNetwork`      |
+| Luxembourg       | `luxembourgGlobalNetwork`     |
+| Malta            | `maltaGlobalNetwork`          |
+| Moldova          | `moldovaGlobalNetwork`        |
+| Monaco           | `monacoGlobalNetwork`         |
+| Montenegro       | `montenegroGlobalNetwork`     |
+| Netherlands      | `netherlandsGlobalNetwork`    |
+| North Macedonia  | `northMacedoniaGlobalNetwork` |
+| Norway           | `norwayGlobalNetwork`         |
+| Poland           | `polandGlobalNetwork`         |
+| Portugal         | `portugalGlobalNetwork`       |
+| Romania          | `romaniaGlobalNetwork`        |
+| San Marino       | `sanMarinoGlobalNetwork`      |
+| Serbia           | `serbiaGlobalNetwork`         |
+| Slovakia         | `slovakiaGlobalNetwork`       |
+| Slovenia         | `sloveniaGlobalNetwork`       |
+| Spain            | `spainGlobalNetwork`          |
+| Sweden           | `swedenGlobalNetwork`         |
+| Switzerland      | `switzerlandGlobalNetwork`    |
+| Vatican City     | `vaticanCityGlobalNetwork`    |
+
+<Tabs>
+  <Tab title="franceGlobalNetwork">
+
+```json
+{
+  "type": "franceGlobalNetwork",
+  "franceGlobalNetwork": {
+    "transferType": "sepa",
+    "currency": "eur",
+    "bankName": "Example Bank",
+    "iban": "FR7630006000011234567890189",
+    "swiftCode": "AGRIFRPP"
+  }
+}
+```
+
+  </Tab>
+  <Tab title="germanyGlobalNetwork">
+
+```json
+{
+  "type": "germanyGlobalNetwork",
+  "germanyGlobalNetwork": {
+    "transferType": "sepa",
+    "currency": "eur",
+    "bankName": "Example Bank",
+    "iban": "DE89370400440532013000",
+    "swiftCode": "COBADEFFXXX"
+  }
+}
+```
+
+  </Tab>
+  <Tab title="spainGlobalNetwork">
+
+```json
+{
+  "type": "spainGlobalNetwork",
+  "spainGlobalNetwork": {
+    "transferType": "sepa",
+    "currency": "eur",
+    "bankName": "Example Bank",
+    "iban": "ES9121000418450200051332",
+    "swiftCode": "CAIXESBBXXX"
+  }
+}
+```
+
+  </Tab>
+</Tabs>
+
+For the full country and payment-method matrix, see [Coverage](/docs/coverage).
+
+</Accordion>
+
+Save the returned `id`. You will use it as `destination.accountId` when creating the offramp.
+
+## Step 2: Create an EUR Offramp Quote
+
+Create an offramp request with a stablecoin source and an EUR destination.
+
+```bash
+curl -X POST "https://sandbox.hifibridge.com/v2/offramps" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "requestId": "b08e27be-c086-4b84-a321-307ed9f265e1",
+    "source": {
+      "currency": "usdc",
+      "chain": "POLYGON",
+      "userId": "usr_abc123",
+      "amount": 100
+    },
+    "destination": {
+      "currency": "eur",
+      "accountId": "acc_eur123",
+      "userId": "usr_abc123",
+      "sepaReference": "Invoice 1001"
+    },
+    "purposeOfPayment": "other",
+    "description": "EUR payout for invoice 1001"
+  }'
+```
+
+<ResponseField name="destination.currency" type="string" required>
+  Use `eur` for EUR offramps.
+</ResponseField>
+
+<ResponseField name="destination.accountId" type="string" required>
+  The EUR offramp account that should receive the payout.
+</ResponseField>
+
+<ResponseField name="destination.sepaReference" type="string">
+  Optional SEPA reference included with the payout. It must be 6 to 140 characters and may contain letters, numbers, spaces, ampersand (`&`), hyphen (`-`), full stop (`.`), and solidus (`/`).
+</ResponseField>
+
+## Step 3: Review and Accept the Quote
+
+The create response includes an offramp `id`, status, and quote information. Review the rate, fees, destination amount, and expiration time before accepting.
+
+```bash
+curl -X POST "https://sandbox.hifibridge.com/v2/offramps/off_abc123/quote/accept" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+After the quote is accepted, the offramp moves through crypto and fiat processing statuses until completion.
+
+## Track the Offramp
+
+You can track EUR offramp status in two ways:
+
+- Subscribe to [Offramp events](/docs/webhooks/offramp-events)
+- Poll the [Retrieve an offramp](https://docs.hifi.com/api-reference/offramp/retrieve-an-offramp) endpoint
+
+```bash
+curl -X GET "https://sandbox.hifibridge.com/v2/offramps/off_abc123" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+## Related Resources
+
+- [Offramp Accounts](/docs/accounts/offramp-accounts)
+- [Offramps](/docs/transactions/offramps)
+- [Global Network Rail](/docs/rails/global-network)
+- [Offramp Events](/docs/webhooks/offramp-events)
