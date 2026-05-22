@@ -5,6 +5,33 @@ mode: "center"
 rss: true
 ---
 
+<Update label="May 15, 2026" description="EUR Payouts and Breaking Chnanges">
+  **Supplementary Info for Compliance**
+
+  - Added `supplementaryInfo` and `supplementaryUrl` fields to Update KYC on API and Dashboard
+  - Allows applicants to proactively provide additional business context they believe may help compliance review
+    - Aims to reduce friction and minimize RFIs during onboarding
+
+  **EUR Payouts Are Now Live**\
+  HIFI now supports EUR payouts across 41 European countries via SEPA, SEPA Instant, and SWIFT.
+
+  - Faster EUR disbursements across European corridors
+  - Unified API support for EUR payout workflows
+  - SEPA, SEPA Instant, and SWIFT rails available
+
+  Learn more with our guide: [Send EUR Offramps](https://docs.hifi.com/guides/send-eur-offramps)\
+  \
+  Questions or interested in enabling EUR rails? Reach out to [revenue@hifi.com](mailto:revenue@hifi.com) or reply in the thread below.\
+
+  **Breaking Change:**\
+  **Proof of Address required from May 22, 2026 (0:00 EST)**
+
+  - Starting May 22, 2026, Proof of Address (PoA) will be required for all KYC/KYB(UBO) submissions via the API and Dashboard
+    - U.S. and Canadian residents may submit a valid government-issued ID displaying their residential address (e.g., driver’s license).
+    - If the address provided in the application does not match the address shown on the ID, an additional Proof of Address will be needed.
+    - Users approved before May 22 will not be affected.
+</Update>
+
 <Update label="May 7, 2026" description="Dashboard Enhancement and Breaking Chnanges">
   **Dashboard**
 
@@ -16,7 +43,7 @@ rss: true
       - `d `**→** toggle light/dark theme
     - Improves workflows and overall dashboard navigation speed
   - **"What’s New" Feature Popup**
-    - Implemented a "What’s New**"** popup system for newly released dashboard features
+    - Implemented a "What’s New\*\*"\*\* popup system for newly released dashboard features
     - Automatically appears on login when developers have unseen updates
       - Improves feature discoverability and visibility into newly released functionality
   - **Delete Offramp Account**
@@ -322,7 +349,7 @@ rss: true
 
   `ONRAMP.UPDATE`, `OFFRAMP.UPDATE`, `ONRAMP.CREATE`, and `OFFRAMP.CREATE` will no longer be supported. Update your integrations to use the new transaction events documented in our [Onramp events](/webhooks/onramp-events) and [Offramp events](/webhooks/offramp-events) sections to avoid service disruptions.
 
-  If you have any questions, please email <a href="mailto:support@hifi.com">[support@hifi.com](mailto:support@hifi.com)</a>
+  If you have any questions, please email 
 
   .
 </Update>
