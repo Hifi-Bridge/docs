@@ -5,7 +5,7 @@ mode: "center"
 rss: true
 ---
 
-<Update label="May 15, 2026" description="EUR Payouts and Breaking Chnanges">
+<Update label="May 15, 2026" description="Supplementary Info and EUR Payouts">
   **Supplementary Info for Compliance**
 
   - Added `supplementaryInfo` and `supplementaryUrl` fields to Update KYC on API and Dashboard
@@ -46,24 +46,6 @@ rss: true
   - We'll be performing scheduled maintenance that may temporarily affect certain fiat on-ramp and off-ramp services.
   - During this window, transactions may experience delays or intermittent disruptions. All other platform features will remain available. We recommend planning any time-sensitive transactions before or after this maintenance period.
   - Any in-progress transactions will be processed once maintenance is complete.
-
-  **Breaking Changes:**\
-  **Proof of Address required from May 22, 2026 (0:00 EST)**
-
-  - Starting May 22, 2026, Proof of Address (PoA) will be required for all KYC/KYB(UBO) submissions via the API and Dashboard
-    - U.S. and Canadian residents may submit a valid government-issued ID displaying their residential address (e.g., driver’s license).
-    - If the address provided in the application does not match the address shown on the ID, an additional Proof of Address will be needed.
-    - Users approved before May 22 will not be affected.
-
-  **No Nested Flows - Effective May 10, 2026 (7:00 AM EST)**
-
-  - We're introducing a new required field, `accountHolder.isFintech`, to the [Create an Account](https://docs.hifi.com/api-reference/account/create-an-account) endpoint.
-    - If `accountHolder.isFintech = true` → the account will be flagged for review
-    - From there, the intended use case must be clearly defined (e.g., treasury management, invoice payments, internal fund movement)
-    - Payment flows will be assessed to ensure they are not nested or pass-through in nature
-  - **What this means for you:**
-    - End users who intend to send funds must be onboarded directly onto the HIFI platform through the full KYB process.
-    - Payments should not be pooled and processed on behalf of end users, as this constitutes a nested flow. All end users must be onboarded and their transactions processed from their named account
 </Update>
 
 <Update label="May 1, 2026" description="Dashboard Enhancement">
