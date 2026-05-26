@@ -6,48 +6,52 @@ description: "The USD Rail enables pay-ins and pay-outs from stablecoins to USD.
 
 ### Payment Methods
 
-| Payment Method | Direction     | Typical Duration  |
-| :------------- | :------------ | :---------------- |
-| Wire           | Payin, Payout | \< 1 business day |
-| ACH            | Payin, Payout | 1-3 business days |
-| SWIFT          | Payout        | 1-5 business days |
-| RTP            | Payin, Payout | Instant           |
+| Payment Method | Direction | Typical Duration |
+| :-- | :-- | :-- |
+| Wire | Payin, Payout | \< 1 business day |
+| ACH | Payin, Payout | 1-3 business days |
+| SWIFT | Payout | 1-5 business days |
+| RTP | Payin, Payout | Instant |
+
+<Info>
+  SWIFT cut-off times: SWIFT operates Monday to Friday. The daily cut-off time is 11:30 AM EST; any transactions processed after this time will be queued for processing at approximately 2:00 AM EST the following business day. Saturday and Sunday are treated as non-working days.
+</Info>
 
 ## Currency Support
 
-| Country              | Currency | Direction     | Payment Methods  |
-| :------------------- | :------- | :------------ | :--------------- |
-| United States        | USD      | Payin, Payout | Wire, ACH, RTP, SWIFT(Payout-only) |
-| United Arab Emirates | USD      | Payout        | SWIFT            |
-| Australia            | USD      | Payout        | SWIFT            |
-| Austria              | USD      | Payout        | SWIFT            |
-| Belgium              | USD      | Payout        | SWIFT            |
-| Canada               | USD      | Payout        | SWIFT            |
-| Estonia              | USD      | Payout        | SWIFT            |
-| Finland              | USD      | Payout        | SWIFT            |
-| France               | USD      | Payout        | SWIFT            |
-| Germany              | USD      | Payout        | SWIFT            |
-| Greece               | USD      | Payout        | SWIFT            |
-| India                | USD      | Payout        | SWIFT            |
-| Ireland              | USD      | Payout        | SWIFT            |
-| Italy                | USD      | Payout        | SWIFT            |
-| Japan                | USD      | Payout        | SWIFT            |
-| Lithuania            | USD      | Payout        | SWIFT            |
-| Luxembourg           | USD      | Payout        | SWIFT            |
-| Mexico               | USD      | Payout        | SWIFT            |
-| Malaysia             | USD      | Payout        | SWIFT            |
-| Netherlands          | USD      | Payout        | SWIFT            |
-| New Zealand          | USD      | Payout        | SWIFT            |
-| Norway               | USD      | Payout        | SWIFT            |
-| Oman                 | USD      | Payout        | SWIFT            |
-| Philippines          | USD      | Payout        | SWIFT            |
-| Portugal             | USD      | Payout        | SWIFT            |
-| Slovenia             | USD      | Payout        | SWIFT            |
-| Spain                | USD      | Payout        | SWIFT            |
-| United Kingdom       | USD      | Payout        | SWIFT            |
-| Colombia             | USD      | Payout        | SWIFT            |
-| Guatemala            | USD      | Payout        | SWIFT            |
-| Uruguay              | USD      | Payout        | SWIFT            |
+| Country | Currency | Direction | Payment Methods |
+| :-- | :-- | :-- | :-- |
+| United States | USD | Payin, Payout | Wire, ACH, RTP, SWIFT(Payout-only) |
+| United Arab Emirates | USD | Payout | SWIFT |
+| Australia | USD | Payout | SWIFT |
+| Austria | USD | Payout | SWIFT |
+| Belgium | USD | Payout | SWIFT |
+| Canada | USD | Payout | SWIFT |
+| Estonia | USD | Payout | SWIFT |
+| Finland | USD | Payout | SWIFT |
+| France | USD | Payout | SWIFT |
+| Germany | USD | Payout | SWIFT |
+| Greece | USD | Payout | SWIFT |
+| India | USD | Payout | SWIFT |
+| Ireland | USD | Payout | SWIFT |
+| Italy | USD | Payout | SWIFT |
+| Japan | USD | Payout | SWIFT |
+| Lithuania | USD | Payout | SWIFT |
+| Luxembourg | USD | Payout | SWIFT |
+| Mexico | USD | Payout | SWIFT |
+| Malaysia | USD | Payout | SWIFT |
+| Netherlands | USD | Payout | SWIFT |
+| New Zealand | USD | Payout | SWIFT |
+| Norway | USD | Payout | SWIFT |
+| Oman | USD | Payout | SWIFT |
+| Philippines | USD | Payout | SWIFT |
+| Portugal | USD | Payout | SWIFT |
+| Slovenia | USD | Payout | SWIFT |
+| Spain | USD | Payout | SWIFT |
+| United Kingdom | USD | Payout | SWIFT |
+| Colombia | USD | Payout | SWIFT |
+| Guatemala | USD | Payout | SWIFT |
+| Uruguay | USD | Payout | SWIFT |
 
 <Note>
   USD SWIFT payouts are currently limited to senders based in the United States. For other regions, please use the [Global Network](/rails/global-network) rail.
@@ -59,31 +63,31 @@ The USD rail for individual users requires comprehensive KYC (Know Your Customer
 
 ### KYC Fields
 
-| Field                       | Description                                                                                                                                               | `Required` |
-| :-------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------- |
-| **firstName**               | User's first name                                                                                                                                         | `Required` |
-| **lastName**                | User's last name                                                                                                                                          | `Required` |
-| **email**                   | User's email address                                                                                                                                      | `Required` |
-| **phone**                   | User's phone number                                                                                                                                       | `Required` |
-| **address**                 | The address the user currently resides. Required fields: `addressLine1`, `city`, `stateProvinceRegion`, `postalCode`, `country`. Optional: `addressLine2` | `Required` |
-| **nationality**             | User's nationality                                                                                                                                        | `Required` |
-| **dateOfBirth**             | User's date of birth                                                                                                                                      | `Required` |
-| **taxIdentificationNumber** | For individual US customers, this has to be SSN or ITIN                                                                                                   | `Required` |
-| **documents**               | Refer to the [Documents](#documents) section                                                                                                              | `Required` |
+| Field | Description | `Required` |
+| :-- | :-- | :-- |
+| **firstName** | User's first name | `Required` |
+| **lastName** | User's last name | `Required` |
+| **email** | User's email address | `Required` |
+| **phone** | User's phone number | `Required` |
+| **address** | The address the user currently resides. Required fields: `addressLine1`, `city`, `stateProvinceRegion`, `postalCode`, `country`. Optional: `addressLine2` | `Required` |
+| **nationality** | User's nationality | `Required` |
+| **dateOfBirth** | User's date of birth | `Required` |
+| **taxIdentificationNumber** | For individual US customers, this has to be SSN or ITIN | `Required` |
+| **documents** | Refer to the [Documents](#documents) section | `Required` |
 
 ### Documents
 
-| Document Group | Min Count | Document Types                               | `Required` |
-| :------------- | :-------- | :------------------------------------------- | ---------- |
-| **identity**   | 1         | DRIVERS, ID_CARD, PASSPORT, RESIDENCE_PERMIT | `Required` |
+| Document Group | Min Count | Document Types | `Required` |
+| :-- | :-- | :-- | --- |
+| **identity** | 1 | DRIVERS, ID\_CARD, PASSPORT, RESIDENCE\_PERMIT | `Required` |
 
 <Accordion title="Document types">
-  |   Document Type  | Description                  |
-  | :--------------- | :--------------------------- |
-  | DRIVERS          | Drivers license              |
-  | ID_CARD          | Identification card          |
-  | PASSPORT         | National passport            |
-  | RESIDENCE_PERMIT | Residence permit or document |
+  | Document Type | Description |
+  | :-- | :-- |
+  | DRIVERS | Drivers license |
+  | ID\_CARD | Identification card |
+  | PASSPORT | National passport |
+  | RESIDENCE\_PERMIT | Residence permit or document |
 </Accordion>
 
 ## Business
@@ -92,53 +96,53 @@ The USD rail for business users requires comprehensive KYB (Know Your Business) 
 
 ### KYB Fields
 
-| Fields                       | Description                                                                                                                                                                                                                                           | `Required` |
-| :--------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------- |
-| **businessName**             | The full legal name of the business                                                                                                                                                                                                                   | `Required` |
-| **businessIndustry**         | The industry in which this business operates. Click [here](/docs/compliance/references/business-industries) for the complete list of valid industries and codes                                                                                       | `Required` |
-| **businessType**             | The type of business structure                                                                                                                                                                                                                        | `Required` |
-| **registrationNumber**       | Business Registration Number                                                                                                                                                                                                                          | `Required` |
-| **address**                  | Business address. Required fields: `addressLine1`, `city`, `stateProvinceRegion`, `postalCode`, `country`. Optional: `addressLine2`                                                                                                                   | `Required` |
-| **registeredAddress**        | The official registered office address of the business as filed with the government authority in its jurisdiction of incorporation. Required fields: `addressLine1`, `city`, `stateProvinceRegion`, `postalCode`, `country`. Optional: `addressLine2` | `Required` |
-| **incorporationDate**        | Date when the business was incorporated                                                                                                                                                                                                               | `Required` |
-| **email**                    | Business email address                                                                                                                                                                                                                                | `Required` |
-| **phone**                    | Business phone number                                                                                                                                                                                                                                 | `Required` |
-| **taxIdentificationNumber**  | Company tax number. For US business, EIN has to be provided                                                                                                                                                                                           | `Required` |
-| **website**                  | Business website URL                                                                                                                                                                                                                                  | `Required` |
-| **incorporationCountry**     | Country where the business was incorporated                                                                                                                                                                                                           |            |
-| **incorporationState**       | State where the business was incorporated                                                                                                                                                                                                             |            |
-| **sofEuQuestionnaire**       | Refer to the [Source of Funds and Expected Use](#source-of-funds-and-expected-use-questionnaire-1) section                                                                                                                                            | `Required` |
-| **documents**                | Refer to the [Documents](#documents-1) section                                                                                                                                                                                                        | `Required` |
-| **ultimateBeneficialOwners** | Refer to the [Ultimate Beneficial Owners](#ultimate-beneficial-owners-ubos) section                                                                                                                                                                   | `Required` |
+| Fields | Description | `Required` |
+| :-- | :-- | :-- |
+| **businessName** | The full legal name of the business | `Required` |
+| **businessIndustry** | The industry in which this business operates. Click [here](/docs/compliance/references/business-industries) for the complete list of valid industries and codes | `Required` |
+| **businessType** | The type of business structure | `Required` |
+| **registrationNumber** | Business Registration Number | `Required` |
+| **address** | Business address. Required fields: `addressLine1`, `city`, `stateProvinceRegion`, `postalCode`, `country`. Optional: `addressLine2` | `Required` |
+| **registeredAddress** | The official registered office address of the business as filed with the government authority in its jurisdiction of incorporation. Required fields: `addressLine1`, `city`, `stateProvinceRegion`, `postalCode`, `country`. Optional: `addressLine2` | `Required` |
+| **incorporationDate** | Date when the business was incorporated | `Required` |
+| **email** | Business email address | `Required` |
+| **phone** | Business phone number | `Required` |
+| **taxIdentificationNumber** | Company tax number. For US business, EIN has to be provided | `Required` |
+| **website** | Business website URL | `Required` |
+| **incorporationCountry** | Country where the business was incorporated |  |
+| **incorporationState** | State where the business was incorporated |  |
+| **sofEuQuestionnaire** | Refer to the [Source of Funds and Expected Use](#source-of-funds-and-expected-use-questionnaire-1) section | `Required` |
+| **documents** | Refer to the [Documents](#documents-1) section | `Required` |
+| **ultimateBeneficialOwners** | Refer to the [Ultimate Beneficial Owners](#ultimate-beneficial-owners-ubos) section | `Required` |
 
 ### Questionnaire
 
-| Fields                                | Description                                                      | `Required` |
-| :------------------------------------ | :--------------------------------------------------------------- | :--------- |
-| **primaryPurpose**                    | What is the primary purpose of the customer's account?           | `Required` |
-| **primaryPurposeOther**               | Required if the primary purpose is 'other'                       |            |
-| **sourceOfFunds**                     | What is the source of funds for the customer's account?          | `Required` |
-| **sourceOfFundsDescription**          | Additional description of the source of funds                    |            |
-| **transmitsCustomerFunds**            | Does the business transmit customer funds? (boolean)             | `Required` |
-| **transmitsCustomerFundsDescription** | Description of how customer funds are transmitted                |            |
-| **conductsMoneyServices**             | Does the business conduct money services? (boolean)              | `Required` |
-| **highRiskActivities**                | List of high-risk activities the business is involved in (array) | `Required` |
-| **estimatedAnnualRevenueUsd**         | Estimated annual revenue in USD                                  | `Required` |
-| **expectedMonthlyPaymentsUsd**        | Expected monthly volume of payments in USD                       | `Required` |
-| **customerFundsDescription**          | Description of how customer funds are handled                    | `Required` |
-| **operatesInProhibitedCountries**     | Does the business operate in prohibited countries?               |            |
+| Fields | Description | `Required` |
+| :-- | :-- | :-- |
+| **primaryPurpose** | What is the primary purpose of the customer's account? | `Required` |
+| **primaryPurposeOther** | Required if the primary purpose is 'other' |  |
+| **sourceOfFunds** | What is the source of funds for the customer's account? | `Required` |
+| **sourceOfFundsDescription** | Additional description of the source of funds |  |
+| **transmitsCustomerFunds** | Does the business transmit customer funds? (boolean) | `Required` |
+| **transmitsCustomerFundsDescription** | Description of how customer funds are transmitted |  |
+| **conductsMoneyServices** | Does the business conduct money services? (boolean) | `Required` |
+| **highRiskActivities** | List of high-risk activities the business is involved in (array) | `Required` |
+| **estimatedAnnualRevenueUsd** | Estimated annual revenue in USD | `Required` |
+| **expectedMonthlyPaymentsUsd** | Expected monthly volume of payments in USD | `Required` |
+| **customerFundsDescription** | Description of how customer funds are handled | `Required` |
+| **operatesInProhibitedCountries** | Does the business operate in prohibited countries? |  |
 
 ### Documents
 
-| Document Group         | Min Count | Document Types                                                               | `Required` |
-| :--------------------- | :-------- | :--------------------------------------------------------------------------- | :--------- |
-| **legalPresence**      | 1         | INCORPORATION_ARTICLES, INCORPORATION_CERT, STATE_REGISTRY                   | `Required` |
-| **ownershipStructure** | 1         | SHAREHOLDER_REGISTRY, TRUST_AGREEMENT, INFORMATION_STATEMENT, STATE_REGISTRY | `Required` |
-| **companyDetails**     | 1         | PROOF_OF_ADDRESS                                                             | `Required` |
-| **controlStructure**   | 1         | DIRECTORS_REGISTRY, TRUST_AGREEMENT, INFORMATION_STATEMENT, STATE_REGISTRY   | `Required` |
+| Document Group | Min Count | Document Types | `Required` |
+| :-- | :-- | :-- | :-- |
+| **legalPresence** | 1 | INCORPORATION\_ARTICLES, INCORPORATION\_CERT, STATE\_REGISTRY | `Required` |
+| **ownershipStructure** | 1 | SHAREHOLDER\_REGISTRY, TRUST\_AGREEMENT, INFORMATION\_STATEMENT, STATE\_REGISTRY | `Required` |
+| **companyDetails** | 1 | PROOF\_OF\_ADDRESS | `Required` |
+| **controlStructure** | 1 | DIRECTORS\_REGISTRY, TRUST\_AGREEMENT, INFORMATION\_STATEMENT, STATE\_REGISTRY | `Required` |
 
 <Accordion title="Document types">
-  | Document Type | Description | | :--------------------- | :--------------------------------- | | INCORPORATION_ARTICLES | Incorporation articles document | | INCORPORATION_CERT | Incorporation certificate document | | STATE_REGISTRY | State registry document | | SHAREHOLDER_REGISTRY | Shareholder registry document | | TRUST_AGREEMENT | Trust agreement document | | INFORMATION_STATEMENT | Information statement document | | PROOF_OF_ADDRESS | Proof of address document | | DIRECTORS_REGISTRY | Directors registry document |
+  | Document Type | Description | | :--------------------- | :--------------------------------- | | INCORPORATION\_ARTICLES | Incorporation articles document | | INCORPORATION\_CERT | Incorporation certificate document | | STATE\_REGISTRY | State registry document | | SHAREHOLDER\_REGISTRY | Shareholder registry document | | TRUST\_AGREEMENT | Trust agreement document | | INFORMATION\_STATEMENT | Information statement document | | PROOF\_OF\_ADDRESS | Proof of address document | | DIRECTORS\_REGISTRY | Directors registry document |
 </Accordion>
 
 ### UBOs
@@ -151,19 +155,19 @@ The USD rail for business users requires comprehensive KYB (Know Your Business) 
   **Share Threshold:** Only UBOs with a share proportion greater than 25% need to be provided.
 </Info>
 
-| Fields                        | Description                                                                                                                                                    | `Required` |
-| :---------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------- |
-| **roles**                     | Array of roles (e.g., DIRECTOR, UBO). Combined roles across all UBOs must include at least one DIRECTOR and one UBO                                            | `Required` |
-| **businessTitle**             | UBO's business title                                                                                                                                           | `Required` |
-| **firstName**                 | UBO's first name                                                                                                                                               | `Required` |
-| **middleName**                | UBO's middle name                                                                                                                                              |            |
-| **lastName**                  | UBO's last name                                                                                                                                                | `Required` |
-| **nationality**               | UBO's nationality                                                                                                                                              | `Required` |
-| **email**                     | UBO's email address                                                                                                                                            | `Required` |
-| **phone**                     | UBO's phone number                                                                                                                                             | `Required` |
-| **address**                   | The address where the UBO currently resides. Required fields: `addressLine1`, `city`, `stateProvinceRegion`, `postalCode`, `country`. Optional: `addressLine2` | `Required` |
-| **dateOfBirth**               | UBO's date of birth                                                                                                                                            | `Required` |
-| **taxIdentificationNumber**   | UBO's tax identification number                                                                                                                                | `Required` |
-| **shareProportion**           | UBO's share proportion in the business                                                                                                                         | `Required` |
-| **relationshipEstablishedAt** | Date when the relationship was established                                                                                                                     | `Required` |
-| **documents**                 | Identity documents. Required: minimum 1 document. Accepted types: DRIVERS, ID_CARD, PASSPORT, RESIDENCE_PERMIT                                                 | `Required` |
+| Fields | Description | `Required` |
+| :-- | :-- | :-- |
+| **roles** | Array of roles (e.g., DIRECTOR, UBO). Combined roles across all UBOs must include at least one DIRECTOR and one UBO | `Required` |
+| **businessTitle** | UBO's business title | `Required` |
+| **firstName** | UBO's first name | `Required` |
+| **middleName** | UBO's middle name |  |
+| **lastName** | UBO's last name | `Required` |
+| **nationality** | UBO's nationality | `Required` |
+| **email** | UBO's email address | `Required` |
+| **phone** | UBO's phone number | `Required` |
+| **address** | The address where the UBO currently resides. Required fields: `addressLine1`, `city`, `stateProvinceRegion`, `postalCode`, `country`. Optional: `addressLine2` | `Required` |
+| **dateOfBirth** | UBO's date of birth | `Required` |
+| **taxIdentificationNumber** | UBO's tax identification number | `Required` |
+| **shareProportion** | UBO's share proportion in the business | `Required` |
+| **relationshipEstablishedAt** | Date when the relationship was established | `Required` |
+| **documents** | Identity documents. Required: minimum 1 document. Accepted types: DRIVERS, ID\_CARD, PASSPORT, RESIDENCE\_PERMIT | `Required` |
