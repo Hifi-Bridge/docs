@@ -3,15 +3,11 @@ title: "Authentication"
 description: "All requests to the HIFI API must be authenticated using API keys. This guide covers how to create, secure, and manage your keys."
 ---
 
-
 ## Prerequisites
 
 To get your API keys, you'll need access to the HIFI Dashboard. **Don't have access?** Schedule a call with our team.
 
-<Card
-  title="Request access"
-  href="https://app.hifi.com/request-access"
->
+<Card title="Request access" href="https://app.hifi.com/request-access">
   Describe your use case and schedule an intro call
 </Card>
 
@@ -19,17 +15,17 @@ To get your API keys, you'll need access to the HIFI Dashboard. **Don't have acc
 
 HIFI provides two environments for development and production:
 
-| Environment    | Base URL                            | Purpose                                             |
-| :------------- | :---------------------------------- | :-------------------------------------------------- |
-| **Sandbox**    | `https://sandbox.hifibridge.com`    | Testing and development with simulated transactions |
-| **Production** | `https://production.hifibridge.com` | Live transactions with real money movement          |
+| Environment | Base URL | Purpose |
+| :-- | :-- | :-- |
+| **Sandbox** | `https://sandbox.hifibridge.com` | Testing and development with simulated transactions |
+| **Production** | `https://production.hifibridge.com` | Live transactions with real money movement |
 
 ## Creating API Keys
 
 ### Access the API Keys Section
 
 1. Log in to the [HIFI Dashboard](https://app.hifi.com)
-2. Navigate to **Developer** → **API Keys**  
+2. Navigate to **Developer** → **API Keys**
 
 ### Select Your Environment
 
@@ -39,28 +35,24 @@ Choose which environment you're creating keys for:
 - **Production** - For live operations
 
 <Info>
-  **Best Practice:** Start with sandbox keys to build and test your integration
-  before moving to production.
+  **Best Practice:** Start with sandbox keys to build and test your integration before moving to production.
 </Info>
 
 ### Generate a New API Key
 
 1. Click the **"Create API Key"** or **"New API Key"** button
-2. Provide a descriptive name that identifies the key's purpose  
+2. Provide a descriptive name that identifies the key's purpose\
    Examples:
-
    - "Production Web App"
    - "Staging Server"
    - "Mobile App Development"
    - "Webhook Service"
-
 3. Click **"Generate"** to create the key
 
 ### Copy and Secure Your API Key
 
 <Warning>
-  API keys are shown only once at creation. If you lose your key, you'll need to
-  generate a new one and update your application.
+  API keys are shown only once at creation. If you lose your key, you'll need to generate a new one and update your application.
 </Warning>
 
 **After generation:**
@@ -90,8 +82,7 @@ If a key is compromised or no longer needed:
 4. Confirm the deletion
 
 <Warning>
-  Deleted keys stop working immediately. Ensure you've updated your application
-  with a new key before deleting the old one.
+  Deleted keys stop working immediately. Ensure you've updated your application with a new key before deleting the old one.
 </Warning>
 
 ## API Key Security Requirements
@@ -129,7 +120,7 @@ All customers and integrators are required to handle HIFI API keys in accordance
 Verify your API key is working correctly with the ping endpoint:
 
 ```bash
-curl -X GET "https://sandbox.hifibridge.com/v2/ping" \
+curl -X GET "https://sandbox.hifibridge.com/ping" \
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
@@ -155,10 +146,10 @@ curl -X GET "https://sandbox.hifibridge.com/v2/ping" \
 
 Now that you have your API keys set up:
 
-- **[Quickstart Guide](/docs/quickstart)** - Build your first integration
-- **[API Reference](https://docs.hifi.com/api-reference)** - Explore available endpoints
-- **[Webhooks](/docs/webhooks)** - Set up real-time event notifications
-- **[Error Handling](https://docs.hifi.com/docs/api/errors)** - Learn how to handle API errors gracefully
+- [**Quickstart Guide**](/docs/quickstart) - Build your first integration
+- [**API Reference**](https://docs.hifi.com/api-reference) - Explore available endpoints
+- [**Webhooks**](/docs/webhooks) - Set up real-time event notifications
+- [**Error Handling**](https://docs.hifi.com/docs/api/errors) - Learn how to handle API errors gracefully
 
 ---
 
@@ -172,5 +163,5 @@ Now that you have your API keys set up:
 
 **Still need help?**
 
-- 📧 **Email:** support@hifi.com
+- 📧 **Email:** [support@hifi.com](mailto:support@hifi.com)
 - 💬 **Slack:** Message us in our shared Slack channel
