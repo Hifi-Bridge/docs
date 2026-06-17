@@ -120,6 +120,14 @@ curl -X POST "https://sandbox.hifibridge.com/v2/users/{userId}/kyc/submissions" 
 
 Use the [Retrieve KYC Requirements](vscode-webview://0i1j29tk92nufv4ln4afcj0psprq4mtgggj5r943g6sjkcmsrbdu/api-reference/kyc/retrieve-kyc-requirements) endpoint beforehand to identify exactly which fields are missing or invalid before resubmitting.
 
+## Notes for Token Sharing
+
+- Individuals only — no business/entity
+- Applicant must already be approved on the token donor side
+- Customer must have a specific agreement setting activated with HIFI in Sumsub
+- Applicant's Sumsub profile must contain all fields required by HIFI's [KYC standard](/rails/usd)
+- A given user can only import token once
+
 ## Getting Help
 
 - 📧 **Email:** [support@hifi.com](mailto:support@hifi.com)
