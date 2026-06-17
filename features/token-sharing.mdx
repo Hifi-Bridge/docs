@@ -72,3 +72,17 @@ curl -X POST "https://sandbox.hifibridge.com/v2/users/{userId}/kyc/import-token"
 </ResponseField>
 
 ## Behavior
+
+<AccordionGroup>
+  <Accordion title="User already has an approved KYC">
+    If the user already has an active, approved KYC applicant in HIFI, the import is skipped and the existing KYC status is returned. No duplicate applicant is created. 
+  </Accordion>
+
+  <Accordion title="Invalid or expired share token">
+     If Sumsub rejects the token (e.g., it has expired or was already used), the endpoint returns a `400` with an error message indicating the token is invalid. Generate a fresh share token from Sumsub and retry.
+  </Accordion>
+
+  <Accordion title="Document sync is asynchronous">
+    After a successful import, HIFI queues a background job to pull the applicant's documents from Sumsub. The import response does not wait for documents to be synced — use the  [Retrieve KYC Status](/api-reference/kyc/retrieve-kyc-status) endpoint to check completion. 
+  </Accordion>
+</AccordionGroup>
