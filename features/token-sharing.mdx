@@ -42,11 +42,11 @@ curl -X POST "https://sandbox.hifibridge.com/v2/users/{userId}/kyc/import-token"
 ```
 
 <ResponseField name="tokenProvider" type="string" required>
-   The KYC provider the token was issued by. Currently only `SUMSUB` is supported. 
+  The KYC provider the token was issued by. Currently only `SUMSUB` is supported.
 </ResponseField>
 
 <ResponseField name="token" type="string" required>
-   The reusable identity share token obtained from Sumsub. Used to authorize HIFI to import the applicant's existing KYC data. 
+  The reusable identity share token obtained from Sumsub. Used to authorize HIFI to import the applicant's existing KYC data.
 </ResponseField>
 
 ### Response
@@ -60,15 +60,15 @@ curl -X POST "https://sandbox.hifibridge.com/v2/users/{userId}/kyc/import-token"
 ```
 
 <ResponseField name="rails" type="string">
-   The rail the KYC submission applies to. Token import currently supports the USD rail. 
+  The rail the KYC submission applies to. Token import currently supports the USD rail.
 </ResponseField>
 
 <ResponseField name="status" type="string">
-   The KYC review status after import. Common values are PENDING, ACTIVE, INCOMPLETE, and INACTIVE. 
+  The KYC review status after import. Common values are PENDING, ACTIVE, INCOMPLETE, and INACTIVE.
 </ResponseField>
 
 <ResponseField name="message" type="string">
-   A human-readable description of the current status or any error encountered during import. 
+  A human-readable description of the current status or any error encountered during import.
 </ResponseField>
 
 ## Behavior
