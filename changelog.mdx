@@ -172,13 +172,13 @@ rss: true
   - Enables faster reviews and improves overall settlement efficiency
   - Highly recommended to reduce transaction friction due to RFIs
 
-  ## TRON USDT Sandbox Support
+  ### TRON USDT Sandbox Support
 
   - Added support for USDT on TRON within the sandbox environment
   - Enables testing of TRON-based USDT flows prior to production use
   - Expands multi-chain testing coverage for developers
 
-  ## Dashboard Improvements
+  ### Dashboard Improvements
 
   ### Reports Page
 
@@ -192,7 +192,7 @@ rss: true
 </Update>
 
 <Update label="March 23, 2026" description="Breaking changes">
-  ## ⚠️ Breaking Change - Testnet USDT
+  ### ⚠️ Breaking Change - Testnet USDT
 
   ### Ethereum Sepolia USDT Token Update
 
@@ -213,7 +213,7 @@ rss: true
 </Update>
 
 <Update label="March 20, 2026" description="Dashboard home and transaction history export">
-  ## New Features
+  ### New Features
 
   ### New Dashboard Home Page
 
@@ -228,7 +228,7 @@ rss: true
 </Update>
 
 <Update label="March 14, 2026" description="Authentication improvements">
-  ## Authentication Improvements
+  ### Authentication Improvements
 
   - Updated the authentication architecture across our platform (both server and dashboard)
   - This update improves overall platform security while simplifying the authentication process
@@ -236,14 +236,14 @@ rss: true
 </Update>
 
 <Update label="March 6, 2026" description="Transaction cancellation and enhanced ux">
-  ## Transaction Cancellation
+  ### Transaction Cancellation
 
   Users can now cancel onramp and offramp transactions while they are in the `IN_REVIEW` state, providing greater control during the review window and allowing quick correction of submission errors.
 
   - [Cancel an onramp](https://docs.hifi.com/api-reference/onramp/cancel-an-onramp)
   - [Cancel an offramp](https://docs.hifi.com/api-reference/offramp/cancel-an-offramp)
 
-  ## Enhanced Transaction UI / UX
+  ### Enhanced Transaction UI / UX
 
   - Improved transaction flow across the dashboard
   - Simplifies how users create and review transactions across onramp, offramp, swap, and bridging flows
@@ -251,7 +251,7 @@ rss: true
 </Update>
 
 <Update label="February 27, 2026" description="TRON support and Dashboard improvements">
-  ## TRON is live!
+  ### TRON is live!
 
   We've added support for the TRON network on HIFI, significantly expanding our platform's blockchain coverage.
 
@@ -263,14 +263,14 @@ rss: true
   - Swaps
   - Virtual Accounts
 
-  ## Dashboard Improvements
+  ### Dashboard Improvements
 
   - Introduced a compliance overview section to provide greater transparency and visibility into account status and requirements
   - Improved onboarding experience to show compliance stage clearly
 </Update>
 
 <Update label="February 20, 2026" description="Dashboard and authentication improvements">
-  ## Dashboard
+  ### Dashboard
 
   - Replaced magic link login with OTP-based authentication to prevent user lockouts and improve reliability.
   - Enhanced login page design across both light and dark modes for stronger visual consistency and brand alignment.
@@ -278,14 +278,14 @@ rss: true
 </Update>
 
 <Update label="February 14, 2026" description="RTP and other improvements">
-  ## Real-Time Payments (RTP) Now Live for USD Domestic Transfers
+  ### Real-Time Payments (RTP) Now Live for USD Domestic Transfers
 
   - Users can now select RTP for eligible USD domestic offramp transactions
   - RTP is also supported for eligible Virtual Account (VA) deposits
   - Enables near-instant settlement to support U.S. bank accounts
   - Expands payout rails beyond ACH, Wire, and SWIFT—improving speed and operational flexibility for domestic USD transfers
 
-  ## Dashboard
+  ### Dashboard
 
   - Enhanced light mode for improved visual clarity and usability
   - Optimized performance to reduce load times on the workflows user page
@@ -294,23 +294,23 @@ rss: true
     - Users can initiate and manage bridging operations from the UI
     - Expands cross-network functionality without requiring API usage
 
-  ## Documentation
+  ### Documentation
 
   - Updated the Global Network page to reflect the complete and current set of supported payment methods and corridors
 
-  ## Offramp – Proof of Payment
+  ### Offramp – Proof of Payment
 
   - Automatic Proof-of-Payment generation for completed offramp transactions
   - Provides downloadable and shareable confirmations for end recipients
 
-  ## Chain \+ Token Support Expansion (Global Network)
+  ### Chain \+ Token Support Expansion (Global Network)
 
   - Added offramp support for USDC on Base
   - Enabled offramp functionality for additional tokens: PYUSD, USDG, USDT
 </Update>
 
 <Update label="February 13, 2026" description="Transaction status and event updates">
-  ## Transaction "In Review" Status
+  ### Transaction "In Review" Status
 
   Transactions under compliance review will now show an explicit `IN_REVIEW` status before progressing to fund transfer states:
 
@@ -320,7 +320,7 @@ rss: true
 
   Previously, transactions remained in `FIAT_PENDING` (Onramp) or `CRYPTO_INITIATED` (Offramp) during review, making monitoring unclear.
 
-  ## Legacy Events Deprecated
+  ### Legacy Events Deprecated
 
   `ONRAMP.UPDATE`, `OFFRAMP.UPDATE`, `ONRAMP.CREATE`, and `OFFRAMP.CREATE` will no longer be supported. Update your integrations to use the new transaction events documented in our [Onramp events](/webhooks/onramp-events) and [Offramp events](/webhooks/offramp-events) sections to avoid service disruptions.
 
@@ -330,7 +330,7 @@ rss: true
 </Update>
 
 <Update label="February 6, 2026" description="Dashboard improvements and expanded coverage">
-  ## Dashboard Improvements
+  ### Dashboard Improvements
 
   - Added UETR visibility directly within the transaction view
   - Enabled virtual account deactivation from the dashboard
@@ -339,7 +339,7 @@ rss: true
   - Removed optional and non-essential fields from global network off-ramp account creation
   - Fixed team member invite flow to ensure proper redirection and completion
 
-  ## Expanded Global Network Offramp Coverage
+  ### Expanded Global Network Offramp Coverage
 
   Added USD SWIFT Offramp support for:
 
@@ -351,7 +351,7 @@ rss: true
 </Update>
 
 <Update label="January 30, 2026" description="Dashboard launch, stability, and new coverage">
-  ## Dashboard Launch
+  ### Dashboard Launch
 
   The new Dashboard is now live at [app.hifi.com](https://app.hifi.com)!
 
@@ -371,7 +371,7 @@ rss: true
 </Update>
 
 <Update label="January 22, 2026" description="New features and improvements">
-  ## New Dashboard (Pilot)
+  ### New Dashboard (Pilot)
 
   We're rolling out a pilot of the new HIFI Dashboard, redesigned to support enhanced developer workflows and faster compliance operations.
 
@@ -396,7 +396,7 @@ rss: true
     - `RFI_PENDING` - Additional information is required (Request sent via email)
     - `APPROVED`/`REJECTED` - Final state
 
-  ## Improvements
+  ### Improvements
 
   ### Proof of Address Automation for KYC Process
 
@@ -409,7 +409,7 @@ rss: true
 </Update>
 
 <Update label="January 16, 2026" description="New features and improvements">
-  ## New Features
+  ### New Features
 
   ### Solana Support - Global Network
 
@@ -430,7 +430,7 @@ rss: true
 </Update>
 
 <Update label="January 10, 2026" description="New features and improvements">
-  ## New Features
+  ### New Features
 
   ### Dashboard Swaps
 
@@ -446,7 +446,7 @@ rss: true
 
   Please use these to build robust error handling before going live.
 
-  ## Bug Fixes & Improvements
+  ### Bug Fixes & Improvements
 
   ### Onramps
 
@@ -470,7 +470,7 @@ rss: true
 </Update>
 
 <Update label="January 8, 2026" description="New feature">
-  ## Wallet Swaps
+  ### Wallet Swaps
 
   Exchange one stablecoin for another instantly on the same blockchain network. New endpoints:
 
@@ -483,7 +483,7 @@ rss: true
 </Update>
 
 <Update label="January 2, 2026" description="New webhook events">
-  ## New Webhook Events
+  ### New Webhook Events
 
   Starting Monday Jan 5, we're introducing new webhook events to help you track the status of onramp and offramp transactions more efficiently.
 
@@ -504,7 +504,7 @@ rss: true
   - `OFFRAMP.RFI.OPEN`
   - `OFFRAMP.RFI.CLOSED`
 
-  ## ⚠️ Breaking Changes
+  ### ⚠️ Breaking Changes
 
   Legacy transaction events (`ONRAMP.UPDATE`, `OFFRAMP.UPDATE`, `ONRAMP.CREATE`, `OFFRAMP.CREATE`) will be deprecated by Friday, Feb 13 2026.
 
@@ -514,13 +514,13 @@ rss: true
 </Update>
 
 <Update label="December 26, 2025" description="Updates and fixes">
-  ## Dashboard Updates
+  ### Dashboard Updates
 
   - Added support for deleting offramp accounts.
   - Enabled updating the compliance contact email from Developer \> Team.
   - Micro-deposits are now displayed in the Virtual accounts drawer.
 
-  ## Fixes & Stability
+  ### Fixes & Stability
 
   - Resolved multiple KYC Link issues that prevented form submissions.
   - Fixed a bug with accepting organisation invites.
@@ -529,7 +529,7 @@ rss: true
 </Update>
 
 <Update label="December 23, 2025" description="New feature">
-  ## Transaction Approvals for Offramps
+  ### Transaction Approvals for Offramps
 
   Transaction approvals are now available for offramp transactions. You can require approval before executing offramp transactions (stablecoin to fiat conversions) to add an extra layer of security and compliance control.
 
@@ -553,15 +553,15 @@ rss: true
 </Update>
 
 <Update label="December 20, 2025" description="New features and improvements">
-  ## Instant Onramps
+  ### Instant Onramps
 
   **CRNow is live**, enabling USDC minting in under **10 minutes** after deposit during business operating hours. To learn more, visit our [Availability page](/availability).
 
-  ## USD SWIFT Expansion
+  ### USD SWIFT Expansion
 
   Our **SWIFT coverage** continues to expand. Offramps to Brazil, Saudi Arabia, Italy, Germany, United Arab Emirates, and Spain are now available. See the [USD Rails page](/rails/usd) for the complete list of supported countries.
 
-  ## Updates to Accounts API
+  ### Updates to Accounts API
 
   The following fields have been updated for Global Network accounts:
 
@@ -569,21 +569,21 @@ rss: true
   - `dateOfBirth`: now optional
   - `formationDate`: now optional
 
-  ## Improvements
+  ### Improvements
 
   - KYC Links now autosave, resolving an issue in which forms could reset and lose previously entered data
   - Offramp account holder types are now restricted to individual and business only
 </Update>
 
 <Update label="December 13, 2025" description="Updates and fixes">
-  ## Updates
+  ### Updates
 
   - Added a "Find User" feature on the Compliance page to search quickly.
   - Changed Transfers page on the Dashboard to Transactions. HIFI supports three transaction types: transfers (onchain), onramps and offramps.
   - Improved legibility in drawers for usernames and lengthy IDs.
   - Implemented retries for wallet swaps to improve reliability.
 
-  ## Fixes
+  ### Fixes
 
   - Fixed a bug related to fee charging for refund wallet transfers.
   - Updated the Global Network KYC response object to show a failed status when the sender's country is unsupported, instead of throwing errors.
@@ -592,7 +592,7 @@ rss: true
 </Update>
 
 <Update label="December 12, 2025" description="New feature">
-  ## Reporting
+  ### Reporting
 
   We're excited to share our new **Metrics API**! This powerful addition enables you to generate comprehensive data and reports for your payment operations.
 
@@ -607,7 +607,7 @@ rss: true
 </Update>
 
 <Update label="December 9, 2025" description="Expansion">
-  ## SWIFT Offramps
+  ### SWIFT Offramps
 
   We now support international SWIFT payouts (USD). Refer to the [USD Rails page](/rails/usd) for more details on supported countries and regions. Or see the [Offramp Accounts guide](/accounts/offramp-accounts) for instructions on how to create an account.
 </Update>
