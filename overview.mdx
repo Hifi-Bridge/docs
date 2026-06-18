@@ -1,7 +1,7 @@
 ---
 title: "Platform Overview"
 sidebarTitle: "Overview"
-description: "HIFI provides infrastructure for money through three core product pillars: Inflows, Management, and Outflows."
+description: "HIFI provides infrastructure for money through three core product pillars: Inflows, Controls, and Outflows."
 ---
 
 ---
@@ -10,27 +10,27 @@ description: "HIFI provides infrastructure for money through three core product 
 
 Inflow APIs help you create entry points for value so funds can move into your system from bank rails and digital assets.
 
-| Product                                            | Description                                                                                  | Use this to                                                                                  |
-| :------------------------------------------------- | :------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------- |
-| **[Virtual Accounts](/accounts/virtual-accounts)** | Issue unique local account details for supported markets and currencies to receive deposits. | Accept recurring or one-time inbound bank transfers and reconcile funds per user or account. |
-| **[Onramps](/transactions/onramps)**               | Convert fiat into supported stablecoin balances through programmatic transfer flows.         | Bring user or treasury funds on-chain from local bank rails.                                 |
-| **[Wallet Deposits](/wallets)**                    | Provision custodial wallets that can receive and hold supported digital assets.              | Let users or your business receive stablecoin deposits into managed custody.                 |
+| Product | Description | Use this to |
+| :-- | :-- | :-- |
+| [**Virtual Accounts**](/accounts/virtual-accounts) | Issue unique local account details for supported markets and currencies to receive deposits. | Accept recurring or one-time inbound bank transfers and reconcile funds per user or account. |
+| [**Onramps**](/transactions/onramps) | Convert fiat into supported stablecoin balances through programmatic transfer flows. | Bring user or treasury funds on-chain from local bank rails. |
+| [**Wallet Deposits**](/wallets) | Provision custodial wallets that can receive and hold supported digital assets. | Let users or your business receive stablecoin deposits into managed custody. |
 
 ---
 
-## Management
+## Controls
 
-Management APIs give you programmable control over how money moves internally across accounts, wallets, chains, and workflows.
+Control APIs give you programmable control over how money moves internally across accounts, wallets, chains, and workflows.
 
-| Product                                                | Description                                                                     | Use this to                                                                   |
-| :----------------------------------------------------- | :------------------------------------------------------------------------------ | :---------------------------------------------------------------------------- |
-| **[Transfers](/transactions/transfers)**               | Trigger one-time transfer operations across supported rails and counterparties. | Move funds programmatically between entities in your product lifecycle.       |
-| **[Wallet Transfers](/transactions/overview)**         | Manage digital asset movement between wallets and destinations.                 | Power treasury, internal rebalancing, and operational crypto movements.       |
-| **[Bridging](/transactions/bridging)**                 | Move assets across supported chains while keeping workflows unified.            | Route liquidity or settle value across multiple networks.                     |
-| **[Swaps](/transactions/swaps)**                       | Exchange supported assets to meet settlement or treasury requirements.          | Convert one digital asset into another as part of a payment or treasury flow. |
-| **[Settlement Rules](/features/settlement-rules)**     | Configure deterministic routing logic for incoming funds and account behavior.  | Automate value routing and reduce manual operational intervention.            |
-| **[Batch Transfers](/features/batch-transfers)**       | Submit grouped transfer actions in a single orchestration workflow.             | Execute high-volume payouts or internal disbursements efficiently.            |
-| **[Transfer Approvals](/features/transfer-approvals)** | Add policy-based approval steps before transfer execution.                      | Enforce internal controls and governance for sensitive fund movement.         |
+| Product | Description | Use this to |
+| :-- | :-- | :-- |
+| [**Transfers**](/transactions/transfers) | Trigger one-time transfer operations across supported rails and counterparties. | Move funds programmatically between entities in your product lifecycle. |
+| [**Wallet Transfers**](/transactions/overview) | Manage digital asset movement between wallets and destinations. | Power treasury, internal rebalancing, and operational crypto movements. |
+| [**Bridging**](/transactions/bridging) | Move assets across supported chains while keeping workflows unified. | Route liquidity or settle value across multiple networks. |
+| [**Swaps**](/transactions/swaps) | Exchange supported assets to meet settlement or treasury requirements. | Convert one digital asset into another as part of a payment or treasury flow. |
+| [**Settlement Rules**](/features/settlement-rules) | Configure deterministic routing logic for incoming funds and account behavior. | Automate value routing and reduce manual operational intervention. |
+| [**Batch Transfers**](/features/batch-transfers) | Submit grouped transfer actions in a single orchestration workflow. | Execute high-volume payouts or internal disbursements efficiently. |
+| [**Transfer Approvals**](/features/transfer-approvals) | Add policy-based approval steps before transfer execution. | Enforce internal controls and governance for sensitive fund movement. |
 
 ---
 
@@ -38,10 +38,10 @@ Management APIs give you programmable control over how money moves internally ac
 
 Outflow APIs help you settle to users, partners, and counterparties across bank rails and digital asset destinations.
 
-| Product                                | Description                                                                 | Use this to                                    |
-| :------------------------------------- | :-------------------------------------------------------------------------- | :--------------------------------------------- |
-| **[Offramps](/transactions/offramps)** | Convert stablecoin balances into fiat and deliver to bank payout endpoints. | Settle users or partners in local currency.    |
-| **[Coverage](/coverage)**              | Explore supported regions, corridors, and payment rails.                    | Plan where and how you can settle payments to. |
+| Product | Description | Use this to |
+| :-- | :-- | :-- |
+| [**Offramps**](/transactions/offramps) | Convert stablecoin balances into fiat and deliver to bank payout endpoints. | Settle users or partners in local currency. |
+| [**Coverage**](/coverage) | Explore supported regions, corridors, and payment rails. | Plan where and how you can settle payments to. |
 
 ---
 
@@ -49,11 +49,13 @@ Outflow APIs help you settle to users, partners, and counterparties across bank 
 
 HIFI includes built-in onboarding and compliance primitives so product teams can launch regulated money movement with fewer integration layers.
 
-| Product                              | Description                                                           | Use this to                                                                |
-| :----------------------------------- | :-------------------------------------------------------------------- | :------------------------------------------------------------------------- |
-| **[Users](/users/overview)**         | Create and manage end users or business entities in your integration. | Maintain customer records tied to wallet, account, and transfer activity.  |
-| **[KYC/KYB](/kyc)**                  | Collect and evaluate identity and business verification requirements. | Satisfy onboarding controls before enabling production money movement.     |
-| **[KYC Links](/features/kyc-links)** | Generate hosted onboarding flows for compliance submission.           | Offload document collection and verification UX while keeping API control. |
+| Product | Description | Use this to |
+| :-- | :-- | :-- |
+| [**Users**](/users/overview) | Create and manage end users or business entities in your integration. | Maintain customer records tied to wallet, account, and transfer activity. |
+| [**KYC/KYB**](/kyc) | Collect and evaluate identity and business verification requirements. | Satisfy onboarding controls before enabling production money movement. |
+| [**KYC Links**](/features/kyc-links) | Generate hosted onboarding flows for compliance submission. | Offload document collection and verification UX while keeping API control. |
+
+---
 
 ## Private Transactions
 
@@ -64,13 +66,10 @@ For institution-grade settlement between trusted counterparties, HIFI also suppo
 ## Where to start
 
 <CardGroup cols={2}>
-  <Card
-    title="Request access"
-    icon="phone"
-    href="https://app.hifi.com/request-access"
-  >
+  <Card title="Request access" icon="phone" href="https://app.hifi.com/request-access">
     Schedule a call with our sales team to discuss your needs.
   </Card>
+
   <Card title="Quickstart" icon="rocket" href="/guides/quickstart">
     Build your first flow in sandbox and learn how things work.
   </Card>
