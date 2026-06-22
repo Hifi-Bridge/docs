@@ -240,7 +240,8 @@
               "features/batch-transfers",
               "features/transfer-approvals",
               "features/developer-fees",
-              "features/settlement-rules"
+              "features/settlement-rules",
+              "features/token-sharing"
             ]
           },
           {
