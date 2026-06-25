@@ -241,6 +241,7 @@
               "features/transfer-approvals",
               "features/developer-fees",
               "features/settlement-rules",
+              "features/liquidation-addresses",
               "features/token-sharing"
             ]
           },
