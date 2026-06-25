@@ -1,0 +1,142 @@
+---
+title: "KYC Token Import (Beta)"
+description: "KYC Token Import allows you to onboard users who have already completed identity verification with Sumsub on your platform. Share their existing KYC directly into HIFI without requiring users to re-submit their information."
+sidebarTitle: "KYC Token Import"
+tag: "Beta"
+---
+
+<Info>
+  KYC Token Import is a gated feature. Contact your HIFI account manager to have it enabled for your profile.
+</Info>
+
+## How KYC Token Import Works
+
+<Steps>
+  <Step title="User completes KYC on your platform">
+    Your user finishes identity verification through Sumsub on your own application. Their applicant data is stored in your Sumsub account and approved.
+  </Step>
+  <Step title="Generate a share token">
+    Using Sumsub's API, generate a reusable identity share token for the applicant. This token authorizes HIFI to access the user's existing KYC data.
+  </Step>
+  <Step title="Import the token into HIFI">
+    Call the Import KYC Token endpoint with the user's HIFI `userId` and the Sumsub share token. HIFI imports the applicant record and queues an async document sync.
+  </Step>
+  <Step title="Monitor KYC status">
+    After import, the user's KYC status reflects their Sumsub review result. Use the [Retrieve KYC Status](/api-reference/kyc/retrieve-kyc-status) endpoint to poll for updates.
+  </Step>
+</Steps>
+
+## Importing a KYC Token
+
+Import a user's existing Sumsub verification using the [Import KYC Token](/api-reference/kyc/import-kyc-token) endpoint.
+
+### Request
+
+```bash
+curl -X POST "https://sandbox.hifibridge.com/v2/users/{userId}/kyc/import-token" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "tokenProvider": "SUMSUB",
+    "token": "your-sumsub-share-token"
+  }'
+```
+
+<ResponseField name="tokenProvider" type="string" required>
+  The KYC provider the token was issued by. Currently only `SUMSUB` is supported.
+</ResponseField>
+
+<ResponseField name="token" type="string" required>
+  The reusable identity share token obtained from Sumsub. Used to authorize HIFI to import the applicant's existing KYC data.
+</ResponseField>
+
+### Response
+
+```json
+{
+  "rails": "USD",
+  "status": "PENDING",
+  "message": "Your KYC application has been successfully created. We will review it shortly.",
+}
+```
+
+<ResponseField name="rails" type="string">
+  The rail the KYC submission applies to. Token import currently supports the USD rail.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  The KYC review status after import. Common values are PENDING, ACTIVE, INCOMPLETE, and INACTIVE.
+</ResponseField>
+
+<ResponseField name="message" type="string">
+  A human-readable description of the current status or any error encountered during import.
+</ResponseField>
+
+## Behavior
+
+<AccordionGroup>
+  <Accordion title="User already has submitted KYC Application">
+    If the user already has submitted their KYC application, the endpoint returns a `400` with an error message indicating the user is not allowed for token sharing.
+  </Accordion>
+
+  <Accordion title="Invalid or expired share token">
+    If Sumsub rejects the token (e.g., it has expired or was already used), the endpoint returns a `400` with an error message indicating the token is invalid. Generate a fresh share token from Sumsub and retry.
+  </Accordion>
+
+  <Accordion title="Document sync is asynchronous">
+    After a successful import, HIFI queues a background job to pull the applicant's documents from Sumsub. The import response does not wait for documents to be synced — use the  [Retrieve KYC Status](/api-reference/kyc/retrieve-kyc-status) endpoint to check completion.
+  </Accordion>
+</AccordionGroup>
+
+## Managing KYC After Import
+
+Once a token is imported, the user's KYC data is fully managed through HIFI's standard KYC endpoints — no special handling is required.
+
+### Updating KYC Information
+
+If the imported data is incomplete or needs correction, use the [Update KYC](/api-reference/kyc/update-kyc-information) endpoint to modify individual fields.
+
+```bash
+curl -X POST "https://sandbox.hifibridge.com/v2/users/{userId}/kyc" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "firstName": "Jane",
+    "lastName": "Doe"
+  }'
+```
+
+### Resubmitting KYC
+
+If the imported KYC is reviewed and comes back `INCOMPLETE`, update the flagged fields and resubmit using the [Submit KYC](vscode-webview://0i1j29tk92nufv4ln4afcj0psprq4mtgggj5r943g6sjkcmsrbdu/api-reference/kyc/submit-kyc) endpoint.
+
+```bash
+curl -X POST "https://sandbox.hifibridge.com/v2/users/{userId}/kyc/submissions" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "rails": "USD"
+  }'
+```
+
+Use the [Retrieve KYC Requirements](vscode-webview://0i1j29tk92nufv4ln4afcj0psprq4mtgggj5r943g6sjkcmsrbdu/api-reference/kyc/retrieve-kyc-requirements) endpoint beforehand to identify exactly which fields are missing or invalid before resubmitting.
+
+## Notes for Token Sharing
+
+- Individuals only — no business/entity
+- Applicant must already be approved on the token donor side
+- Customer must have a specific agreement setting activated with HIFI in Sumsub
+- Applicant's Sumsub profile must contain all fields required by HIFI's [KYC standard](/rails/usd)
+- A given user can only import token once
+
+## Getting Help
+
+- 📧 **Email:** [support@hifi.com](mailto:support@hifi.com)
+- 💬 **Slack:** Message us in our shared Slack channel
+
+## Related Resources
+
+- [KYC Overview](vscode-webview://0i1j29tk92nufv4ln4afcj0psprq4mtgggj5r943g6sjkcmsrbdu/docs/kyc/overview) - KYC submission flows and status lifecycle
+- [Submit KYC](vscode-webview://0i1j29tk92nufv4ln4afcj0psprq4mtgggj5r943g6sjkcmsrbdu/api-reference/kyc/submit-kyc) - Standard KYC submission without token import
+- [Retrieve KYC Status](vscode-webview://0i1j29tk92nufv4ln4afcj0psprq4mtgggj5r943g6sjkcmsrbdu/api-reference/kyc/retrieve-kyc-status) - Poll for KYC review outcomes
+- [API Reference](vscode-webview://0i1j29tk92nufv4ln4afcj0psprq4mtgggj5r943g6sjkcmsrbdu/api-reference/kyc/import-kyc-token) - Complete endpoint documentation
