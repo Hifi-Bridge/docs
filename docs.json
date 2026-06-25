@@ -429,6 +429,21 @@
                 ]
               },
               {
+                "group": "Liquidation Addresses",
+                "pages": [
+                  "GET /v2/users/{userId}/liquidation-addresses",
+                  "GET /v2/users/{userId}/liquidation-addresses/{liquidationAddressId}",
+                  "POST /v2/users/{userId}/liquidation-addresses",
+                  "POST /v2/users/{userId}/liquidation-addresses/{liquidationAddressId}/update",
+                  "POST /v2/users/{userId}/liquidation-addresses/{liquidationAddressId}/deactivate",
+                  "GET /v2/users/{userId}/liquidation-addresses/{liquidationAddressId}/deposits",
+                  "GET /v2/users/{userId}/liquidation-addresses/{liquidationAddressId}/deposits/{depositId}",
+                  "GET /v2/users/{userId}/liquidation-addresses/{liquidationAddressId}/batches",
+                  "GET /v2/users/{userId}/liquidation-addresses/{liquidationAddressId}/batches/{batchId}",
+                  "POST /v2/users/{userId}/liquidation-addresses/{liquidationAddressId}/liquidate"
+                ]
+              },
+              {
                 "group": "Onramps",
                 "pages": [
                   "GET /v2/onramps",
