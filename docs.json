@@ -441,7 +441,7 @@
                   "GET /v2/users/{userId}/orchestration-addresses/{orchestrationAddressId}/deposits/{depositId}",
                   "GET /v2/users/{userId}/orchestration-addresses/{orchestrationAddressId}/batches",
                   "GET /v2/users/{userId}/orchestration-addresses/{orchestrationAddressId}/batches/{batchId}",
-                  "POST /v2/users/{userId}/orchestration-addresses/{orchestrationAddressId}/liquidate"
+                  "POST /v2/users/{userId}/orchestration-addresses/{orchestrationAddressId}/orchestrate"
                 ]
               },
               {
