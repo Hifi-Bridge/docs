@@ -1,0 +1,281 @@
+---
+title: "Orchestration Addresses"
+description: "An Orchestration Address is a persistent on-chain wallet attached to a USD payout account. Stablecoins sent to it are automatically off-ramped to fiat — immediately, on a schedule, or when an aggregate amount is reached. The user never has to create an offramp manually; HIFI does it for them."
+sidebarTitle: "Orchestration Addresses"
+---
+
+An Orchestration Address is the **inverse** of a [Virtual Account](/docs/accounts/virtual-accounts):
+
+|  | Virtual Account | Orchestration Address |
+| --- | --- | --- |
+| Direction | Fiat → Stablecoin | Stablecoin → Fiat |
+| Deposit method | Bank transfer (wire / ACH) | On-chain stablecoin transfer |
+| Destination | A crypto wallet | A bank account |
+
+Each Orchestration Address is bound to **one user, one chain, one source token (USDC or USDT), and one destination payout account**. The address is persistent — once created it lives forever and keeps accepting deposits, even after deactivation.
+
+## Common Use Cases
+
+<CardGroup cols={2}>
+  <Card title="Merchant settlement" icon="store">
+    Give customers a stable on-chain address to pay into. Auto-settle to your bank daily with `SCHEDULED` mode.
+  </Card>
+
+  <Card title="Payment processing" icon="receipt">
+    Issue per-customer addresses and settle each payment independently for clean reconciliation. Best paired with `PER_DEPOSIT` mode.
+  </Card>
+
+  <Card title="Treasury sweeps" icon="building-columns">
+    Accumulate stablecoin revenue across wallets and sweep to fiat on a fixed cadence. `SCHEDULED` mode (`DAILY` / `WEEKLY`) keeps your bank balance predictable.
+  </Card>
+
+  <Card title="Payouts collection" icon="hand-holding-dollar">
+    Collect stablecoin from multiple senders and convert to USD once a meaningful balance accrues. `THRESHOLD` mode minimizes per-offramp fees.
+  </Card>
+
+  <Card title="OTC desks & exchanges" icon="arrow-right-arrow-left">
+    Automate fiat off-ramping without a manual quote-accept on every trade. `PER_DEPOSIT` gives each trade its own offramp record.
+  </Card>
+
+  <Card title="Subscription billing" icon="repeat">
+    Charge customers in stablecoin and convert to fiat on your billing cycle with `SCHEDULED` mode.
+  </Card>
+</CardGroup>
+
+## How Orchestration Addresses Work
+
+<Steps>
+  <Step title="Create the address">
+    Configure a source `(currency, chain)`, a USD destination payout account, and an orchestration `mode`. HIFI provisions a dedicated on-chain wallet and returns its address.
+  </Step>
+  <Step title="Receive stablecoin deposits">
+    Senders transfer USDC or USDT on-chain to the address. HIFI detects each deposit via on-chain webhooks.
+  </Step>
+  <Step title="Automatic offramp">
+    Based on the configured mode, HIFI batches eligible deposits and runs them through the standard offramp pipeline. USD lands in the destination account — no manual quote-accept step required.
+  </Step>
+</Steps>
+
+## Orchestration Modes
+
+Choose one of three modes at create time. The mode is changeable later via the update endpoint.
+
+<CardGroup cols={3}>
+  <Card title="PER_DEPOSIT" icon="bolt">
+    Every detected deposit becomes its own batch and offramp, immediately.
+
+    Best for clients who want each customer payment to settle independently with full traceability.
+  </Card>
+
+  <Card title="SCHEDULED" icon="clock">
+    Deposits accumulate until the next scheduled tick (`HOURLY`, `DAILY`, or `WEEKLY`), then roll up into a single batch.
+
+    Best for predictable cadence or end-of-day sweeps.
+  </Card>
+
+  <Card title="THRESHOLD" icon="gauge-high">
+    Deposits accumulate until their aggregate amount reaches `thresholdAmount`, then roll up into a single batch.
+
+    Best for minimizing offramp fees by waiting for a meaningful balance.
+  </Card>
+</CardGroup>
+
+Every active address also supports a **manual trigger** that batches whatever is currently pending — regardless of mode — without advancing the `SCHEDULED` clock.
+
+## Supported Source Pairs
+
+| Chain | USDC | USDT |
+| --- | :-: | :-: |
+| Ethereum, Polygon, Base, Solana | ✅ | ✅ |
+| Tron | ❌ | ✅ |
+
+Unsupported pairs (for example, USDC on Tron) are rejected at create time.
+
+## Minimum Amounts
+
+Every destination rail enforces a minimum amount. A batch is only created once the eligible `PENDING` deposits sum to at least that minimum.
+
+| Rail | Minimum |
+| --- | --- |
+| Wire, ACH, RTP | 1 USDC |
+| SWIFT | 5 USDC |
+| USDT (any rail) | 10 USDT |
+
+Mode-specific behavior:
+
+- **`PER_DEPOSIT`** — a deposit at or above the minimum is batched immediately; a sub-minimum deposit is held `PENDING` and swept into the next qualifying batch.
+- **`SCHEDULED`** — a tick whose `PENDING` total is below the minimum batches nothing; the deposits roll into the next tick.
+- **`THRESHOLD`** — `thresholdAmount` is validated to be ≥ the rail minimum at create/update time, so a crossed threshold always clears it.
+- **Manual trigger** — returns `triggered: false, reason: "below_offramp_minimum"` if the pending total is below the minimum.
+
+## Creating an Orchestration Address
+
+Create an address using the [Create Orchestration Address](https://docs.hifi.com/api-reference/orchestration-addresses/create-an-orchestration-address) endpoint.
+
+```bash
+curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/orchestration-addresses" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "requestId": "550e8400-e29b-41d4-a716-446655440000",
+    "source": {
+      "currency": "usdc",
+      "chain": "BASE"
+    },
+    "destination": {
+      "currency": "usd",
+      "accountId": "acc_xyz789"
+    },
+    "mode": "PER_DEPOSIT"
+  }'
+```
+
+### Request Fields
+
+<ResponseField name="requestId" type="string" required>
+  Your idempotency key (UUID v4). Repeating the same `requestId` with the same payload returns the existing record; repeating it with a different payload returns `409 RESOURCE_CONFLICT` identifying the first mismatched field (one of `source.currency`, `source.chain`, `destination.currency`, `destination.accountId`, `mode`, `schedule.interval`, or `thresholdAmount`).
+</ResponseField>
+
+<ResponseField name="source" type="object" required>
+  The stablecoin and chain the address will accept.
+
+  <Expandable title="Source Object Fields">
+    <ResponseField name="source.currency" type="string" required>
+      Source stablecoin. Options: `usdc`, `usdt`.
+    </ResponseField>
+
+    <ResponseField name="source.chain" type="string" required>
+      Blockchain network. Options: `ETHEREUM`, `POLYGON`, `BASE`, `SOLANA`, `TRON`.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="destination" type="object" required>
+  The USD payout account that will receive the offramped funds.
+
+  <Expandable title="Destination Object Fields">
+    <ResponseField name="destination.currency" type="string" required>
+      Payout currency. Currently only `usd` is supported.
+    </ResponseField>
+
+    <ResponseField name="destination.accountId" type="string" required>
+      ID of an existing USD account belonging to the same user.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="mode" type="string" required>
+  Orchestration mode. One of `PER_DEPOSIT`, `SCHEDULED`, or `THRESHOLD`.
+</ResponseField>
+
+<ResponseField name="schedule" type="object">
+  Required when `mode = SCHEDULED`. Must be omitted otherwise.
+
+  <Expandable title="Schedule Object Fields">
+    <ResponseField name="schedule.interval" type="string" required>
+      Tick cadence. Options: `HOURLY`, `DAILY`, `WEEKLY`.
+    </ResponseField>
+
+    <ResponseField name="schedule.nextRunAt" type="string">
+      Optional ISO timestamp for the first tick. Defaults to `now + interval`.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="thresholdAmount" type="string">
+  Required when `mode = THRESHOLD`. Must be omitted otherwise. Must be at least the destination rail's offramp minimum.
+</ResponseField>
+
+### Response
+
+```json
+{
+  "id": "oa_abc123",
+  "userId": "usr_abc123",
+  "address": "0xAbc...123",
+  "source": { "currency": "usdc", "chain": "BASE" },
+  "destination": { "currency": "usd", "accountId": "acc_xyz789" },
+  "mode": "PER_DEPOSIT",
+  "schedule": null,
+  "thresholdAmount": null,
+  "status": "ACTIVE",
+  "createdAt": "2026-06-22T12:00:00.000Z",
+  "updatedAt": "2026-06-22T12:00:00.000Z",
+  "deactivatedAt": null
+}
+```
+
+<Info>
+  `status` may briefly be `PENDING_WALLET` while the on-chain wallet is being provisioned. The Create endpoint waits for provisioning to complete, so the typical response is already `ACTIVE` with `address` populated.
+</Info>
+
+## Managing the Address Lifecycle
+
+### Update
+
+[Update](https://docs.hifi.com/api-reference/orchestration-addresses/update-an-orchestration-address) the mode, schedule, threshold, or destination account at any time while the address is `ACTIVE`. Updates do not affect offramps already in flight — only future deposits use the new configuration.
+
+### Deactivate
+
+[Deactivate](https://docs.hifi.com/api-reference/orchestration-addresses/deactivate-an-orchestration-address) the address with a `walletAddress` to receive any in-kind refunds. Deactivation:
+
+- Refunds all `PENDING` (not-yet-batched) deposits in-kind to `walletAddress`.
+- Lets in-flight `PROCESSING` batches continue to completion.
+- Stops offramping any **new** deposits — they are recorded as `IGNORED` with no automatic refund.
+
+The on-chain address keeps receiving deposits even after deactivation, since the underlying wallet cannot be taken offline.
+
+### Manually trigger an orchestration
+
+Call [Trigger Orchestration](https://docs.hifi.com/api-reference/orchestration-addresses/trigger-an-orchestration) to batch all currently-`PENDING` deposits immediately, regardless of mode. Idempotent — returns `triggered: false` with a reason when there is nothing to orchestrate.
+
+## Tracking Deposits and Batches
+
+Each on-chain deposit is recorded as a **deposit** row; each produced offramp is recorded as a **batch** row.
+
+| Resource | Statuses | Use |
+| --- | --- | --- |
+| Deposit | `PENDING`, `BATCHED`, `IGNORED` | Track individual on-chain transfers. |
+| Batch | `PENDING`, `PROCESSING`, `COMPLETED`, `FAILED` | Track the offramp produced from a group of deposits. |
+
+Use [List Deposits](https://docs.hifi.com/api-reference/orchestration-addresses/list-deposits) and [List Batches](https://docs.hifi.com/api-reference/orchestration-addresses/list-batches) to query history.
+
+<Tip>
+  [Get Orchestration Address](https://docs.hifi.com/api-reference/orchestration-addresses/get-an-orchestration-address) (the single-address endpoint) also returns a live `balance` field — the on-chain balance of the source token held by the address — so you don't need a separate provider call to check funds in flight.
+</Tip>
+
+### Reconciling with offramps
+
+Orchestration offramps flow through the same pipeline as direct offramps, so the existing offramp endpoints and webhooks work without changes:
+
+- **Webhook events:** the standard offramp progress events fire for orchestration offramps. Each event payload includes an `orchestrationAddressId` field — non-null when the offramp was produced by an orchestration address, null for direct offramps.
+- **Cross-reference:** [Get Offramp](https://docs.hifi.com/api-reference/offramp/get-an-offramp) includes `orchestrationAddressId` in its response, and a batch's `offrampTransactionId` links to the full offramp record. You can pivot in either direction without an extra round-trip.
+
+### Ignored deposits
+
+A deposit is recorded with `status = IGNORED` (and not offramped) in two cases:
+
+- **`ADDRESS_DEACTIVATED`** — the deposit arrived after the address was deactivated.
+- **`UNSUPPORTED_TOKEN`** — the sender used the wrong stablecoin (for example, sending USDT to a USDC-only address).
+
+In both cases the funds remain in the on-chain wallet. Contact support to arrange a manual refund.
+
+### Failed batches
+
+A batch can land in `FAILED` for one of two reasons, surfaced as `failureReason`:
+
+- **`ADDRESS_NOT_ACTIVE`** — the address was deactivated between batch creation and processing.
+- **A terminal offramp status** (`NOT_INITIATED`, `QUOTE_FAILED`, `CRYPTO_FAILED`, `FIAT_FAILED`, `EXPIRED`, `REJECTED`, `CANCELLED`) — the underlying offramp terminated. Compliance issues (lost product access, KYC rejection) surface here.
+
+The deposits in a failed batch remain in `BATCHED` status and are not automatically retried. Contact support to re-batch them once any underlying issue is resolved.
+
+## Getting Help
+
+- 📧 **Email:** [support@hifi.com](mailto:support@hifi.com)
+- 💬 **Slack:** Message us in our shared Slack channel
+
+## Related Resources
+
+- [Virtual Accounts](/docs/accounts/virtual-accounts) - The inverse flow: fiat deposits converted to stablecoins
+- [Developer Fees](/docs/features/developer-fees) - Fee calculation for offramp transactions
+- [API Reference](https://docs.hifi.com/api-reference/orchestration-addresses/create-an-orchestration-address) - Complete endpoint documentation

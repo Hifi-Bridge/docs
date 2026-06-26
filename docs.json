@@ -241,7 +241,7 @@
               "features/transfer-approvals",
               "features/developer-fees",
               "features/settlement-rules",
-              "features/liquidation-addresses",
+              "features/orchestration-addresses",
               "features/token-sharing"
             ]
           },
@@ -430,18 +430,18 @@
                 ]
               },
               {
-                "group": "Liquidation Addresses",
+                "group": "Orchestration Addresses",
                 "pages": [
-                  "GET /v2/users/{userId}/liquidation-addresses",
-                  "GET /v2/users/{userId}/liquidation-addresses/{liquidationAddressId}",
-                  "POST /v2/users/{userId}/liquidation-addresses",
-                  "POST /v2/users/{userId}/liquidation-addresses/{liquidationAddressId}/update",
-                  "POST /v2/users/{userId}/liquidation-addresses/{liquidationAddressId}/deactivate",
-                  "GET /v2/users/{userId}/liquidation-addresses/{liquidationAddressId}/deposits",
-                  "GET /v2/users/{userId}/liquidation-addresses/{liquidationAddressId}/deposits/{depositId}",
-                  "GET /v2/users/{userId}/liquidation-addresses/{liquidationAddressId}/batches",
-                  "GET /v2/users/{userId}/liquidation-addresses/{liquidationAddressId}/batches/{batchId}",
-                  "POST /v2/users/{userId}/liquidation-addresses/{liquidationAddressId}/liquidate"
+                  "GET /v2/users/{userId}/orchestration-addresses",
+                  "GET /v2/users/{userId}/orchestration-addresses/{orchestrationAddressId}",
+                  "POST /v2/users/{userId}/orchestration-addresses",
+                  "POST /v2/users/{userId}/orchestration-addresses/{orchestrationAddressId}/update",
+                  "POST /v2/users/{userId}/orchestration-addresses/{orchestrationAddressId}/deactivate",
+                  "GET /v2/users/{userId}/orchestration-addresses/{orchestrationAddressId}/deposits",
+                  "GET /v2/users/{userId}/orchestration-addresses/{orchestrationAddressId}/deposits/{depositId}",
+                  "GET /v2/users/{userId}/orchestration-addresses/{orchestrationAddressId}/batches",
+                  "GET /v2/users/{userId}/orchestration-addresses/{orchestrationAddressId}/batches/{batchId}",
+                  "POST /v2/users/{userId}/orchestration-addresses/{orchestrationAddressId}/orchestrate"
                 ]
               },
               {
