@@ -339,13 +339,8 @@
           },
           {
             "tab": "Changelog",
-            "groups": [
-              {
-                "group": "Changelog",
-                "pages": [
-                  "changelog"
-                ]
-              }
+            "pages": [
+              "changelog"
             ]
           },
           {
@@ -549,6 +544,417 @@
                       "DELETE /v2/reporting/metrics/{id}",
                       "POST /v2/reporting/metrics/preview",
                       "GET /v2/reporting/metrics/{id}/results"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "version": "v1",
+        "tag": "Legacy",
+        "tabs": [
+          {
+            "tab": "Docs",
+            "groups": [
+              {
+                "group": "Introduction",
+                "pages": [
+                  "v1/index",
+                  "v1/overview",
+                  "v1/sandbox",
+                  "v1/dashboard",
+                  "v1/availability",
+                  "v1/coverage"
+                ]
+              },
+              {
+                "group": "Core concepts",
+                "pages": [
+                  {
+                    "group": "Users",
+                    "pages": [
+                      "v1/users/overview",
+                      "v1/users/tos"
+                    ]
+                  },
+                  "v1/wallets",
+                  {
+                    "group": "KYC",
+                    "pages": [
+                      "v1/kyc",
+                      "v1/kyc/kyc-requirements",
+                      "v1/kyc/kyc-status",
+                      "v1/kyc/kyb-status"
+                    ]
+                  },
+                  {
+                    "group": "Rails",
+                    "pages": [
+                      "v1/rails",
+                      "v1/rails/usd",
+                      "v1/rails/global-network",
+                      "v1/rails/africa"
+                    ]
+                  },
+                  {
+                    "group": "Accounts",
+                    "pages": [
+                      "v1/accounts/virtual-accounts",
+                      "v1/accounts/offramp-accounts",
+                      "v1/accounts/onramp-accounts"
+                    ]
+                  },
+                  {
+                    "group": "Transactions",
+                    "pages": [
+                      "v1/transactions/overview",
+                      "v1/transactions/transfers",
+                      "v1/transactions/onramps",
+                      "v1/transactions/offramps",
+                      "v1/transactions/bridging",
+                      "v1/transactions/swaps"
+                    ]
+                  },
+                  {
+                    "group": "Webhooks",
+                    "pages": [
+                      "v1/webhooks",
+                      "v1/webhooks/user-events",
+                      "v1/webhooks/kyc-events",
+                      "v1/webhooks/wallet-events",
+                      "v1/webhooks/onramp-events-copied-1",
+                      "v1/webhooks/account-events",
+                      "v1/webhooks/onramp-events",
+                      "v1/webhooks/offramp-events"
+                    ]
+                  },
+                  {
+                    "group": "Reporting",
+                    "pages": [
+                      "v1/reporting/metrics"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "Features",
+                "pages": [
+                  {
+                    "group": "Canton",
+                    "tag": "NEW",
+                    "pages": [
+                      "v1/features/canton/overview",
+                      "v1/features/canton/transfer-offer",
+                      "v1/features/canton/usdcx-bridging"
+                    ]
+                  },
+                  "v1/features/kyc-links",
+                  "v1/features/exchange-rates",
+                  "v1/features/batch-transfers",
+                  "v1/features/transfer-approvals",
+                  "v1/features/developer-fees",
+                  "v1/features/settlement-rules",
+                  "v1/features/orchestration-addresses",
+                  "v1/features/token-sharing"
+                ]
+              },
+              {
+                "group": "Compliance",
+                "pages": [
+                  "v1/compliance/industries",
+                  "v1/compliance/regions",
+                  {
+                    "group": "Documents",
+                    "pages": [
+                      "v1/compliance/documents",
+                      "v1/compliance/documents/identity",
+                      "v1/compliance/documents/proof-of-address"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "Payments",
+                "pages": [
+                  {
+                    "group": "Dispute Handling",
+                    "pages": [
+                      "v1/disputes"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "References",
+                "pages": [
+                  "v1/references/currencies",
+                  "v1/references/identity-documents",
+                  {
+                    "group": "Business Industries",
+                    "pages": [
+                      "v1/references/business-industries",
+                      "v1/references/business-industries/agriculture-forestry",
+                      "v1/references/business-industries/mining-energy",
+                      "v1/references/business-industries/construction",
+                      "v1/references/business-industries/manufacturing",
+                      "v1/references/business-industries/wholesale-retail-trade",
+                      "v1/references/business-industries/transportation-logistics",
+                      "v1/references/business-industries/information-media",
+                      "v1/references/business-industries/finance-insurance",
+                      "v1/references/business-industries/real-estate-leasing",
+                      "v1/references/business-industries/professional-technical-services",
+                      "v1/references/business-industries/administrative-support-services",
+                      "v1/references/business-industries/education",
+                      "v1/references/business-industries/health-social-services",
+                      "v1/references/business-industries/arts-recreation-entertainment",
+                      "v1/references/business-industries/hospitality-food",
+                      "v1/references/business-industries/other-services",
+                      "v1/references/business-industries/public-administration"
+                    ]
+                  },
+                  "v1/references/occupations",
+                  "v1/references/account-purposes",
+                  "v1/references/export-categories",
+                  "v1/references/product-service-categories"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "Guides",
+            "groups": [
+              {
+                "group": "Guides",
+                "pages": [
+                  "v1/guides/quickstart",
+                  "v1/guides/submit-kyc",
+                  "v1/guides/receive-money",
+                  "v1/guides/send-money",
+                  "v1/guides/send-eur-offramps",
+                  "v1/guides/reporting"
+                ]
+              },
+              {
+                "group": "Recipes",
+                "pages": [
+                  "v1/guides/remittances",
+                  "v1/guides/global-transfers",
+                  "v1/guides/market-payments",
+                  "v1/guides/split-payments"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "Changelog",
+            "pages": [
+              "v1/changelog"
+            ]
+          },
+          {
+            "tab": "API Reference",
+            "groups": [
+              {
+                "group": "Overview",
+                "pages": [
+                  "v1/api/authentication",
+                  "v1/api/responses",
+                  "v1/api/errors"
+                ]
+              },
+              {
+                "group": "Endpoints",
+                "openapi": "https://production.hifi.com/api/v1/openapi.json",
+                "pages": [
+                  {
+                    "group": "Common",
+                    "pages": [
+                      "GET /ping"
+                    ]
+                  },
+                  {
+                    "group": "Users",
+                    "pages": [
+                      "GET /v1/users",
+                      "GET /v1/users/{userId}",
+                      "POST /v1/users",
+                      "POST /v1/users/{userId}",
+                      "GET /v1/tos-link/{signedAgreementId}",
+                      "POST /v1/tos-link"
+                    ]
+                  },
+                  {
+                    "group": "KYC",
+                    "pages": [
+                      "GET /v1/kyc/status",
+                      "GET /v1/users/{userId}/kyc",
+                      "GET /v1/users/{userId}/kyc/status",
+                      "GET /v1/users/{userId}/kyc/requirements",
+                      "GET /v1/users/{userId}/kyc/documents",
+                      "GET /v1/users/{userId}/kyc/documents/{documentId}",
+                      "GET /v1/users/{userId}/kyc/ubos",
+                      "GET /v1/users/{userId}/kyc/ubos/{uboId}",
+                      "POST /v1/kyc-link",
+                      "POST /v1/users/{userId}/kyc",
+                      "POST /v1/users/{userId}/kyc/submissions",
+                      "POST /v1/users/{userId}/kyc/documents",
+                      "POST /v1/users/{userId}/kyc/documents/{documentId}",
+                      "POST /v1/users/{userId}/kyc/ubos",
+                      "POST /v1/users/{userId}/kyc/ubos/{uboId}"
+                    ]
+                  },
+                  {
+                    "group": "File",
+                    "pages": [
+                      "POST /v1/files"
+                    ]
+                  },
+                  {
+                    "group": "Wallets",
+                    "pages": [
+                      "GET /v1/users/{userId}/wallets/balance",
+                      "GET /v1/users/{userId}/wallets/external",
+                      "GET /v1/users/{userId}/wallets/external/{externalWalletId}",
+                      "GET /v1/users/{userId}/wallets/deposits",
+                      "GET /v1/users/{userId}/wallets/deposits/{depositId}",
+                      "POST /v1/users/{userId}/wallets/add",
+                      "POST /v1/users/{userId}/wallets/external"
+                    ]
+                  },
+                  {
+                    "group": "Accounts",
+                    "pages": [
+                      "GET /v1/users/{userId}/accounts",
+                      "GET /v1/users/{userId}/accounts/{accountId}",
+                      "POST /v1/users/{userId}/accounts",
+                      "DELETE /v1/users/{userId}/accounts/{accountId}"
+                    ]
+                  },
+                  {
+                    "group": "Virtual Accounts",
+                    "pages": [
+                      "GET /v1/users/{userId}/virtual-accounts",
+                      "GET /v1/users/{userId}/virtual-accounts/{accountId}",
+                      "POST /v1/users/{userId}/virtual-accounts",
+                      "POST /v1/users/{userId}/virtual-accounts/{accountId}/update",
+                      "POST /v1/users/{userId}/virtual-accounts/{accountId}/deactivate",
+                      "POST /v1/users/{userId}/virtual-accounts/{accountId}/reactivate",
+                      "POST /v1/users/{userId}/virtual-accounts/{accountId}/simulate-deposit"
+                    ]
+                  },
+                  {
+                    "group": "Orchestration Addresses",
+                    "pages": [
+                      "GET /v1/users/{userId}/orchestration-addresses",
+                      "GET /v1/users/{userId}/orchestration-addresses/{orchestrationAddressId}",
+                      "POST /v1/users/{userId}/orchestration-addresses",
+                      "POST /v1/users/{userId}/orchestration-addresses/{orchestrationAddressId}/update",
+                      "POST /v1/users/{userId}/orchestration-addresses/{orchestrationAddressId}/deactivate",
+                      "GET /v1/users/{userId}/orchestration-addresses/{orchestrationAddressId}/deposits",
+                      "GET /v1/users/{userId}/orchestration-addresses/{orchestrationAddressId}/deposits/{depositId}",
+                      "GET /v1/users/{userId}/orchestration-addresses/{orchestrationAddressId}/batches",
+                      "GET /v1/users/{userId}/orchestration-addresses/{orchestrationAddressId}/batches/{batchId}",
+                      "POST /v1/users/{userId}/orchestration-addresses/{orchestrationAddressId}/orchestrate"
+                    ]
+                  },
+                  {
+                    "group": "Onramps",
+                    "pages": [
+                      "GET /v1/onramps",
+                      "GET /v1/onramps/{transferId}",
+                      "GET /v1/onramps/rates",
+                      "POST /v1/onramps",
+                      "POST /v1/onramps/{transferId}/cancel",
+                      "POST /v1/onramps/{transferId}/quote/refresh",
+                      "POST /v1/onramps/{transferId}/quote/accept"
+                    ]
+                  },
+                  {
+                    "group": "Offramps",
+                    "pages": [
+                      "GET /v1/offramps",
+                      "GET /v1/offramps/{transferId}",
+                      "GET /v1/offramps/rates",
+                      "POST /v1/offramps",
+                      "POST /v1/offramps/{transferId}/cancel",
+                      "POST /v1/offramps/{transferId}/quote/accept"
+                    ]
+                  },
+                  {
+                    "group": "Wallet Transfers",
+                    "pages": [
+                      "GET /v1/wallets/transfers",
+                      "GET /v1/wallets/transfers/{transferId}",
+                      "GET /v1/wallets/transfers/batches",
+                      "GET /v1/wallets/transfers/batches/{transferId}",
+                      "POST /v1/wallets/transfers",
+                      "POST /v1/wallets/transfers/batches"
+                    ]
+                  },
+                  {
+                    "group": "Wallet Offers",
+                    "pages": [
+                      "GET /v1/wallets/{walletId}/offers",
+                      "GET /v1/wallets/{walletId}/offers/{offerId}",
+                      "POST /v1/wallets/{walletId}/offers/{offerId}/accept",
+                      "POST /v1/wallets/{walletId}/offers/{offerId}/reject"
+                    ]
+                  },
+                  {
+                    "group": "Wallet Bridges",
+                    "pages": [
+                      "GET /v1/wallets/bridges",
+                      "GET /v1/wallets/bridges/{transferId}",
+                      "POST /v1/wallets/bridges",
+                      "POST /v1/wallets/bridges/{transferId}/accept"
+                    ]
+                  },
+                  {
+                    "group": "Wallet Swaps",
+                    "pages": [
+                      "GET /v1/wallets/swaps",
+                      "GET /v1/wallets/swaps/{swapId}",
+                      "POST /v1/wallets/swaps",
+                      "POST /v1/wallets/swaps/{swapId}/accept"
+                    ]
+                  },
+                  {
+                    "group": "Transfer Approvals",
+                    "pages": [
+                      "GET /v1/transfer-approvals",
+                      "GET /v1/transfer-approvals/{approvalId}",
+                      "POST /v1/transfer-approvals/{approvalId}/approve",
+                      "POST /v1/transfer-approvals/{approvalId}/reject"
+                    ]
+                  },
+                  {
+                    "group": "Settlement Rules",
+                    "pages": [
+                      "GET /v1/virtual-accounts/settlement-rules",
+                      "GET /v1/virtual-accounts/settlement-rules/{ruleId}",
+                      "POST /v1/virtual-accounts/settlement-rules",
+                      "POST /v1/virtual-accounts/settlement-rules/{ruleId}/update",
+                      "POST /v1/users/{userId}/virtual-accounts/{accountId}/settlement-rules/{ruleId}",
+                      "DELETE /v1/virtual-accounts/settlement-rules/{ruleId}",
+                      "DELETE /v1/users/{userId}/virtual-accounts/{accountId}/settlement-rules"
+                    ]
+                  },
+                  {
+                    "group": "Reporting",
+                    "pages": [
+                      "GET /v1/reporting/templates",
+                      "GET /v1/reporting/templates/{name}",
+                      "GET /v1/reporting/params/{name}/options",
+                      "POST /v1/reporting/metrics",
+                      "GET /v1/reporting/metrics",
+                      "GET /v1/reporting/metrics/{id}",
+                      "POST /v1/reporting/metrics/{id}",
+                      "DELETE /v1/reporting/metrics/{id}",
+                      "POST /v1/reporting/metrics/preview",
+                      "GET /v1/reporting/metrics/{id}/results"
                     ]
                   }
                 ]
