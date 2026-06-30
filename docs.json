@@ -150,7 +150,7 @@
               {
                 "group": "Introduction",
                 "pages": [
-                  "v3/index"
+                  "v3/welcome"
                 ]
               }
             ]
@@ -160,15 +160,14 @@
             "pages": [
               {
                 "group": "Guides",
-                "pages": [
-                  "guides/quickstart",
-                  "guides/submit-kyc",
-                  "guides/receive-money",
-                  "guides/send-money",
-                  "guides/send-eur-offramps",
-                  "guides/reporting"
-                ]
+                "pages": []
               }
+            ]
+          },
+          {
+            "tab": "Changelog",
+            "pages": [
+              "changelog"
             ]
           }
         ]
