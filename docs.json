@@ -150,7 +150,8 @@
               {
                 "group": "Introduction",
                 "pages": [
-                  "v3/docs/welcome.mdx"
+                  "v3/docs/welcome.mdx",
+                  "v3/docs/overview.mdx"
                 ]
               }
             ]
