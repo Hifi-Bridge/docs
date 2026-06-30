@@ -141,6 +141,23 @@
   "navigation": {
     "versions": [
       {
+        "version": "v3",
+        "tag": "Beta",
+        "tabs": [
+          {
+            "tab": "Docs",
+            "pages": [
+              {
+                "group": "Introduction",
+                "pages": [
+                  "v3/index"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
         "version": "v2",
         "tabs": [
           {
@@ -548,7 +565,9 @@
               }
             ]
           }
-        ]
+        ],
+        "default": true,
+        "tag": "Stable"
       }
     ]
   },
