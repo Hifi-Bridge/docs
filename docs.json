@@ -150,7 +150,7 @@
               {
                 "group": "Introduction",
                 "pages": [
-                  "v3/welcome"
+                  "v3/docs/welcome.mdx"
                 ]
               }
             ]
@@ -165,10 +165,7 @@
             ]
           },
           {
-            "tab": "Changelog",
-            "pages": [
-              "changelog"
-            ]
+            "tab": "Changelog"
           }
         ]
       },
