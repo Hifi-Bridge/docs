@@ -152,7 +152,8 @@
                 "pages": [
                   "v3/docs/welcome",
                   "v3/docs/overview",
-                  "v3/docs/sandbox"
+                  "v3/docs/sandbox",
+                  "v3/docs/dashboard"
                 ]
               }
             ]
