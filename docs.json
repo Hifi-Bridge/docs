@@ -155,6 +155,28 @@
                   "v3/docs/sandbox",
                   "v3/docs/dashboard"
                 ]
+              },
+              {
+                "group": "Core concepts",
+                "pages": []
+              },
+              {
+                "group": "Features",
+                "pages": []
+              },
+              {
+                "group": "Compliance",
+                "pages": []
+              },
+              {
+                "group": "Payments",
+                "pages": []
+              },
+              {
+                "group": "References",
+                "pages": [
+                  "availability-1"
+                ]
               }
             ]
           },
