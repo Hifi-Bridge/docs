@@ -150,10 +150,10 @@
               {
                 "group": "Introduction",
                 "pages": [
-                  "v3/docs/welcome",
-                  "v3/docs/overview",
-                  "v3/docs/sandbox",
-                  "v3/docs/dashboard"
+                  "v3/docs/introduction/welcome",
+                  "v3/docs/introduction/overview",
+                  "v3/docs/introduction/sandbox",
+                  "v3/docs/introduction/dashboard"
                 ]
               },
               {
@@ -175,7 +175,8 @@
               {
                 "group": "References",
                 "pages": [
-                  "availability-1"
+                  "v3/docs/references/availability",
+                  "v3/docs/references/coverage"
                 ]
               }
             ]
