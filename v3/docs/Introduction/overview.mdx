@@ -6,37 +6,42 @@ description: "HIFI provides infrastructure for money through three core product 
 
 ## Inflows
 
-Inflow APIs help you create entry points for value so funds can move into your system from bank rails and digital assets.
+Inflow products help you create entry points for value so funds can move into your system from bank rails and digital assets.
 
 | Product | Description | Use this to |
 | :-- | :-- | :-- |
-| **Virtual Accounts** | Issue unique local account details for supported markets and currencies to receive deposits. | Accept recurring or one-time inbound bank transfers and reconcile funds per user or account. |
+| **Virtual Accounts** | Unique local accounts in supported markets and currencies — receive fiat deposits and programmatically convert to stablecoin. | Accept recurring inbound bank transfers and reconcile funds with stablecoin. |
 | **Onramps** | Convert fiat into supported stablecoin balances through programmatic transfer flows. | Bring user or treasury funds on-chain from local bank rails. |
-| **Wallet Deposits** | Provision custodial wallets that can receive and hold supported digital assets. | Let users or your business receive stablecoin deposits into managed custody. |
+| **Wallet Deposits** | Provision wallets that can receive and hold supported digital assets. | Let users or your business receive onchain asset. |
 
-## Controls
+## Orchestration 
 
-Control APIs give you programmable control over how money moves internally across accounts, wallets, chains, and workflows.
+Orchestration products give you programmable control over how money moves across accounts, wallets, networks, and workflows.
 
 | Product | Description | Use this to |
 | :-- | :-- | :-- |
-| **Transfers** | Trigger one-time transfer operations across supported rails and counterparties. | Move funds programmatically between entities in your product lifecycle. |
-| **Wallet Transfers** | Manage digital asset movement between wallets and destinations. | Power treasury, internal rebalancing, and operational crypto movements. |
-| **Batch Transfers** | Submit grouped transfer actions in a single orchestration workflow. | Execute high-volume payouts or internal disbursements efficiently. |
-| **Bridging** | Move assets across supported chains while keeping workflows unified. | Route liquidity or settle value across multiple networks. |
-| **Swaps** | Exchange supported assets to meet settlement or treasury requirements. | Convert one digital asset into another as part of a payment or treasury flow. |
-| **Settlement Rules** | Configure deterministic routing logic for incoming funds and account behavior. | Automate value routing and reduce manual operational intervention. |
-| **Orchestration Addresses** | A static onchain address that orchestrate the funds flow with flexible configuration | Move and convert funds based on predefined rules |
+| **Wallet Transfers** | Manage digital asset movement between wallets and addresses. | Power treasury, internal rebalancing, and operational crypto movements. |
+| **Batch Transfers** | Submit grouped transfer actions in an atomic orchestration workflow | Execute multiple transactions atomically and cost-efficiently. |
+| **Bridging** | Move assets across supported chains. | Route liquidity or settle value across multiple networks. |
+| **Swaps** | Exchange supported assets. | Convert one digital asset into another as part of a payment or treasury flow. |
+| **Settlement Rules** | Settlement logic for virtual account deposits. | Automate value routing and reduce manual operations in your business logic. |
+| **Orchestration Addresses** | A static onchain address that orchestrates fund flows with flexible configuration | Move and convert funds automatically based on predefined rules. |
 | **Transfer Approvals** | Add policy-based approval steps before transfer execution. | Enforce internal controls and governance for sensitive fund movement. |
 
 ## Outflows
 
-Outflow APIs help you settle to users, partners, and counterparties across bank rails and digital asset destinations.
+Outflow products help you settle to users, partners, and counterparties across bank rails and digital asset destinations.
 
 | Product | Description | Use this to |
 | :-- | :-- | :-- |
-| **Offramps** | Convert stablecoin balances into fiat and deliver to bank payout endpoints. | Settle users or partners in local currency. |
-| **Coverage** | Explore supported regions, corridors, and payment rails. | Plan where and how you can settle payments to. |
+| **Offramps** | Convert stablecoin balances into fiat and deliver to banks via multiple payment rails. | Settle to beneficiaries in fiat currency |
+| **Visa Direct (Push to Card)** | Settle fiat globally and instantly to cards via the Visa network | Settle payments in fiat when speed matters |
+
+## Private Transactions
+
+For institution-grade settlement between trusted counterparties, HIFI also supports private transaction workflows designed for controlled, compliant value movement.
+
+[Learn more about Private Transactions](/features/canton/overview)
 
 ---
 
@@ -46,16 +51,10 @@ HIFI includes built-in onboarding and compliance primitives so product teams can
 
 | Product | Description | Use this to |
 | :-- | :-- | :-- |
-| **Users** | Create and manage end users or business entities in your integration. | Maintain customer records tied to wallet, account, and transfer activity. |
+| **Users** | Create and manage individual users or business entities in your integration. | Maintain customer records tied to wallet, account, and transfer activity. |
 | **KYC/KYB** | Collect and evaluate identity and business verification requirements. | Satisfy onboarding controls before enabling production money movement. |
-| **KYC Links** | Generate hosted onboarding flows for compliance submission. | Offload document collection and verification UX while keeping API control. |
-| **Token Sharing** | Share your end users KYC information via token provided by eligible compliance vendor | Enable faster onboarding for your end users with less integration overhead |
-
-## Private Transactions
-
-For institution-grade settlement between trusted counterparties, HIFI also supports private transaction workflows designed for controlled, compliant value movement.
-
-[Learn more about Private Transactions](/features/canton/overview)
+| **Compliance Links** | Generate hosted onboarding flows for compliance submission. | Offload document collection and verification UX while keeping API control. |
+| **Token Sharing** | Share your end users' KYC information via a token provided by an eligible compliance vendor | Enable faster end-user onboarding with less integration overhead |
 
 ---
 
