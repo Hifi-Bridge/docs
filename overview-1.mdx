@@ -1,0 +1,68 @@
+---
+title: "Overview"
+description: "A User represents an individual or business on the HIFI platform. Users are the foundation of all transaction activity - every onramp, offramp, and transfer is associated with a user."
+---
+
+## User Types
+
+HIFI supports two types of users:
+
+| Type | Description |
+| :-- | :-- |
+| **Individual** | A natural person |
+| **Business** | A legal entity |
+
+## User Creation
+
+Users are created in two steps:
+
+1. **Generate Terms of Service link** - User must review and accept HIFI's [Terms of Service](/terms-of-service)
+2. **Create user** – Once terms are accepted, create the user with the accepted terms of service ID and the user type.
+
+<Info>
+  User's information can be updated via PATCH `/v3/users/:user_id/compliance/profile`
+</Info>
+
+**Create a user:**
+
+```shellscript
+curl -X POST "https://sandbox.hifi.com/v3/users" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "type": "INDIVIDUAL",
+    "signedAgreementId": "8cb49537-bcf9-41b1-8d8c-c9c200d7341b",
+    "requestId": "705f1f8b-a080-467c-b683-174eca409928"
+  }'
+```
+
+**Response:**
+
+```json
+{
+    "id": "usr_9RJb0KUrhugQ7uMZL5UML",
+    "type": "INDIVIDUAL",
+    "createdAt": "2026-07-12T21:19:32.760Z",
+    "updatedAt": "2026-07-12T21:19:32.760Z"
+}
+```
+
+## Next Steps
+
+After creating a user, complete the following before they can transact:
+
+1. **Upload compliance information** – Submit the user's KYC/KYB details via PATCH `/v3/users/:user_id/compliance/profile`. See the <u>Compliance Information</u> for more details.
+2. **Add a custodial wallet** – Create a custodial wallet for the user to hold and transfer funds.
+
+## Getting Help
+
+- 📧 **Email:** [support@hifi.com](mailto:support@hifi.com)
+- 💬 **Slack:** Message us in our shared Slack channel
+
+## Related Resources
+
+- [Quickstart Guide](/docs/quickstart) - Step-by-step tutorial for creating and verifying users
+- [KYC Documentation](/docs/users/kyc) - Detailed KYC requirements and process
+- [Virtual Accounts](/docs/accounts/virtual-accounts) - Set up fiat deposit accounts
+- [Offramp Accounts](/docs/accounts/offramp-accounts) - Configure withdrawal bank accounts
+- [API Reference: Users](https://docs.hifi.com/api-reference/user/create-a-user) - Complete endpoint documentation

@@ -158,7 +158,15 @@
               },
               {
                 "group": "Core concepts",
-                "pages": []
+                "pages": [
+                  {
+                    "group": "Users",
+                    "pages": [
+                      "overview-1",
+                      "terms-of-service"
+                    ]
+                  }
+                ]
               },
               {
                 "group": "Features",
