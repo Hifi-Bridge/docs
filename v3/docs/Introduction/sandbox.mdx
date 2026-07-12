@@ -49,23 +49,23 @@ In sandbox, the compliance process is streamlined for testing:
 
 - **Auto-Approved** - Compliance submissions are usually approved within minutes
 - **Compliance Checks Still Apply** - Some compliance checks (like PEP screening) may still block approval even in sandbox
-- **Dummy Data** - Use any test personal information and documents
+- **Dummy Data** - Use mock data as inputs to simulate the flow
 - **Magic Value** - Use magic values to trigger different behaviors for testing
 
 <Info>
-  In production, KYC applications undergo real compliance review
+  In production, KYC/B applications undergo real compliance review
 </Info>
 
 ### Simulated Transactions
 
 All money movement in sandbox is simulated:
 
-- **Virtual Account Deposits** - Use simulate deposit endpoint to mimic bank deposits
-- **Testnet Token** - Transaction uses testnet tokens and is processed on a testnet network
+- **Virtual Account Deposits** - Use the simulate deposit endpoint to mimic bank deposits
+- **Testnet Token** - Transactions use testnet tokens and are processed on a testnet network
 - **Testnet Wallets** - All wallet addresses are on blockchain testnets
 
 <Warning>
-  Please do not send real funds to testnet wallets. HIFI is not responsible for any funds lost in this situation.
+  Only send testnet assets to testnet wallets. Real-world funds sent to testnet wallets cannot be recovered, and HIFI is not responsible for any resulting loss.
 </Warning>
 
 ---
