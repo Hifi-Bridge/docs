@@ -1,0 +1,61 @@
+---
+title: "Overview"
+description: "To comply with financial regulations, HIFI enforces KYC (Know Your Customer) and KYB (Know Your Business) checks before a User can receive funds from fiat (onramps), pay out to fiat (offramps), or access other financial products offered by HIFI."
+---
+
+## KYC vs. KYB
+
+Different information is required based on the user type, including both non-documentary and documentary verification.
+
+| User Type | Check | What's verified |
+| :-- | :-- | :-- |
+| **Individual** | KYC | Identity, address, date of birth, government ID, etc. |
+| **Business** | KYB | Legal entity details, beneficial owners, incorporation docs, etc. |
+
+<Info>
+  **For business users, associated party and ultimate beneficial owner (UBO) information is required in addition to the company information.**
+</Info>
+
+<Info>
+  **All KYB will go through our compliance team's manual review**
+</Info>
+
+## Compliance Life Cycle
+
+1. **Update compliance information** – Upload the user's profile via PATCH `/v3/users/:user_id/compliance/profile`
+2. **Upload documentation** – Upload the user's documents via POST `/v3/users/:user_id/compliance/documents`
+3. **Submit compliance application** – Submit the user's compliance data for screening via POST `/v3/users/:user_id/compliance/submit`
+4. **Verification** – HIFI reviews the submitted information
+5. **Status updates** – Receive results via webhook or by polling GET `/v3/users/:user_id/compliance/status`
+6. **Revise information & documentation** – If there's an issue with the applicant's information, update the affected fields and resubmit
+7. **Resolve RFIs via email** – Our compliance team may reach out for additional information
+
+## Compliance Statuses
+
+| Status | Description |
+| --- | --- |
+| `NOT_SUBMITTED` | Compliance check has not been requested yet |
+| `PENDING` | Application has been submitted and is awaiting review |
+| `IN_REVIEW` | Application is currently being manually reviewed by the compliance team |
+| `APPROVED` | Application has been approved by our compliance team |
+| `REJECTED` | Application has been rejected by our compliance team |
+| `REQUIRES_INFO` | Applicant's compliance data requires updates before resubmitting |
+
+## Required Information
+
+- KYC requirements
+- KYB requirements
+- Associated Party requirements (part of KYB application)
+
+## Getting Help
+
+- 📧 **Email:** [support@hifi.com](mailto:support@hifi.com)
+- 💬 **Slack:** Message us in our shared Slack channel
+
+## Related Resources
+
+- [User Overview](/v3/core/users/overview)
+- KYC Requirements (detailed field list)
+- KYB Requirements (detailed field list)
+- Webhooks
+- API Reference: Compliance endpoints

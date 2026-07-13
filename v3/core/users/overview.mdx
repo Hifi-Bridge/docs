@@ -18,7 +18,7 @@ Different types of users require different sets of compliance information in ord
 
 Users are created in two steps:
 
-1. **Generate Terms of Service link** - User must review and accept HIFI's [Terms of Service](/terms-of-service)
+1. **Generate Terms of Service link** - User must review and accept HIFI's [Terms of Service](/v3/core/users/terms-of-service)
 2. **Create user** – Once terms are accepted, create the user with the accepted terms of service ID and the user type.
 
 <Info>
@@ -53,7 +53,7 @@ curl -X POST "https://sandbox.hifi.com/v3/users" \
 
 After creating a user, complete the following before they can transact:
 
-1. **Upload compliance information** – Submit the user's KYC/KYB details via PATCH `/v3/users/:user_id/compliance/profile`. See the <u>Compliance Information</u> for more details.
+1. **Upload compliance information** – Submit the user's KYC/KYB details via PATCH `/v3/users/:user_id/compliance/profile`. See the [Compliance Information](/v3/core/compliance/overview) for more details.
 2. **Add a custodial wallet** – Create a custodial wallet for the user to hold and transfer funds.
 
 ## Getting Help

@@ -162,8 +162,19 @@
                   {
                     "group": "Users",
                     "pages": [
-                      "overview-1",
-                      "terms-of-service"
+                      "v3/core/users/overview",
+                      "v3/core/users/terms-of-service"
+                    ]
+                  },
+                  {
+                    "group": "Compliance",
+                    "pages": [
+                      "v3/core/compliance/overview",
+                      "v3/core/compliance/kyc",
+                      "v3/core/compliance/kyb",
+                      "v3/core/compliance/associated-party",
+                      "v3/core/compliance/questionnaire",
+                      "v3/core/compliance/documents"
                     ]
                   }
                 ]
