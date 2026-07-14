@@ -1,0 +1,237 @@
+---
+title: "Push to Card"
+description: "Create a card destination and send USD offramps directly to a recipient's eligible card."
+---
+
+**Time to complete:** 10-15 minutes
+
+<Note>
+  All examples use the sandbox environment (`https://sandbox.hifibridge.com`).
+  Sandbox transactions are simulated and do not move real funds.
+</Note>
+
+## Overview
+
+Push to card lets you convert stablecoins into fiat and deliver the funds to a recipient's eligible card instead of a bank account. In API v3, the flow uses an external card as the destination for an offramp.
+
+The flow has three steps:
+
+<Steps>
+  <Step title="Create an external card">
+    Add the recipient's card under a counter party. HIFI tokenizes the card with the card provider and returns an `externalCardId`.
+  </Step>
+  <Step title="Create an offramp quote">
+    Create an offramp request with `destination.externalCardId`.
+  </Step>
+  <Step title="Accept the quote">
+    Accept the quote before it expires to execute the push-to-card payout.
+  </Step>
+</Steps>
+
+## Prerequisites
+
+Before creating a push-to-card offramp, make sure you have:
+
+- A user with Terms of Service accepted
+- KYC or KYB approved for USD offramps
+- An active counter party for the card recipient
+- A funded HIFI wallet or external wallet with a supported stablecoin
+- API keys from the Dashboard
+
+<Info>
+  Push-to-card destinations use external cards. Bank-account offramps continue to use external accounts.
+</Info>
+
+## Step 1: Create an External Card
+
+Create an external card for the recipient.
+
+```bash
+curl -X POST "https://sandbox.hifibridge.com/v3/users/usr_abc123/counter-parties/cpty_abc123/external-cards" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "firstName": "Jane",
+    "lastName": "Doe",
+    "cardNumber": "4111111111111111",
+    "expiryMonth": "12",
+    "expiryYear": "29",
+    "cvv": "123"
+  }'
+```
+
+Save the returned `id`. You will use it as `destination.externalCardId` when creating the offramp.
+
+<Accordion title="Response">
+  ```json
+  {
+    "id": "extcrd_abc123",
+    "userId": "usr_abc123",
+    "counterPartyId": "cpty_abc123",
+    "firstName": "Jane",
+    "lastName": "Doe",
+    "cardNumber": "************1111",
+    "expiryMonth": "12",
+    "expiryYear": "29",
+    "status": "ACTIVE",
+    "createdAt": "2026-07-14T19:00:00.000Z",
+    "updatedAt": "2026-07-14T19:00:00.000Z"
+  }
+  ```
+</Accordion>
+
+<ResponseField name="id" type="string">
+  External card ID. Use this value as `destination.externalCardId`.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  Card status. `ACTIVE` means the card can be used as an offramp destination.
+</ResponseField>
+
+<Warning>
+  Card details are submitted once to create a provider token. Store the returned `id`, not the raw card number.
+</Warning>
+
+## Step 2: Create a Push-to-Card Offramp Quote
+
+Create an offramp with `destination.externalCardId`. Provide exactly one source wallet identifier (`source.walletId` or `source.externalWalletId`) and exactly one amount (`source.amount` or `destination.amount`).
+
+```bash
+curl -X POST "https://sandbox.hifibridge.com/v3/offramps" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "requestId": "b08e27be-c086-4b84-a321-307ed9f265e1",
+    "source": {
+      "walletId": "wlt_abc123",
+      "currency": "USDC",
+      "amount": 100
+    },
+    "destination": {
+      "externalCardId": "extcrd_abc123",
+      "currency": "USD"
+    },
+    "description": "Card payout for order 1001"
+  }'
+```
+
+<Accordion title="Response">
+  ```json
+  {
+    "id": "offramp_abc123",
+    "requestId": "b08e27be-c086-4b84-a321-307ed9f265e1",
+    "status": "OPEN_QUOTE",
+    "source": {
+      "chain": "POLYGON",
+      "amount": "100",
+      "currency": "USDC",
+      "userId": "usr_abc123",
+      "walletId": "wlt_abc123",
+      "walletAddress": "0x1234567890abcdef1234567890abcdef12345678"
+    },
+    "destination": {
+      "amount": "100",
+      "currency": "USD",
+      "userId": "usr_abc123",
+      "externalCardId": "extcrd_abc123"
+    },
+    "quote": {
+      "sendGross": {
+        "amount": "100",
+        "currency": "USDC"
+      },
+      "receiveNet": {
+        "amount": "100",
+        "currency": "USD"
+      },
+      "rate": "1",
+      "expiresAt": "2026-07-14T19:10:00.000Z"
+    },
+    "receipt": {
+      "transactionHash": null,
+      "paymentTracking": null
+    },
+    "depositInfo": []
+  }
+  ```
+</Accordion>
+
+<ResponseField name="id" type="string">
+  Offramp ID. Use this value to accept the quote and check the transaction status.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  `OPEN_QUOTE` means the quote is ready to review and accept.
+</ResponseField>
+
+<ResponseField name="destination.externalCardId" type="string">
+  The card destination for the push-to-card payout.
+</ResponseField>
+
+<ResponseField name="quote.expiresAt" type="string">
+  Quote expiration timestamp. Accept the quote before this time.
+</ResponseField>
+
+## Step 3: Accept the Quote
+
+After reviewing the quote, accept it to execute the offramp.
+
+```bash
+curl -X POST "https://sandbox.hifibridge.com/v3/offramps/offramp_abc123/quote/accept" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+When the quote is accepted, HIFI starts the stablecoin collection or transfer flow. After funds reach the Cross River offramp subaccount, HIFI initiates a card payment using the card token created in Step 1.
+
+<Accordion title="Response">
+  ```json
+  {
+    "id": "offramp_abc123",
+    "requestId": "b08e27be-c086-4b84-a321-307ed9f265e1",
+    "status": "IN_REVIEW",
+    "source": {
+      "amount": "100",
+      "currency": "USDC",
+      "walletId": "wlt_abc123"
+    },
+    "destination": {
+      "amount": "100",
+      "currency": "USD",
+      "externalCardId": "extcrd_abc123"
+    },
+    "receipt": {
+      "transactionHash": null,
+      "paymentTracking": null
+    }
+  }
+  ```
+</Accordion>
+
+## Step 4: Track the Offramp
+
+Use the offramp ID to check status.
+
+```bash
+curl -X GET "https://sandbox.hifibridge.com/v3/offramps/offramp_abc123" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+Common statuses include:
+
+| Status | Meaning |
+| :-- | :-- |
+| `OPEN_QUOTE` | The quote was created and is waiting to be accepted. |
+| `AWAITING_FUNDS` | HIFI is waiting for funds from an external wallet source. |
+| `IN_REVIEW` | Funds are in process and provider review or settlement is underway. |
+| `FIAT_INITIATED` | The card payout has been initiated. |
+| `FIAT_PENDING` | The card payout is processing. |
+| `COMPLETED` | The push-to-card offramp completed successfully. |
+| `FIAT_FAILED` | The card payout failed. |
+
+## Notes
+
+- Use `destination.externalCardId` for push-to-card offramps. Do not include `destination.externalAccountId` in the same request.
+- Push-to-card currently uses USD card payouts.
+- External cards must be `ACTIVE`.
+- The counter party attached to the card must remain active.
+- `requestId` is idempotent for creating offramps. Reusing the same `requestId` for a different transfer will return a conflict.
