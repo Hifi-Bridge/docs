@@ -12,17 +12,16 @@ description: "Send USDC directly to an eligible card."
 
 ## Overview
 
-Push to card lets you convert stablecoins into fiat and deliver the funds to a recipient's card.
-
-The flow has three steps:
+With HIFI Push to Card, you can convert stablecoins into fiat and deliver the funds to a recipient's card. The flow has three steps:
 
 <Steps>
   <Step title="Create user">
-    Onboard the sender with a KYC Link so they are verified for USD offramps.
+    Onboard the sender with a KYC Link or through the API so they are verified
+    to transact on HIFI.
   </Step>
   <Step title="Add counterparty card">
     Create a counterparty for the recipient and add their card. HIFI tokenizes
-    the card with the card provider and returns an `externalCardId`.
+    the card with the provider and returns an `externalCardId`.
   </Step>
   <Step title="Create offramp">
     Create a push-to-card offramp with `destination.externalCardId`, accept the
