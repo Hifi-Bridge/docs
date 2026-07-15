@@ -1,0 +1,333 @@
+---
+title: "KYC (Individual)"
+description: "To comply with financial regulations, HIFI enforces KYC (Know Your Customer) checks before an individual User can receive funds from fiat (onramps), pay out to fiat (offramps), or access other financial products offered by HIFI."
+---
+
+## Information Required
+
+Different information is required for verification, including both non-documentary and documentary checks.
+
+### Profile
+
+| Field | Description | Required |
+| :-- | :-- | :-- |
+| `firstName` | Legal first name | Yes |
+| `lastName` | Legal last name | Yes |
+| `dateOfBirth` | Date of birth (YYYY-MM-DD) | Yes |
+| `email` | Contact email address | Yes |
+| `phoneNumber` | Phone number with country code | Yes |
+| `physicalAddress` | Residential address (line1, city, state, postalCode, country) | Yes |
+| `taxId` | Tax identification number in the user's country | Yes |
+| `taxIdType` | Tax identification number (e.g. SSN, ITIN) | No |
+| `taxIdCountry` | Tax identification number issuance country | No |
+| `nationality` | Type of government ID (e.g. PASSPORT, DRIVERS\_LICENSE) | Yes |
+
+{/* TODO: Replace with the actual field list and requirement rules — 
+  requirements may vary by country/corridor */}
+
+### Documentation
+
+For more details check [Documents](/v3/core/compliance/documents)
+
+| Document Group | Accepted Type | Required |
+| :-- | --- | :-- |
+| `identity` | `DRIVERS`, `ID_CARD`, `PASSPORT`, `RESIDENCE_PERMIT` | Yes |
+| `proofOfResidence` | `UTILITY_BILL`, `BANK_STATEMENT`, `RENTAL_AGREEMENT`, `TAX_DOCUMENT`, `VOTER_REGISTRATION_CARD`, `BANK_REFERENCE_LETTER`, `LEASE_OR_TENANCY_AGREEMENT`, `PROOF_OF_ADDRESS` | Yes\* |
+
+{/* TODO: Confirm which documents are required vs. conditional */}
+
+<Tip>
+  For US and Canadian users, proof of address is optional if a driver's license, national ID, or resident permit is submitted as the government-issued ID.
+</Tip>
+
+## Questionnaire (Optional)
+
+| Field | Description |
+| :-- | :-- |
+| `employmentStatus` | The user's current employment status |
+| `sourceOfFunds` | The primary source of the user's funds |
+| `primaryPurpose` | The user's primary purpose for using the platform |
+| `expectedMonthlyTransactionVolume` | Expected monthly transaction volume in USD |
+| `expectedMonthlyTransactionCount` | Expected number of transactions per month |
+| `highRiskActivities` | Any high-risk activities the user engages in |
+| `actsOnBehalfOfThirdParty` | Whether the user acts on behalf of a third party |
+| `actsOnBehalfOfThirdPartyDetails` | Details about the third party, if applicable |
+
+## Example: Full KYC Flow
+
+<Steps>
+  <Step title="Update compliance profile">
+    Update user's non-documentary information
+
+    **Request**
+
+    ```shellscript
+    curl -X PATCH "https://sandbox.hifi.com/v3/users/usr_4o0ZDdLcfxmB6OyzUEVNq/compliance/profile" \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "firstName": "Henry",
+        "lastName": "Wu",
+        "dateOfBirth": "1998-03-29",
+        "email": "henry@hifi.com",
+        "phoneNumber": "+18572719480",
+        "physicalAddress": {
+            "addressLine1": "Example St 1.",
+            "city": "Hoboken",
+            "stateProvinceRegion": "NJ",
+            "postalCode": "07030",
+            "country": "USA"
+        },
+        "taxId": "23423123",
+        "nationality": "USA",
+      }'
+    ```
+
+    **Response**
+
+    ```json
+    {
+        "userId": "usr_4o0ZDdLcfxmB6OyzUEVNq",
+        "type": "INDIVIDUAL",
+        "firstName": "Henry",
+        "middleName": null,
+        "lastName": "Wu",
+        "nationality": "USA",
+        "email": "henry@hifi.com",
+        "phoneNumber": "*******9480",
+        "physicalAddress": {
+            "addressLine1": "Example St 1.",
+            "addressLine2": null,
+            "city": "Hoboken",
+            "stateProvinceRegion": "NJ",
+            "postalCode": "07030",
+            "country": "USA"
+        },
+        "dateOfBirth": "1998-03-29",
+        "gender": null,
+        "taxId": "****3123",
+        "taxIdType": null,
+        "taxIdCountry": null,
+        "createdAt": "2026-07-13T22:12:26.802Z",
+        "updatedAt": "2026-07-13T22:12:37.242Z"
+    }
+    ```
+  </Step>
+  <Step title="Add Documentation">
+    Upload the documentation to fulfill both the ID and proof of address requirements
+
+    <Info>
+      Use the File endpoint to upload the file first, then add the documentation to the user with the returned file ID (e.g. `file_xxxxxxxxxxxx`).
+    </Info>
+
+    #### Government Issued ID
+
+    **Request**
+
+    ```shellscript
+    curl -X PATCH "https://sandbox.hifi.com/v3/users/usr_4o0ZDdLcfxmB6OyzUEVNq/compliance/documents" \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "type": "PASSPORT",
+        "subType": "SINGLE_SIDE",
+        "issuedCountry": "USA",
+        "issuedDate": "2024-05-04", // optional
+        "expiryDate": "2030-05-04", // optional
+        "fileId": "file_O8A1X7gCKoYxlb2aMYYzK"
+      }'
+    ```
+
+    **Response**
+
+    ```json
+    {
+        "id": "doc_lPeFxGI2dAVFvLV2g7b33",
+        "userId": "usr_TpCyt0c8PeZveAsmddulu",
+        "associatedPartyId": null,
+        "type": "PASSPORT",
+        "subType": "SINGLE_SIDE",
+        "issuedCountry": "USA",
+        "issuedDate": "2024-05-04",
+        "expiryDate": "2030-05-04",
+        "number": null,
+        "fileId": "file_O8A1X7gCKoYxlb2aMYYzK",
+        "description": null,
+        "isValid": null,
+        "message": null,
+        "createdAt": "2026-07-13T22:13:44.870Z",
+        "updatedAt": "2026-07-13T22:13:44.870Z"
+    }
+    ```
+
+    <Info>
+      If the document has two sides, submit both, using `FRONT_SIDE` and `BACK_SIDE` for the `subType`.
+    </Info>
+
+    #### Proof of Address
+
+    **Request**
+
+    ```shellscript
+    curl -X PATCH "https://sandbox.hifi.com/v3/users/usr_4o0ZDdLcfxmB6OyzUEVNq/compliance/documents" \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "type": "UTILITY_BILL",
+        "subType": "SINGLE_SIDE",
+        "issuedCountry": "USA",
+        "issuedDate": "2024-05-04", // optional
+        "expiryDate": "2030-05-04", // optional
+        "fileId": "file_ofidSSDFHS7538ffbje9"
+      }'
+    ```
+
+    **Response**
+
+    ```json
+    {
+        "id": "doc_lPeFxGI2dAVFvLV2g7b33",
+        "userId": "usr_TpCyt0c8PeZveAsmddulu",
+        "associatedPartyId": null,
+        "type": "UTILITY_BILL",
+        "subType": "SINGLE_SIDE",
+        "issuedCountry": "USA",
+        "issuedDate": "2024-05-04",
+        "expiryDate": "2030-05-04",
+        "number": null,
+        "fileId": "file_ofidSSDFHS7538ffbje9",
+        "description": null,
+        "isValid": null,
+        "message": null,
+        "createdAt": "2026-07-13T22:13:44.870Z",
+        "updatedAt": "2026-07-13T22:13:44.870Z"
+    }
+    ```
+
+    <Tip>
+      For US and Canadian users, if a driver's license, national ID, or resident permit has already been submitted as the government-issued ID, no additional proof of address is needed.
+    </Tip>
+  </Step>
+  <Step title="Update Questionnaire (optional)">
+    **Request**
+
+    ```shellscript
+    curl -X PATCH "https://sandbox.hifi.com/v3/users/usr_4o0ZDdLcfxmB6OyzUEVNq/compliance/questionnaire" \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "employmentStatus": "employed",
+        "sourceOfFunds": "employment_income",
+        "primaryPurpose": "goods_and_services",
+        "expectedMonthlyTransactionVolume": "0_20000",
+        "expectedMonthlyTransactionCount": "10_100",
+        "highRiskActivities": ["none"],
+        "actsOnBehalfOfThirdParty": true,
+        "actsOnBehalfOfThirdPartyDetails": "blah blah blah"
+      }'
+    ```
+
+    **Response**
+
+    ```json
+    {
+        "userId": "usr_TpCyt0c8PeZveAsmddulu",
+        "type": "INDIVIDUAL",
+        "employmentStatus": "employed",
+        "expectedMonthlyTransactionVolume": "0_20000",
+        "expectedMonthlyTransactionCount": "10_100",
+        "highRiskActivities": [
+            "none"
+        ],
+        "primaryPurpose": "goods_and_services",
+        "primaryPurposeDetails": null,
+        "sourceOfFunds": "employment_income",
+        "sourceOfFundsDetails": null,
+        "actsOnBehalfOfThirdParty": true,
+        "actsOnBehalfOfThirdPartyDetails": "blah blah blah",
+        "createdAt": "2026-07-13T22:12:26.766Z",
+        "updatedAt": "2026-07-13T22:12:41.585Z"
+    }
+    ```
+  </Step>
+  <Step title="Submit compliance information for check">
+    Once all the required information are updated, submit the application for compliance review
+
+    **Request**
+
+    ```shellscript
+    curl -X PATCH "https://sandbox.hifi.com/v3/users/usr_4o0ZDdLcfxmB6OyzUEVNq/compliance/check" \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+    ```
+
+    **Response**
+
+    ```json
+    {
+        "userId": "usr_TpCyt0c8PeZveAsmddulu",
+        "complianceStatus": "PENDING",
+        "message": null,
+        "rfiActions": []
+    }
+    ```
+  </Step>
+  <Step title="Get the KYC status ">
+    Listen to our webhook or polling the user's compliance status
+
+    **Request**
+
+    ```shellscript
+    curl -X GET "https://sandbox.hifi.com/v3/users/usr_9RJb0KUrhugQ7uMZL5UML/compliance/status" \
+      -H "Authorization: Bearer YOUR_API_KEY"
+    ```
+
+    **Response**
+
+    ```json
+    {
+        "userId": "usr_TpCyt0c8PeZveAsmddulu",
+        "complianceStatus": "APPROVED",
+        "message": null,
+        "rfiActions": []
+    }
+    ```
+  </Step>
+</Steps>
+
+## Expected Behavior
+
+After submission, the application moves through the following statuses:
+
+| Status | Description |
+| :-- | :-- |
+| `NOT_SUBMITTED` | Compliance check has not been requested yet |
+| `PENDING` | Application has been submitted and is awaiting review |
+| `IN_REVIEW` | Application is currently being reviewed by the compliance team |
+| `APPROVED` | Application has been approved by our compliance team |
+| `REJECTED` | Application has been rejected by our compliance team |
+| `REQUIRES_INFO` | Applicant's compliance data requires updates before resubmitting |
+
+## Sandbox Magic Values
+
+In sandbox, you can trigger specific KYC outcomes by using the following values, allowing you to test each path without waiting for a real review:
+
+| Field | Value | Result |
+| :-- | :-- | :-- |
+| `firstName` | Application is `APPROVED` |  |
+|  | `firstName` | Application is `REJECTED` |
+| `firstName` | Application returns `REQUIRES_INFO` |  |
+
+{/* TODO: Replace with HIFI's actual magic values — commonly these are 
+  special names, SSNs, or DOBs that deterministically trigger each status */}
+
+## Getting Help
+
+- 📧 **Email:** [support@hifi.com](mailto:support@hifi.com)
+- 💬 **Slack:** Message us in our shared Slack channel
+
+## Related Resources
+
+- [User Overview](/docs/users/overview) - User types and creation
+- [KYB (Business)](/docs/users/kyb) - Business verification requirements
+- [Virtual Accounts](/docs/accounts/virtual-accounts) - Set up fiat deposit accounts
+- [API Reference: Compliance](https://docs.hifi.com/api-reference/...) - Complete endpoint documentation
