@@ -330,19 +330,35 @@ After submission, the application can be in different state
 
     For more details, check the `rfiActions` field after calling GET `/v3/users/:user_id/compliance/status`.
 
+    **Example**
+
+    ```json
+    {
+        "userId": "usr_CchuBDCeCm1FvoEWWl6rw",
+        "complianceStatus": "REQUIRES_INFO",
+        "onboardingStatus": "NOT_STARTED",
+        "message": "Enter your full name exactly as it appears on your identity document.",
+        "rfiActions": [
+            {
+                "type": "UPDATE_PROFILE",
+                "fields": [
+                    "firstName",
+                    "lastName"
+                ],
+                "message": "Please update the full name in your profile to match the document."
+            },
+            {
+                "type": "UPLOAD_DOCUMENT",
+                "message": "Please upload the document including the expiration date page.",
+                "documentId": "doc_pu0aoLYYTST8xxewiyblK"
+            }
+        ]
+    }
+    ```
+
     Update the information, then use POST `/v3/users/:user_id/compliance/submit `to submit the application again.
   </Accordion>
 </AccordionGroup>
-
-## Sandbox Magic Values
-
-In sandbox, you can trigger specific KYC outcomes by using the following values, allowing you to test each path without waiting for a real review:
-
-| Field | Value | Result |
-| :-- | :-- | :-- |
-| `firstName` | Application is `APPROVED` |  |
-|  | `firstName` | Application is `REJECTED` |
-| `firstName` | Application returns `REQUIRES_INFO` |  |
 
 {/* TODO: Replace with HIFI's actual magic values — commonly these are 
   special names, SSNs, or DOBs that deterministically trigger each status */}
@@ -354,7 +370,7 @@ In sandbox, you can trigger specific KYC outcomes by using the following values,
 
 ## Related Resources
 
-- [User Overview](/docs/users/overview) - User types and creation
-- [KYB (Business)](/docs/users/kyb) - Business verification requirements
-- [Virtual Accounts](/docs/accounts/virtual-accounts) - Set up fiat deposit accounts
-- [API Reference: Compliance](https://docs.hifi.com/api-reference/...) - Complete endpoint documentation
+- [User Overview](/v3/core/users/overview) - User types and creation
+- [KYB (Business)](/v3/core/compliance/kyb) - Business verification requirements
+- Virtual Accounts - Set up fiat deposit accounts
+- API Reference: Compliance - Complete endpoint documentation
