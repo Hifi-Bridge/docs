@@ -296,16 +296,43 @@ For more details check [Documents](/v3/core/compliance/documents)
 
 ## Expected Behavior
 
-After submission, the application moves through the following statuses:
+After submission, the application can be in different state
 
-| Status | Description |
-| :-- | :-- |
-| `NOT_SUBMITTED` | Compliance check has not been requested yet |
-| `PENDING` | Application has been submitted and is awaiting review |
-| `IN_REVIEW` | Application is currently being reviewed by the compliance team |
-| `APPROVED` | Application has been approved by our compliance team |
-| `REJECTED` | Application has been rejected by our compliance team |
-| `REQUIRES_INFO` | Applicant's compliance data requires updates before resubmitting |
+<AccordionGroup>
+  <Accordion title="APPROVED">
+    No additional action is needed — the user has already passed HIFI's compliance check.
+
+    **What's next:**
+
+    Wait for corridor functionality to be unlocked for the user. The timing may vary, and based on the customer profile, the user may not be eligible for all corridors.
+  </Accordion>
+
+  <Accordion title="PENDING">
+    No action required — the information has been uploaded and is awaiting processing.
+  </Accordion>
+
+  <Accordion title="IN_REVIEW">
+    The application is currently under review by our compliance team.
+
+    **What you can expect:**
+
+    - An RFI may be sent to your compliance mailbox requesting additional information
+    - The status may move to `REQUIRES_INFO` after our compliance check — use GET `/v3/users/:user_id/compliance/status` to see what additional information is required
+    - The status may move to `REJECTED` or `APPROVED` when a final decision is made by our compliance team
+  </Accordion>
+
+  <Accordion title="REJECTED">
+    Our compliance team has determined that we cannot onboard this user. Reach out to our support team for more information.
+  </Accordion>
+
+  <Accordion title="REQUIRES_INFO">
+    Our compliance team has requested updates to the applicant's data before resubmission. Common reasons include: a mismatched address on the proof of address, blurry documentation, or an incorrectly formatted document.
+
+    For more details, check the `rfiActions` field after calling GET `/v3/users/:user_id/compliance/status`.
+
+    Update the information, then use POST `/v3/users/:user_id/compliance/submit `to submit the application again.
+  </Accordion>
+</AccordionGroup>
 
 ## Sandbox Magic Values
 
