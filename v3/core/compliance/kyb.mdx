@@ -122,7 +122,7 @@ Each UBO or person with significant control of the business must be added as an 
 
     ```json
     {
-        "userId": "usr_pIntMywTz8LM3Y7rT8Gjd",
+        "userId": "usr_8kL2MdPcfxmB6OyzXWQNr",
         "type": "BUSINESS",
         "businessName": "Random Bizz",
         "businessDescription": "move money",
@@ -184,7 +184,6 @@ Each UBO or person with significant control of the business must be added as an 
         "type": "STATE_REGISTRY",
         "subType": "SINGLE_SIDE",
         "issuedCountry": "USA",
-        "issuedDate": "2020-01-15",
         "fileId": "file_O8A1X7gCKoYxlb2aMYYzK"
       }'
     ```
@@ -194,7 +193,7 @@ Each UBO or person with significant control of the business must be added as an 
     ```json
     {
         "id": "doc_SRcWjbyyP3o6Fx643rxyM",
-        "userId": "usr_pIntMywTz8LM3Y7rT8Gjd",
+        "userId": "usr_8kL2MdPcfxmB6OyzXWQNr",
         "associatedPartyId": null,
         "type": "STATE_REGISTRY",
         "subType": "SINGLE_SIDE",
@@ -223,7 +222,6 @@ Each UBO or person with significant control of the business must be added as an 
         "type": "UTILIT_BILL",
         "subType": "SINGLE_SIDE",
         "issuedCountry": "USA",
-        "issuedDate": "2020-01-15",
         "fileId": "file_9r3hAF930FHS3853"
       }'
     ```
@@ -233,7 +231,7 @@ Each UBO or person with significant control of the business must be added as an 
     ```json
     {
         "id": "doc_20450GHDGIEo6Fse3FE",
-        "userId": "usr_pIntMywTz8LM3Y7rT8Gjd",
+        "userId": "usr_8kL2MdPcfxmB6OyzXWQNr",
         "associatedPartyId": null,
         "type": "UTILIT_BILL",
         "subType": "SINGLE_SIDE",
@@ -276,7 +274,7 @@ Each UBO or person with significant control of the business must be added as an 
 
     ```json
     {
-        "userId": "usr_pIntMywTz8LM3Y7rT8Gjd",
+        "userId": "usr_8kL2MdPcfxmB6OyzXWQNr",
         "type": "BUSINESS",
         "annualRevenue": "250000000_plus",
         "expectedMonthlyTransactionVolume": "20000000_plus",
@@ -338,7 +336,7 @@ Each UBO or person with significant control of the business must be added as an 
     ```json
     {
         "id": "ap_PafbCNYpvOBnkr1U01BYI",
-        "userId": "usr_pIntMywTz8LM3Y7rT8Gjd",
+        "userId": "usr_8kL2MdPcfxmB6OyzXWQNr",
         "type": "INDIVIDUAL",
         "roles": [
             "UBO"
@@ -384,7 +382,7 @@ Each UBO or person with significant control of the business must be added as an 
     **Request**
 
     ```shellscript
-    curl -X POST "https://sandbox.hifi.com/v3/users/usr_4o0ZDdLcfxmB6OyzUEVNq/compliance/associated-parties/ap_PafbCNYpvOBnkr1U01BYI/documents" \
+    curl -X POST "https://sandbox.hifi.com/v3/users/usr_8kL2MdPcfxmB6OyzXWQNr/compliance/associated-parties/ap_PafbCNYpvOBnkr1U01BYI/documents" \
       -H "Authorization: Bearer YOUR_API_KEY" \
       -H "Content-Type: application/json" \
       -d '{
@@ -400,13 +398,13 @@ Each UBO or person with significant control of the business must be added as an 
     ```json
     {
         "id": "doc_lPeFxGI2dAVFvLV2g7b33",
-        "userId": "usr_TpCyt0c8PeZveAsmddulu",
-        "associatedPartyId": null,
+        "userId": "usr_8kL2MdPcfxmB6OyzXWQNr",
+        "associatedPartyId": "ap_PafbCNYpvOBnkr1U01BYI",
         "type": "PASSPORT",
         "subType": "SINGLE_SIDE",
         "issuedCountry": "USA",
-        "issuedDate": "2024-05-04",
-        "expiryDate": "2030-05-04",
+        "issuedDate": null,
+        "expiryDate": null,
         "number": null,
         "fileId": "file_O8A1X7gCKoYxlb2aMYYzK",
         "description": null,
@@ -426,7 +424,7 @@ Each UBO or person with significant control of the business must be added as an 
     **Request**
 
     ```shellscript
-    curl -X POST "https://sandbox.hifi.com/v3/users/usr_4o0ZDdLcfxmB6OyzUEVNq/compliance/associated-parties/ap_PafbCNYpvOBnkr1U01BYI/documents" \
+    curl -X POST "https://sandbox.hifi.com/v3/users/usr_8kL2MdPcfxmB6OyzXWQNr/compliance/associated-parties/ap_PafbCNYpvOBnkr1U01BYI/documents" \
       -H "Authorization: Bearer YOUR_API_KEY" \
       -H "Content-Type: application/json" \
       -d '{
@@ -442,13 +440,13 @@ Each UBO or person with significant control of the business must be added as an 
     ```json
     {
         "id": "doc_lPeFxGI2dAVFvLV2g7b33",
-        "userId": "usr_TpCyt0c8PeZveAsmddulu",
-        "associatedPartyId": null,
+        "userId": "usr_8kL2MdPcfxmB6OyzXWQNr",
+        "associatedPartyId": "ap_PafbCNYpvOBnkr1U01BYI",
         "type": "UTILITY_BILL",
         "subType": "SINGLE_SIDE",
         "issuedCountry": "USA",
-        "issuedDate": "2024-05-04",
-        "expiryDate": "2030-05-04",
+        "issuedDate": null,
+        "expiryDate": null,
         "number": null,
         "fileId": "file_ofidSSDFHS7538ffbje9",
         "description": null,
@@ -468,7 +466,7 @@ Each UBO or person with significant control of the business must be added as an 
 
     **Request**
 
-    ```bash
+    ```shellscript
     curl -X PATCH "https://sandbox.hifi.com/v3/users/usr_8kL2MdPcfxmB6OyzXWQNr/compliance/check" \
           -H "Authorization: Bearer YOUR_API_KEY"
     ```
@@ -476,12 +474,12 @@ Each UBO or person with significant control of the business must be added as an 
     **Response**
 
     ```json
-        {
-            "userId": "usr_8kL2MdPcfxmB6OyzXWQNr",
-            "complianceStatus": "PENDING",
-            "message": null,
-            "rfiActions": []
-        }
+    {
+        "userId": "usr_8kL2MdPcfxmB6OyzXWQNr",
+        "complianceStatus": "PENDING",
+        "message": null,
+        "rfiActions": []
+    }
     ```
   </Step>
   <Step title="Get the KYB status">
@@ -489,20 +487,20 @@ Each UBO or person with significant control of the business must be added as an 
 
     **Request**
 
-    ```bash
-        curl -X GET "https://sandbox.hifi.com/v3/users/usr_8kL2MdPcfxmB6OyzXWQNr/compliance/status" \
-          -H "Authorization: Bearer YOUR_API_KEY"
+    ```shell
+    curl -X GET "https://sandbox.hifi.com/v3/users/usr_8kL2MdPcfxmB6OyzXWQNr/compliance/status" \
+      -H "Authorization: Bearer YOUR_API_KEY"
     ```
 
     **Response**
 
     ```json
-        {
-            "userId": "usr_8kL2MdPcfxmB6OyzXWQNr",
-            "complianceStatus": "APPROVED",
-            "message": null,
-            "rfiActions": []
-        }
+    {
+        "userId": "usr_8kL2MdPcfxmB6OyzXWQNr",
+        "complianceStatus": "APPROVED",
+        "message": null,
+        "rfiActions": []
+    }
     ```
   </Step>
 </Steps>
@@ -536,8 +534,6 @@ After submission, the application can be in different states
     <Info>
       KYB reviews typically take longer than individual KYC due to the additional entity and associated party verification.
     </Info>
-
-    {/* TODO: Confirm typical KYB review timing and adjust or remove the note */}
   </Accordion>
 
   <Accordion title="REJECTED">
@@ -552,33 +548,54 @@ After submission, the application can be in different states
     **Example**
 
     ```json
-        {
-            "userId": "usr_8kL2MdPcfxmB6OyzXWQNr",
-            "complianceStatus": "REQUIRES_INFO",
-            "onboardingStatus": "NOT_STARTED",
-            "message": "The ownership information provided does not match the shareholder register.",
-            "rfiActions": [
-                {
-                    "type": "UPDATE_ASSOCIATED_PARTY",
-                    "associatedPartyId": "apt_kF9sLm2QwXcVbN3yTzR8p",
-                    "fields": [
-                        "ownershipPercentage"
-                    ],
-                    "message": "Please update the ownership percentage to match the shareholder register."
-                },
-                {
-                    "type": "UPLOAD_DOCUMENT",
-                    "message": "Please upload a complete shareholder register including all pages.",
-                    "documentId": "doc_pu0aoLYYTST8xxewiyblK"
-                }
-            ]
-        }
+    {
+        "userId": "usr_8kL2MdPcfxmB6OyzXWQNr",
+        "complianceStatus": "REQUIRES_INFO",
+        "message": "The ownership information provided does not match the shareholder register.",
+        "rfiActions": [
+            {
+                "type": "UPDATE_PROFILE",
+                "associatedPartyId": "apt_kF9sLm2QwXcVbN3yTzR8p",
+                "fields": [
+                    "ownershipPercentage"
+                ],
+                "message": "Please update the ownership percentage to match the shareholder register."
+            },
+            {
+                "type": "UPDATE_PROFILE",
+                "fields": [
+                    "registrationNumber"
+                ],
+                "message": "Please update the business registration number to match the document."
+            },
+            {
+                "type": "UPLOAD_DOCUMENT",
+                "message": "Please upload a complete shareholder register including all pages.",
+                "documentId": "doc_pu0aoLYYTST8xxewiyblK"
+            },
+            {
+                "type": "UPLOAD_DOCUMENT",
+                "associatedPartyId": "apt_kF9sLm2QwXcVbN3yTzR8p",
+                "message": "Please upload a complete shareholder register including all pages.",
+                "documentId": "doc_puDSeif893FEyblK"
+            }
+        ]
+    }
     ```
 
-    Update the information, then use POST `/v3/users/:user_id/compliance/submit` to submit the application again.
+    **Breaksdown**
 
-    {/* TODO: Confirm UPDATE_ASSOCIATED_PARTY is a real rfiAction type and
-  replace the example with real sandbox output */}
+    For the above example, there are 2 update requirements for the business information — these come in objects that do not include an `associatedPartyId`:
+
+    - `UPDATE_PROFILE`: registrationNumber
+    - `UPLOAD_DOCUMENT`: `doc_pu0aoLYYTST8xxewiyblK`
+
+    On top of that, there are also 2 update requirements for the associated party `apt_kF9sLm2QwXcVbN3yTzR8p` that needs updates:
+
+    - `UPDATE_PROFILE`: ownershipPercentage
+    - `UPLOAD_DOCUMENT`: `doc_puDSeif893FEyblK`
+
+    Update the information, then use POST `/v3/users/:user_id/compliance/submit` to submit the application again.
   </Accordion>
 </AccordionGroup>
 
@@ -588,10 +605,9 @@ When a submitted application needs updated information, the status transitions t
 
 | Type | Action |
 | :-- | :-- |
-| `UPDATE_PROFILE` | Update the business's profile information before resubmission — a common reason is information that doesn't match the submitted documentation. |
-| `UPDATE_ASSOCIATED_PARTY` | Update the associated party's information before resubmission — a common reason is ownership or identity details that don't match the submitted documentation. See [Associated Parties](/v3/core/compliance/associated-parties). |
-| `UPLOAD_DOCUMENT` | Update the user's documentation before resubmission — common reasons include expired, blurry, or unqualified documents. |
-| `UPDATE_QUESTIONNAIRE` | Update the user's questionnaire before resubmission |
+| `UPDATE_PROFILE` | Update the business's or associated party's profile information before resubmission — a common reason is information that doesn't match the submitted documentation. |
+| `UPLOAD_DOCUMENT` | Update the business's or associated party's documentation before resubmission — common reasons include expired, blurry, or unqualified documents. |
+| `UPDATE_QUESTIONNAIRE` | Update the business's questionnaire before resubmission |
 
 {/* TODO: Confirm the full list of rfiAction types for business users */}
 
