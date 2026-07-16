@@ -1,3 +1,248 @@
 ---
-title: "Associated Party"
+title: "Associated Parties"
+description: "For business users, each UBO (ultimate beneficial owner) or person with significant control of the business must be added as an associated party and verified as part of HIFI's KYB check."
 ---
+
+## Information Required
+
+Different information is required for verification, including both non-documentary and documentary checks. Each associated party requires their own profile and identity documentation.
+
+### Profile
+
+| Field | Description | Required |
+| :-- | :-- | :-- |
+| `firstName` | Legal first name | Yes |
+| `lastName` | Legal last name | Yes |
+| `dateOfBirth` | Date of birth (YYYY-MM-DD) | Yes |
+| `email` | Contact email address | Yes |
+| `phoneNumber` | Phone number with country code | Yes |
+| `physicalAddress` | Residential address (line1, city, state, postalCode, country) | Yes |
+| `taxId` | Tax identification number in the party's country | Yes |
+| `taxIdType` | Tax identification number type (e.g. SSN, ITIN) | No |
+| `taxIdCountry` | Tax identification number issuance country | No |
+| `nationality` | Nationality of the associated party | Yes |
+| `shareProportion` | Percentage of the business owned by this party | Yes |
+| `relationshipEstablishedAt` | Date the party's relationship with the business was established (YYYY-MM-DD) | Yes |
+
+{/* TODO: Replace with the actual field list and requirement rules, and
+  confirm whether shareProportion and relationshipEstablishedAt are required */}
+
+### Documentation
+
+For more details check [Documents](/v3/core/compliance/documents)
+
+| Document Group | Accepted Type | Required |
+| :-- | :-- | :-- |
+| `identity` | `DRIVERS`, `ID_CARD`, `PASSPORT`, `RESIDENCE_PERMIT` | Yes |
+| `proofOfResidence` | `UTILITY_BILL`, `BANK_STATEMENT`, `RENTAL_AGREEMENT`, `TAX_DOCUMENT`, `VOTER_REGISTRATION_CARD`, `BANK_REFERENCE_LETTER`, `LEASE_OR_TENANCY_AGREEMENT`, `PROOF_OF_ADDRESS` | Yes\* |
+
+{/* TODO: Confirm the document groups for associated parties match the
+  individual KYC groups, and which are required vs. conditional */}
+
+<Tip>
+  For US and Canadian associated parties, proof of address is optional if a driver's license, national ID, or resident permit is submitted as the government-issued ID.
+</Tip>
+
+## Example: Add an Associated Party
+
+<Steps>
+  <Step title="Add the associated party">
+    Add the party's non-documentary information to the business user
+
+    **Request**
+
+    ```shell
+    curl -X POST "https://sandbox.hifi.com/v3/users/usr_8kL2MdPcfxmB6OyzXWQNr/compliance/associated-parties" \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "firstName": "Henry",
+        "lastName": "Wu",
+        "dateOfBirth": "1998-03-29",
+        "email": "henry@hifi.com",
+        "phoneNumber": "+18572719480",
+        "physicalAddress": {
+            "addressLine1": "Example St 1.",
+            "city": "Hoboken",
+            "stateProvinceRegion": "NJ",
+            "postalCode": "07030",
+            "country": "USA"
+        },
+        "taxId": "23423123",
+        "nationality": "USA",
+        "shareProportion": 30,
+        "relationshipEstablishedAt": "2022-03-22"
+      }'
+    ```
+
+    **Response**
+
+    ```json
+    {
+        "id": "ap_kF9sLm2QwXcVbN3yTzR8p",
+        "userId": "usr_8kL2MdPcfxmB6OyzXWQNr",
+        "firstName": "Henry",
+        "middleName": null,
+        "lastName": "Wu",
+        "nationality": "USA",
+        "email": "henry@hifi.com",
+        "phoneNumber": "*******9480",
+        "physicalAddress": {
+            "addressLine1": "Example St 1.",
+            "addressLine2": null,
+            "city": "Hoboken",
+            "stateProvinceRegion": "NJ",
+            "postalCode": "07030",
+            "country": "USA"
+        },
+        "dateOfBirth": "1998-03-29",
+        "taxId": "****3123",
+        "taxIdType": null,
+        "taxIdCountry": null,
+        "shareProportion": 30,
+        "relationshipEstablishedAt": "2022-03-22",
+        "createdAt": "2026-07-14T18:03:12.114Z",
+        "updatedAt": "2026-07-14T18:03:12.114Z"
+    }
+    ```
+  </Step>
+  <Step title="Add Documentation">
+    Upload the documentation to fulfill the party's identity and proof of address requirements, using the `associatedPartyId` returned in the previous step
+
+    <Info>
+      Use the File endpoint to upload the file first, then add the documentation to the user with the returned file ID (e.g. `file_xxxxxxxxxxxx`).
+    </Info>
+
+    #### Government Issued ID
+
+    **Request**
+
+    ```shellscript
+    curl -X POST "https://sandbox.hifi.com/v3/users/usr_8kL2MdPcfxmB6OyzXWQNr/compliance/associated-parties/ap_kF9sLm2QwXcVbN3yTzR8p/documents" \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "type": "PASSPORT",
+        "subType": "SINGLE_SIDE",
+        "issuedCountry": "USA",
+        "issuedDate": "2024-05-04", // optional
+        "expiryDate": "2030-05-04", // optional
+        "fileId": "file_O8A1X7gCKoYxlb2aMYYzK"
+      }'
+    ```
+
+    **Response**
+
+    ```json
+    {
+        "id": "doc_lPeFxGI2dAVFvLV2g7b33",
+        "userId": "usr_8kL2MdPcfxmB6OyzXWQNr",
+        "associatedPartyId": "ap_kF9sLm2QwXcVbN3yTzR8p",
+        "type": "PASSPORT",
+        "subType": "SINGLE_SIDE",
+        "issuedCountry": "USA",
+        "issuedDate": "2024-05-04",
+        "expiryDate": "2030-05-04",
+        "number": null,
+        "fileId": "file_O8A1X7gCKoYxlb2aMYYzK",
+        "description": null,
+        "isValid": null,
+        "message": null,
+        "createdAt": "2026-07-13T22:13:44.870Z",
+        "updatedAt": "2026-07-13T22:13:44.870Z"
+    }
+    ```
+
+    <Info>
+      If the document has two sides, submit both, using `FRONT_SIDE` and `BACK_SIDE` for the `subType`.
+    </Info>
+
+    #### Proof of Address
+
+    **Request**
+
+    ```shellscript
+    curl -X POST "https://sandbox.hifi.com/v3/users/usr_8kL2MdPcfxmB6OyzXWQNr/compliance/associated-parties/ap_kF9sLm2QwXcVbN3yTzR8p/documents" \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "type": "UTILITY_BILL",
+        "subType": "SINGLE_SIDE",
+        "issuedCountry": "USA",
+        "issuedDate": "2024-05-04", // optional
+        "expiryDate": "2030-05-04", // optional
+        "fileId": "file_ofidSSDFHS7538ffbje9"
+      }'
+    ```
+
+    **Response**
+
+    ```json
+    {
+        "id": "doc_lPeFxGI2dAVFvLV2g7b33",
+        "userId": "usr_8kL2MdPcfxmB6OyzXWQNr",
+        "associatedPartyId": "ap_kF9sLm2QwXcVbN3yTzR8p",
+        "type": "UTILITY_BILL",
+        "subType": "SINGLE_SIDE",
+        "issuedCountry": "USA",
+        "issuedDate": "2024-05-04",
+        "expiryDate": "2030-05-04",
+        "number": null,
+        "fileId": "file_ofidSSDFHS7538ffbje9",
+        "description": null,
+        "isValid": null,
+        "message": null,
+        "createdAt": "2026-07-13T22:13:44.870Z",
+        "updatedAt": "2026-07-13T22:13:44.870Z"
+    }
+    ```
+
+    <Tip>
+      For US and Canadian users, if a driver's license, national ID, or resident permit has already been submitted as the government-issued ID, no additional proof of address is needed.
+    </Tip>
+  </Step>
+</Steps>
+
+Associated parties are verified as part of the business's KYB application — they do not have a separate compliance status. Once all parties are added, submit the business's application and track its status as described in [KYB (Business)](/v3/core/compliance/kyb).
+
+If an associated party's information needs updating, the business's application will move to `REQUIRES_INFO` with an `UPDATE_ASSOCIATED_PARTY` action in the `rfiActions` field, including the `associatedPartyId` and the fields to correct.
+
+**Example**
+
+```json
+{
+    "userId": "usr_8kL2MdPcfxmB6OyzXWQNr",
+    "complianceStatus": "REQUIRES_INFO",
+    "message": "The ownership information provided does not match the shareholder register.",
+    "rfiActions": [
+        {
+            "type": "UPDATE_PROFILE",
+            "associatedPartyId": "apt_kF9sLm2QwXcVbN3yTzR8p",
+            "fields": [
+                "ownershipPercentage"
+            ],
+            "message": "Please update the ownership percentage to match the shareholder register."
+        },
+        {
+            "type": "UPLOAD_DOCUMENT",
+            "associatedPartyId": "apt_kF9sLm2QwXcVbN3yTzR8p",
+            "message": "Please upload a complete shareholder register including all pages.",
+            "documentId": "doc_puDSeif893FEyblK"
+        }
+    ]
+}
+```
+
+{/* TODO: Confirm this is how associated party issues surface in rfiActions */}
+
+## Getting Help
+
+- 📧 **Email:** [support@hifi.com](mailto:support@hifi.com)
+- 💬 **Slack:** Message us in our shared Slack channel
+
+## Related Resources
+
+- [KYB (Business)](/v3/core/compliance/kyb) - Business verification requirements
+- [KYC (Individual)](/v3/core/compliance/kyc) - Individual verification requirements
+- [Documents](/v3/core/compliance/documents) - Document types and upload details
+- API Reference: Compliance - Complete endpoint documentation
