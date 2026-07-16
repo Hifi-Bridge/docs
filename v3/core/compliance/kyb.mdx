@@ -1,3 +1,609 @@
 ---
-title: "KYB"
+title: "KYB (Business)"
+description: "To comply with financial regulations, HIFI enforces KYB (Know Your Business) checks before a business User can receive funds from fiat (onramps), pay out to fiat (offramps), or access other financial products offered by HIFI."
 ---
+
+## Components of a KYB Application
+
+A KYB application consists of information about the business itself and each of its associated parties.
+
+<Columns cols={2}>
+  <Card title="Business" icon="building">
+    - Profile
+    - Documentation
+    - Questionnaire
+  </Card>
+
+  <Card title="Associated Parties" icon="users">
+    Each UBO or control person requires their own:
+
+    - Profile
+    - Documentation
+  </Card>
+</Columns>
+
+## Information Required
+
+Different information is required for verification, including both non-documentary and documentary checks. For business users, associated party and ultimate beneficial owner (UBO) information is required in addition to the company information.
+
+### Profile
+
+| Field | Description | Required |
+| :-- | :-- | :-- |
+| `businessName` | Legal name of the business | Yes |
+| `businessDescription` | Description of the business activities | Yes |
+| `email` | Contact email address | Yes |
+| `phoneNumber` | Phone number with country code | Yes |
+| `businessType` | Legal entity type (e.g. LLC, CORPORATION) | Yes |
+| `businessIndustry` | Industry code of the business | Yes |
+| `registrationNumber` | Business registration number | Yes |
+| `incorporationDate` | Date of business incorporation | Yes |
+| `physicalAddress` | Business address (line1, city, state, postalCode, country) | Yes |
+| `taxId` | Tax identification number (e.g. EIN for US businesses) | Yes |
+| `taxIdType` | Tax identification number (e.g. SSN, ITIN) | Yes |
+| `taxIdCountry` | Tax identification number issuance country | Yes |
+| `registeredAddress` | Registered business address (line1, city, state, postalCode, country) | Yes |
+| `website` | Business website | Yes |
+
+### Documentation
+
+For more details check [Documents](/v3/core/compliance/documents)
+
+| Document Group | Accepted Type | Required |
+| :-- | :-- | :-- |
+| `legalPresence` | `INCORPORATION_ARTICLES`, `INCORPORATION_CERT`, `STATE_REGISTRY` | Yes |
+| `ownershipStructure` | `SHAREHOLDER_REGISTRY`, `TRUST_AGREEMENT`, `INFORMATION_STATEMENT`, `STATE_REGISTRY` | Yes |
+| `controlStructure` | `DIRECTORS_REGISTRY`, `TRUST_AGREEMENT`, `INFORMATION_STATEMENT`, `STATE_REGISTRY` | Yes |
+| `companyDetails` | `UTILITY_BILL`, `BANK_STATEMENT`, `RENTAL_AGREEMENT`, `TAX_DOCUMENT`, `VOTER_REGISTRATION_CARD`, `BANK_REFERENCE_LETTER`, `LEASE_OR_TENANCY_AGREEMENT`, `PROOF_OF_ADDRESS` | Yes |
+
+<Tip>
+  A single document can be used to fulfill multiple document group requirements — for example, submitting a `STATE_REGISTRY` can fulfill `legalPresence`, `ownershipStructure`, and `controlStructure`.
+</Tip>
+
+### Associated Parties
+
+Each UBO or person with significant control of the business must be added as an associated party, with their own profile information and identity documentation. For the required fields and endpoint details, see [Associated Parties](/v3/core/compliance/associated-parties).
+
+## Questionnaire
+
+| Field | Description |
+| :-- | :-- |
+| `annualRevenue` | The business's annual revenue in USD |
+| `expectedMonthlyTransactionVolume` | Expected monthly transaction volume in USD |
+| `expectedMonthlyTransactionCount` | Expected number of transactions per month |
+| `primaryPurpose` | The business's primary purpose for using the platform |
+| `primaryPurposeDetails` | Details about the primary purpose, if `primaryPurpose` is `other` |
+| `highRiskActivities` | Any high-risk activities the business engages in |
+| `sourceOfFunds` | The primary source of the business's funds |
+| `transmitsThirdPartyFunds` | Whether the business transmits funds on behalf of third parties |
+| `providesFinancialServices` | Whether the business provides financial services |
+
+## Example: Full KYB Flow
+
+<Steps>
+  <Step title="Update Compliance Profile">
+    Update the business's non-documentary information
+
+    **Request**
+
+    ```shellscript
+    curl -X PATCH "https://sandbox.hifi.com/v3/users/usr_8kL2MdPcfxmB6OyzXWQNr/compliance/profile" \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "businessName": "Random Bizz",
+        "businessDescription": "move money",
+        "businessType": "corporation",
+        "businessIndustry": "423430",
+        "email": "new.random.bizz@hifibridge.com",
+        "website": "https://www.hifibridge.com",
+        "phoneNumber": "8522224412",
+        "physicalAddress": {
+            "addressLine1": "Example St 1.",
+            "city": "Hoboken",
+            "stateProvinceRegion": "NJ",
+            "postalCode": "07030",
+            "country": "USA"
+        },
+        "registeredAddress": {
+            "addressLine1": "Example St 1.",
+            "city": "Hoboken",
+            "stateProvinceRegion": "NJ",
+            "postalCode": "07030",
+            "country": "USA"
+        },
+        "registrationNumber": "99999999",
+        "taxId": "12345678",
+        "incorporationDate": "2021-01-22"
+      }'
+    ```
+
+    **Response**
+
+    ```json
+    {
+        "userId": "usr_pIntMywTz8LM3Y7rT8Gjd",
+        "type": "BUSINESS",
+        "businessName": "Random Bizz",
+        "businessDescription": "move money",
+        "alternativeNames": null,
+        "businessType": "corporation",
+        "businessIndustry": "423430",
+        "website": "https://www.hifibridge.com",
+        "taxId": "****9068",
+        "taxIdType": null,
+        "taxIdCountry": null,
+        "registrationNumber": "****9999",
+        "leiNumber": null,
+        "formationDate": null,
+        "incorporationDate": "2021-01-22",
+        "email": "new.random.bizz@hifibridge.com",
+        "phoneNumber": "*******4412",
+        "physicalAddress": {
+            "addressLine1": "Example St 1.",
+            "addressLine2": null,
+            "city": "Hoboken",
+            "stateProvinceRegion": "NJ",
+            "postalCode": "07030",
+            "country": "USA"
+        },
+        "registeredAddress": {
+            "addressLine1": "Example St 1.",
+            "addressLine2": null,
+            "city": "Hoboken",
+            "stateProvinceRegion": "NJ",
+            "postalCode": "07030",
+            "country": "USA"
+        },
+        "postalAddress": null,
+        "createdAt": "2026-07-16T03:20:24.656Z",
+        "updatedAt": "2026-07-16T03:20:43.199Z"
+    }
+    ```
+
+    {/* TODO: Replace with a real sandbox request/response pair */}
+  </Step>
+  <Step title="Add Busines Documentation">
+    Upload the documentation to fulfill the business `legalPresence`, `ownershipStructure`, `controlStructure` and `companyDetails` requirements
+
+    <Info>
+      Use the File endpoint to upload the file first, then add the documentation to the user with the returned file ID (e.g. `file_xxxxxxxxxxxx`).
+    </Info>
+
+    #### Business Documents
+
+    Add `STATE_REGISTRY`to fulfill `legalPresence`, `ownershipStructure`, `controlStructure`requirements.
+
+    **Request**
+
+    ```shell
+    curl -X POST "https://sandbox.hifi.com/v3/users/usr_8kL2MdPcfxmB6OyzXWQNr/compliance/documents" \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "type": "STATE_REGISTRY",
+        "subType": "SINGLE_SIDE",
+        "issuedCountry": "USA",
+        "issuedDate": "2020-01-15",
+        "fileId": "file_O8A1X7gCKoYxlb2aMYYzK"
+      }'
+    ```
+
+    **Response**
+
+    ```json
+    {
+        "id": "doc_SRcWjbyyP3o6Fx643rxyM",
+        "userId": "usr_pIntMywTz8LM3Y7rT8Gjd",
+        "associatedPartyId": null,
+        "type": "STATE_REGISTRY",
+        "subType": "SINGLE_SIDE",
+        "issuedCountry": "USA",
+        "issuedDate": null,
+        "expiryDate": null,
+        "number": null,
+        "fileId": "file_O8A1X7gCKoYxlb2aMYYzK",
+        "description": null,
+        "isValid": null,
+        "message": null,
+        "createdAt": "2026-07-16T03:25:07.389Z",
+        "updatedAt": "2026-07-16T03:25:07.389Z"
+    }
+    ```
+
+    Add `UTILITY_BILL`to fulfill `companyDetails` requirements.
+
+    **Request**
+
+    ```shell
+    curl -X POST "https://sandbox.hifi.com/v3/users/usr_8kL2MdPcfxmB6OyzXWQNr/compliance/documents" \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "type": "UTILIT_BILL",
+        "subType": "SINGLE_SIDE",
+        "issuedCountry": "USA",
+        "issuedDate": "2020-01-15",
+        "fileId": "file_9r3hAF930FHS3853"
+      }'
+    ```
+
+    **Response**
+
+    ```json
+    {
+        "id": "doc_20450GHDGIEo6Fse3FE",
+        "userId": "usr_pIntMywTz8LM3Y7rT8Gjd",
+        "associatedPartyId": null,
+        "type": "UTILIT_BILL",
+        "subType": "SINGLE_SIDE",
+        "issuedCountry": "USA",
+        "issuedDate": null,
+        "expiryDate": null,
+        "number": null,
+        "fileId": "file_9r3hAF930FHS3853",
+        "description": null,
+        "isValid": null,
+        "message": null,
+        "createdAt": "2026-07-16T03:25:07.389Z",
+        "updatedAt": "2026-07-16T03:25:07.389Z"
+    }
+    ```
+  </Step>
+  <Step title="Update Questionnaire">
+    **Request**
+
+    ```shell
+    curl -X PATCH "https://sandbox.hifi.com/v3/users/usr_8kL2MdPcfxmB6OyzXWQNr/compliance/questionnaire" \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "annualRevenue": "250000000_plus",
+        "expectedMonthlyTransactionVolume": "20000000_plus",
+        "expectedMonthlyTransactionCount": "100000_plus",
+        "primaryPurpose": "other",
+        "primaryPurposeDetails": "basd",
+        "highRiskActivities": [
+            "none"
+        ],
+        "sourceOfFunds": "operating_revenue",
+        "transmitsThirdPartyFunds": false,
+        "providesFinancialServices": true
+    }'
+    ```
+
+    **Response**
+
+    ```json
+    {
+        "userId": "usr_pIntMywTz8LM3Y7rT8Gjd",
+        "type": "BUSINESS",
+        "annualRevenue": "250000000_plus",
+        "expectedMonthlyTransactionVolume": "20000000_plus",
+        "expectedMonthlyTransactionCount": "100000_plus",
+        "highRiskActivities": [
+            "none"
+        ],
+        "primaryPurpose": "other",
+        "primaryPurposeDetails": "basd",
+        "sourceOfFunds": "operating_revenue",
+        "sourceOfFundsDetails": null,
+        "providesFinancialServices": true,
+        "transmitsThirdPartyFunds": false,
+        "transmitsThirdPartyFundsDetails": null,
+        "createdAt": "2026-07-16T03:20:24.597Z",
+        "updatedAt": "2026-07-16T03:35:53.249Z"
+    }
+    ```
+
+    {/* TODO: Replace with a real sandbox request/response pair */}
+  </Step>
+  <Step title="Add Associated Party">
+    Add each UBO or person with significant control of the business, then keep the returned `associatedPartyId` — you'll need it to attach their identity documentation in the next step.
+
+    **Request**
+
+    ```shell
+    curl -X POST "https://sandbox.hifi.com/v3/users/usr_8kL2MdPcfxmB6OyzXWQNr/compliance/associated-parties" \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "businessTitle": "CEO",
+        "roles": [
+            "UBO"
+        ],
+        "firstName": "William",
+        "lastName": "Yang",
+        "dateOfBirth": "1955-03-22",
+        "email": "bob@hifi.com",
+        "phoneNumber": "8574839944",
+        "gender": "M",
+        "physicalAddress": {
+            "addressLine1": "Example St 1.",
+            "addressLine2": "Apt 123",
+            "city": "Hoboken",
+            "stateProvinceRegion": "NJ",
+            "postalCode": "12345",
+            "country": "USA"
+        },
+        "taxId": "38493888",
+        "relationshipEstablishedAt": "2022-03-22",
+        "nationality": "USA",
+        "shareProportion": 30
+    }'
+    ```
+
+    **Response**
+
+    ```json
+    {
+        "id": "ap_PafbCNYpvOBnkr1U01BYI",
+        "userId": "usr_pIntMywTz8LM3Y7rT8Gjd",
+        "type": "INDIVIDUAL",
+        "roles": [
+            "UBO"
+        ],
+        "businessTitle": "CEO",
+        "firstName": "William",
+        "middleName": null,
+        "lastName": "Yang",
+        "nationality": "USA",
+        "email": "bob@hifi.com",
+        "phoneNumber": "*******9944",
+        "physicalAddress": {
+            "addressLine1": "Example St 1.",
+            "addressLine2": "Apt 123",
+            "city": "Hoboken",
+            "stateProvinceRegion": "NJ",
+            "postalCode": "12345",
+            "country": "USA"
+        },
+        "dateOfBirth": "1955-03-22",
+        "gender": "M",
+        "taxId": "****3888",
+        "taxIdType": "SSN",
+        "taxIdCountry": "USA",
+        "relationshipEstablishedAt": "2022-03-22",
+        "shareProportion": 30,
+        "createdAt": "2026-07-16T03:37:23.681Z",
+        "updatedAt": "2026-07-16T03:37:23.681Z"
+    }
+    ```
+
+    See [Associated Parties](/v3/core/compliance/associated-parties) for more details
+  </Step>
+  <Step title="Add Documents for Associated Party">
+    Upload the documentation to fulfill the associated party `identity`  and `proofOfResidence `requirements
+
+    <Info>
+      Use the File endpoint to upload the file first, then add the documentation to the user with the returned file ID (e.g. `file_xxxxxxxxxxxx`).
+    </Info>
+
+    #### Government Issued ID
+
+    **Request**
+
+    ```shellscript
+    curl -X POST "https://sandbox.hifi.com/v3/users/usr_4o0ZDdLcfxmB6OyzUEVNq/compliance/associated-parties/ap_PafbCNYpvOBnkr1U01BYI/documents" \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "type": "PASSPORT",
+        "subType": "SINGLE_SIDE",
+        "issuedCountry": "USA",
+        "fileId": "file_O8A1X7gCKoYxlb2aMYYzK"
+      }'
+    ```
+
+    **Response**
+
+    ```json
+    {
+        "id": "doc_lPeFxGI2dAVFvLV2g7b33",
+        "userId": "usr_TpCyt0c8PeZveAsmddulu",
+        "associatedPartyId": null,
+        "type": "PASSPORT",
+        "subType": "SINGLE_SIDE",
+        "issuedCountry": "USA",
+        "issuedDate": "2024-05-04",
+        "expiryDate": "2030-05-04",
+        "number": null,
+        "fileId": "file_O8A1X7gCKoYxlb2aMYYzK",
+        "description": null,
+        "isValid": null,
+        "message": null,
+        "createdAt": "2026-07-13T22:13:44.870Z",
+        "updatedAt": "2026-07-13T22:13:44.870Z"
+    }
+    ```
+
+    <Info>
+      If the document has two sides, submit both, using `FRONT_SIDE` and `BACK_SIDE` for the `subType`.
+    </Info>
+
+    #### Proof of Address
+
+    **Request**
+
+    ```shellscript
+    curl -X POST "https://sandbox.hifi.com/v3/users/usr_4o0ZDdLcfxmB6OyzUEVNq/compliance/associated-parties/ap_PafbCNYpvOBnkr1U01BYI/documents" \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "type": "UTILITY_BILL",
+        "subType": "SINGLE_SIDE",
+        "issuedCountry": "USA",
+        "fileId": "file_ofidSSDFHS7538ffbje9"
+      }'
+    ```
+
+    **Response**
+
+    ```json
+    {
+        "id": "doc_lPeFxGI2dAVFvLV2g7b33",
+        "userId": "usr_TpCyt0c8PeZveAsmddulu",
+        "associatedPartyId": null,
+        "type": "UTILITY_BILL",
+        "subType": "SINGLE_SIDE",
+        "issuedCountry": "USA",
+        "issuedDate": "2024-05-04",
+        "expiryDate": "2030-05-04",
+        "number": null,
+        "fileId": "file_ofidSSDFHS7538ffbje9",
+        "description": null,
+        "isValid": null,
+        "message": null,
+        "createdAt": "2026-07-13T22:13:44.870Z",
+        "updatedAt": "2026-07-13T22:13:44.870Z"
+    }
+    ```
+
+    <Tip>
+      For US and Canadian users, if a driver's license, national ID, or resident permit has already been submitted as the government-issued ID, no additional proof of address is needed.
+    </Tip>
+  </Step>
+  <Step title="Submit compliance information for check">
+    Once all the required information is updated, submit the application for compliance review
+
+    **Request**
+
+    ```bash
+    curl -X PATCH "https://sandbox.hifi.com/v3/users/usr_8kL2MdPcfxmB6OyzXWQNr/compliance/check" \
+          -H "Authorization: Bearer YOUR_API_KEY"
+    ```
+
+    **Response**
+
+    ```json
+        {
+            "userId": "usr_8kL2MdPcfxmB6OyzXWQNr",
+            "complianceStatus": "PENDING",
+            "message": null,
+            "rfiActions": []
+        }
+    ```
+  </Step>
+  <Step title="Get the KYB status">
+    Listen to our webhook or poll the user's compliance status
+
+    **Request**
+
+    ```bash
+        curl -X GET "https://sandbox.hifi.com/v3/users/usr_8kL2MdPcfxmB6OyzXWQNr/compliance/status" \
+          -H "Authorization: Bearer YOUR_API_KEY"
+    ```
+
+    **Response**
+
+    ```json
+        {
+            "userId": "usr_8kL2MdPcfxmB6OyzXWQNr",
+            "complianceStatus": "APPROVED",
+            "message": null,
+            "rfiActions": []
+        }
+    ```
+  </Step>
+</Steps>
+
+## Expected Behavior
+
+After submission, the application can be in different states
+
+<AccordionGroup>
+  <Accordion title="APPROVED">
+    No additional action is needed — the user has already passed HIFI's compliance check.
+
+    **What's next:**
+
+    Wait for corridor functionality to be unlocked for the user. The timing may vary, and based on the customer profile, the user may not be eligible for all corridors.
+  </Accordion>
+
+  <Accordion title="PENDING">
+    No action required — the information has been uploaded and is awaiting processing.
+  </Accordion>
+
+  <Accordion title="IN_REVIEW">
+    The application is currently under review by our compliance team.
+
+    **What you can expect:**
+
+    - An RFI may be sent to your compliance mailbox requesting additional information
+    - The status may move to `REQUIRES_INFO` after our compliance check — use GET `/v3/users/:user_id/compliance/status` to see what additional information is required
+    - The status may move to `REJECTED` or `APPROVED` when a final decision is made by our compliance team
+
+    <Info>
+      KYB reviews typically take longer than individual KYC due to the additional entity and associated party verification.
+    </Info>
+
+    {/* TODO: Confirm typical KYB review timing and adjust or remove the note */}
+  </Accordion>
+
+  <Accordion title="REJECTED">
+    Our compliance team has determined that we cannot onboard this user. Reach out to our support team for more information.
+  </Accordion>
+
+  <Accordion title="REQUIRES_INFO">
+    Our compliance team has requested updates to the applicant's data before resubmission. Common reasons include: a mismatched address on the proof of address, blurry documentation, an incorrectly formatted document, or incomplete associated party information.
+
+    For more details, check the `rfiActions` field after calling GET `/v3/users/:user_id/compliance/status`.
+
+    **Example**
+
+    ```json
+        {
+            "userId": "usr_8kL2MdPcfxmB6OyzXWQNr",
+            "complianceStatus": "REQUIRES_INFO",
+            "onboardingStatus": "NOT_STARTED",
+            "message": "The ownership information provided does not match the shareholder register.",
+            "rfiActions": [
+                {
+                    "type": "UPDATE_ASSOCIATED_PARTY",
+                    "associatedPartyId": "apt_kF9sLm2QwXcVbN3yTzR8p",
+                    "fields": [
+                        "ownershipPercentage"
+                    ],
+                    "message": "Please update the ownership percentage to match the shareholder register."
+                },
+                {
+                    "type": "UPLOAD_DOCUMENT",
+                    "message": "Please upload a complete shareholder register including all pages.",
+                    "documentId": "doc_pu0aoLYYTST8xxewiyblK"
+                }
+            ]
+        }
+    ```
+
+    Update the information, then use POST `/v3/users/:user_id/compliance/submit` to submit the application again.
+
+    {/* TODO: Confirm UPDATE_ASSOCIATED_PARTY is a real rfiAction type and
+  replace the example with real sandbox output */}
+  </Accordion>
+</AccordionGroup>
+
+## RFI Actions
+
+When a submitted application needs updated information, the status transitions to `REQUIRES_INFO` and the `rfiActions` field will include the actions required before resubmission.
+
+| Type | Action |
+| :-- | :-- |
+| `UPDATE_PROFILE` | Update the business's profile information before resubmission — a common reason is information that doesn't match the submitted documentation. |
+| `UPDATE_ASSOCIATED_PARTY` | Update the associated party's information before resubmission — a common reason is ownership or identity details that don't match the submitted documentation. See [Associated Parties](/v3/core/compliance/associated-parties). |
+| `UPLOAD_DOCUMENT` | Update the user's documentation before resubmission — common reasons include expired, blurry, or unqualified documents. |
+| `UPDATE_QUESTIONNAIRE` | Update the user's questionnaire before resubmission |
+
+{/* TODO: Confirm the full list of rfiAction types for business users */}
+
+## Getting Help
+
+- 📧 **Email:** [support@hifi.com](mailto:support@hifi.com)
+- 💬 **Slack:** Message us in our shared Slack channel
+
+## Related Resources
+
+- [User Overview](/v3/core/users/overview) - User types and creation
+- [KYC (Individual)](/v3/core/compliance/kyc) - Individual verification requirements
+- [Associated Parties](/v3/core/compliance/associated-parties) - UBO and control person requirements
+- Virtual Accounts - Set up fiat deposit accounts
+- API Reference: Compliance - Complete endpoint documentation
