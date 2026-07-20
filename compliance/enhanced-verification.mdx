@@ -1,18 +1,16 @@
 ---
 title: "Enhanced Verification"
-description: "Implement enhanced KYB for business users that require Enhanced Verification."
+description: "Context and rules for countries that require Enhanced Verification."
 ---
 
-Enhanced Verification is required for business users from certain supported countries. These users can access USD payouts through enhanced KYB as part of a pilot program.
+Onboarding business users from certain countries requires Enhanced Verification. HIFI is currently running this flow as a pilot program with an initial set of customers.
 
 <Warning>
   Enhanced Verification onboarding is part of a pilot program. Contact HIFI
   before enabling USD payouts for customers in these countries.
 </Warning>
 
-The business-level document review is the same as standard KYB, but owner verification and payment monitoring are stricter.
-
-## Supported Countries
+## Pilot Countries
 
 | Country | ISO Code | Rail | Direction | Payment Method |
 | :-- | :-- | :-- | :-- | :-- |
@@ -23,78 +21,32 @@ The business-level document review is the same as standard KYB, but owner verifi
 | Vietnam | VN | USD | Payout | SWIFT |
 
 <Info>
-  Enhanced Verification countries are not prohibited regions. They require enhanced KYB,
-  additional UBO verification, and lower transaction review limits.
+  These countries are not prohibited regions. Business users from these
+  countries require Enhanced Verification before USD payouts can be enabled.
 </Info>
 
 ## What Changes
 
-| Area | Standard KYB | Enhanced Verification KYB |
-| :-- | :-- | :-- |
-| Entity documents | Baseline business document checks | No change |
-| UBO threshold | UBOs with more than 25% ownership | All UBOs with 10% ownership or above |
-| UBO verification | Standard individual KYC for required UBOs | Full individual KYC plus live ID capture and biometric liveness verification |
-| Review threshold | Single transactions or payments of $25,000 USD or more | Single transactions or payments of $10,000 USD or more |
+<CardGroup cols={2}>
+  <Card title="Entity documents" icon="file-lines">
+    Baseline business document collection and review do not change.
+  </Card>
 
-<Note>
-  The key KYB difference is at the ownership level. Every UBO at or above the
-  10% ownership threshold must be individually verified before the entity can be
-  approved.
-</Note>
+  <Card title="UBO threshold" icon="users">
+    All UBOs with 10% ownership or above must complete full individual KYC
+    before the entity can be approved.
+  </Card>
 
-## Onboarding Flow
+  <Card title="Liveness verification" icon="camera">
+    Qualifying UBOs must complete live ID capture and biometric liveness
+    verification. Static ID uploads and screenshots are not accepted.
+  </Card>
 
-<Steps>
-  <Step title="Identify country risk">
-    Check whether the business is from one of the supported Enhanced
-    Verification countries before starting KYB.
-  </Step>
-  <Step title="Collect business information">
-    Collect the standard USD rail KYB fields and baseline business documents.
-    Entity-level document collection does not change for Enhanced Verification
-    countries.
-  </Step>
-  <Step title="Add UBOs at 10% ownership or above">
-    Include every Ultimate Beneficial Owner with 10% ownership or above, not
-    only owners above the standard 25% threshold.
-  </Step>
-  <Step title="Complete UBO liveness verification">
-    Each qualifying UBO must complete the hosted liveness link, including live ID
-    capture and biometric liveness verification.
-  </Step>
-  <Step title="Wait for KYB approval">
-    Enable USD payouts only after the business KYB status is active.
-  </Step>
-</Steps>
-
-## UBO Verification Requirements
-
-For each UBO at or above 10% ownership:
-
-- Collect the required individual KYC information.
-- Require live camera capture for identity document collection.
-- Require biometric liveness verification.
-- Do not accept static image uploads or screenshots of identity documents.
-
-<Warning>
-  Static document uploads are not accepted for Enhanced Verification UBO
-  identity checks. The UBO must complete verification through the liveness link.
-</Warning>
-
-## Payment Review Limits
-
-Any single transaction or payment of $10,000 USD or more is held for review before processing.
-
-Build your product and operations workflow so users can see when a payment is pending review and so your team can monitor review outcomes before treating the payment as processed.
-
-## Implementation Checklist
-
-- Add the five Enhanced Verification countries to your country support logic.
-- Route Enhanced Verification businesses through enhanced KYB.
-- Collect all UBOs with 10% ownership or above.
-- Send each qualifying UBO through the liveness verification link.
-- Wait for active KYB status before enabling USD payouts.
-- Hold single transactions or payments of $10,000 USD or more for review before processing.
+  <Card title="$10,000 review hold" icon="dollar-sign">
+    Any single transaction or payment of $10,000 USD or more is held for review
+    before processing.
+  </Card>
+</CardGroup>
 
 ## Related Pages
 
