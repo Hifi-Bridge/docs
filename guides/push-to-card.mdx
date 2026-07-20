@@ -1,6 +1,6 @@
 ---
 title: "Push to Card"
-description: "Send USDC directly to an eligible card."
+description: "Register a card, send a payout, and track settlement."
 ---
 
 **Time to complete:** 10-15 minutes
@@ -12,20 +12,22 @@ description: "Send USDC directly to an eligible card."
 
 ## Overview
 
-With HIFI Push to Card, you can convert stablecoins into fiat and deliver the funds to a recipient's card. The flow has three steps:
+With HIFI Push to Card, you can convert stablecoins into fiat and deliver funds to an eligible recipient card.
+
+The workflow has three steps:
 
 <Steps>
-  <Step title="Create user">
-    Onboard the sender with a KYC Link or through the API so they are verified
-    to transact on HIFI.
+  <Step title="Register card">
+    Create a counterparty for the recipient, add their card, and save the
+    returned `externalCardId`.
   </Step>
-  <Step title="Add counterparty card">
-    Create a counterparty for the recipient and add their card. HIFI tokenizes
-    the card with the provider and returns an `externalCardId`.
+  <Step title="Send payout">
+    Create a push-to-card offramp with `destination.externalCardId`, review the
+    quote, and accept it before expiration.
   </Step>
-  <Step title="Create offramp">
-    Create a push-to-card offramp with `destination.externalCardId`, accept the
-    quote, and track settlement.
+  <Step title="Track payment">
+    Use webhooks or the retrieve endpoint to follow the payment through card
+    payout processing.
   </Step>
 </Steps>
 
@@ -34,18 +36,20 @@ With HIFI Push to Card, you can convert stablecoins into fiat and deliver the fu
 Before you start, make sure you have:
 
 - API keys from the Dashboard
+- A verified HIFI user with KYC or KYB approved
 - A funded HIFI or external wallet with USDC
 - The recipient's eligible card details
 
 <Info>
-  HIFI Push to Cards currently only support payouts to Visa cards globally
-  through Visa Direct.
+  HIFI Push to Card currently supports payouts to Visa cards globally through
+  Visa Direct.
 </Info>
 
-## Transaction limits
+For user onboarding, use a [KYC Link](/docs/features/kyc-links) or the API flow described in [Quickstart](/docs/guides/quickstart) and [Users](/docs/users/overview).
 
-The same limits apply to domestic and cross-border payouts, and are enforced
-separately per sender and per recipient.
+## Transaction Limits
+
+The same limits apply to domestic and cross-border payouts, and are enforced separately per sender and per recipient.
 
 | Frequency | Max transactions | Max total amount |
 | :-------- | :--------------- | :--------------- |
@@ -55,32 +59,13 @@ separately per sender and per recipient.
 
 Each individual push-to-card payout can be up to $15,000.
 
-## Create user
+## Register Card
 
-Push-to-card requires a verified HIFI user with KYC or KYB approved. The fastest path is a [KYC Link](/docs/features/kyc-links), which creates the user and collects verification in one hosted flow:
+Register the recipient card once, then reuse the returned `externalCardId` for future push-to-card payouts to that card.
 
-```bash
-curl -X POST "https://sandbox.hifibridge.com/v3/kyc-links" \
-  -H "Authorization: Bearer YOUR_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "requestId": 123,
-    "userType": "INDIVIDUAL",
-    "redirectUrl": "https://yourapp.com/kyc-complete"
-  }'
-```
+### Create Counterparty
 
-Redirect the user to the returned link. After they complete the flow, save the `userId` to your records.
-
-For full onboarding details, see the [Quickstart](/docs/guides/quickstart) or [Users](/docs/users/overview) page.
-
-## Add counterparty card
-
-Next, create a counterparty for the recipient under the user, then add their card.
-
-### Create counterparty
-
-Create the recipient counterparty with the fields required for external cards: `phoneNumber`, `email`, and `address`.
+Create a counterparty for the recipient under the verified user. External card counterparties require `phoneNumber`, `email`, and `address`.
 
 ```bash
 curl -X POST "https://sandbox.hifibridge.com/v3/users/usr_abc123/counter-parties" \
@@ -128,9 +113,9 @@ curl -X POST "https://sandbox.hifibridge.com/v3/users/usr_abc123/counter-parties
 
 Save the returned counterparty `id`. You will use it in the external card path.
 
-### Create external card
+### Create External Card
 
-Create an external card for the counterparty:
+Create an external card for the counterparty. HIFI tokenizes the card with the provider and returns an external card ID.
 
 ```bash
 curl -X POST "https://sandbox.hifibridge.com/v3/users/usr_abc123/counter-parties/cpty_abc123/external-cards" \
@@ -145,8 +130,6 @@ curl -X POST "https://sandbox.hifibridge.com/v3/users/usr_abc123/counter-parties
     "cvv": "123"
   }'
 ```
-
-Save the returned `id`. You will use it as `destination.externalCardId` when creating the offramp.
 
 <Accordion title="Response">
   ```json
@@ -167,7 +150,7 @@ Save the returned `id`. You will use it as `destination.externalCardId` when cre
 </Accordion>
 
 <ResponseField name="id" type="string">
-  External card ID. Use this value as `destination.externalCardId`.
+  External card ID. Use this value as `destination.externalCardId` when sending the payout.
 </ResponseField>
 
 <ResponseField name="status" type="string">
@@ -179,11 +162,11 @@ Save the returned `id`. You will use it as `destination.externalCardId` when cre
   `id`, not the raw card number.
 </Warning>
 
-## Create offramp
+## Send Payout
 
-Create a push-to-card offramp with the tokenized card as the destination, accept the quote, and track settlement to completion.
+Send a payout by creating an offramp quote to the registered card, then accepting the quote.
 
-### Create the quote
+### Create Payout Quote
 
 Create an offramp with `destination.externalCardId`. Provide exactly one source wallet identifier (`source.walletId` or `source.externalWalletId`) and exactly one amount (`source.amount` or `destination.amount`).
 
@@ -248,8 +231,7 @@ curl -X POST "https://sandbox.hifibridge.com/v3/offramps" \
 </Accordion>
 
 <ResponseField name="id" type="string">
-  Offramp ID. Use this value to accept the quote and check the transaction
-  status.
+  Offramp ID. Use this value to accept the quote and track the payment.
 </ResponseField>
 
 <ResponseField name="status" type="string">
@@ -257,16 +239,16 @@ curl -X POST "https://sandbox.hifibridge.com/v3/offramps" \
 </ResponseField>
 
 <ResponseField name="destination.externalCardId" type="string">
-  The card destination for the push-to-card payout.
+  The registered card destination for the push-to-card payout.
 </ResponseField>
 
 <ResponseField name="quote.expiresAt" type="string">
   Quote expiration timestamp. Accept the quote before this time.
 </ResponseField>
 
-### Accept the quote
+### Accept Quote
 
-After reviewing the quote, accept it to execute the offramp.
+After reviewing the quote, accept it to execute the payout.
 
 ```bash
 curl -X POST "https://sandbox.hifibridge.com/v3/offramps/offramp_abc123/quote/accept" \
@@ -299,9 +281,17 @@ When the quote is accepted, HIFI starts the transfer flow.
   ```
 </Accordion>
 
-### Track the offramp
+## Track Payment
 
-Use the offramp ID to check status.
+Track the payment with webhooks for real-time updates or poll the retrieve endpoint with the offramp ID.
+
+### Listen for Webhooks
+
+Subscribe to [Offramp events](/docs/webhooks/offramp-events) and handle `OFFRAMP.STATUS.*` events. Use `eventAction` or the transfer status in the event data to update the payment in your system.
+
+### Retrieve Payment Status
+
+Use the offramp ID returned when you created the payout quote.
 
 ```bash
 curl -X GET "https://sandbox.hifibridge.com/v3/offramps/offramp_abc123" \
@@ -317,8 +307,16 @@ Common statuses include:
 | `IN_REVIEW`      | Funds are in process and provider review or settlement is underway. |
 | `FIAT_INITIATED` | The card payout has been initiated.                                 |
 | `FIAT_PENDING`   | The card payout is processing.                                      |
-| `COMPLETED`      | The push-to-card offramp completed successfully.                    |
+| `COMPLETED`      | The push-to-card payout completed successfully.                     |
 | `FIAT_FAILED`    | The card payout failed.                                             |
+
+<ResponseField name="receipt.transactionHash" type="string">
+  Stablecoin conversion transaction hash, when available.
+</ResponseField>
+
+<ResponseField name="receipt.paymentTracking" type="object">
+  Fiat payout tracking details, when available from the card payout provider.
+</ResponseField>
 
 ## Notes
 
