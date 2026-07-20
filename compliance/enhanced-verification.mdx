@@ -1,13 +1,13 @@
 ---
-title: "Enhanced Due Diligence"
-description: "Implement enhanced KYB for business users that require Enhanced Due Diligence."
+title: "Enhanced Verification"
+description: "Implement enhanced KYB for business users that require Enhanced Verification."
 ---
 
-Enhanced Due Diligence (EDD) is required for business users from certain supported countries. These users can access USD payouts through enhanced KYB as part of a pilot program.
+Enhanced Verification is required for business users from certain supported countries. These users can access USD payouts through enhanced KYB as part of a pilot program.
 
 <Warning>
-  EDD onboarding is part of a pilot program. Contact HIFI before enabling USD
-  payouts for customers in these countries.
+  Enhanced Verification onboarding is part of a pilot program. Contact HIFI
+  before enabling USD payouts for customers in these countries.
 </Warning>
 
 The business-level document review is the same as standard KYB, but owner verification and payment monitoring are stricter.
@@ -23,13 +23,13 @@ The business-level document review is the same as standard KYB, but owner verifi
 | Vietnam | VN | USD | Payout | SWIFT |
 
 <Info>
-  EDD countries are not prohibited regions. They require enhanced KYB,
+  Enhanced Verification countries are not prohibited regions. They require enhanced KYB,
   additional UBO verification, and lower transaction review limits.
 </Info>
 
 ## What Changes
 
-| Area | Standard KYB | EDD KYB |
+| Area | Standard KYB | Enhanced Verification KYB |
 | :-- | :-- | :-- |
 | Entity documents | Baseline business document checks | No change |
 | UBO threshold | UBOs with more than 25% ownership | All UBOs with 10% ownership or above |
@@ -46,12 +46,13 @@ The business-level document review is the same as standard KYB, but owner verifi
 
 <Steps>
   <Step title="Identify country risk">
-    Check whether the business is from one of the supported EDD countries before
-    starting KYB.
+    Check whether the business is from one of the supported Enhanced
+    Verification countries before starting KYB.
   </Step>
   <Step title="Collect business information">
     Collect the standard USD rail KYB fields and baseline business documents.
-    Entity-level document collection does not change for EDD countries.
+    Entity-level document collection does not change for Enhanced Verification
+    countries.
   </Step>
   <Step title="Add UBOs at 10% ownership or above">
     Include every Ultimate Beneficial Owner with 10% ownership or above, not
@@ -76,8 +77,8 @@ For each UBO at or above 10% ownership:
 - Do not accept static image uploads or screenshots of identity documents.
 
 <Warning>
-  Static document uploads are not accepted for EDD UBO identity checks. The UBO
-  must complete verification through the liveness link.
+  Static document uploads are not accepted for Enhanced Verification UBO
+  identity checks. The UBO must complete verification through the liveness link.
 </Warning>
 
 ## Payment Review Limits
@@ -88,8 +89,8 @@ Build your product and operations workflow so users can see when a payment is pe
 
 ## Implementation Checklist
 
-- Add the five EDD countries to your country support logic.
-- Route EDD businesses through enhanced KYB.
+- Add the five Enhanced Verification countries to your country support logic.
+- Route Enhanced Verification businesses through enhanced KYB.
 - Collect all UBOs with 10% ownership or above.
 - Send each qualifying UBO through the liveness verification link.
 - Wait for active KYB status before enabling USD payouts.
