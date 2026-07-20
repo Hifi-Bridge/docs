@@ -318,6 +318,7 @@
                 "pages": [
                   "guides/quickstart",
                   "guides/submit-kyc",
+                  "guides/high-risk-countries",
                   "guides/receive-money",
                   "guides/send-money",
                   "guides/send-eur-offramps",

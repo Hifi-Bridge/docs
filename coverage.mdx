@@ -33,18 +33,39 @@ description: "HIFI enables inflows and outflows across multiple regions. Here ar
 | New Zealand | USD | Payout | SWIFT |
 | Norway | USD | Payout | SWIFT |
 | Oman | USD | Payout | SWIFT |
+| Panama | USD | Payout | SWIFT |
 | Philippines | USD | Payout | SWIFT |
 | Portugal | USD | Payout | SWIFT |
+| Saudi Arabia | USD | Payout | SWIFT |
 | Slovenia | USD | Payout | SWIFT |
 | Spain | USD | Payout | SWIFT |
 | Sweden | USD | Payout | SWIFT |
 | United Arab Emirates | USD | Payout | SWIFT |
 | United Kingdom | USD | Payout | SWIFT |
 | Uruguay | USD | Payout | SWIFT |
+| Vietnam | USD | Payout | SWIFT |
 
 <Note>
   USD SWIFT payouts are currently limited to senders based in the United States. For other regions, please use the [Global Network](/rails/global-network) rail.
 </Note>
+
+### High Risk Countries
+
+The USD rail supports the following high risk countries for business users through enhanced KYB:
+
+| Country | ISO Code | Direction | Payment Method |
+| --- | --- | --- | --- |
+| India | IN | Payout | SWIFT |
+| Panama | PA | Payout | SWIFT |
+| Philippines | PH | Payout | SWIFT |
+| Saudi Arabia | SA | Payout | SWIFT |
+| Vietnam | VN | Payout | SWIFT |
+
+<Warning>
+  Business users from high risk countries require enhanced KYB before USD
+  payouts can be enabled. See the [High Risk Countries guide](/guides/high-risk-countries)
+  for UBO verification and review-limit requirements.
+</Warning>
 
 [Learn more about the USD Rail](/rails/usd)
 
