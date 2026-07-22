@@ -5,8 +5,6 @@ description: "HIFI enables inflows and outflows across multiple regions. Here ar
 
 ## USD Rail
 
-The USD Rail supports domestic US pay-ins and payouts, plus USD SWIFT payouts from US-based senders to the countries below.
-
 | Country | Currency | Direction | Payment Methods |
 | --- | --- | --- | --- |
 | United States of America | USD | Payin, Payout | WIRE, ACH, RTP, SWIFT (Payout-only) |
@@ -23,7 +21,7 @@ The USD Rail supports domestic US pay-ins and payouts, plus USD SWIFT payouts fr
 | Germany | USD | Payout | SWIFT |
 | Greece | USD | Payout | SWIFT |
 | Guatemala | USD | Payout | SWIFT |
-| India\* | USD | Payout | SWIFT |
+| India | USD | Payout | SWIFT |
 | Ireland | USD | Payout | SWIFT |
 | Italy | USD | Payout | SWIFT |
 | Japan | USD | Payout | SWIFT |
@@ -33,32 +31,32 @@ The USD Rail supports domestic US pay-ins and payouts, plus USD SWIFT payouts fr
 | Mexico | USD | Payout | SWIFT |
 | Netherlands | USD | Payout | SWIFT |
 | New Zealand | USD | Payout | SWIFT |
-| Nigeria\* | USD | Payout | SWIFT |
 | Norway | USD | Payout | SWIFT |
 | Oman | USD | Payout | SWIFT |
-| Panama\* | USD | Payout | SWIFT |
-| Philippines\* | USD | Payout | SWIFT |
+| Philippines | USD | Payout | SWIFT |
 | Portugal | USD | Payout | SWIFT |
-| Saudi Arabia\* | USD | Payout | SWIFT |
 | Slovenia | USD | Payout | SWIFT |
 | Spain | USD | Payout | SWIFT |
 | Sweden | USD | Payout | SWIFT |
 | United Arab Emirates | USD | Payout | SWIFT |
 | United Kingdom | USD | Payout | SWIFT |
 | Uruguay | USD | Payout | SWIFT |
-| Vietnam\* | USD | Payout | SWIFT |
 
-<Warning>
-  **Enhanced due diligence:** Countries marked with an asterisk (\*) require
-  liveness checks for UBOs.
-</Warning>
-
-<Info>
-  In these countries, we currently support business users only.
-</Info>
+<Note>
+  USD SWIFT payouts are currently limited to senders based in the United States. For other regions, please use the [Global Network](/rails/global-network) rail.
+</Note>
 
 - [Learn more about the USD Rail](/rails/usd)
-- [Learn more about Liveness Checks](/compliance/liveness-checks)
+
+### USD Virtual Accounts
+
+Business users incorporated in India, Nigeria, Panama, the Philippines, Saudi Arabia, and Vietnam can be enabled for USD virtual accounts after required UBO identity and liveness checks are complete.
+
+<Info>
+  This is virtual-account eligibility, not expanded USD payout coverage. See
+  [Liveness Checks](/compliance/liveness-checks) for the 10% UBO threshold and
+  integration requirements.
+</Info>
 
 ## Global Network Rail
 

@@ -1,9 +1,9 @@
 ---
 title: "Liveness Checks"
-description: "Show UBOs the hosted liveness check returned by the KYC Status API."
+description: "Show UBOs the hosted liveness check required to enable USD virtual accounts."
 ---
 
-Some business users require their Ultimate Beneficial Owners (UBOs) to complete a liveness check before the USD rail can be activated.
+Some business users require their Ultimate Beneficial Owners (UBOs) to complete a liveness check before USD virtual accounts can be enabled.
 
 <Note>
   Complete the normal KYB submission first. See [Liveness
@@ -24,8 +24,9 @@ Some business users require their Ultimate Beneficial Owners (UBOs) to complete 
     Send the corresponding `liveness` URL to the UBO. Sumsub handles the hosted
     verification flow.
   </Step>
-  <Step title="Wait for ACTIVE">
-    Continue checking the business status until it becomes `ACTIVE`.
+  <Step title="Wait for completion">
+    Continue checking the business status until no required UBO remains
+    incomplete, then wait for HIFI to enable virtual accounts for the profile.
   </Step>
 </Steps>
 
@@ -102,11 +103,11 @@ return incompleteOwners.map((owner) => (
   UBO, and do not construct or modify it.
 </Info>
 
-## Wait for Activation
+## Wait for Virtual Account Enablement
 
 After the UBO completes the Sumsub flow, continue calling Retrieve KYC Status. Keep the business pending while any UBO is `INCOMPLETE` or the response includes `NOT_ALL_CHECKS_COMPLETED`.
 
-Enable the USD rail only when the top-level `status` is `ACTIVE`.
+Do not attempt to create a virtual account while a required UBO remains incomplete. A top-level `status` of `ACTIVE` confirms that the compliance review is complete; virtual-account availability is enabled for the profile by HIFI.
 
 ## Related Pages
 
