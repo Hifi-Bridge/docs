@@ -19,8 +19,6 @@ description: "The USD Rail enables pay-ins and pay-outs from stablecoins to USD.
 
 ## Currency Support
 
-Use the USD Rail for domestic US payment methods and USD SWIFT payouts from US-based senders to the countries below.
-
 | Country | Currency | Direction | Payment Methods |
 | :-- | :-- | :-- | :-- |
 | United States | USD | Payin, Payout | Wire, ACH, RTP, SWIFT(Payout-only) |
@@ -34,7 +32,7 @@ Use the USD Rail for domestic US payment methods and USD SWIFT payouts from US-b
 | France | USD | Payout | SWIFT |
 | Germany | USD | Payout | SWIFT |
 | Greece | USD | Payout | SWIFT |
-| India\* | USD | Payout | SWIFT |
+| India | USD | Payout | SWIFT |
 | Ireland | USD | Payout | SWIFT |
 | Italy | USD | Payout | SWIFT |
 | Japan | USD | Payout | SWIFT |
@@ -44,28 +42,29 @@ Use the USD Rail for domestic US payment methods and USD SWIFT payouts from US-b
 | Malaysia | USD | Payout | SWIFT |
 | Netherlands | USD | Payout | SWIFT |
 | New Zealand | USD | Payout | SWIFT |
-| Nigeria\* | USD | Payout | SWIFT |
 | Norway | USD | Payout | SWIFT |
 | Oman | USD | Payout | SWIFT |
-| Panama\* | USD | Payout | SWIFT |
-| Philippines\* | USD | Payout | SWIFT |
+| Philippines | USD | Payout | SWIFT |
 | Portugal | USD | Payout | SWIFT |
-| Saudi Arabia\* | USD | Payout | SWIFT |
 | Slovenia | USD | Payout | SWIFT |
 | Spain | USD | Payout | SWIFT |
 | United Kingdom | USD | Payout | SWIFT |
 | Colombia | USD | Payout | SWIFT |
 | Guatemala | USD | Payout | SWIFT |
 | Uruguay | USD | Payout | SWIFT |
-| Vietnam\* | USD | Payout | SWIFT |
 
-<Warning>
-  **Enhanced due diligence:** Countries marked with an asterisk (\*) require
-  liveness checks for UBOs.
-</Warning>
+<Note>
+  USD SWIFT payouts are currently limited to senders based in the United States. For other regions, please use the [Global Network](/rails/global-network) rail.
+</Note>
+
+## Virtual Account Eligibility
+
+Business users incorporated in India, Nigeria, Panama, the Philippines, Saudi Arabia, and Vietnam can be enabled for USD virtual accounts after every UBO with 10% ownership or above completes the required identity and liveness checks.
 
 <Info>
-  In these countries, we currently support business users only.
+  This eligibility applies to virtual accounts only. It does not expand USD
+  SWIFT payout coverage for businesses incorporated in these countries. See
+  [Liveness Checks](/compliance/liveness-checks) for the complete requirements.
 </Info>
 
 ## Individual
@@ -168,7 +167,8 @@ The USD rail for business users requires comprehensive KYB (Know Your Business) 
 </Info>
 
 <Note>
-  For businesses subject to [liveness checks](/compliance/liveness-checks),
+  For businesses seeking virtual-account enablement that are subject to
+  [liveness checks](/compliance/liveness-checks),
   provide every UBO with 10% ownership or above. Those UBOs must complete full
   individual KYC through the hosted verification flow, including live ID
   capture and biometric liveness verification.

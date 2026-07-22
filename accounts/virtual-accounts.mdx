@@ -21,6 +21,23 @@ Virtual accounts enable fiat-to-stablecoin onramps through a simple three-step p
 
 Each virtual account is configured for a specific conversion pair (e.g., USD → USDC on Polygon). You can create multiple virtual accounts per user for different currencies and chains.
 
+## Eligibility and Enablement
+
+USD virtual accounts must be enabled for your profile before you can create one for a user. Business users incorporated in India, Nigeria, Panama, the Philippines, Saudi Arabia, or Vietnam require enhanced verification before they are eligible.
+
+For these businesses:
+
+1. Provide every UBO with 10% ownership or above during KYB.
+2. Retrieve the business's KYC status and find each UBO whose status is `INCOMPLETE`.
+3. Send each UBO their own `liveness` URL from the response so they can complete the hosted identity and liveness check.
+4. Wait until no required UBO remains incomplete and HIFI has enabled virtual accounts for the profile before creating the account.
+
+<Info>
+  This process enables USD virtual accounts only. It does not expand USD SWIFT
+  payout coverage. See the [Liveness Checks
+  guide](/guides/liveness-checks) for the API response and implementation flow.
+</Info>
+
 ## Creating Virtual Accounts
 
 Create a virtual account using the [Create Virtual Account](https://docs.hifi.com/api-reference/virtual-account/create-a-virtual-account) endpoint.
