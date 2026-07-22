@@ -1,0 +1,115 @@
+---
+title: "Liveness Checks"
+description: "Show UBOs the hosted liveness check returned by the KYC Status API."
+---
+
+Some business users require their Ultimate Beneficial Owners (UBOs) to complete a liveness check before the USD rail can be activated.
+
+<Note>
+  Complete the normal KYB submission first. See [Liveness
+  Checks](/compliance/liveness-checks) for the countries and ownership threshold
+  that require this flow.
+</Note>
+
+## How It Works
+
+<Steps>
+  <Step title="Check the business status">
+    Call the KYC Status API after submitting KYB.
+  </Step>
+  <Step title="Find incomplete UBOs">
+    Look for UBOs with `status: "INCOMPLETE"` and a `liveness` URL.
+  </Step>
+  <Step title="Show each UBO their link">
+    Send the corresponding `liveness` URL to the UBO. Sumsub handles the hosted
+    verification flow.
+  </Step>
+  <Step title="Wait for ACTIVE">
+    Continue checking the business status until it becomes `ACTIVE`.
+  </Step>
+</Steps>
+
+## Check the Business Status
+
+Call [Retrieve KYC Status](https://docs.hifi.com/api-reference/kyc/retrieve-kyc-status) for the USD rail.
+
+```bash
+curl --request GET \
+  --url "https://sandbox.hifibridge.com/v2/users/USER_ID/kyc/status?rails=USD" \
+  --header "accept: application/json" \
+  --header "authorization: Bearer YOUR_API_KEY"
+```
+
+When liveness checks are outstanding, the response includes:
+
+- A top-level `status` of `PENDING`
+- `NOT_ALL_CHECKS_COMPLETED` in `reviewResult.rejectReasons`
+- An `INCOMPLETE` UBO with a `liveness` URL
+
+<Accordion title="View relevant response fields">
+
+```json
+{
+  "status": "PENDING",
+  "reviewResult": {
+    "reviewAnswer": "APPROVED",
+    "rejectReasons": ["NOT_ALL_CHECKS_COMPLETED"]
+  },
+  "details": {
+    "ultimateBeneficialOwners": {
+      "details": [
+        {
+          "id": "33673710-8cd7-407b-81a3-01f105970baf",
+          "status": "INCOMPLETE",
+          "message": "Please complete [selfie, phone_verification].",
+          "liveness": "https://in.sumsub.com/websdk/p/sbx_BsHt7ee3DsGcSsSi"
+        }
+      ]
+    }
+  }
+}
+```
+
+</Accordion>
+
+<Warning>
+  Use the top-level `status` as the completion signal. A `reviewAnswer` of
+  `APPROVED` does not mean the business is ready while `status` is `PENDING`.
+</Warning>
+
+## Show Each UBO Their Link
+
+Inspect every item in `details.ultimateBeneficialOwners.details`. For each incomplete UBO with a `liveness` URL, show the API message and a link to the hosted flow.
+
+```tsx
+const owners =
+  status.details?.ultimateBeneficialOwners?.details ?? [];
+
+const incompleteOwners = owners.filter(
+  (owner) => owner.status === "INCOMPLETE" && owner.liveness
+);
+
+return incompleteOwners.map((owner) => (
+  <section key={owner.id}>
+    <p>{owner.message}</p>
+    <a href={owner.liveness}>Complete verification</a>
+  </section>
+));
+```
+
+<Info>
+  Each UBO has their own `liveness` URL. Show the URL only to the corresponding
+  UBO, and do not construct or modify it.
+</Info>
+
+## Wait for Activation
+
+After the UBO completes the Sumsub flow, continue calling Retrieve KYC Status. Keep the business pending while any UBO is `INCOMPLETE` or the response includes `NOT_ALL_CHECKS_COMPLETED`.
+
+Enable the USD rail only when the top-level `status` is `ACTIVE`.
+
+## Related Pages
+
+- [Liveness Checks](/compliance/liveness-checks)
+- [KYB Status](/kyc/kyb-status)
+- [Submit KYC](/guides/submit-kyc)

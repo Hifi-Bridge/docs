@@ -1,0 +1,53 @@
+---
+title: "Liveness Checks"
+description: "Enhanced verification for UBOs."
+---
+
+Business users incorporated in certain countries must have qualifying Ultimate Beneficial Owners (UBOs) complete a hosted identity and liveness check before the USD rail can become active.
+
+## Countries That Require Liveness Checks
+
+| Country | ISO Code | Rail | Direction | Payment Method |
+| :-- | :-- | :-- | :-- | :-- |
+| India | IN | USD | Payout | SWIFT |
+| Nigeria | NG | USD | Payout | SWIFT |
+| Panama | PA | USD | Payout | SWIFT |
+| Philippines | PH | USD | Payout | SWIFT |
+| Saudi Arabia | SA | USD | Payout | SWIFT |
+| Vietnam | VN | USD | Payout | SWIFT |
+
+<Info>
+  These countries are not prohibited regions. Business users from these
+  countries require UBO liveness checks before USD payouts can be enabled.
+</Info>
+
+## Requirements
+
+<CardGroup cols={1}>
+  <Card title="10% UBO threshold" icon="users">
+    All UBOs with 10% ownership or above must complete full individual KYC
+    before the entity can be approved.
+  </Card>
+
+  <Card title="Hosted liveness check" icon="camera">
+    Qualifying UBOs must complete live ID capture and biometric liveness
+    verification. Static ID uploads and screenshots are not accepted.
+  </Card>
+</CardGroup>
+
+## Integration Guide
+
+<Card title="Implement liveness checks" icon="code" href="/guides/liveness-checks">
+  Learn how to interpret the KYC Status response, identify UBOs who still need
+  to act, and send them to the hosted verification flow.
+</Card>
+
+## Related Pages
+
+- [Coverage](/coverage)
+- [USD Rail](/rails/usd)
+- [Regions](/compliance/regions)
+- [KYC Links](/features/kyc-links)
+- [KYC Requirements](/kyc/kyc-requirements)
+- [KYB Status](/kyc/kyb-status)
+- [Liveness Checks guide](/guides/liveness-checks)
