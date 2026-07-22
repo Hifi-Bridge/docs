@@ -1,16 +1,11 @@
 ---
-title: "Enhanced Verification"
-description: "Context and rules for countries that require Enhanced Verification."
+title: "Liveness Checks"
+description: "Enhanced verification for UBOs."
 ---
 
-Onboarding business users from certain countries requires Enhanced Verification. HIFI is currently running this flow as a pilot program with an initial set of customers.
+Business users incorporated in certain countries must have qualifying Ultimate Beneficial Owners (UBOs) complete a hosted identity and liveness check before the USD rail can become active.
 
-<Warning>
-  Enhanced Verification onboarding is part of a pilot program. Contact HIFI
-  before enabling USD payouts for customers in these countries.
-</Warning>
-
-## Pilot Countries
+## Countries That Require Liveness Checks
 
 | Country | ISO Code | Rail | Direction | Payment Method |
 | :-- | :-- | :-- | :-- | :-- |
@@ -23,27 +18,29 @@ Onboarding business users from certain countries requires Enhanced Verification.
 
 <Info>
   These countries are not prohibited regions. Business users from these
-  countries require Enhanced Verification before USD payouts can be enabled.
+  countries require UBO liveness checks before USD payouts can be enabled.
 </Info>
 
-## What Changes
+## Requirements
 
 <CardGroup cols={1}>
-  <Card title="UBO threshold" icon="users">
+  <Card title="10% UBO threshold" icon="users">
     All UBOs with 10% ownership or above must complete full individual KYC
     before the entity can be approved.
   </Card>
 
-  <Card title="Liveness verification" icon="camera">
+  <Card title="Hosted liveness check" icon="camera">
     Qualifying UBOs must complete live ID capture and biometric liveness
     verification. Static ID uploads and screenshots are not accepted.
   </Card>
-
-  <Card title="$10,000 review hold" icon="dollar-sign">
-    Any single transaction or payment of $10,000 USD or more is held for review
-    before processing.
-  </Card>
 </CardGroup>
+
+## Integration Guide
+
+<Card title="Implement liveness checks" icon="code" href="/guides/liveness-checks">
+  Learn how to interpret the KYC Status response, identify UBOs who still need
+  to act, and send them to the hosted verification flow.
+</Card>
 
 ## Related Pages
 
@@ -53,3 +50,4 @@ Onboarding business users from certain countries requires Enhanced Verification.
 - [KYC Links](/features/kyc-links)
 - [KYC Requirements](/kyc/kyc-requirements)
 - [KYB Status](/kyc/kyb-status)
+- [Liveness Checks guide](/guides/liveness-checks)

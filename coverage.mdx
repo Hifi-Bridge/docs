@@ -5,6 +5,8 @@ description: "HIFI enables inflows and outflows across multiple regions. Here ar
 
 ## USD Rail
 
+The USD Rail supports domestic US pay-ins and payouts, plus USD SWIFT payouts from US-based senders to the countries below.
+
 | Country | Currency | Direction | Payment Methods |
 | --- | --- | --- | --- |
 | United States of America | USD | Payin, Payout | WIRE, ACH, RTP, SWIFT (Payout-only) |
@@ -21,7 +23,7 @@ description: "HIFI enables inflows and outflows across multiple regions. Here ar
 | Germany | USD | Payout | SWIFT |
 | Greece | USD | Payout | SWIFT |
 | Guatemala | USD | Payout | SWIFT |
-| India | USD | Payout | SWIFT |
+| India\* | USD | Payout | SWIFT |
 | Ireland | USD | Payout | SWIFT |
 | Italy | USD | Payout | SWIFT |
 | Japan | USD | Payout | SWIFT |
@@ -31,47 +33,36 @@ description: "HIFI enables inflows and outflows across multiple regions. Here ar
 | Mexico | USD | Payout | SWIFT |
 | Netherlands | USD | Payout | SWIFT |
 | New Zealand | USD | Payout | SWIFT |
-| Nigeria | USD | Payout | SWIFT |
+| Nigeria\* | USD | Payout | SWIFT |
 | Norway | USD | Payout | SWIFT |
 | Oman | USD | Payout | SWIFT |
-| Panama | USD | Payout | SWIFT |
-| Philippines | USD | Payout | SWIFT |
+| Panama\* | USD | Payout | SWIFT |
+| Philippines\* | USD | Payout | SWIFT |
 | Portugal | USD | Payout | SWIFT |
-| Saudi Arabia | USD | Payout | SWIFT |
+| Saudi Arabia\* | USD | Payout | SWIFT |
 | Slovenia | USD | Payout | SWIFT |
 | Spain | USD | Payout | SWIFT |
 | Sweden | USD | Payout | SWIFT |
 | United Arab Emirates | USD | Payout | SWIFT |
 | United Kingdom | USD | Payout | SWIFT |
 | Uruguay | USD | Payout | SWIFT |
-| Vietnam | USD | Payout | SWIFT |
-
-<Note>
-  USD SWIFT payouts are currently limited to senders based in the United States. For other regions, please use the [Global Network](/rails/global-network) rail.
-</Note>
-
-### Enhanced Verification
-
-The USD rail supports the following additional countries for business users. Enhanced KYB is required before USD payouts can be enabled.
-
-| Country | ISO Code | Direction | Payment Method |
-| --- | --- | --- | --- |
-| India | IN | Payout | SWIFT |
-| Nigeria | NG | Payout | SWIFT |
-| Panama | PA | Payout | SWIFT |
-| Philippines | PH | Payout | SWIFT |
-| Saudi Arabia | SA | Payout | SWIFT |
-| Vietnam | VN | Payout | SWIFT |
+| Vietnam\* | USD | Payout | SWIFT |
 
 <Warning>
-  Enhanced Verification is part of a pilot program, and HIFI is onboarding
-  customers case by case. See the [Enhanced Verification guide](/compliance/enhanced-verification)
-  for UBO verification and review-limit requirements.
+  **Enhanced due diligence:** Countries marked with an asterisk (\*) require
+  liveness checks for UBOs.
 </Warning>
 
-[Learn more about the USD Rail](/rails/usd)
+<Info>
+  In these countries, we currently support business users only.
+</Info>
+
+- [Learn more about the USD Rail](/rails/usd)
+- [Learn more about Liveness Checks](/compliance/liveness-checks)
 
 ## Global Network Rail
+
+The Global Network Rail supports international payouts in local currencies and USD through SEPA, SWIFT, and local payment networks.
 
 | Country | Currency | Direction | Payment Methods |
 | --- | --- | --- | --- |
@@ -179,6 +170,8 @@ The USD rail supports the following additional countries for business users. Enh
 [Learn more about the Global Network Rail](/rails/global-network)
 
 ## Africa Rail (Beta)
+
+The Africa Rail supports local-currency pay-ins and payouts through bank transfers and mobile money in select African countries.
 
 | Country | Currency | Direction | Payment Methods |
 | --- | --- | --- | --- |

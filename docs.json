@@ -253,7 +253,7 @@
                 "pages": [
                   "compliance/industries",
                   "compliance/regions",
-                  "compliance/enhanced-verification",
+                  "compliance/liveness-checks",
                   {
                     "group": "Documents",
                     "pages": [
@@ -319,6 +319,7 @@
                 "pages": [
                   "guides/quickstart",
                   "guides/submit-kyc",
+                  "guides/liveness-checks",
                   "guides/receive-money",
                   "guides/send-money",
                   "guides/send-eur-offramps",
@@ -554,6 +555,14 @@
     ]
   },
   "redirects": [
+    {
+      "source": "/compliance/enhanced-verification",
+      "destination": "/compliance/liveness-checks"
+    },
+    {
+      "source": "/guides/enhanced-verification-ubos",
+      "destination": "/guides/liveness-checks"
+    },
     {
       "source": "/quickstart",
       "destination": "/guides/quickstart"
