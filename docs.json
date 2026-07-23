@@ -177,6 +177,10 @@
                       "v3/core/compliance/documents",
                       "v3/core/compliance/compliance-link"
                     ]
+                  },
+                  {
+                    "group": "Wallets",
+                    "pages": []
                   }
                 ]
               },
