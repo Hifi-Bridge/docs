@@ -235,6 +235,28 @@ If an associated party's information needs updating, the business's application 
 
 {/* TODO: Confirm this is how associated party issues surface in rfiActions */}
 
+## Optional Liveness Check
+
+A liveness check may be required for associated parties of a business user from a high-risk jurisdiction. When required, a verification link will appear under `rfiActions` with type `COMPLETE_LIVENESS_CHECK` and all associated parties must complete the liveness check before the KYB process can continue.
+
+**Example**
+
+```json
+{
+    "userId": "usr_V3leEgLs3FJ4jcI7rfPWJ",
+    "complianceStatus": "IN_REVIEW",
+    "message": null,
+    "rfiActions": [
+        {
+            "type": "COMPLETE_LIVENESS_CHECK",
+            "message": "Please complete the liveness check via verification link",
+            "verificationLink": "https://in.sumsub.com/websdk/p/sbx_iNZi5pTWEjmzOPEQ",
+            "associatedPartyId": "ap_tIFGUMSVnyUrkc68kPqtV"
+        }
+    ]
+}
+```
+
 ## Getting Help
 
 - 📧 **Email:** [support@hifi.com](mailto:support@hifi.com)

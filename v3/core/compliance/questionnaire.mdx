@@ -1,3 +1,151 @@
 ---
 title: "Questionnaire"
+description: "The questionnaire helps our compliance team evaluate a user's expected use cases and volume. It is optional, but providing it can help speed up the compliance review."
 ---
+
+## Information Required
+
+The questionnaire fields differ based on the user type. All fields are optional.
+
+<Tabs>
+  <Tab title="Individual">
+    | Field | Description | Allowed Values |
+    | :-- | :-- | :-- |
+    | `employmentStatus` | The user's current employment status | `employed`, `self_employed`, `contractor_freelancer`, `business_owner`, `student`, `unemployed`, `retired`, `homemaker`, `government_employee`, `other` |
+    | `sourceOfFunds` | The primary source of the user's funds | `employment_income`, `self_employment_income`, `business_income`, `asset_sale`, `inheritance`, `gift`, `loans`, `savings`, `investment_income`, `pension_retirement`, `government_benefits`, `other` |
+    | `primaryPurpose` | The user's primary purpose for using the platform | `goods_and_services`, `receive_payments`, `family_support`, `investment`, `savings`, `charitable_donations`, `tax_management`, `other` |
+    | `primaryPurposeDetails` | Details about the primary purpose, if `primaryPurpose` is `other` | Free text |
+    | `expectedMonthlyTransactionVolume` | Expected monthly transaction volume in USD | `0_20000`, `20000_50000`, `50000_100000`, `100000_250000`, `250000_plus` |
+    | `expectedMonthlyTransactionCount` | Expected number of transactions per month | `0_10`, `10_100`, `100_1000`, `1000_10000`, `10000_plus` |
+    | `highRiskActivities` | Any high-risk activities the user engages in | `adult_entertainment`, `gambling`, `financial_services`, `lending`, `money_services`, `payment_processing`, `custody_of_funds`, `crypto_services`, `crypto_mining`, `pharmaceuticals`, `marijuana`, `tobacco`, `precious_metals`, `weapons`, `none` |
+    | `actsOnBehalfOfThirdParty` | Whether the user acts on behalf of a third party | `true`, `false` |
+    | `actsOnBehalfOfThirdPartyDetails` | Details about the third party, if `actsOnBehalfOfThirdParty` is `true` | Free text |
+  </Tab>
+  <Tab title="Business">
+    | Field | Description | Allowed Values |
+    | :-- | :-- | :-- |
+    | `annualRevenue` | The business's annual revenue in USD | `0_100000`, `100000_1000000`, `1000000_10000000`, `10000000_50000000`, `50000000_250000000`, `250000000_plus` |
+    | `expectedMonthlyTransactionVolume` | Expected monthly transaction volume in USD | `0_500000`, `500000_1000000`, `1000000_5000000`, `5000000_20000000`, `20000000_plus` |
+    | `expectedMonthlyTransactionCount` | Expected number of transactions per month | `0_100`, `100_1000`, `1000_10000`, `10000_100000`, `100000_plus` |
+    | `primaryPurpose` | The business's primary purpose for using the platform | `receive_payments`, `business_expenses`, `payroll`, `treasury_management`, `investment_activity`, `money_transmission`, `payment_processing`, `charitable_donations`, `tax_management`, `other` |
+    | `primaryPurposeDetails` | Details about the primary purpose, if `primaryPurpose` is `other` | Free text |
+    | `highRiskActivities` | Any high-risk activities the business engages in | `adult_entertainment`, `gambling`, `financial_services`, `lending`, `money_services`, `payment_processing`, `custody_of_funds`, `crypto_services`, `crypto_mining`, `pharmaceuticals`, `marijuana`, `tobacco`, `precious_metals`, `weapons`, `check_cashing_or_bail`, `government_entities`, `bearer_shares`, `shell_bank`, `none` |
+    | `sourceOfFunds` | The primary source of the business's funds | `operating_revenue`, `equity_investment`, `loans`, `investment_income`, `asset_sale`, `intercompany_funds`, `treasury_reserves`, `grants`, `third_party_funds`, `other` |
+    | `transmitsThirdPartyFunds` | Whether the business transmits funds on behalf of third parties | `true`, `false` |
+    | `providesFinancialServices` | Whether the business provides financial services | `true`, `false` |
+  </Tab>
+</Tabs>
+
+{/* TODO: If these fields have fixed enum values (e.g. employmentStatus,
+  sourceOfFunds, volume/count ranges), list them here or link to the API
+  Reference where they're enumerated */}
+
+## Example: Update the Questionnaire
+
+<Tabs>
+  <Tab title="Individual">
+    **Request**
+
+    ```bash
+        curl -X PATCH "https://sandbox.hifi.com/v3/users/usr_4o0ZDdLcfxmB6OyzUEVNq/compliance/questionnaire" \
+          -H "Authorization: Bearer YOUR_API_KEY" \
+          -H "Content-Type: application/json" \
+          -d '{
+            "employmentStatus": "employed",
+            "sourceOfFunds": "employment_income",
+            "primaryPurpose": "goods_and_services",
+            "expectedMonthlyTransactionVolume": "0_20000",
+            "expectedMonthlyTransactionCount": "10_100",
+            "highRiskActivities": ["none"],
+            "actsOnBehalfOfThirdParty": false
+          }'
+    ```
+
+    **Response**
+
+    ```json
+        {
+            "userId": "usr_4o0ZDdLcfxmB6OyzUEVNq",
+            "type": "INDIVIDUAL",
+            "employmentStatus": "employed",
+            "expectedMonthlyTransactionVolume": "0_20000",
+            "expectedMonthlyTransactionCount": "10_100",
+            "highRiskActivities": [
+                "none"
+            ],
+            "primaryPurpose": "goods_and_services",
+            "primaryPurposeDetails": null,
+            "sourceOfFunds": "employment_income",
+            "sourceOfFundsDetails": null,
+            "actsOnBehalfOfThirdParty": false,
+            "actsOnBehalfOfThirdPartyDetails": null,
+            "createdAt": "2026-07-13T22:12:26.766Z",
+            "updatedAt": "2026-07-13T22:12:41.585Z"
+        }
+    ```
+  </Tab>
+  <Tab title="Business">
+    **Request**
+
+    ```bash
+        curl -X PATCH "https://sandbox.hifi.com/v3/users/usr_8kL2MdPcfxmB6OyzXWQNr/compliance/questionnaire" \
+          -H "Authorization: Bearer YOUR_API_KEY" \
+          -H "Content-Type: application/json" \
+          -d '{
+            "annualRevenue": "250000000_plus",
+            "expectedMonthlyTransactionVolume": "20000000_plus",
+            "expectedMonthlyTransactionCount": "100000_plus",
+            "primaryPurpose": "other",
+            "primaryPurposeDetails": "Cross-border supplier payments",
+            "highRiskActivities": ["none"],
+            "sourceOfFunds": "operating_revenue",
+            "transmitsThirdPartyFunds": false,
+            "providesFinancialServices": true
+          }'
+    ```
+
+    **Response**
+
+    ```json
+        {
+            "userId": "usr_8kL2MdPcfxmB6OyzXWQNr",
+            "type": "BUSINESS",
+            "annualRevenue": "250000000_plus",
+            "expectedMonthlyTransactionVolume": "20000000_plus",
+            "expectedMonthlyTransactionCount": "100000_plus",
+            "highRiskActivities": [
+                "none"
+            ],
+            "primaryPurpose": "other",
+            "primaryPurposeDetails": "Cross-border supplier payments",
+            "sourceOfFunds": "operating_revenue",
+            "sourceOfFundsDetails": null,
+            "transmitsThirdPartyFunds": false,
+            "providesFinancialServices": true,
+            "createdAt": "2026-07-14T18:22:10.412Z",
+            "updatedAt": "2026-07-14T18:22:10.412Z"
+        }
+    ```
+
+    {/* TODO: Replace with a real sandbox request/response pair — the
+  business response shape is inferred from the individual one */}
+  </Tab>
+</Tabs>
+
+## Expected Behavior
+
+The questionnaire is submitted as part of the user's compliance application — it does not have a separate status. Update it before submitting the application for review, as described in [KYC (Individual)](/v3/core/compliance/kyc) and [KYB (Business)](/v3/core/compliance/kyb).
+
+If our compliance team needs the questionnaire updated after review, the application will move to `REQUIRES_INFO` with an `UPDATE_QUESTIONNAIRE` action in the `rfiActions` field.
+
+## Getting Help
+
+- 📧 **Email:** [support@hifi.com](mailto:support@hifi.com)
+- 💬 **Slack:** Message us in our shared Slack channel
+
+## Related Resources
+
+- [KYC (Individual)](/v3/core/compliance/kyc) - Individual verification requirements
+- [KYB (Business)](/v3/core/compliance/kyb) - Business verification requirements
+- [Associated Parties](/v3/core/compliance/associated-parties) - UBO and control person requirements
+- API Reference: Complete endpoints

@@ -530,6 +530,25 @@ After submission, the application can be in different states
     - An RFI may be sent to your compliance mailbox requesting additional information
     - The status may move to `REQUIRES_INFO` after our compliance check — use GET `/v3/users/:user_id/compliance/status` to see what additional information is required
     - The status may move to `REJECTED` or `APPROVED` when a final decision is made by our compliance team
+    - A verification link may be included in the `rfiActions` field when a liveness check is required for an associated party with type `COMPLETE_LIVENESS_CHECK`.
+
+    **Example**
+
+    ```json
+    {
+        "userId": "usr_V3leEgLs3FJ4jcI7rfPWJ",
+        "complianceStatus": "IN_REVIEW",
+        "message": null,
+        "rfiActions": [
+            {
+                "type": "COMPLETE_LIVENESS_CHECK",
+                "message": "Please complete the liveness check via verification link",
+                "verificationLink": "https://in.sumsub.com/websdk/p/sbx_iNZi5pTWEjmzOPEQ",
+                "associatedPartyId": "ap_tIFGUMSVnyUrkc68kPqtV"
+            }
+        ]
+    }
+    ```
 
     <Info>
       KYB reviews typically take longer than individual KYC due to the additional entity and associated party verification.
@@ -601,15 +620,20 @@ After submission, the application can be in different states
 
 ## RFI Actions
 
-When a submitted application needs updated information, the status transitions to `REQUIRES_INFO` and the `rfiActions` field will include the actions required before resubmission.
+When a submitted application needs updated information, the `rfiActions` field will include the actions required before resubmission.
 
 | Type | Action |
 | :-- | :-- |
 | `UPDATE_PROFILE` | Update the business's or associated party's profile information before resubmission — a common reason is information that doesn't match the submitted documentation. |
-| `UPLOAD_DOCUMENT` | Update the business's or associated party's documentation before resubmission — common reasons include expired, blurry, or unqualified documents. |
+| `RESUBMIT_DOCUMENT` | Update the business's or associated party's documentation before resubmission — common reasons include expired, blurry, or unqualified documents. |
 | `UPDATE_QUESTIONNAIRE` | Update the business's questionnaire before resubmission |
+| `COMPLETE_LIVENESS_CHECK` | Complete the required liveness check for each associated party via provided verification link. |
 
 {/* TODO: Confirm the full list of rfiAction types for business users */}
+
+<Info>
+  A `COMPLETE_LIVENESS_CHECK` action is currently issued when the status is `IN_REVIEW`.
+</Info>
 
 ## Getting Help
 
