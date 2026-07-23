@@ -1,0 +1,127 @@
+---
+title: "Compliance Links"
+description: "A compliance link is a HIFI-hosted page you can share with your end users to collect their compliance information. Submitted data flows directly to HIFI, so you don't need to handle or store compliance data yourself."
+---
+
+## Overview
+
+Compliance links let you offload the collection of KYC and KYB information to a HIFI-hosted page. You generate a link, share it with your end user, and they complete and submit their compliance information directly to HIFI. When the user submits, the compliance check is initiated automatically - no separate submission call is required. The page can be white-labeled with your own logo using a template ID.
+
+A compliance link can be issued to:
+
+- **Create a new user** – Collect compliance information from a user who doesn't exist on the platform yet
+- **Update an existing user** – Request updated information from a user who has already been created
+
+## Request Fields
+
+| Field | Description | Required |
+| :-- | :-- | :-- |
+| `requestId` | A unique identifier for the request, used for idempotency | Yes |
+| `userType` | The type of user to create (`INDIVIDUAL` or `BUSINESS`). Use when creating a new user. | Conditional |
+| `userId` | The ID of an existing user to request updates from. Use when updating an existing user. | Conditional |
+| `redirectUrl` | URL to send the user to after they complete the hosted flow | No |
+| `recipientEmail` | Email address to send the compliance link to | No |
+| `templateId` | Template ID for white-labeling the hosted page with your logo | No |
+
+<Info>
+  Provide `userType` to create a new user, or `userId` to request updates from an existing user - one or the other, depending on the use case.
+</Info>
+
+<Tip>
+  Include a `redirectUrl` to send the user to a different page once they complete the hosted flow.
+</Tip>
+
+## Example: Create a Compliance Link
+
+<Steps>
+  <Step title="Create the link">
+    Generate a compliance link for a new or existing user.
+
+    #### New User
+
+    **Request**
+
+    ```shell
+    curl -X POST "https://sandbox.hifi.com/v3/compliance-links" \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "requestId": "705f1f8b-a080-467c-b683-174eca409928",
+        "userType": "INDIVIDUAL"
+      }'
+    ```
+
+    #### Existing User
+
+    **Request**
+
+    ```shell
+    curl -X POST "https://sandbox.hifi.com/v3/compliance-links" \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "requestId": "705f1f8b-a080-467c-b683-174eca409928",
+        "userId": "usr_y6bCoQkp0dToIZNDQToUG"
+      }'
+    ```
+
+    **Response**
+
+    ```json
+    {
+        "id": "cl_cx8Af2eUaXxgeKVVBJDOP",
+        "userId": "usr_y6bCoQkp0dToIZNDQToUG",
+        "userType": "INDIVIDUAL",
+        "url": "https://app.hifi.com/sandbox/compliance-link?complianceLinkId=cl_cx8Af2eUaXxgeKVVBJDOP&sessionToken=...",
+        "sessionToken": "...",
+        "template": null
+    }
+    ```
+
+    <Info>
+      If the link is created for a new user, a userId will also be returned in the response.
+    </Info>
+  </Step>
+  <Step title="Share the link">
+    Share the `url` from the response with your end user. They complete and submit their compliance information on the HIFI-hosted page, and the data flows directly to HIFI.
+
+    If you provide a `recipientEmail`, HIFI can deliver the link to the user by email on your behalf.
+
+    <Info>
+      On submission, the compliance check is initiated automatically.
+    </Info>
+  </Step>
+  <Step title="Track the status">
+    Once the user submits, a webhook will be sent out with the corresponding compliance link ID.
+
+    Track their compliance status the same way as a directly created user - via webhook or by polling GET `/v3/users/:user_id/compliance/status`.
+  </Step>
+</Steps>
+
+## Customization
+
+White-label the hosted page with your branding by including a `templateId` when creating the link.
+
+<Steps>
+  <Step title="Upload branding">
+    Upload your company logo via [https://app.hifi.com/sandbox/developer/template](https://app.hifi.com/sandbox/developer/template)
+  </Step>
+  <Step title="Receive template ID">
+    Once the logo is uploaded, your template ID will appear on the same page.
+  </Step>
+  <Step title="Use template ID">
+    Include the `templateId` when generating the compliance link.
+  </Step>
+</Steps>
+
+## Getting Help
+
+- 📧 **Email:** [support@hifi.com](mailto:support@hifi.com)
+- 💬 **Slack:** Message us in our shared Slack channel
+
+## Related Resources
+
+- [User Overview](/v3/core/users/overview) - User types and creation
+- [KYC (Individual)](/v3/core/compliance/kyc) - Individual verification requirements
+- [KYB (Business)](/v3/core/compliance/kyb) - Business verification requirements
+- API Reference: Compliance - Complete endpoint documentation

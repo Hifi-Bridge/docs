@@ -174,7 +174,8 @@
                       "v3/core/compliance/kyb",
                       "v3/core/compliance/associated-party",
                       "v3/core/compliance/questionnaire",
-                      "v3/core/compliance/documents"
+                      "v3/core/compliance/documents",
+                      "v3/core/compliance/compliance-link"
                     ]
                   }
                 ]
