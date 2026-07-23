@@ -36,105 +36,98 @@ The questionnaire fields differ based on the user type. All fields are optional.
   </Tab>
 </Tabs>
 
-{/* TODO: If these fields have fixed enum values (e.g. employmentStatus,
-  sourceOfFunds, volume/count ranges), list them here or link to the API
-  Reference where they're enumerated */}
-
 ## Example: Update the Questionnaire
 
 <Tabs>
   <Tab title="Individual">
     **Request**
 
-    ```bash
-        curl -X PATCH "https://sandbox.hifi.com/v3/users/usr_4o0ZDdLcfxmB6OyzUEVNq/compliance/questionnaire" \
-          -H "Authorization: Bearer YOUR_API_KEY" \
-          -H "Content-Type: application/json" \
-          -d '{
-            "employmentStatus": "employed",
-            "sourceOfFunds": "employment_income",
-            "primaryPurpose": "goods_and_services",
-            "expectedMonthlyTransactionVolume": "0_20000",
-            "expectedMonthlyTransactionCount": "10_100",
-            "highRiskActivities": ["none"],
-            "actsOnBehalfOfThirdParty": false
-          }'
+    ```shellscript
+    curl -X PATCH "https://sandbox.hifi.com/v3/users/usr_4o0ZDdLcfxmB6OyzUEVNq/compliance/questionnaire" \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "employmentStatus": "employed",
+        "sourceOfFunds": "employment_income",
+        "primaryPurpose": "goods_and_services",
+        "expectedMonthlyTransactionVolume": "0_20000",
+        "expectedMonthlyTransactionCount": "10_100",
+        "highRiskActivities": ["none"],
+        "actsOnBehalfOfThirdParty": false
+      }'
     ```
 
     **Response**
 
     ```json
-        {
-            "userId": "usr_4o0ZDdLcfxmB6OyzUEVNq",
-            "type": "INDIVIDUAL",
-            "employmentStatus": "employed",
-            "expectedMonthlyTransactionVolume": "0_20000",
-            "expectedMonthlyTransactionCount": "10_100",
-            "highRiskActivities": [
-                "none"
-            ],
-            "primaryPurpose": "goods_and_services",
-            "primaryPurposeDetails": null,
-            "sourceOfFunds": "employment_income",
-            "sourceOfFundsDetails": null,
-            "actsOnBehalfOfThirdParty": false,
-            "actsOnBehalfOfThirdPartyDetails": null,
-            "createdAt": "2026-07-13T22:12:26.766Z",
-            "updatedAt": "2026-07-13T22:12:41.585Z"
-        }
+    {
+        "userId": "usr_4o0ZDdLcfxmB6OyzUEVNq",
+        "type": "INDIVIDUAL",
+        "employmentStatus": "employed",
+        "expectedMonthlyTransactionVolume": "0_20000",
+        "expectedMonthlyTransactionCount": "10_100",
+        "highRiskActivities": [
+            "none"
+        ],
+        "primaryPurpose": "goods_and_services",
+        "primaryPurposeDetails": null,
+        "sourceOfFunds": "employment_income",
+        "sourceOfFundsDetails": null,
+        "actsOnBehalfOfThirdParty": false,
+        "actsOnBehalfOfThirdPartyDetails": null,
+        "createdAt": "2026-07-13T22:12:26.766Z",
+        "updatedAt": "2026-07-13T22:12:41.585Z"
+    }
     ```
   </Tab>
   <Tab title="Business">
     **Request**
 
-    ```bash
-        curl -X PATCH "https://sandbox.hifi.com/v3/users/usr_8kL2MdPcfxmB6OyzXWQNr/compliance/questionnaire" \
-          -H "Authorization: Bearer YOUR_API_KEY" \
-          -H "Content-Type: application/json" \
-          -d '{
-            "annualRevenue": "250000000_plus",
-            "expectedMonthlyTransactionVolume": "20000000_plus",
-            "expectedMonthlyTransactionCount": "100000_plus",
-            "primaryPurpose": "other",
-            "primaryPurposeDetails": "Cross-border supplier payments",
-            "highRiskActivities": ["none"],
-            "sourceOfFunds": "operating_revenue",
-            "transmitsThirdPartyFunds": false,
-            "providesFinancialServices": true
-          }'
+    ```shell
+    curl -X PATCH "https://sandbox.hifi.com/v3/users/usr_8kL2MdPcfxmB6OyzXWQNr/compliance/questionnaire" \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "annualRevenue": "250000000_plus",
+        "expectedMonthlyTransactionVolume": "20000000_plus",
+        "expectedMonthlyTransactionCount": "100000_plus",
+        "primaryPurpose": "other",
+        "primaryPurposeDetails": "Cross-border supplier payments",
+        "highRiskActivities": ["none"],
+        "sourceOfFunds": "operating_revenue",
+        "transmitsThirdPartyFunds": false,
+        "providesFinancialServices": true
+      }'
     ```
 
     **Response**
 
     ```json
-        {
-            "userId": "usr_8kL2MdPcfxmB6OyzXWQNr",
-            "type": "BUSINESS",
-            "annualRevenue": "250000000_plus",
-            "expectedMonthlyTransactionVolume": "20000000_plus",
-            "expectedMonthlyTransactionCount": "100000_plus",
-            "highRiskActivities": [
-                "none"
-            ],
-            "primaryPurpose": "other",
-            "primaryPurposeDetails": "Cross-border supplier payments",
-            "sourceOfFunds": "operating_revenue",
-            "sourceOfFundsDetails": null,
-            "transmitsThirdPartyFunds": false,
-            "providesFinancialServices": true,
-            "createdAt": "2026-07-14T18:22:10.412Z",
-            "updatedAt": "2026-07-14T18:22:10.412Z"
-        }
+    {
+        "userId": "usr_8kL2MdPcfxmB6OyzXWQNr",
+        "type": "BUSINESS",
+        "annualRevenue": "250000000_plus",
+        "expectedMonthlyTransactionVolume": "20000000_plus",
+        "expectedMonthlyTransactionCount": "100000_plus",
+        "highRiskActivities": [
+            "none"
+        ],
+        "primaryPurpose": "other",
+        "primaryPurposeDetails": "Cross-border supplier payments",
+        "sourceOfFunds": "operating_revenue",
+        "sourceOfFundsDetails": null,
+        "transmitsThirdPartyFunds": false,
+        "providesFinancialServices": true,
+        "createdAt": "2026-07-14T18:22:10.412Z",
+        "updatedAt": "2026-07-14T18:22:10.412Z"
+    }
     ```
-
-    {/* TODO: Replace with a real sandbox request/response pair — the
-  business response shape is inferred from the individual one */}
   </Tab>
 </Tabs>
 
 ## Expected Behavior
 
-The questionnaire is submitted as part of the user's compliance application — it does not have a separate status. Update it before submitting the application for review, as described in [KYC (Individual)](/v3/core/compliance/kyc) and [KYB (Business)](/v3/core/compliance/kyb).
+The questionnaire is submitted as part of the user's compliance application - it does not have a separate status. Update it before submitting the application for review, as described in [KYC (Individual)](/v3/core/compliance/kyc) and [KYB (Business)](/v3/core/compliance/kyb).
 
 If our compliance team needs the questionnaire updated after review, the application will move to `REQUIRES_INFO` with an `UPDATE_QUESTIONNAIRE` action in the `rfiActions` field.
 

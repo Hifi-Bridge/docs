@@ -1,3 +1,133 @@
 ---
 title: "Documents"
+description: "Documentation is uploaded as part of a user's compliance application to satisfy KYC and KYB requirements. Files are uploaded first, then attached to the user (or an associated party) as compliance documents."
 ---
+
+## Document Groups
+
+Each user type must satisfy a set of document groups. A document's `type` determines which group (or groups) it fulfills.
+
+### Individual & Associated Party
+
+| Document Group | Accepted Type | Required |
+| :-- | :-- | :-- |
+| `identity` | `DRIVERS`, `ID_CARD`, `PASSPORT`, `RESIDENCE_PERMIT` | Yes |
+| `proofOfResidence` | `UTILITY_BILL`, `BANK_STATEMENT`, `RENTAL_AGREEMENT`, `TAX_DOCUMENT`, `VOTER_REGISTRATION_CARD`, `BANK_REFERENCE_LETTER`, `LEASE_OR_TENANCY_AGREEMENT`, `PROOF_OF_ADDRESS` | Yes\* |
+
+<Tip>
+  For US and Canadian users, proof of address is optional if a driver's license, national ID, or resident permit is submitted as the government-issued ID.
+</Tip>
+
+### Business
+
+| Document Group | Accepted Type | Required |
+| :-- | :-- | :-- |
+| `legalPresence` | `INCORPORATION_ARTICLES`, `INCORPORATION_CERT`, `STATE_REGISTRY` | Yes |
+| `ownershipStructure` | `SHAREHOLDER_REGISTRY`, `TRUST_AGREEMENT`, `INFORMATION_STATEMENT`, `STATE_REGISTRY` | Yes |
+| `controlStructure` | `DIRECTORS_REGISTRY`, `TRUST_AGREEMENT`, `INFORMATION_STATEMENT`, `STATE_REGISTRY` | Yes |
+| `companyDetails` | `UTILITY_BILL`, `BANK_STATEMENT`, `RENTAL_AGREEMENT`, `TAX_DOCUMENT`, `VOTER_REGISTRATION_CARD`, `BANK_REFERENCE_LETTER`, `LEASE_OR_TENANCY_AGREEMENT`, `PROOF_OF_ADDRESS` | Yes |
+
+<Info>
+  A single document can fulfill multiple document group requirements - for example, submitting a `STATE_REGISTRY` can fulfill `legalPresence`, `ownershipStructure`, and `controlStructure`.
+</Info>
+
+## Document Fields
+
+| Field | Description | Required |
+| :-- | :-- | :-- |
+| `type` | The document type (e.g. `PASSPORT`, `STATE_REGISTRY`) | Yes |
+| `subType` | `SINGLE_SIDE`, or `FRONT_SIDE` / `BACK_SIDE` for two-sided documents | Yes |
+| `fileId` | The `fileId` returned from the File endpoint | Yes |
+| `issuedCountry` | Country that issued the document | Yes |
+| `issuedDate` | Date the document was issued (YYYY-MM-DD) | No |
+| `expiryDate` | Date the document expires (YYYY-MM-DD) | No |
+| `associatedPartyId` | The associated party this document belongs to, if applicable | No |
+
+{/* TODO: Confirm the field list, required flags, and subType enum values */}
+
+<Info>
+  If the document has two sides, submit both, using `FRONT_SIDE` and `BACK_SIDE` for the `subType`.
+</Info>
+
+## Example: Upload a Document
+
+<Steps>
+  <Step title="Upload the file">
+    Upload the raw file to receive a `fileId`.
+
+    **Request**
+
+    ```shell
+    curl -X POST "https://sandbox.hifi.com/v3/files" \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -F "file=@ex_passport.png"
+    ```
+
+    **Response**
+
+    ```json
+    {
+        "id": "file_bpctfWmU4RM2o-wnqFU3g",
+        "createdAt": "2026-07-23T21:07:40.823Z",
+        "fileName": "ex_passport.png",
+        "size": 2723224,
+        "mimeType": "image/png"
+    }
+    ```
+  </Step>
+  <Step title="Attach the document">
+    Attach the document to the user with the returned `fileId`.
+
+    **Request**
+
+    ```shell
+    curl -X PATCH "https://sandbox.hifi.com/v3/users/usr_4o0ZDdLcfxmB6OyzUEVNq/compliance/documents" \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "type": "PASSPORT",
+        "subType": "SINGLE_SIDE",
+        "issuedCountry": "USA",
+        "fileId": "file_O8A1X7gCKoYxlb2aMYYzK"
+      }'
+    ```
+
+    **Response**
+
+    ```json
+    {
+        "id": "doc_lPeFxGI2dAVFvLV2g7b33",
+        "userId": "usr_4o0ZDdLcfxmB6OyzUEVNq",
+        "associatedPartyId": null,
+        "type": "PASSPORT",
+        "subType": "SINGLE_SIDE",
+        "issuedCountry": "USA",
+        "issuedDate": "2024-05-04",
+        "expiryDate": "2030-05-04",
+        "number": null,
+        "fileId": "file_O8A1X7gCKoYxlb2aMYYzK",
+        "description": null,
+        "isValid": null,
+        "message": null,
+        "createdAt": "2026-07-14T18:05:27.331Z",
+        "updatedAt": "2026-07-14T18:05:27.331Z"
+    }
+    ```
+
+    <Info>
+      To attach a document to an associated party, include the party's `associatedPartyId` in the request body.
+    </Info>
+  </Step>
+</Steps>
+
+## Getting Help
+
+- 📧 **Email:** [support@hifi.com](mailto:support@hifi.com)
+- 💬 **Slack:** Message us in our shared Slack channel
+
+## Related Resources
+
+- [KYC (Individual)](/v3/core/compliance/kyc) - Individual verification requirements
+- [KYB (Business)](/v3/core/compliance/kyb) - Business verification requirements
+- [Associated Parties](/v3/core/compliance/associated-parties) - UBO and control person requirements
+- API Reference: Compliance - Complete endpoint documentation
