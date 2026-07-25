@@ -107,9 +107,52 @@ curl -X GET https://sandbox.hifi.com/v3/users/usr_x1y2z3/wallets/wlt_fkc0E4OsfHW
 
 ## Retrieve wallet's deposit history
 
-Get a list of incoming deposit for supported asset for a given wallet
+Get a list of incoming deposits for supported assets for a given wallet.
 
-(WIP)
+### Example: Retrieving all USDC Deposits
+
+**Request**
+
+```shellscript
+curl -X GET https://sandbox.hifi.com/v3/users/usr_Cu7daJpEqY6gIAzG30R9s/wallets/wlt_ETUnJO1R8j9hDlthRnqNp/deposits?currency=USDT \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+```
+
+**Response**
+
+```json
+{
+    "data": [
+        {
+            "id": "760d0d4d-0b31-5bf9-8e75-61d5eaf1a679",
+            "userId": "usr_Cu7daJpEqY6gIAzG30R9s",
+            "createdAt": 1784926651388,
+            "updatedAt": 1784926651388,
+            "wallet": {
+                "id": "wlt_ETUnJO1R8j9hDlthRnqNp",
+                "address": "0xE153A986dE3E910E1221cC554a908a57abDd3a8f",
+                "chain": "ETHEREUM"
+            },
+            "transaction": {
+                "transactionHash": "0x7abebe03abbe08030435c1d567b11fb03fc6cedd467c5267c9b7ae395dba6fee",
+                "chain": "ETHEREUM",
+                "currency": "USDT",
+                "status": "COMPLETED",
+                "sourceAddress": "0x49042c4A9141A0bF388C07d971098E59D13D80c3",
+                "destinationAddress": "0xE153A986dE3E910E1221cC554a908a57abDd3a8f",
+                "contractAddress": "0x5532B426Bb07Bf73E2e28c106b6a593e7797f07E",
+                "amount": 499.5,
+                "unitAmount": "499500000"
+            }
+        }
+    ],
+    "pagination": {
+        "hasMore": false,
+        "startCursor": "760d0d4d-0b31-5bf9-8e75-61d5eaf1a679",
+        "endCursor": "dep_gO38BgTY7bV4h9VWWtxGQ"
+    }
+}
+```
 
 <Info>
   Incoming deposits are also sent out via webhook messages—subscribe to receive real-time updates.
