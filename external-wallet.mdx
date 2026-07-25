@@ -1,0 +1,96 @@
+---
+title: "External Wallet"
+description: "Register and manage externally owned wallets used as destinations for on-chain transfers."
+---
+
+An External Wallet is an on-chain address outside HIFI's system - typically a user's own self-custody wallet, or a wallet belonging to a third party. Once registered, it can act as:
+
+- The **destination** for a Crypto Transfer, Swap, or Bridge out of a [HIFI Wallet](/v3/core/wallets/hifi-wallet).
+- The **destination** for an Onramp or a Virtual Account, when a client wants fiat converted straight to stablecoins in the user's own wallet instead of a HIFI Wallet.
+- The **source** for an Offramp - e.g. a payout triggered by a deposit coming from the external wallet
+
+<Info>
+  Every external wallet is tied to a **counterparty** - the recipient entity it belongs to. The counterparty must be active before you can add a wallet for them.
+</Info>
+
+<Card title="Counterparty" icon="person">
+  The person or entity on the other side of a transaction - the external wallet or bank account the funds are sent to or received from.
+</Card>
+
+## Add an external wallet
+
+Registers an address as a whitelisted destination for a counterparty. Requires an `Idempotency-Key` header.
+
+**Request**
+
+```shell
+curl -X POST https://sandbox.hifi.com/v3/users/usr_x1y2z3/counter-parties/cpty_a1b2c3/external-wallets \
+  -H "Idempotency-Key: <unique-key>" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -d '{
+    "address": "0x94AFE8D964Af80086d81B1b0F67504eA864482de",
+    "chain": "ETHEREUM",
+    "name": "Jane External Wallet",
+    "referenceId": "jane-external-1"
+  }'
+```
+
+**Response**
+
+```json
+{
+    "id": "extwlt_QW1e2r3t4y",
+    "userId": "usr_x1y2z3",
+    "counterPartyId": "cpty_a1b2c3",
+    "chain": "ETHEREUM",
+    "name": "Jane's External Wallet",
+    "address": "0x94AFE8D964Af80086d81B1b0F67504eA864482de",
+    "referenceId": "jane-external-1",
+    "active": true,
+    "createdAt": "2026-07-24T22:10:00.000Z",
+    "updatedAt": "2026-07-24T22:10:00.000Z"
+}
+```
+
+<Info>
+  HIFI runs address screening on newly added external wallets, plus ongoing monitoring. Make sure the wallet is active before initiating a transaction against it.
+</Info>
+
+## Deactivate an external wallet
+
+Revokes a previously-added address. A deactivated wallet can no longer be used as a transfer destination — attempts to send to it fail with `RESOURCE_NOT_USABLE` (422) — but its record and history are preserved.
+
+**Request**
+
+```shell
+curl -X POST https://sandbox.hifi.com/v3/users/usr_x1y2z3/counter-parties/cpty_a1b2c3/external-wallets/extwlt_QW1e2r3t4y/deactivate \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+**Response**
+
+```json
+{
+    "id": "extwlt_QW1e2r3t4y",
+    "userId": "usr_x1y2z3",
+    "counterPartyId": "cpty_a1b2c3",
+    "chain": "ETHEREUM",
+    "name": "Jane's External Wallet",
+    "address": "0x94AFE8D964Af80086d81B1b0F67504eA864482de",
+    "referenceId": "jane-external-1",
+    "active": false,
+    "createdAt": "2026-07-24T22:10:00.000Z",
+    "updatedAt": "2026-07-24T22:10:00.000Z"
+}
+```
+
+## Getting Help
+
+- 📧 **Email:** [support@hifi.com](mailto:support@hifi.com)
+- 💬 **Slack:** Message us in our shared Slack channel
+
+## Related Resources
+
+- [Wallets Overview](/v3/core/wallets/overview) - Wallets resources
+- [HIFI Wallet](/v3/core/wallets/hifi-wallet) — Provision wallets and read balances
+- [Deposit Offers](/v3/core/wallets/deposit-offers) — Accept/reject Canton transfers

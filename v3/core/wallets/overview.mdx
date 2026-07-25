@@ -1,0 +1,61 @@
+---
+title: "Overview"
+description: "HIFI Wallets are custodial, multi-chain wallets HIFI provisions and secures for each user, alongside external wallets, on-chain deposits, and Canton deposit offers."
+---
+
+Wallets are how value moves on-chain in HIFI. Every user can have one or more **HIFI Wallets** — custodial wallets that HIFI provisions per chain — plus any number of **External Wallets**, which are whitelisted third-party addresses used as withdrawal destinations.
+
+This section covers four resources:
+
+| Resource | What it's for |
+| --- | --- |
+| [HIFI Wallet](/v3/core/wallets/hifi-wallet) | Provision custodial wallets, fetch wallet details, and read live on-chain balances. |
+| [External Wallet](/v3/core/wallets/external-wallet) | Register and manage non-custodial addresses tied to a counterparty. |
+| [Balances (Deposits)](/v3/core/wallets/balances-deposits) | Query the ledger of confirmed on-chain deposits into a user's HIFI Wallets. |
+| [Deposit Offers](/v3/core/wallets/deposit-offers) | Accept or reject incoming Canton transfers, which arrive as two-step offers rather than direct deposits. |
+
+## Supported chains
+
+HIFI Wallets and External Wallets can both be used on:
+
+| Chain | Testnet |
+| :-- | :-- |
+| `POLYGON` | ✅ |
+| `ETHEREUM` | ✅ |
+| `SOLANA` | ✅ |
+| `BASE` | ✅ |
+| `FLOW_EVM` | ✅ |
+| `TRON` | ✅ |
+| `CANTON` | ✅ |
+| `XRPL` | ✅ |
+
+For more details checkout [Supported Onchain Assets](/v3/docs/references/onchain-assets)
+
+<Info>
+  Additional chains are available upon request
+</Info>
+
+## Supported currencies
+
+| Context | Currencies |
+| --- | --- |
+| Deposits | `USDC`, `USDT`, `USDG`, `PYUSD`, `PYUSD0`, `USDCX` |
+| Balance lookups | `USDC`, `USDT`, `USDG`, `RLUSD`, `PYUSD`, `PYUSD0`, `USDCX` |
+
+For more details checkout [Supported Onchain Assets](/v3/docs/references/onchain-assets)
+
+<Info>
+  **Not every currency is available on every chain.** Requesting a balance for an unsupported currency/chain combination returns a `RESOURCE_NOT_ELIGIBLE` error.
+</Info>
+
+## Getting Help
+
+- 📧 **Email:** [support@hifi.com](mailto:support@hifi.com)
+- 💬 **Slack:** Message us in our shared Slack channel
+
+## Related Resources
+
+- [HIFI Wallet](vscode-webview://0i1j29tk92nufv4ln4afcj0psprq4mtgggj5r943g6sjkcmsrbdu/v3/core/wallets/hifi-wallet) — Provision wallets and read balances
+- [External Wallet](vscode-webview://0i1j29tk92nufv4ln4afcj0psprq4mtgggj5r943g6sjkcmsrbdu/v3/core/wallets/external-wallet) — Manage withdrawal destinations
+- [Balances (Deposits)](vscode-webview://0i1j29tk92nufv4ln4afcj0psprq4mtgggj5r943g6sjkcmsrbdu/v3/core/wallets/balances-deposits) — Confirmed on-chain deposit history
+- [Deposit Offers](vscode-webview://0i1j29tk92nufv4ln4afcj0psprq4mtgggj5r943g6sjkcmsrbdu/v3/core/wallets/deposit-offers) — Accept/reject Canton transfers

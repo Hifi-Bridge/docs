@@ -180,7 +180,12 @@
                   },
                   {
                     "group": "Wallets",
-                    "pages": []
+                    "pages": [
+                      "v3/core/wallets/overview",
+                      "v3/core/wallets/hifi-wallet",
+                      "v3/core/wallets/external-wallet",
+                      "v3/core/wallets/deposit-offers"
+                    ]
                   }
                 ]
               },
@@ -200,7 +205,8 @@
                 "group": "References",
                 "pages": [
                   "v3/docs/references/availability",
-                  "v3/docs/references/coverage"
+                  "v3/docs/references/coverage",
+                  "v3/docs/references/onchain-assets"
                 ]
               }
             ]
