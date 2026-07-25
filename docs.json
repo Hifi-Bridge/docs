@@ -190,7 +190,29 @@
                   {
                     "group": "Counterparties",
                     "pages": [
-                      "counter-paty"
+                      "v3/core/counterparties/overview",
+                      "v3/core/counterparties/counterparty",
+                      "v3/core/counterparties/external-account",
+                      "v3/core/counterparties/external-card"
+                    ]
+                  },
+                  {
+                    "group": "Transaction",
+                    "pages": [
+                      "v3/core/transaction/overview",
+                      "v3/core/transaction/onramps",
+                      "v3/core/transaction/offramps",
+                      "v3/core/transaction/onchain-transfer",
+                      "v3/core/transaction/swap",
+                      "v3/core/transaction/bridge"
+                    ]
+                  },
+                  {
+                    "group": "Orchestration",
+                    "pages": [
+                      "v3/core/orchestration/overview",
+                      "v3/core/orchestration/virtual-account",
+                      "v3/core/orchestration/orchestration-address"
                     ]
                   }
                 ]
