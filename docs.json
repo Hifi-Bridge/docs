@@ -186,6 +186,13 @@
                       "v3/core/wallets/external-wallet",
                       "v3/core/wallets/deposit-offers"
                     ]
+                  },
+                  {
+                    "group": "Counterparties",
+                    "pages": [
+                      "overview-1",
+                      "counter-paty"
+                    ]
                   }
                 ]
               },
