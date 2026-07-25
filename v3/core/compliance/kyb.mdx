@@ -66,17 +66,19 @@ Each UBO or person with significant control of the business must be added as an 
 
 ## Questionnaire
 
-| Field | Description |
-| :-- | :-- |
-| `annualRevenue` | The business's annual revenue in USD |
-| `expectedMonthlyTransactionVolume` | Expected monthly transaction volume in USD |
-| `expectedMonthlyTransactionCount` | Expected number of transactions per month |
-| `primaryPurpose` | The business's primary purpose for using the platform |
-| `primaryPurposeDetails` | Details about the primary purpose, if `primaryPurpose` is `other` |
-| `highRiskActivities` | Any high-risk activities the business engages in |
-| `sourceOfFunds` | The primary source of the business's funds |
-| `transmitsThirdPartyFunds` | Whether the business transmits funds on behalf of third parties |
-| `providesFinancialServices` | Whether the business provides financial services |
+| Field | Description | Required |
+| :-- | :-- | --- |
+| `annualRevenue` | The business's annual revenue in USD | Yes |
+| `expectedMonthlyTransactionVolume` | Expected monthly transaction volume in USD | Yes |
+| `expectedMonthlyTransactionCount` | Expected number of transactions per month | Yes |
+| `primaryPurpose` | The business's primary purpose for using the platform | Yes |
+| `primaryPurposeDetails` | Details about the primary purpose, if `primaryPurpose` is `other` | No\* |
+| `highRiskActivities` | Any high-risk activities the business engages in | Yes |
+| `sourceOfFunds` | The primary source of the business's funds | Yes |
+| `sourceOfFundsDetails` | Details about the primary source of the business's funds, if `sourceOfFundsDetails` is `other` | No\* |
+| `transmitsThirdPartyFunds` | Whether the business transmits funds on behalf of third parties | Yes |
+| `transmitsThirdPartyFundsDetails` | Details about the nature of how the business transmits funds on behalf of third parties | No\* |
+| `providesFinancialServices` | Whether the business provides financial services | Yes |
 
 ## Example: Full KYB Flow
 
@@ -507,7 +509,7 @@ Each UBO or person with significant control of the business must be added as an 
 
 ## Expected Behavior
 
-After submission, the application can be in different states
+After submission, the application has the following possible states:
 
 <AccordionGroup>
   <Accordion title="APPROVED">
@@ -624,8 +626,8 @@ When a submitted application needs updated information, the `rfiActions` field w
 
 | Type | Action |
 | :-- | :-- |
-| `UPDATE_PROFILE` | Update the business's or associated party's profile information before resubmission — a common reason is information that doesn't match the submitted documentation. |
-| `RESUBMIT_DOCUMENT` | Update the business's or associated party's documentation before resubmission — common reasons include expired, blurry, or unqualified documents. |
+| `UPDATE_PROFILE` | Update the business's or associated party's profile information before resubmission, a common reason is information that doesn't match the submitted documentation. |
+| `RESUBMIT_DOCUMENT` | Update the business's or associated party's documentation before resubmission, common reasons include expired, blurry, or unqualified documents. |
 | `UPDATE_QUESTIONNAIRE` | Update the business's questionnaire before resubmission |
 | `COMPLETE_LIVENESS_CHECK` | Complete the required liveness check for each associated party via provided verification link. |
 
