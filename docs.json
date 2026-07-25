@@ -234,7 +234,8 @@
                 "pages": [
                   "v3/docs/references/availability",
                   "v3/docs/references/coverage",
-                  "v3/docs/references/onchain-assets"
+                  "v3/docs/references/onchain-assets",
+                  "v3/docs/references/account-information"
                 ]
               }
             ]
