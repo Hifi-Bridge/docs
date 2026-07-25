@@ -3,11 +3,18 @@ title: "External Card"
 description: "Register a debit/prepaid or credit card for a counterparty, directly or through a hosted collection flow."
 ---
 
-An External Card is a debit, prepaid or credit card belonging to a [Counter Party](/v3/core/counter-party/counter-party), used as the destination for a Visa card payout.
+An External Card is a debit, prepaid or credit card belonging to a [Counter Party](/v3/core/counter-party/counter-party), used as the destination for a push style card payout.
 
-<Tip>
-  To access the Add External Card API, you need to be at least PCI Level 1; otherwise, use [External Card Session](https://docs.hifi.com/#external-card-sessions).
-</Tip>
+## Two ways to add a card
+
+| Method | Who can use it | How it works |
+| --- | --- | --- |
+| [Card API](#add-an-external-card) | Clients certified **PCI DSS Level 1** | Your backend collects the card number/CVV and sends them directly to HIFI. |
+| [External Card Session](#external-card-sessions) | All other clients | The recipient enters their card details on a HIFI-hosted page — raw card data never touches your servers. |
+
+<Info>
+  If you aren't PCI DSS Level 1 certified, use an External Card Session instead of calling the Card API directly - contact HIFI if you're unsure which applies to you.
+</Info>
 
 ## Counterparty requirements
 
@@ -18,7 +25,13 @@ The counterparty must be `ACTIVE`, and have the following [accepted fields](/v3/
 | Individual | `phoneNumber`, `email`, `address` |
 | Business | `phoneNumber`, `email`, `address` |
 
-If a required field is missing, HIFI rejects the request with `ACTION_NOT_ALLOWED` (422) — [update the counterparty](/v3/core/counter-party/counter-party#update-a-counter-party) with the missing field and retry. This requirement doesn't apply to counterparties created through an [External Card Session](#external-card-sessions) submission, since the session's own schema already enforces these fields.
+<Info>
+  If a required field is missing, HIFI rejects the request with `ACTION_NOT_ALLOWED` (422) — [update the counterparty](/v3/core/counter-party/counter-party#update-a-counter-party) with the missing field and retry.
+</Info>
+
+<Tip>
+  The counterparty doesn't need to be created upfront if the card is added through an [External Card Session](https://docs.hifi.com/#external-card-sessions) submission, since the session's own schema already enforces these fields. Otherwise, you can also pass `counterpartyId` as an optional fields when create the session.
+</Tip>
 
 ## Supported Card Network
 
@@ -26,7 +39,7 @@ If a required field is missing, HIFI rejects the request with `ACTION_NOT_ALLOWE
 | --- | --- |
 | Visa | OCT |
 
-## Add an external card
+## Add an external card via API
 
 Registers a card directly against an existing counterparty. Requires an `Idempotency-Key` header. `cardNumber` and `cvv` are used once to tokenize the card with HIFI's card provider and are never returned in the response.
 
@@ -95,7 +108,7 @@ curl -X DELETE https://sandbox.hifi.com/v3/users/usr_x1y2z3/counter-parties/cpty
 
 ## Retrieve a counterparty's external cards
 
-List a counterparty's registered cards, optionally filtered by `status`. `GET` on a single `externalCardId` returns the same shape.
+List a counterparty's registered cards
 
 **Request**
 
@@ -133,7 +146,7 @@ curl https://sandbox.hifi.com/v3/users/usr_x1y2z3/counter-parties/cpty_a1b2c3/ex
 
 ## External Card Sessions
 
-An External Card Session is a hosted alternative to adding a card directly — useful when the recipient, not your backend, should be the one typing in their own card and identity details (so the raw card number never touches your servers). You generate a session and get back a hosted URL; HIFI's hosted page collects the counterparty and card details from there and creates both once the recipient submits.
+An External Card Session is the hosted alternative to the Card API - **the required path if you aren't PCI DSS Level 1 certified**. Instead of your backend collecting the card number, the recipient types their own card and identity details directly into a HIFI-hosted page, so raw card data never touches your servers. You generate a session and get back a hosted URL; HIFI's hosted page collects the counterparty and card details from there and creates both once the recipient submits.
 
 ### Generate a session
 
@@ -170,7 +183,7 @@ curl -X POST https://sandbox.hifi.com/v3/users/usr_x1y2z3/external-card-sessions
 ```
 
 <Info>
-  `url` is a one-time hosted link — redirect the recipient's browser there, or rely on `recipientEmail` to send it for you. The recipient's browser is redirected to `redirectUrl` once they finish. Retrieving or submitting a session directly from your own backend isn't supported — that's handled entirely by the hosted page. Subscribe to `EXTERNAL_CARD` and `COUNTER_PARTY` webhook events to know when the resulting resources are created.
+  Retrieving or submitting a session directly from your own backend isn't supported — that's handled entirely by the hosted page. Subscribe to `EXTERNAL_CARD` and `COUNTER_PARTY` webhook events to know when the resulting resources are created.
 </Info>
 
 ## Getting Help
