@@ -190,10 +190,10 @@
                   {
                     "group": "Counterparties",
                     "pages": [
-                      "v3/core/counterparties/overview",
-                      "v3/core/counterparties/counterparty",
-                      "v3/core/counterparties/external-account",
-                      "v3/core/counterparties/external-card"
+                      "v3/core/counter-party/overview",
+                      "v3/core/counter-party/counterparty",
+                      "v3/core/counter-party/external-account",
+                      "v3/core/counter-party/external-card"
                     ]
                   },
                   {
