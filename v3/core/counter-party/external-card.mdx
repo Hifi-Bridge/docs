@@ -1,3 +1,185 @@
 ---
 title: "External Card"
+description: "Register a debit/prepaid or credit card for a counterparty, directly or through a hosted collection flow."
 ---
+
+An External Card is a debit, prepaid or credit card belonging to a [Counter Party](/v3/core/counter-party/counter-party), used as the destination for a Visa card payout.
+
+<Tip>
+  To access the Add External Card API, you need to be at least PCI Level 1; otherwise, use [External Card Session](https://docs.hifi.com/#external-card-sessions).
+</Tip>
+
+## Counterparty requirements
+
+The counterparty must be `ACTIVE`, and have the following [accepted fields](/v3/core/counter-party/counter-party#accepted-fields) set in addition to its own minimum, before you can add an external card for them:
+
+| Counterparty type | Additional required fields |
+| --- | --- |
+| Individual | `phoneNumber`, `email`, `address` |
+| Business | `phoneNumber`, `email`, `address` |
+
+If a required field is missing, HIFI rejects the request with `ACTION_NOT_ALLOWED` (422) — [update the counterparty](/v3/core/counter-party/counter-party#update-a-counter-party) with the missing field and retry. This requirement doesn't apply to counterparties created through an [External Card Session](#external-card-sessions) submission, since the session's own schema already enforces these fields.
+
+## Supported Card Network
+
+| Network | Type |
+| --- | --- |
+| Visa | OCT |
+
+## Add an external card
+
+Registers a card directly against an existing counterparty. Requires an `Idempotency-Key` header. `cardNumber` and `cvv` are used once to tokenize the card with HIFI's card provider and are never returned in the response.
+
+**Request**
+
+```shell
+curl -X POST https://sandbox.hifi.com/v3/users/usr_x1y2z3/counter-parties/cpty_a1b2c3/external-cards \
+  -H "Idempotency-Key: <unique-key>" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -d '{
+    "firstName": "Jane",
+    "lastName": "Doe",
+    "cardNumber": "4111111111111234",
+    "expiryMonth": "09",
+    "expiryYear": "28",
+    "cvv": "123"
+  }'
+```
+
+**Response**
+
+```json
+{
+    "id": "extcrd_QW1e2r3t4y",
+    "userId": "usr_x1y2z3",
+    "counterPartyId": "cpty_a1b2c3",
+    "firstName": "Jane",
+    "lastName": "Doe",
+    "cardNumber": "************1234",
+    "expiryMonth": "09",
+    "expiryYear": "28",
+    "status": "ACTIVE",
+    "createdAt": "2026-07-24T22:10:00.000Z",
+    "updatedAt": "2026-07-24T22:10:00.000Z"
+}
+```
+
+## Deactivate an external card
+
+Revokes a previously-added card. A deactivated card can no longer be used as a payout destination, but its record and history are preserved.
+
+**Request**
+
+```shell
+curl -X DELETE https://sandbox.hifi.com/v3/users/usr_x1y2z3/counter-parties/cpty_a1b2c3/external-cards/extcrd_QW1e2r3t4y \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+**Response**
+
+```json
+{
+    "id": "extcrd_QW1e2r3t4y",
+    "userId": "usr_x1y2z3",
+    "counterPartyId": "cpty_a1b2c3",
+    "firstName": "Jane",
+    "lastName": "Doe",
+    "cardNumber": "************1234",
+    "expiryMonth": "09",
+    "expiryYear": "28",
+    "status": "INACTIVE",
+    "createdAt": "2026-07-24T22:10:00.000Z",
+    "updatedAt": "2026-07-24T22:15:00.000Z"
+}
+```
+
+## Retrieve a counterparty's external cards
+
+List a counterparty's registered cards, optionally filtered by `status`. `GET` on a single `externalCardId` returns the same shape.
+
+**Request**
+
+```shell
+curl https://sandbox.hifi.com/v3/users/usr_x1y2z3/counter-parties/cpty_a1b2c3/external-cards \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+**Response**
+
+```json
+{
+    "data": [
+        {
+            "id": "extcrd_QW1e2r3t4y",
+            "userId": "usr_x1y2z3",
+            "counterPartyId": "cpty_a1b2c3",
+            "firstName": "Jane",
+            "lastName": "Doe",
+            "cardNumber": "************1234",
+            "expiryMonth": "09",
+            "expiryYear": "28",
+            "status": "ACTIVE",
+            "createdAt": "2026-07-24T22:10:00.000Z",
+            "updatedAt": "2026-07-24T22:10:00.000Z"
+        }
+    ],
+    "pagination": {
+        "hasMore": false,
+        "startCursor": "extcrd_QW1e2r3t4y",
+        "endCursor": "extcrd_QW1e2r3t4y"
+    }
+}
+```
+
+## External Card Sessions
+
+An External Card Session is a hosted alternative to adding a card directly — useful when the recipient, not your backend, should be the one typing in their own card and identity details (so the raw card number never touches your servers). You generate a session and get back a hosted URL; HIFI's hosted page collects the counterparty and card details from there and creates both once the recipient submits.
+
+### Generate a session
+
+`requestId` is a client-supplied UUID that makes the call idempotent. If `counterPartyId` is omitted, the recipient enters their own counterparty details as part of the hosted flow; if provided, only card details are collected. Set `recipientEmail` to have HIFI email the hosted link directly to the recipient.
+
+**Request**
+
+```shell
+curl -X POST https://sandbox.hifi.com/v3/users/usr_x1y2z3/external-card-sessions \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -d '{
+    "requestId": "5c1b1e0a-1234-4a5b-8c9d-0e1f2a3b4c5d",
+    "recipientEmail": "jane@example.com",
+    "redirectUrl": "https://yourapp.com/card-collection-complete",
+    "expiresIn": 3600
+  }'
+```
+
+**Response**
+
+```json
+{
+    "id": "ecs_QW1e2r3t4y",
+    "userId": "usr_x1y2z3",
+    "counterPartyId": null,
+    "url": "https://dashboard.hifi.com/sandbox/external-card-sessions/ecs_QW1e2r3t4y#sessionToken=...",
+    "recipientEmail": "jane@example.com",
+    "redirectUrl": "https://yourapp.com/card-collection-complete",
+    "status": "PENDING",
+    "expiredAt": "2026-07-24T23:10:00.000Z",
+    "createdAt": "2026-07-24T22:10:00.000Z",
+    "updatedAt": "2026-07-24T22:10:00.000Z"
+}
+```
+
+<Info>
+  `url` is a one-time hosted link — redirect the recipient's browser there, or rely on `recipientEmail` to send it for you. The recipient's browser is redirected to `redirectUrl` once they finish. Retrieving or submitting a session directly from your own backend isn't supported — that's handled entirely by the hosted page. Subscribe to `EXTERNAL_CARD` and `COUNTER_PARTY` webhook events to know when the resulting resources are created.
+</Info>
+
+## Getting Help
+
+- 📧 **Email:** [support@hifi.com](mailto:support@hifi.com)
+- 💬 **Slack:** Message us in our shared Slack channel
+
+## Related Resources
+
+- [Counterparty Overview](/v3/core/counter-party/overview) - Counterparty resources
+- [Counter Party](/v3/core/counter-party/counter-party) — Create and manage recipients/payers
+- [External Account](/v3/core/counter-party/external-account) — Bank accounts for a counterparty
