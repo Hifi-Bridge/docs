@@ -201,21 +201,60 @@ curl -X POST https://sandbox.hifi.com/v3/offramps/offramp_QW1e2r3t4y/cancel \
 }
 ```
 
+## Purpose of Payment
+
+Some destinations require a `purposeOfPayment` describing why the payment is being made - for example, it's required for SWIFT transfers and other local payout outside of US.
+
+| Value | Meaning |
+| --- | --- |
+| `invoice_payments` | Invoice payments |
+| `payment_for_services` | Payment for services |
+| `payment_for_software` | Payment for software |
+| `payment_for_imported_goods` | Payment for imported goods |
+| `travel_services` | Travel services |
+| `transfer_to_own_account` | Transfer to own account |
+| `repayment_of_loans` | Repayment of loans |
+| `payroll` | Payroll |
+| `payment_of_property_rental` | Payment of property rental |
+| `information_service_charges` | Information service charges |
+| `advertising_and_public_relations` | Advertising and public relations |
+| `royalty_and_ip_fees` | Royalty and IP fees |
+| `financial_service_fees` | Financial service fees |
+| `advisory_and_consulting_fees` | Advisory and consulting fees |
+| `representative_office_expenses` | Representative office expenses |
+| `tax_payment` | Tax payment |
+| `transportation_fees` | Transportation fees |
+| `construction_costs` | Construction costs |
+| `insurance_premium` | Insurance premium |
+| `offline_goods_trade` | Offline goods trade |
+| `insurance_claims` | Insurance claims |
+| `remittance_to_family_or_friends` | Remittance to family or friends |
+| `education_expenses` | Education expenses |
+| `medical_treatment` | Medical treatment |
+| `donations` | Donations |
+| `mutual_fund_investment` | Mutual fund investment |
+| `currency_exchange` | Currency exchange |
+| `advance_payment_for_goods` | Advance payment for goods |
+| `merchant_settlement` | Merchant settlement |
+| `repatriation_fund_settlement` | Repatriation fund settlement |
+
 ## Additional information
 
 <AccordionGroup>
-  <Accordion title="Purpose of payment">
-    Some destinations require a `purposeOfPayment` describing why the payment is being made - for example, it's required for SWIFT transfers and other local payout outside of US.
-  </Accordion>
-
   <Accordion title="Transfer approval">
     Offramps can be routed through an approval workflow before they settle - `status` shows `PENDING_APPROVAL` until someone approves it, or `REJECTED` if it's declined. Dedicated page coming soon.
 
     Checkout Transfer Approval for more details
   </Accordion>
 
+  <Accordion title="Exchange fees">
+    Some stablecoin offramps include a real conversion fee priced off live market rates, reflected in `quote.conversionFee` — depending on your billing preference, it's either deducted from the transaction (`ON_TRANSACTION`) or billed separately (`ON_INVOICE`). 
+
+    Checkout Exchange Fees for more details
+  </Accordion>
+
   <Accordion title="Developer fees">
-    You can attach your own fee on top of an offramp by setting `developerFee` 
+    You can attach your own fee on top of an offramp by setting `developerFee`
 
     Checkout Developer Fees for more details
   </Accordion>
