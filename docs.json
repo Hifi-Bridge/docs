@@ -199,12 +199,12 @@
                   {
                     "group": "Transaction",
                     "pages": [
-                      "v3/core/transaction/overview",
-                      "v3/core/transaction/onramps",
-                      "v3/core/transaction/offramps",
-                      "v3/core/transaction/onchain-transfer",
-                      "v3/core/transaction/swap",
-                      "v3/core/transaction/bridge"
+                      "v3/core/transactions/overview",
+                      "v3/core/transactions/onramps",
+                      "v3/core/transactions/offramps",
+                      "v3/core/transactions/onchain-transfer",
+                      "v3/core/transactions/swap",
+                      "v3/core/transactions/bridge"
                     ]
                   },
                   {

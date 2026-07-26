@@ -1,0 +1,234 @@
+---
+title: "Offramps"
+description: "Convert stablecoins into fiat, paid out to a counterparty's External Account or External Card."
+---
+
+An Offramp converts stablecoins into fiat and pays it out to a counterparty. Like Onramp, it's a **quote-then-accept** flow: creating an offramp returns a quote without moving any funds; accepting it locks the quote and starts settlement.
+
+## Two source types
+
+| Source | How it settles |
+| --- | --- |
+| `source.walletId` - a [HIFI Wallet](/v3/core/wallets/hifi-wallet) | Funds are available in the HIFI Wallet. Accepting moves the offramp straight to `IN_REVIEW` while under compliance reviewc. |
+| `source.externalWalletId` - an [External Wallet](/v3/core/wallets/external-wallet) | Funds are sitting in an externally owned Wallet. Accepting returns a deposit address (`depositInfo`) and moves to `AWAITING_FUNDS` until the crypto arrives. |
+
+## Two destination types
+
+| Destination | Description |
+| --- | --- |
+| `destination.externalAccountId` | Pays out to a counterparty's registered [External Account](/v3/core/counter-party/external-account) (bank account). |
+| `destination.externalCardId` | Pays out to a counterparty's registered [External Card](/v3/core/counter-party/external-card). |
+
+## Create an offramp (quote)
+
+Creates the offramp in `OPEN_QUOTE` status. Requires an `Idempotency-Key` header and a `requestId`. Either `source.amount` or `destination.amount` can drive the conversion, not both.
+
+**Request**
+
+```shell
+curl -X POST https://sandbox.hifi.com/v3/offramps \
+  -H "Idempotency-Key: <unique-key>" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -d '{
+    "requestId": "3f2504e0-4f89-11d3-9a0c-0305e82c3301",
+    "source": {
+      "walletId": "wlt_fkc0E4OsfHWZPNXiPhj4q",
+      "currency": "USDC",
+      "amount": 500
+    },
+    "destination": {
+      "externalAccountId": "extacct_QW1e2r3t4y",
+      "currency": "USD"
+    }
+  }'
+```
+
+**Response**
+
+```json
+{
+    "id": "offramp_QW1e2r3t4y",
+    "requestId": "3f2504e0-4f89-11d3-9a0c-0305e82c3301",
+    "status": "OPEN_QUOTE",
+    "failedReason": null,
+    "error": null,
+    "errorDetails": null,
+    "source": {
+        "chain": "POLYGON",
+        "amount": "500.00",
+        "currency": "USDC",
+        "userId": "usr_x1y2z3",
+        "walletId": "wlt_fkc0E4OsfHWZPNXiPhj4q",
+        "externalWalletId": null,
+        "walletAddress": "0xEBf25E3eCA55Cf4300b637c0569fB6995DEb8153"
+    },
+    "destination": {
+        "amount": "500.00",
+        "currency": "USD",
+        "userId": "usr_x1y2z3",
+        "externalAccountId": "extacct_QW1e2r3t4y",
+        "externalCardId": null
+    },
+    "receipt": {
+        "transactionHash": null,
+        "paymentTracking": null
+    },
+    "quote": {
+        "sendGross": { "amount": "500.00", "currency": "USDC" },
+        "sendNet": { "amount": "500.00", "currency": "USDC" },
+        "receiveGross": { "amount": "500.00", "currency": "USD" },
+        "receiveNet": { "amount": "500.00", "currency": "USD" },
+        "rate": "1.00",
+        "conversionFee": null,
+        "expiresAt": "2026-07-25T22:00:00.000Z"
+    },
+    "depositInfo": null,
+    "sameDayAch": false,
+    "achMessage": null,
+    "sepaMessage": null,
+    "wireMessage": null,
+    "swiftMessage": null,
+    "purposeOfPayment": null,
+    "returnAddress": null,
+    "developerFee": null,
+    "description": null,
+    "createdAt": "2026-07-24T22:00:00.000Z",
+    "updatedAt": "2026-07-24T22:00:00.000Z"
+}
+```
+
+<Info>
+  `quote.expiresAt` is a real expiry. [Accepting](#accept-an-offramp-quote) after it's passed fails with `QUOTE_FAILED`/`QUOTE_EXPIRED`; the quote isn't refreshed automatically, so create a new offramp instead.
+</Info>
+
+<Tip>
+  For an exact stablecoin sending amount, set `source.amount`; for an exact received fiat amount, set `destination.amount`.
+</Tip>
+
+## Accept an offramp quote
+
+Locks the quote and starts settlement — moving to `IN_REVIEW` (HIFI Wallet source) or `AWAITING_FUNDS` (External Wallet source, with `depositInfo` populated).
+
+**Request**
+
+```shell
+curl -X POST https://sandbox.hifi.com/v3/offramps/offramp_QW1e2r3t4y/quote/accept \
+  -H "Idempotency-Key: <unique-key>" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+**Response (HIFI Wallet)**
+
+```json
+{
+    "id": "offramp_QW1e2r3t4y",
+    "status": "IN_REVIEW",
+    "...": "other fields unchanged"
+}
+```
+
+**Response (External Wallet)**
+
+```json
+{
+    "id": "offramp_QW1e2r3t4y",
+    "status": "AWSITING_FUNDS",
+    "depositInfo": [
+        {
+            "id": "f66de8de-ed4a-5028-a3d9-8b95f7a9ea81",
+            "fromAddress": null,
+            "toAddress": "0xB05dD4eB68363bff7f109739177c29162AA27AE5",
+            "currency": "usdc",
+            "contractAddress": "0x41E94Eb019C0762f9Bfcf9Fb1E58725BfB0e7582",
+            "rawAmount": "500000000",
+            "returnAddress": null,
+            "amount": "500",
+            "chain": "POLYGON",
+            "collected": false,
+            "collectable": true,
+            "expiresAt": "2026-07-26T13:27:40.047+00:00",
+            "refund": null,
+            "transactionHash": null
+        }
+    ],
+    "...": "other fields unchanged"
+}
+```
+
+## Status
+
+| Status | Meaning | Terminal |
+| --- | --- | --- |
+| `CREATED` | Offramp created; quote being generated. | No |
+| `OPEN_QUOTE` | Quote ready, awaiting [accept](#accept-an-offramp-quote). | No |
+| `PENDING_APPROVAL` | Awaiting approval (if `requireApproval` was set — see [Onchain Transfer](/v3/core/transactions/onchain-transfer) for the same pattern). | No |
+| `IN_REVIEW` | Quote accepted (HIFI Wallet source); settlement queued. [Cancellable](#cancel-an-offramp) here. | No |
+| `AWAITING_FUNDS` | Quote accepted (External Wallet source); awaiting the crypto deposit. | No |
+| `CRYPTO_INITIATED` / `CRYPTO_PENDING` / `CRYPTO_PROCESSED` | Crypto leg initiating, confirming, and settled. | No |
+| `FIAT_INITIATED` / `FIAT_PENDING` | Fiat payout initiating and processing. | No |
+| `COMPLETED` | Fiat delivered to the destination. | Yes\* |
+| `CRYPTO_FAILED` | Crypto leg failed. | No |
+| `CRYPTO_RETURNED` | Crypto was returned. | Yes |
+| `FIAT_FAILED` / `FIAT_RETURNED` | Fiat payout failed or was returned. | No |
+| `QUOTE_FAILED` | Quote couldn't be generated, or expired before being accepted. | Yes |
+| `REJECTED` | Approval was rejected. | Yes |
+| `EXPIRED` | Offramp expired before settling. | Yes |
+| `CANCELLED` | Cancelled via the [cancel](#cancel-an-offramp) endpoint. | Yes |
+
+<Note>
+  A transaction in `COMPLETED` status can transition to `FIAT_RETURNED` or `FIAT_RETURNED` if a payment is returned by the recipient.
+</Note>
+
+## Cancel an offramp
+
+Only allowed while status is `IN_REVIEW`. Any other status returns `RESOURCE_NOT_ELIGIBLE` (422).
+
+**Request**
+
+```shell
+curl -X POST https://sandbox.hifi.com/v3/offramps/offramp_QW1e2r3t4y/cancel \
+  -H "Idempotency-Key: <unique-key>" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+**Response**
+
+```json
+{
+    "id": "offramp_QW1e2r3t4y",
+    "status": "CANCELLED",
+    "...": "other fields unchanged"
+}
+```
+
+## Additional information
+
+<AccordionGroup>
+  <Accordion title="Purpose of payment">
+    Some destinations require a `purposeOfPayment` describing why the payment is being made - for example, it's required for SWIFT transfers and other local payout outside of US.
+  </Accordion>
+
+  <Accordion title="Transfer approval">
+    Offramps can be routed through an approval workflow before they settle - `status` shows `PENDING_APPROVAL` until someone approves it, or `REJECTED` if it's declined. Dedicated page coming soon.
+
+    Checkout Transfer Approval for more details
+  </Accordion>
+
+  <Accordion title="Developer fees">
+    You can attach your own fee on top of an offramp by setting `developerFee` 
+
+    Checkout Developer Fees for more details
+  </Accordion>
+</AccordionGroup>
+
+## Getting Help
+
+- 📧 **Email:** [support@hifi.com](mailto:support@hifi.com)
+- 💬 **Slack:** Message us in our shared Slack channel
+
+## Related Resources
+
+- [Transactions Overview](/v3/core/transactions/overview) - Transactions resources
+- [Onramps](/v3/core/transactions/onramps) — Convert fiat to stablecoins
+- [External Account](/v3/core/counter-party/external-account) — Bank account payout destinations
+- [External Card](/v3/core/counter-party/external-card) — Card payout destinations
