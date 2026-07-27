@@ -116,23 +116,19 @@ curl -X POST https://sandbox.hifi.com/v3/batch-transfers \
 
 ## Status
 
-| Status | Meaning |
-| --- | --- |
-| `CREATED` | Transfer created; queued for execution. |
-| `PENDING_APPROVAL` | Awaiting approval (only if `requireApproval: true` was set). |
-| `APPROVED` | Approved; proceeding to execution. |
-| `REJECTED` | Approval was rejected. Terminal. |
-| `EXPIRED` | Expired before being approved. Terminal. |
-| `INITIATED` | On-chain transaction submitted. |
-| `PENDING` | On-chain transaction confirming. |
-| `COMPLETED` | Transfer settled. Terminal. |
-| `FAILED` | Transfer failed. Terminal. |
-| `NOT_INITIATED` | Never got underway — e.g. insufficient balance, caught during execution rather than at request time. Terminal. |
-| `CANCELLED` | Cancelled. Terminal. |
-
-<Info>
-  A failed on-chain transaction is automatically retried by HIFI when the failure is known to be recoverable; failures that aren't are paused for manual review rather than surfaced as an action you can retry yourself.
-</Info>
+| Status | Meaning | Terminal |
+| --- | --- | --- |
+| `CREATED` | Transfer created; queued for execution. | No |
+| `PENDING_APPROVAL` | Awaiting approval (only if `requireApproval: true` was set). | No |
+| `APPROVED` | Approved; proceeding to execution. | No |
+| `REJECTED` | Approval was rejected. | Yes |
+| `EXPIRED` | Expired before being approved. | Yes |
+| `INITIATED` | On-chain transaction submitted. | No |
+| `PENDING` | On-chain transaction confirming. | No |
+| `COMPLETED` | Transfer settled. | Yes |
+| `FAILED` | Transfer failed. | Yes |
+| `NOT_INITIATED` | Never got underway — e.g. insufficient balance, caught during execution rather than at request time. | Yes |
+| `CANCELLED` | Cancelled. | Yes |
 
 ## Additional information
 

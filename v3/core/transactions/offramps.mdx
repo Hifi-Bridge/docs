@@ -242,7 +242,9 @@ Some destinations require a `purposeOfPayment` describing why the payment is bei
 
 <AccordionGroup>
   <Accordion title="Transfer approval">
-    Offramps can be routed through an approval workflow before they settle - `status` shows `PENDING_APPROVAL` until someone approves it, or `REJECTED` if it's declined. Dedicated page coming soon.
+    Offramps can be routed through an approval workflow before they settle - `status` shows `PENDING_APPROVAL` until someone approves it, or `REJECTED` if it's declined. 
+
+    The quote is only generated once the transfer request is approved. Accept the quote afterward to kick off the transaction flow.
 
     Checkout Transfer Approval for more details
   </Accordion>

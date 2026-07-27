@@ -1,3 +1,162 @@
 ---
 title: "Bridge"
+description: "Move a stablecoin from a wallet on one chain to a wallet on a different chain."
 ---
+
+A Bridge moves the **same stablecoin** from a [HIFI Wallet](/v3/core/wallets/hifi-wallet) on one chain to a wallet — HIFI Wallet or [External Wallet](/v3/core/wallets/external-wallet) — on a **different** chain. Like Onramp, Offramp, and Swap, it's a **quote-then-accept** flow.
+
+For supported pairs checkout [Supported Onchain Asset](/v3/docs/references/onchain-assets).
+
+<Tip>
+  For different asset checkout [Swap](/v3/core/transactions/swap)
+</Tip>
+
+## Create a bridge (quote)
+
+Requires an `Idempotency-Key` header. Source and destination chains are inferred from the wallets and must differ.
+
+**Request**
+
+```shell
+curl -X POST https://sandbox.hifi.com/v3/bridges \
+  -H "Idempotency-Key: <unique-key>" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -d '{
+    "requestId": "61715489-a761-4fff-bd96-16dc76a7c289",
+    "amount": "100",
+    "source": {
+        "currency": "USDC",
+        "walletId": "wlt_cq1lx3hQArvCUSxdGsSC1"
+    },
+    "destination": {
+        "currency": "USDC",
+        "walletId": "wlt_joaIvIT6f3CmcM28UW8yz"
+    }
+  }'
+```
+
+**Response**
+
+```json
+{
+    "id": "brg_ivEHvBBKjF0aGVtSEVmfu",
+    "requestId": "61715489-a761-4fff-bd96-16dc76a7c289",
+    "status": "OPEN_QUOTE",
+    "failedReason": null,
+    "error": null,
+    "errorDetails": null,
+    "amount": "100",
+    "source": {
+        "userId": "usr_WiamhlKfB151vdSch1Ble",
+        "walletId": "wlt_cq1lx3hQArvCUSxdGsSC1",
+        "currency": "USDC",
+        "chain": "ETHEREUM"
+    },
+    "destination": {
+        "userId": "usr_WiamhlKfB151vdSch1Ble",
+        "walletId": "wlt_joaIvIT6f3CmcM28UW8yz",
+        "currency": "USDC",
+        "chain": "POLYGON"
+    },
+    "receipt": {
+        "transactionHash": null,
+        "operations": {
+            "mint": {
+                "transactionHash": null,
+                "userOpHash": null,
+                "chain": null
+            },
+            "burn": {
+                "transactionHash": null,
+                "userOpHash": null,
+                "chain": null
+            },
+            "approve": {
+                "transactionHash": null,
+                "userOpHash": null,
+                "chain": null
+            }
+        }
+    },
+    "fee": null,
+    "quote": {
+        "rate": "1",
+        "railFee": {
+            "amount": "0",
+            "currency": "USDC"
+        },
+        "sendNet": {
+            "amount": "100",
+            "currency": "USDC"
+        },
+        "expiresAt": "2026-07-28T01:31:00.926Z",
+        "sendGross": {
+            "amount": "100",
+            "currency": "USDC"
+        },
+        "receiveNet": {
+            "amount": "100",
+            "currency": "USDC"
+        },
+        "receiveGross": {
+            "amount": "100",
+            "currency": "USDC"
+        }
+    },
+    "createdAt": "2026-07-27T01:31:00.926Z",
+    "updatedAt": "2026-07-27T01:31:00.926Z"
+}
+```
+
+## Accept a bridge quote
+
+Executes the bridge — moving funds off the source chain and, once confirmed, minting or releasing them on the destination chain.
+
+**Request**
+
+```shell
+curl -X POST https://sandbox.hifi.com/v3/bridges/brg_QW1e2r3t4y/quote/accept \
+  -H "Idempotency-Key: <unique-key>" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+**Response**
+
+```json
+{
+    "id": "brg_QW1e2r3t4y",
+    "status": "SOURCE_INITIATED",
+    "...": "other fields unchanged"
+}
+```
+
+## Status
+
+| Status | Meaning | Terminal |
+| --- | --- | --- |
+| `CREATED` | Bridge created. | No |
+| `OPEN_QUOTE` | Quote ready, awaiting accept. | No |
+| `PENDING_APPROVAL` | Awaiting approval (only if `requireApproval: true` was set). | No |
+| `APPROVED` | Approved; proceeding to execution. | No |
+| `REJECTED` | Approval was rejected. | Yes |
+| `SOURCE_INITIATED` / `SOURCE_PENDING` / `SOURCE_PROCESSED` | Source-chain leg initiating, confirming, and settled. | No |
+| `DESTINATION_INITIATED` / `DESTINATION_PENDING` | Destination-chain leg initiating and confirming. | No |
+| `COMPLETED` | Stablecoins delivered on the destination chain. | Yes |
+| `SOURCE_FAILED` / `DESTINATION_FAILED` | The source or destination leg failed. | Yes |
+| `QUOTE_FAILED` | No quote could be generated, or it expired before being accepted. | Yes |
+
+<Info>
+  Settlement time might vary depends on the asset, source chain and destination chain.
+</Info>
+
+## Getting Help
+
+- 📧 **Email:** [support@hifi.com](mailto:support@hifi.com)
+- 💬 **Slack:** Message us in our shared Slack channel
+
+## Related Resources
+
+- [Transactions Overview](/v3/core/transactions/overview) - Transactions resources
+- [Swap](/v3/core/transactions/swap) — Convert between stablecoins
+- [Onchain Transfer](/v3/core/transactions/onchain-transfer) — Move stablecoins on the same chain
+- [HIFI Wallet](/v3/core/wallets/hifi-wallet) — Provision wallets and read balances
