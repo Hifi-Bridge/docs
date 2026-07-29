@@ -127,7 +127,7 @@ curl -X POST https://sandbox.hifi.com/v3/batch-transfers \
 | `PENDING` | On-chain transaction confirming. | No |
 | `COMPLETED` | Transfer settled. | Yes |
 | `FAILED` | Transfer failed. | Yes |
-| `NOT_INITIATED` | Never got underway — e.g. insufficient balance, caught during execution rather than at request time. | Yes |
+| `NOT_INITIATED` | Never got underway (e.g. insufficient balance, caught during execution rather than at request time). | Yes |
 | `CANCELLED` | Cancelled. | Yes |
 |  |  |  |
 
@@ -149,6 +149,6 @@ curl -X POST https://sandbox.hifi.com/v3/batch-transfers \
 ## Related Resources
 
 - [Transactions Overview](/v3/core/transactions/overview) - Transactions resources
-- [Bridge](/v3/core/transactions/bridge) — Move a stablecoin across chains
-- [HIFI Wallet](/v3/core/wallets/hifi-wallet) — Provision wallets and read balances
-- [External Wallet](/v3/core/wallets/external-wallet) — On-chain addresses for a counterparty
+- [Bridge](/v3/core/transactions/bridge) - Move a stablecoin across chains
+- [HIFI Wallet](/v3/core/wallets/hifi-wallet) - Provision wallets and read balances
+- [External Wallet](/v3/core/wallets/external-wallet) - On-chain addresses for a counterparty

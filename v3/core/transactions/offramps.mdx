@@ -9,7 +9,7 @@ An Offramp converts stablecoins into fiat and pays it out to a counterparty. Lik
 
 | Source | How it settles |
 | --- | --- |
-| `source.walletId` - a [HIFI Wallet](/v3/core/wallets/hifi-wallet) | Funds are available in the HIFI Wallet. Accepting moves the offramp straight to `IN_REVIEW` while under compliance reviewc. |
+| `source.walletId` - a [HIFI Wallet](/v3/core/wallets/hifi-wallet) | Funds are available in the HIFI Wallet. Accepting moves the offramp straight to `IN_REVIEW` while under compliance review. |
 | `source.externalWalletId` - an [External Wallet](/v3/core/wallets/external-wallet) | Funds are sitting in an externally owned Wallet. Accepting returns a deposit address (`depositInfo`) and moves to `AWAITING_FUNDS` until the crypto arrives. |
 
 ## Two destination types
@@ -107,7 +107,7 @@ curl -X POST https://sandbox.hifi.com/v3/offramps \
 
 ## Accept an offramp quote
 
-Locks the quote and starts settlement — moving to `IN_REVIEW` (HIFI Wallet source) or `AWAITING_FUNDS` (External Wallet source, with `depositInfo` populated).
+Locks the quote and starts settlement - moving to `IN_REVIEW` (HIFI Wallet source) or `AWAITING_FUNDS` (External Wallet source, with `depositInfo` populated).
 
 **Request**
 

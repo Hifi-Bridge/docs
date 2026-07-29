@@ -10,11 +10,11 @@ An Onramp converts fiat (USD today) into stablecoins, landing in a [HIFI Wallet]
 | Method | Source fields | How it works |
 | --- | --- | --- |
 | User deposit | `source.userId` \+ `source.transferType` (`ACH`, `WIRE`, `RTP`) | HIFI gives you bank deposit instructions once the quote is accepted; the user send the funds manually. |
-| ACH pull | `source.externalAccountId` | HIFI debits a counterparty's registered [External Account](/v3/core/counter-party/external-account) directly — no manual deposit needed. |
+| ACH pull | `source.externalAccountId` | HIFI debits a counterparty's registered [External Account](/v3/core/counter-party/external-account) directly - no manual deposit needed. |
 
 ## Get indicative rates
 
-Returns an informational conversion rate — not a quote, not persisted, and unrelated to the quote you get from actually creating an onramp.
+Returns an informational conversion rate - not a quote, not persisted, and unrelated to the quote you get from actually creating an onramp.
 
 **Request**
 
@@ -239,14 +239,14 @@ curl -X POST https://sandbox.hifi.com/v3/onramps/onramp_HtgURm58uWMF0EzmG8DAl/qu
 ```
 
 <Info>
-  `depositInstructions` is only populated for the user-deposit path — not for ACH pulls, since HIFI initiates those itself. Once a matching deposit is detected, `depositTracking` fills in with the originating bank's details (sender name, routing/account number, reference) so you can reconcile who actually sent the funds.
+  `depositInstructions` is only populated for the user-deposit path - not for ACH pulls, since HIFI initiates those itself. Once a matching deposit is detected, `depositTracking` fills in with the originating bank's details (sender name, routing/account number, reference) so you can reconcile who actually sent the funds.
 </Info>
 
 <Warning>
   Always deposit with the reference provided under `depositInstructions`; a missing or incorrect reference can lead to failed reconciliation. Reach out to HIFI if the deposit is made but the onramp status hasn't transitioned.
 </Warning>
 
-## Micro-deposits
+## Microdeposits
 
 `microDeposits` populates once an onramp reaches `AWAITING_FUNDS`, surfacing small (under \$1.00) verification deposits sent by the user's bank. Some banks require the account holder to confirm these amounts in their own banking app before releasing the real payment - if you see this field populated, pass the amount(s) along to your user so they can complete that verification step with their bank.
 
@@ -271,7 +271,7 @@ curl -X POST https://sandbox.hifi.com/v3/onramps/onramp_HtgURm58uWMF0EzmG8DAl/qu
 ```
 
 <Info>
-  A micro-deposit never counts toward the expected deposit amount and never changes the onramp's `status` — the full amount still needs to arrive in one matching payment for the onramp to proceed.
+  A microdeposit never counts toward the expected deposit amount and never changes the onramp's `status` - the full amount still needs to arrive in one matching payment for the onramp to proceed.
 </Info>
 
 ## Status
@@ -299,7 +299,7 @@ curl -X POST https://sandbox.hifi.com/v3/onramps/onramp_HtgURm58uWMF0EzmG8DAl/qu
 
 ## Cancel an onramp
 
-Only allowed while status is `IN_REVIEW` — after accepting the quote, before a deposit has been detected. Any other status returns `RESOURCE_NOT_ELIGIBLE` (422).
+Only allowed while status is `IN_REVIEW` - after accepting the quote, before a deposit has been detected. Any other status returns `RESOURCE_NOT_ELIGIBLE` (422).
 
 **Request**
 
@@ -331,7 +331,7 @@ curl -X POST https://sandbox.hifi.com/v3/onramps/onramp_QW1e2r3t4y/simulate-depo
   -H "Authorization: Bearer YOUR_API_KEY" \
   -d '{
     "amount": 500,
-    "transferType": "ACH",
+    "transferType": "RTP",
     "reference": "HFPDJIF56M"
     "source": {
       "routingNumber": "021000021",
@@ -341,6 +341,10 @@ curl -X POST https://sandbox.hifi.com/v3/onramps/onramp_QW1e2r3t4y/simulate-depo
     }
   }'
 ```
+
+<Tip>
+  use `RTP` as the `transferType` for faster simulation
+</Tip>
 
 **Response**
 
