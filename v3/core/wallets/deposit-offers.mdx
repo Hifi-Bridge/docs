@@ -21,7 +21,7 @@ This differs from HIFI Wallets on other chains, where an incoming transfer just 
     The sender sends to a Canton wallet using the existing on-chain transfer functionality. The asset is locked and cannot be used while the offer is pending.
   </Step>
   <Step title="Offer is received by the destination wallet">
-    The offer becomes visible on the recipient's HIFI Wallet, in status `RECEIVED`.
+    The offer becomes visible in the recipient's HIFI Wallet, in status `RECEIVED`.
   </Step>
   <Step title="Accept or reject the offer">
     The recipient explicitly accepts or rejects the offer. Accepting executes the transfer and credits the wallet; rejecting declines it and releases the locked asset back to the sender.
@@ -106,7 +106,7 @@ curl -X POST https://sandbox.hifi.com/v3/users/usr_x1y2z3/wallets/wlt_a1b2c3/off
 }
 ```
 
-`/reject` works the same way — swap the path segment.
+`/reject` works the same way - swap the path segment.
 
 <Info>
   Accept and reject are onchain actions that also need to be posted onchain, and are submitted asynchronously.
@@ -131,6 +131,6 @@ curl -X POST https://sandbox.hifi.com/v3/users/usr_x1y2z3/wallets/wlt_a1b2c3/off
 ## Related Resources
 
 - [Wallets Overview](/v3/core/wallets/overview) - Wallets resources
-- [HIFI Wallet](/v3/core/wallets/hifi-wallet) — Provision wallets and read balances
-- [External Wallet](/v3/core/wallets/external-wallet) — Manage externally owned wallets
-- [Balances (Deposits)](/v3/core/wallets/balances-deposits) — Confirmed on-chain deposit history
+- [HIFI Wallet](/v3/core/wallets/hifi-wallet) - Provision wallets and read balances
+- [External Wallet](/v3/core/wallets/external-wallet) - Manage externally owned wallets
+- [Balances (Deposits)](/v3/core/wallets/balances-deposits) - Confirmed on-chain deposit history

@@ -3,7 +3,7 @@ title: "HIFI Wallet"
 description: "Provision custodial, multi-chain wallets for a user and read their on-chain balances."
 ---
 
-A HIFI Wallet is a custodial wallet HIFI provisions and secures on behalf of a user, one per chain. It's the on-chain balance a user's stablecoins live in — funded by [deposits](/v3/core/wallets/balances-deposits) or onramps, and drawn down by offramps or on-chain transfers.
+A HIFI Wallet is a custodial wallet HIFI provisions and secures on behalf of a user one per chain. It's the on-chain balance a user's stablecoins live in - funded by [deposits](/v3/core/wallets/balances-deposits) or onramps and drawn down by offramps or on-chain transfers.
 
 ## What you can do with a HIFI Wallet
 
@@ -11,9 +11,9 @@ A HIFI Wallet is the on/off-ramp for everything else a user does on-chain. Once 
 
 - **Onramp** - convert fiat into the wallet as stablecoins.
 - **Offramp** - convert the wallet's stablecoins to fiat and disburse globally.
-- **Crypto Transfer** - send stablecoins on-chain to another HIFI wallet or an [external wallet](/v3/core/wallets/external-wallet), including batched transfers to many recipients at once.
-- **Swap** — convert between stablecoins held in the wallet (e.g. USDC → USDT).
-- **Bridge** — move the same stablecoin from this wallet to a wallet or external wallet on a _different_ chain.
+- **Crypto Transfer** - send stablecoins on-chain to another HIFI wallet or an [external wallet](/v3/core/wallets/external-wallet), including batched transfers to multiple recipients at once.
+- **Swap** - convert between stablecoins held in the wallet (e.g. USDC → USDT).
+- **Bridge** - move the same stablecoin from this wallet to a wallet or external wallet on a _different_ chain.
 
 ## Provision a wallet
 
@@ -67,16 +67,16 @@ curl -X POST https://sandbox.hifi.com/v3/users/usr_x1y2z3/wallets \
 ```
 
 <Info>
-  A user can only have one wallet per chain. If any requested chain already has one, the whole request fails with `RESOURCE_CONFLICT` (409) — nothing is provisioned, even for the chains that didn't conflict.
+  A user can only have one wallet per chain. If any requested chain already has one, the whole request fails with `RESOURCE_CONFLICT` (409) - nothing is provisioned, even for the chains that didn't conflict.
 </Info>
 
-## Retrieve wallet's balance
+## Retrieve a wallet's balance
 
-Reads the _live_ on-chain balance for a currency - useful right before quoting or initiating an transaction, to confirm funds have actually settled.
+Reads the _live_ on-chain balance for a currency - useful right before quoting or initiating a transaction to confirm funds have actually settled.
 
-### Example: Retrieving USDC balance
+### Example: Retrieve a wallet's USDC balance
 
-Passing `currency=USDC` as the query params to retrieve USDC balance
+Passing `currency=USDC` as the query params to retrieve the USDC balance
 
 **Request**
 
@@ -105,7 +105,7 @@ curl -X GET https://sandbox.hifi.com/v3/users/usr_x1y2z3/wallets/wlt_fkc0E4OsfHW
   `balance` is the raw onchain balance (unformatted); `displayBalance` is the balance formatted to the corresponding decimal places.
 </Info>
 
-## Retrieve wallet's deposit history
+## Retrieve a wallet's deposit history
 
 Get a list of incoming deposits for supported assets for a given wallet.
 
@@ -155,7 +155,7 @@ curl -X GET https://sandbox.hifi.com/v3/users/usr_Cu7daJpEqY6gIAzG30R9s/wallets/
 ```
 
 <Info>
-  Incoming deposits are also sent out via webhook messages—subscribe to receive real-time updates.
+  Incoming deposits are also sent out via webhook messages, subscribe to receive real-time updates.
 </Info>
 
 ## Getting Help
@@ -166,5 +166,5 @@ curl -X GET https://sandbox.hifi.com/v3/users/usr_Cu7daJpEqY6gIAzG30R9s/wallets/
 ## Related Resources
 
 - [Wallets Overview](/v3/core/wallets/overview) - Wallets resources
-- [External Wallet](/v3/core/wallets/external-wallet) — Manage externally owned wallets
-- [Deposit Offers](/v3/core/wallets/deposit-offers) — Accept/reject Canton transfers
+- [External Wallet](/v3/core/wallets/external-wallet) - Manage externally owned wallets
+- [Deposit Offers](/v3/core/wallets/deposit-offers) - Accept/reject Canton transfers

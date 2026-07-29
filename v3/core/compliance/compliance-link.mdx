@@ -5,7 +5,11 @@ description: "A compliance link is a HIFI-hosted page you can share with your en
 
 ## Overview
 
-Compliance links let you offload the collection of KYC and KYB information to a HIFI-hosted page. You generate a link, share it with your end user, and they complete and submit their compliance information directly to HIFI. When the user submits, the compliance check is initiated automatically - no separate submission call is required. The page can be white-labeled with your own logo using a template ID.
+Compliance links let you offload the collection of KYC and KYB information to a HIFI-hosted page. You generate a link, share it with your end user, and they complete and submit their compliance information directly to HIFI. When the user submits, the compliance check is initiated automatically - no separate submission call is required.
+
+<Tip>
+  The page can be white-labeled with your own logo using a template ID. Check out Customization section
+</Tip>
 
 A compliance link can be issued to:
 
@@ -16,12 +20,12 @@ A compliance link can be issued to:
 
 | Field | Description | Required |
 | :-- | :-- | :-- |
-| `requestId` | A unique identifier for the request, used for idempotency | Yes |
+| `requestId` | A unique identifier for the request, used for idempotency. | Yes |
 | `userType` | The type of user to create (`INDIVIDUAL` or `BUSINESS`). Use when creating a new user. | Conditional |
 | `userId` | The ID of an existing user to request updates from. Use when updating an existing user. | Conditional |
-| `redirectUrl` | URL to send the user to after they complete the hosted flow | No |
-| `recipientEmail` | Email address to send the compliance link to | No |
-| `templateId` | Template ID for white-labeling the hosted page with your logo | No |
+| `redirectUrl` | URL to send the user to after they complete the hosted flow. | No |
+| `recipientEmail` | Email address to send the compliance link to. | No |
+| `templateId` | Template ID for white-labeling the hosted page with your logo. | No |
 
 <Info>
   Provide `userType` to create a new user, or `userId` to request updates from an existing user - one or the other, depending on the use case.
