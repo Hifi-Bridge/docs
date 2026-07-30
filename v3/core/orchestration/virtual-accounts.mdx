@@ -34,6 +34,10 @@ A Virtual Account is a persistent USD bank account bound to one user, one destin
 
 Steps 3 through 6 repeat automatically for every future deposit - the Virtual Account never needs to be recreated or re-armed.
 
+<Tip>
+  For supported pairs check out [Virtual Account Routing](/v3/core/eligibility/virtual-account-routing)
+</Tip>
+
 ## Create a Virtual Account
 
 Provisions the account and returns its deposit instructions immediately - the account is `ACTIVE` and ready to receive funds as soon as this call returns. Requires an `Idempotency-Key` header. Set `destination.walletId` to land on a HIFI Wallet, or `destination.externalWalletId` to land on an External Wallet - exactly one is required.
