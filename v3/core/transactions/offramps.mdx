@@ -161,7 +161,7 @@ curl -X POST https://sandbox.hifi.com/v3/offramps/offramp_QW1e2r3t4y/quote/accep
 | --- | --- | --- |
 | `CREATED` | Offramp created; quote being generated. | No |
 | `OPEN_QUOTE` | Quote ready, awaiting [accept](#accept-an-offramp-quote). | No |
-| `PENDING_APPROVAL` | Awaiting approval (if `requireApproval` was set — see [Onchain Transfer](/v3/core/transactions/onchain-transfer) for the same pattern). | No |
+| `PENDING_APPROVAL` | Awaiting approval (if `requireApproval` was set - see [Onchain Transfer](/v3/core/transactions/onchain-transfer) for the same pattern). | No |
 | `IN_REVIEW` | Quote accepted (HIFI Wallet source); settlement queued. [Cancellable](#cancel-an-offramp) here. | No |
 | `AWAITING_FUNDS` | Quote accepted (External Wallet source); awaiting the crypto deposit. | No |
 | `CRYPTO_INITIATED` / `CRYPTO_PENDING` / `CRYPTO_PROCESSED` | Crypto leg initiating, confirming, and settled. | No |
@@ -176,7 +176,7 @@ curl -X POST https://sandbox.hifi.com/v3/offramps/offramp_QW1e2r3t4y/quote/accep
 | `CANCELLED` | Cancelled via the [cancel](#cancel-an-offramp) endpoint. | Yes |
 
 <Note>
-  A transaction in `COMPLETED` status can transition to `FIAT_RETURNED` or `FIAT_RETURNED` if a payment is returned by the recipient.
+  A transaction in `COMPLETED` status can transition to `FIAT_FAILED`, and `FIAT_RETURNED` if a payment is returned by the recipient.
 </Note>
 
 ## Cancel an offramp
