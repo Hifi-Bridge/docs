@@ -1,0 +1,142 @@
+---
+title: "Magic values"
+description: "Use specific values in sandbox to force transfers and KYC applications into particular states, so you can test how your integration handles them."
+---
+
+Magic values only change the **outcome**, not the path taken to it. The transfer still moves through the same steps, statuses, and webhooks as a real failure or return, so what you build against sandbox behaves the same way in production.
+
+<Warning>
+  Magic values are sandbox only. In production, `sandboxScenario` is rejected with a `400`, and the simulate endpoints do not exist.
+</Warning>
+
+## Create offramp
+
+You can force an offramp failure by providing a magic value on the `sandboxScenario` field when making requests to the [create an offramp endpoint](https://docs.hifi.com/api-reference/offramp/create-an-offramp). The following table outlines the magic values and their effects:
+
+| Magic value     | Response                                                                                                                                                                                                                                                                                                                    |
+| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `CRYPTO_FAILED`   | Transfer is rejected before the fiat leg started. When the offramp is funded from a HIFI wallet, nothing left the wallet and the status is terminal. When it is funded from an external wallet, the crypto is returned to the sender and the offramp continues on to `CRYPTO_RETURNED` |
+| `FIAT_FAILED` | Transfer fails at the fiat payout leg after the crypto has already left the source wallet. Offramp is returned with its normal creation status in the synchronous response, then progresses through the usual statuses before a webhook updates it to `FIAT_FAILED`. Converted funds are held and are not returned automatically. Use [Simulate an offramp return](#offramp-returns) to return them. |
+
+```bash
+curl -X POST "https://sandbox.hifibridge.com/v2/offramps" \
+  -H "Authorization: Bearer YOUR_SANDBOX_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "requestId": "201ca31d-700f-4c76-ac4b-961623acbb79",
+    "sandboxScenario": "FIAT_FAILED",
+    "source": {
+      "currency": "usdc",
+      "chain": "POLYGON",
+      "userId": "7d54a7a7-dac3-4313-8b09-27fa4b7fd1ee",
+      "amount": 10
+    },
+    "destination": {
+      "currency": "usd",
+      "accountId": "12c1c496-8f57-41a1-8292-dbe6547791ce",
+      "userId": "7d54a7a7-dac3-4313-8b09-27fa4b7fd1ee"
+    }
+  }'
+```
+
+## Offramp returns
+
+Once an offramp is in `FIAT_FAILED`, call [Simulate an offramp return](https://docs.hifi.com/api-reference/offramp/simulate-an-offramp-return) to return the crypto to the sender:
+
+```bash
+curl -X POST "https://sandbox.hifibridge.com/v2/offramps/173c1e89-7bbd-4352-9e5d-73807681510d/simulate-return" \
+  -H "Authorization: Bearer YOUR_SANDBOX_API_KEY"
+```
+
+| Precondition                | Result                                                                                                                                                        |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Offramp is in `FIAT_FAILED` | The offramp moves to `CRYPTO_RETURNED`. Depending on the rail, it may report an intermediate `FIAT_RETURNED` first.                                           |
+| Offramp is in any other status | Rejected. In particular, a `COMPLETED` offramp cannot be returned, since its payout already reached the destination bank.                                  |
+
+Testnet crypto is delivered on chain to the sender's wallet, so the offramp reaches `CRYPTO_RETURNED` once that delivery confirms. 
+
+## Simulate deposit
+
+Onramps funded by a USD virtual account are created by the deposit itself, so onramp magic values are passed on the `sandboxScenario` field of the [simulate a deposit to a virtual account endpoint](https://docs.hifi.com/api-reference/virtual-account/simulate-a-deposit-to-a-virtual-account) rather than on an onramp create request. The following table outlines the magic values and their effects on the onramp the deposit creates:
+
+| Magic value     | Response                                                                                                                                                                                                                       |
+| --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `FIAT_FAILED`   | Deposit is rejected during review, before any crypto is delivered, and a webhook updates the onramp to `FIAT_FAILED`. Terminal. |
+| `CRYPTO_FAILED` | Deposit is accepted but the crypto delivery leg fails, and a webhook updates the onramp to `CRYPTO_FAILED`. The fiat stays held rather than being returned automatically. Use [Simulate an onramp return](#onramp-returns) to return it. |
+
+```bash
+curl -X POST "https://sandbox.hifibridge.com/v2/users/7d54a7a7-dac3-4313-8b09-27fa4b7fd1ee/virtual-accounts/938e3b36-3be7-5535-ba12-8d89eb683e6b/simulate-deposit" \
+  -H "Authorization: Bearer YOUR_SANDBOX_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "requestId": "0dd0f1a1-5b2f-4f2f-9a6a-2f0a4f2b6c11",
+    "amount": "100",
+    "paymentRail": "WIRE",
+    "sandboxScenario": "CRYPTO_FAILED",
+    "source": {
+      "routingNumber": "021000021",
+      "accountNumber": "1234567890",
+      "name": "John Doe",
+      "bankName": "Test Bank"
+    }
+  }'
+```
+
+## Onramp returns
+
+Once an onramp is in `CRYPTO_FAILED`, call [Simulate an onramp return](https://docs.hifi.com/api-reference/onramp/simulate-an-onramp-return) to return the held fiat to the sender:
+
+```bash
+curl -X POST "https://sandbox.hifibridge.com/v2/onramps/07f217dc-f196-4835-ba31-21e1360652d3/simulate-return" \
+  -H "Authorization: Bearer YOUR_SANDBOX_API_KEY"
+```
+
+| Precondition                    | Result                                                                                                                          |
+| ------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| Onramp is in `CRYPTO_FAILED`    | The onramp moves to `FIAT_RETURNED`.                           |
+| Onramp is in any other status   | Rejected. In particular, a `COMPLETED` onramp cannot be returned, since its crypto already reached the destination wallet.       |
+
+The endpoint takes no request body. `FIAT_RETURNED` status is reached immediately and the response echoes the returned onramp in its new status.
+
+This is available on USD onramps, regardless of which rail funded the deposit.
+
+## Submit KYC
+
+KYC uses a separate name-based convention. Set `lastName` (for individuals) or `businessName` (for businesses) to a magic value when making requests to the [submit KYC endpoint](https://docs.hifi.com/api-reference/kyc/submit-kyc) to drive the application to a particular status:
+
+| Magic value | Response                                                                                                     |
+| ----------- | -------------------------------------------------------------------------------------------------------------- |
+| `APPROVED`  | Application is approved and the user reaches `ACTIVE`.                                                       |
+| `PENDING`   | Stuck application. The user stays in `PENDING`.                                                              |
+| `REJECTED`  | Application is rejected and the user reaches `REJECTED`.                                                     |
+| `RFI`       | The user enters `RFI_PENDING`, then auto-resolves to `ACTIVE` after roughly 10 minutes with no action needed. |
+
+<Note>
+  **Note:** Any other value results in the standard sandbox behavior, where KYC is typically auto-approved. Some compliance checks, such as PEP screening, can still block approval in sandbox regardless of the name used.
+</Note>
+
+See [KYC status](/kyc/kyc-status) and [KYB status](/kyc/kyb-status) for what each status means.
+
+## Coverage
+
+Magic values are wired into the paths below. Combinations that are not listed either fall through to the standard sandbox behavior or return an error.
+
+| Area              | Covered                                                                                            |
+| ----------------- | -------------------------------------------------------------------------------------------------- |
+| Offramp scenarios | USD offramps and global network offramps                                                           |
+| Offramp returns   | USD offramps and global network offramps                                                           |
+| Onramp scenarios  | USD onramps, triggered from the virtual account deposit that creates them                          |
+| Onramp returns    | USD onramps, regardless of which rail funded the deposit                                           |
+| KYC scenarios     | `APPROVED`, `PENDING`, `REJECTED`, and the `RFI_PENDING` lifecycle. `RFI` only auto-resolves to `ACTIVE`. |
+
+## Getting help
+
+- 📧 **Email:** [support@hifi.com](mailto:support@hifi.com)
+- 💬 **Slack:** Message us in our shared Slack channel
+
+## Related resources
+
+- [Sandbox](/sandbox) - Environment setup and how sandbox differs from production
+- [Offramps](/transactions/offramps#failed-payouts-and-returns) - Full offramp status progression, including returns
+- [Onramps](/transactions/onramps) - Full onramp status progression
+- [Offramp events](/webhooks/offramp-events) - Webhook events emitted during failures and returns

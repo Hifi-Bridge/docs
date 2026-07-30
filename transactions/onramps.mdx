@@ -220,6 +220,15 @@ Onramps progress through several phases:
 | **CRYPTO_FAILED**    | Blockchain transaction failed                         |
 | **COMPLETED**        | Stablecoins delivered to wallet, transaction complete |
 
+## Failed Deposits and Returns
+
+An onramp can fail on either leg, and what happens to the funds depends on which leg failed:
+
+- **`FIAT_FAILED`**: Deposit was rejected during review, before any crypto was delivered.
+- **`CRYPTO_FAILED`**: Fiat was accepted but the crypto delivery leg failed. Fiat stays held rather than being returned automatically, and can be returned to the sender's bank account, moving the onramp to `FIAT_RETURNED`. Unlike an offramp return, `FIAT_RETURNED` is terminal.
+
+Returns are available on USD onramps, regardless of which rail funded the deposit. To test them in sandbox, see [Magic values](/testing/magic-values).
+
 ## Tracking Onramps
 
 <Note>
