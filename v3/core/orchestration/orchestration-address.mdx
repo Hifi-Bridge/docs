@@ -1,3 +1,315 @@
 ---
 title: "Orchestration Address"
+description: "An Orchestration Address is a persistent on-chain wallet attached to an external account. Stablecoins sent to it are automatically off-ramped to fiat immediately, on a schedule, or when an aggregate amount is reached. The user never has to create an offramp manually; HIFI does it for them."
 ---
+
+An Orchestration Address is the **inverse** of a [Virtual Account](/v3/core/orchestration/virtual-accounts):
+
+|  | Virtual Account | Orchestration Address |
+| --- | --- | --- |
+| Direction | Fiat → Stablecoin | Stablecoin → Fiat |
+| Deposit method | Bank transfer (ACH / Wire / RTP) | On-chain stablecoin transfer |
+| Destination | A crypto wallet | A bank account |
+
+Each Orchestration Address is bound to **one user, one chain, one source token (USDC or USDT), and one destination [External Account](/v3/core/counter-party/external-account)**. The address is persistent - once created it lives forever and keeps accepting deposits, even after deactivation.
+
+<Note>
+  Once orchestration address is deactivated, no new conversion will be triggered.
+</Note>
+
+## How Orchestration Addresses Work
+
+<Steps>
+  <Step title="Create the address">
+    Configure a source `(currency, chain)`, a destination [External Account](/v3/core/counter-party/external-account), and an orchestration `mode`. HIFI provisions a dedicated on-chain wallet and returns its address.
+  </Step>
+  <Step title="Receive stablecoin deposits">
+    Senders transfer USDC or USDT on-chain to the address. HIFI detects each deposit as it lands on-chain.
+  </Step>
+  <Step title="Automatic offramp">
+    Based on the configured mode, HIFI batches eligible deposits and runs them through the standard offramp pipeline. USD lands in the destination account - no manual quote-accept step required.
+  </Step>
+</Steps>
+
+## Orchestration Modes
+
+Choose one of three modes at create time. The mode is changeable later via the [update](#update-an-orchestration-address) endpoint.
+
+- `PER_DEPOSIT` - a deposit at or above the minimum is batched immediately; a sub-minimum deposit is held `PENDING` and swept into the next qualifying batch.
+- `SCHEDULED` - a tick whose `PENDING` total is below the minimum batches nothing; the deposits roll into the next tick.
+- `THRESHOLD` - `thresholdAmount` is validated to be ≥ the rail minimum at create/update time, so a crossed threshold always clears it.
+
+Every active address also supports a [manual trigger](#manual-trigger) that batches whatever is currently pending - regardless of mode - without advancing the `SCHEDULED` clock.
+
+## Supported Source Pairs
+
+| Chain | USDC | USDT |
+| --- | :-: | :-: |
+| Ethereum, Polygon, Base, Solana | ✅ | ✅ |
+| Tron | ❌ | ✅ |
+
+Unsupported pairs (for example, USDC on Tron) are rejected at create time.
+
+## Minimum Amounts
+
+Every destination rail enforces a minimum amount. A batch is only created once the eligible `PENDING` deposits sum to at least that minimum.
+
+| Rail | Minimum |
+| --- | --- |
+| Wire, ACH, RTP | 1 USDC |
+| SWIFT | 5 USDC |
+| USDT (any rail) | 10 USDT |
+
+## Creating an Orchestration Address
+
+Provisions the wallet and returns the address immediately - `status` is normally already `ACTIVE` by the time this call returns (it can briefly be `PENDING_WALLET` if wallet provisioning is still in flight). Requires an `Idempotency-Key` header.
+
+**Request**
+
+```shellscript
+curl -X POST https://sandbox.hifi.com/v3/users/usr_gBlMyGTbuyknSPXlZtwlS/orchestration-addresses \
+  -H "Idempotency-Key: <unique-key>" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -d '{
+    "requestId": "550e8400-e29b-41d4-a716-446655440000",
+    "source": {
+      "currency": "USDC",
+      "chain": "BASE"
+    },
+    "destination": {
+      "currency": "USD",
+      "externalAccountId": "extacct_QW1e2r3t4y"
+    },
+    "mode": "PER_DEPOSIT"
+  }'
+```
+
+**Response**
+
+```json
+{
+    "id": "orchaddr_HtgURm58uWMF0EzmG8DAl",
+    "userId": "usr_gBlMyGTbuyknSPXlZtwlS",
+    "address": "0xDE49949a9f590421b529c83b339635d5B5783727",
+    "source": { "currency": "USDC", "chain": "BASE" },
+    "destination": { "currency": "USD", "externalAccountId": "extacct_QW1e2r3t4y" },
+    "mode": "PER_DEPOSIT",
+    "schedule": null,
+    "thresholdAmount": null,
+    "status": "ACTIVE",
+    "createdAt": "2026-07-25T23:54:02.679Z",
+    "updatedAt": "2026-07-25T23:54:02.679Z",
+    "deactivatedAt": null
+}
+```
+
+<Info>
+  `status` may briefly be `PENDING_WALLET` while the on-chain wallet is being provisioned. The create endpoint waits for provisioning to complete, so the typical response is already `ACTIVE` with `address` populated.
+</Info>
+
+<Tip>
+  [Get an Orchestration Address](#get-an-orchestration-address) (the single-address endpoint) also returns a live `balance` field - the on-chain balance of the source token held by the address - so you don't need a separate provider call to check funds in flight.
+</Tip>
+
+## Managing the Address Lifecycle
+
+### Update
+
+Change the mode, schedule, threshold, or destination account at any time while the address is `ACTIVE`. Updates do not affect offramps already in flight - only future deposits use the new configuration. A `DEACTIVATED` address can't be updated.
+
+**Request**
+
+```shell
+curl -X PATCH https://sandbox.hifi.com/v3/users/usr_gBlMyGTbuyknSPXlZtwlS/orchestration-addresses/orchaddr_HtgURm58uWMF0EzmG8DAl \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -d '{
+    "mode": "THRESHOLD",
+    "thresholdAmount": "250"
+  }'
+```
+
+### Deactivate
+
+Deactivate the address with a `walletAddress` to receive any remaining refunds. 
+
+Deactivation:
+
+- Refunds all `PENDING` (not-yet-batched) deposits to `walletAddress`.
+- Lets in-flight `PROCESSING` batches continue to completion.
+- Stops offramping any **new** deposits - they are recorded as `IGNORED` **with no automatic refund.**
+
+**Request**
+
+```shell
+curl -X DELETE https://sandbox.hifi.com/v3/users/usr_gBlMyGTbuyknSPXlZtwlS/orchestration-addresses/orchaddr_HtgURm58uWMF0EzmG8DAl \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -d '{
+    "walletAddress": "0xYourRefundAddress..."
+  }'
+```
+
+<Warning>
+  The on-chain address keeps receiving deposits even after deactivation, since the underlying wallet cannot be taken offline.
+</Warning>
+
+### Manual trigger
+
+Batches whatever is currently `PENDING` right now, regardless of mode - useful for forcing an early settlement instead of waiting for the next scheduled tick or threshold crossing. 
+
+**Request**
+
+```shell
+curl -X POST https://sandbox.hifi.com/v3/users/usr_gBlMyGTbuyknSPXlZtwlS/orchestration-addresses/orchaddr_HtgURm58uWMF0EzmG8DAl/orchestrate \
+  -H "Idempotency-Key: <unique-key>" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+**Response**
+
+```json
+{
+    "triggered": true,
+    "batch": {
+            "id": "orchbat_Gh56Ij78Kl",
+            "orchestrationAddressId": "orchaddr_HtgURm58uWMF0EzmG8DAl",
+            "totalAmount": "150.000000",
+            "currency": "USDC",
+            "status": "PROCESSING",
+            "failureReason": null,
+            "createdAt": "2026-07-25T23:54:02.679Z",
+            "updatedAt": "2026-07-25T23:54:02.679Z",
+            "depositIds": ["orchdep_Ab12Cd34Ef", "orchdep_Mn90Op12Qr"],
+            "offrampTransactionId": null
+      }
+}
+```
+
+If there's nothing eligible to batch, `triggered` is `false` and `batch` is `null`, with a `reason` of `no_pending_deposits`, `below_offramp_minimum`, or `address_no_longer_active`.
+
+## Tracking Deposits
+
+Use the GET `v3/users/:userId/orchestration-addresses/:orchId/deposits` to retrieve a list of deposits of an orchestration addresses with optional query filter.
+
+**Request**
+
+```shell
+curl "https://sandbox.hifi.com/v3/users/usr_gBlMyGTbuyknSPXlZtwlS/orchestration-addresses/orchaddr_HtgURm58uWMF0EzmG8DAl/deposits?status=PENDING" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+**Response**
+
+```json
+{
+    "count": 1,
+    "records": [
+        {
+            "id": "orchdep_Ab12Cd34Ef",
+            "orchestrationAddressId": "orchaddr_HtgURm58uWMF0EzmG8DAl",
+            "batchId": null,
+            "amount": "100.500000",
+            "currency": "USDC",
+            "chain": "BASE",
+            "sourceAddress": "0xSender...",
+            "transactionHash": "0xTxHash...",
+            "status": "PENDING",
+            "ignoredReason": null,
+            "createdAt": "2026-07-25T23:54:02.679Z",
+            "updatedAt": "2026-07-25T23:54:02.679Z"
+        }
+    ],
+    "nextCursor": null
+}
+```
+
+#### Statuses
+
+| Status | Details |
+| --- | --- |
+| `PENDING` | Received deposits and awaiting to be batched |
+| `BATCHED` | Deposits that being batched for payout |
+| `IGNORED` | Deposits that will not be processed and batched |
+| `REFUNDED` | Deposits that are refunded |
+
+## Tracking Batches
+
+Use the GET `v3/users/:userId/orchestration-addresses/:orchId/batches` to retrieve a list of created batches of an orchestration addresses with optional query filter.
+
+**Request**
+
+```shell
+curl "https://sandbox.hifi.com/v3/users/usr_gBlMyGTbuyknSPXlZtwlS/orchestration-addresses/orchaddr_HtgURm58uWMF0EzmG8DAl/batches" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+**Response**
+
+```json
+{
+    "count": 1,
+    "records": [
+        {
+            "id": "orchbat_Gh56Ij78Kl",
+            "orchestrationAddressId": "orchaddr_HtgURm58uWMF0EzmG8DAl",
+            "totalAmount": "150.000000",
+            "currency": "USDC",
+            "status": "PROCESSING",
+            "failureReason": null,
+            "createdAt": "2026-07-25T23:54:02.679Z",
+            "updatedAt": "2026-07-25T23:54:02.679Z",
+            "depositIds": ["orchdep_Ab12Cd34Ef", "orchdep_Mn90Op12Qr"],
+            "offrampTransactionId": null
+        }
+    ],
+    "nextCursor": null
+}
+```
+
+`offrampTransactionId` is `null` until the worker picks up the batch, then becomes the id of the produced [Offramp](/v3/core/transactions/offramps) - use GET `v3/offramps/:offrampId` for full transfer details, including its own quote, status history, and receipt.
+
+#### Statuses
+
+| Status | Details |
+| :-- | :-- |
+| `PENDING` | Batch is built and awaiting for processing |
+| `PROCESSING` | Batch is currently being processed |
+| `COMPLETED` | The payout is completed for the batch |
+| `FAILED` | Operation failed for the batch, reach out to HIFI for more information. |
+
+## Additional Information
+
+<AccordionGroup>
+  <Accordion title="Reconciling with offramps">
+    Orchestration offramps flow through the same pipeline as direct offramps, so the existing offramp endpoints and webhooks work without changes - once a batch produces an offramp, that offramp emits the standard `OFFRAMP.STATUS.*` webhooks, and you can `GET` it directly for full transfer details.
+  </Accordion>
+
+  <Accordion title="Ignored deposits">
+    A deposit is recorded with `status = IGNORED` (and not offramped) in two cases:
+
+    - `ADDRESS_DEACTIVATED` - the deposit arrived after the address was deactivated.
+    - `UNSUPPORTED_TOKEN` - the sender used the wrong stablecoin (for example, sending USDT to a USDC-only address).
+
+    In both cases the funds remain in the on-chain wallet. Contact support to arrange a manual refund.
+  </Accordion>
+
+  <Accordion title="Failed batches">
+    A batch can land in `FAILED` for one of two reasons, surfaced as `failureReason`:
+
+    - `ADDRESS_NOT_ACTIVE` - the address was deactivated between batch creation and processing.
+    - **A terminal offramp status** (`NOT_INITIATED`, `QUOTE_FAILED`, `CRYPTO_FAILED`, `FIAT_FAILED`, `EXPIRED`, `REJECTED`, `CANCELLED`) - the underlying offramp terminated. Compliance issues (lost product access, KYC rejection) surface here.
+
+    The deposits in a failed batch remain in `BATCHED` status and are not automatically retried. Contact support to re-batch them once any underlying issue is resolved.
+  </Accordion>
+</AccordionGroup>
+
+## Getting Help
+
+- 📧 **Email:** [support@hifi.com](mailto:support@hifi.com)
+- 💬 **Slack:** Message us in our shared Slack channel
+
+## Related Resources
+
+- [Orchestration Overview](/v3/core/orchestration/overview) - Orchestration resources
+- [Virtual Accounts](/v3/core/orchestration/virtual-accounts) - The inverse flow: fiat deposits converted to stablecoins
+- [Offramps](/v3/core/transactions/offramps) - The transaction each batch produces
+- [External Account](/v3/core/counter-party/external-account) - Valid destination accounts

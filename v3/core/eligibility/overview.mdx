@@ -1,0 +1,40 @@
+---
+title: "Overview"
+description: "Check which corridors and routes are supported - globally, and for a specific user - before you create a transaction or resource."
+---
+
+Not every combination of country, currency, transfer rail, chain, and stablecoin is available everywhere, and availability can differ per user depending on which corridors HIFI has enabled for your profile and the user's compliance profile. Eligibility resources let you check what's actually usable before you call a creation endpoint, instead of finding out from a failed request.
+
+## Resources
+
+- [**Corridors**](/v3/core/eligibility/corridors) - which fiat ↔ stablecoin combinations are supported for [Onramps](/v3/core/transactions/onramps) and [Offramps](/v3/core/transactions/offramps).
+- [**Virtual Account Routes**](/v3/core/eligibility/virtual-account-routes) - which fiat → stablecoin combinations are supported for [Virtual Accounts](/v3/core/orchestration/virtual-accounts).
+
+## Two tiers, same shape
+
+Both resources expose the same two-tier pattern:
+
+| Tier | Endpoint shape | Scope |
+| --- | --- | --- |
+| Catalog | `GET /v3/<resource>` and `GET /v3/<resource>/:id` | Global - everything HIFI could support, regardless of any one user. |
+| Eligibility | `GET /v3/users/:userId/<resource>/eligibility` | User-specific - filtered down to what this user can actually use right now. |
+
+A route or corridor can appear in the catalog but not in a given user's eligibility list - most commonly because the user hasn't finished onboarding with the provider behind it yet. If a combination doesn't show up in the eligibility response, creating the corresponding resource with it will fail.
+
+## Common Conventions
+
+- **`expand`**: eligibility endpoints default to returning just a list of route/corridor `id`s (cheap to call repeatedly, e.g. before every creation). Pass `expand=true` to get the full object for each match instead of making a second call per id.
+- **Cursor pagination**: `limit`, `startingAfter`, `endingBefore` - the same cursor convention used across the rest of the v3 API.
+- **Filters are optional**: omit every filter to see everything currently eligible; add `fiatCurrency`, country, transfer rail, etc. filters to narrow down to one specific combination.
+
+## Getting Help
+
+- 📧 **Email:** [support@hifi.com](mailto:support@hifi.com)
+- 💬 **Slack:** Message us in our shared Slack channel
+
+## Related Resources
+
+- [Corridors](/v3/core/eligibility/corridors) - Onramp/Offramp availability
+- [Virtual Account Routes](/v3/core/eligibility/virtual-account-routes) - Virtual Account availability
+- [Onramps](/v3/core/transactions/onramps) / [Offramps](/v3/core/transactions/offramps) - Gated by Corridors
+- [Virtual Accounts](/v3/core/orchestration/virtual-accounts) - Gated by Virtual Account Routes

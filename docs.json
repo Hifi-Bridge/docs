@@ -211,8 +211,16 @@
                     "group": "Orchestration",
                     "pages": [
                       "v3/core/orchestration/overview",
-                      "v3/core/orchestration/virtual-account",
+                      "v3/core/orchestration/virtual-accounts",
                       "v3/core/orchestration/orchestration-address"
+                    ]
+                  },
+                  {
+                    "group": "Eligibility",
+                    "pages": [
+                      "v3/core/eligibility/overview",
+                      "v3/core/eligibility/corridors",
+                      "v3/core/eligibility/virtual-account-routes"
                     ]
                   }
                 ]

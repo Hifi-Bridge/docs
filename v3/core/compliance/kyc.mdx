@@ -19,7 +19,7 @@ Different information is required for verification, including both non-documenta
 | `physicalAddress` | Residential address (line1, city, state, postalCode, country) | Yes |
 | `taxId` | Tax identification number in the user's country | Yes |
 | `taxIdType` | Tax identification number (e.g. SSN, ITIN) | No |
-| `taxIdCountry` | Tax identification number issuance country | No |
+| `taxIdCountry` |  | No |
 | `nationality` | User's nationality | Yes |
 
 {/* TODO: Replace with the actual field list and requirement rules — 
@@ -300,15 +300,12 @@ After submission, the application has the following possible states:
 
 <AccordionGroup>
   <Accordion title="APPROVED">
-    No additional action is needed — the user has already passed HIFI's compliance check.
-
     **What's next:**
 
     Wait for corridor functionality to be unlocked for the user. The timing may vary, and based on the customer profile, the user may not be eligible for all corridors.
   </Accordion>
 
   <Accordion title="PENDING">
-    No action required — the information has been uploaded and is awaiting processing.
   </Accordion>
 
   <Accordion title="IN_REVIEW">
@@ -368,10 +365,10 @@ After submission, the application has the following possible states:
 When a submitted application needs updated information, the status transitions to `REQUIRES_INFO` and the `rfiActions` field will include the actions required before resubmission.
 
 | Type | Action |
-| --- | --- |
+| :-- | --- |
 | `UPDATE_PROFILE` | Update the user's profile information before resubmission, a common reason is information that doesn't match the submitted documentation. |
 | `RESUBMIT_DOCUMENT` | Update the user's documentation before resubmission, common reasons include expired, blurry, or unqualified documents. |
-| `UPDATE_QUESTIONNAIRE` | Update the user's questionnaire before resubmission |
+| `UPDATE_QUESTIONNAIRE` |  |
 
 ## Getting Help
 
