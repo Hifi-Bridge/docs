@@ -1,3 +1,79 @@
 ---
 title: "Virtual Account Routes"
+description: "Which fiat to stablecoin combinations are supported for Virtual Accounts,per user."
 ---
+
+A Virtual Account Route is one supported combination of country, fiat currency, transfer rail, stablecoin, and destination chain. Before creating a [Virtual Account](/v3/core/orchestration/virtual-accounts), check whether the route you need is available  for the specific user you're creating it for.
+
+## Check routing eligibility
+
+`GET /v3/users/:userId/virtual-accounts/routes/eligibility` filters the catalog down to what a specific user can actually use right now.
+
+**Request**
+
+```shell
+curl "https://sandbox.hifi.com/v3/users/usr_gBlMyGTbuyknSPXlZtwlS/virtual-accounts/routes/eligibility?country=USA&fiatCurrency=USD&transferType=ACH&expand=true" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+**Response**
+
+```json
+{
+    "data": [
+        "var_wnspisLMfjEDZdIZSF9AB",
+        "var_O1E0ktGWJbZq309v7dnQL",
+        "var_4Khz1BRoiXLkHOT8TpEcm",
+        "var_nupsZxEGnaEHRX2juGaqc",
+        "var_Dw6AjzWi59GhTIFfAANA2",
+    ],
+    "pagination": {
+        "hasMore": false,
+        "startCursor": "var_wnspisLMfjEDZdIZSF9AB",
+        "endCursor": "var_Dw6AjzWi59GhTIFfAANA2"
+    }
+}
+```
+
+By default (`expand` omitted or `false`), `data` is just an array of route `id` strings - pass `expand=true` for the full objects shown below.
+
+```json
+{
+    "data": [
+        {
+            "id": "var_wnspisLMfjEDZdIZSF9AB",
+            "country": "USA",
+            "fiatCurrency": "USD",
+            "transferType": "ACH",
+            "cryptoCurrency": "USDC",
+            "chain": "POLYGON",
+            "status": "ACTIVE"
+        },
+        {
+            "id": "var_O1E0ktGWJbZq309v7dnQL",
+            "country": "USA",
+            "fiatCurrency": "USD",
+            "transferType": "ACH",
+            "cryptoCurrency": "USDT",
+            "chain": "TRON",
+            "status": "ACTIVE"
+        }
+    ],
+    "pagination": {
+        "hasMore": false,
+        "startCursor": "var_wnspisLMfjEDZdIZSF9AB",
+        "endCursor": "var_O1E0ktGWJbZq309v7dnQL"
+    }
+}
+```
+
+## Getting Help
+
+- 📧 **Email:** [support@hifi.com](mailto:support@hifi.com)
+- 💬 **Slack:** Message us in our shared Slack channel
+
+## Related Resources
+
+- [Eligibility Overview](/v3/core/eligibility/overview) - Eligibility resources
+- [Corridors](/v3/core/eligibility/corridors) - The equivalent check for Onramps/Offramps
+- [Virtual Accounts](/v3/core/orchestration/virtual-accounts) - Gated by these routes
