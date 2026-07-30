@@ -1,0 +1,187 @@
+---
+title: "Developer Fees"
+description: "Developer Fees enable automated calculation and distribution of fees for offramp transactions. Fees can be configured to be distributed to up to 10 different beneficiary wallets."
+---
+
+{/* INTERNAL: as of this writing, POST /v3/offramps does not accept a developerFee field (OfframpSchema in
+  src/validation/schemas/offramp/offramp.schema.js is a strictObject without it, and translateOfframpContextToV2Fields
+  never forwards one downstream), and buildOfframpObject doesn't return amountIncludeDeveloperFee even though the
+  amount_include_developer_fee column is populated internally. This page documents the intended v3 shape (mirroring
+  the v2 behavior). Do not publish until both are wired up - confirm with eng before removing this comment. */}
+
+<Info>
+  Developer fees work for offramp transactions. Looking to charge fees for Virtual Accounts? Try [Settlement Rules](/v3/features/settlement-rule).
+</Info>
+
+## How Developer Fees Work
+
+<Steps>
+  <Step title="Define fees and beneficiary">
+    Specify the fee calculation method and destination wallets by including the developer fee when creating an offramp.
+  </Step>
+  <Step title="Automatic distribution">
+    Fees are automatically calculated and distributed during the offramp process. The total amount (offramp amount \+ fees) is debited from the source wallet.
+  </Step>
+</Steps>
+
+<Warning>
+  Fees are not refundable once sent out to the beneficiary fee wallets. Fees are sent out the moment the sender wallet is debited, not when the offramp transaction completes.
+</Warning>
+
+## Fee Models
+
+HIFI currently supports two types of fee models:
+
+- **Percentage:** The fee is calculated based on the amount being converted into fiat.
+- **Flat:** The fee is charged as a fixed amount, regardless of the amount being converted into fiat.
+
+**All fees are added on top of the offramp amount and credited to the beneficiary wallet in stablecoin.**
+
+### Fee Calculation Example
+
+An offramp transaction with an amount of **100 USDC** and two developer fees:
+
+- **20 bps (0.002)** as a percentage, credited to **Beneficiary Wallet A**
+- **5 USDC** as a flat fee, credited to **Beneficiary Wallet B**
+
+When the offramp is created, a total of **105.2 USDC** (100 \+ 100 × 0.002 \+ 5) will be debited from the sender's wallet. After settlement:
+
+- **100 USDC** will be converted into fiat and sent to the recipient's bank account
+- **0.2 USDC** will be delivered to **Wallet A**
+- **5 USDC** will be delivered to **Wallet B**
+
+## Applying Developer Fees
+
+Include the `developerFee` field when creating an offramp to automatically calculate and distribute fees. Like other v3 Offramps, this follows a quote-then-accept flow: creating the offramp locks in a quote, and a separate call accepts it to execute the transfer.
+
+### Request
+
+```shellscript
+curl -X POST "https://sandbox.hifibridge.com/v3/offramps" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "requestId": "201ca31d-700f-4c76-ac4b-961623acbb79",
+    "source": {
+      "amount": "100",
+      "currency": "USDC",
+      "walletId": "wlt_fkc0E4OsfHWZPNXiPhj4q"
+    },
+    "destination": {
+      "currency": "USD",
+      "externalAccountId": "extacct_QW1e2r3t4y"
+    },
+    "developerFee": {
+      "fees": [
+        {
+          "type": "PERCENTAGE",
+          "value": "0.002",
+          "walletAddress": "0x366B759bAA089Fa57a08edd3F2E028E86b97f8D7"
+        },
+        {
+          "type": "FLAT",
+          "value": "5",
+          "walletAddress": "0x366B759bAA089Fa57a08edd3F2E028E86b97f8D6"
+        }
+      ]
+    }
+  }'
+```
+
+### Response
+
+```json
+{
+    "id": "offramp_QW1e2r3t4y",
+    "requestId": "3f2504e0-4f89-11d3-9a0c-0305e82c3301",
+    "status": "OPEN_QUOTE",
+    "failedReason": null,
+    "error": null,
+    "errorDetails": null,
+    "source": {
+        "chain": "POLYGON",
+        "amount": "500.00",
+	   "amountIncludeDeveloperFee": "506"
+        "currency": "USDC",
+        "userId": "usr_x1y2z3",
+        "walletId": "wlt_fkc0E4OsfHWZPNXiPhj4q",
+        "externalWalletId": null,
+        "walletAddress": "0xEBf25E3eCA55Cf4300b637c0569fB6995DEb8153"
+    },
+    "destination": {
+        "amount": "500.00",
+        "currency": "USD",
+        "userId": "usr_x1y2z3",
+        "externalAccountId": "extacct_QW1e2r3t4y",
+        "externalCardId": null
+    },
+    "receipt": {
+        "transactionHash": null,
+        "paymentTracking": null
+    },
+    "quote": {
+        "sendGross": { "amount": "500.00", "currency": "USDC" },
+        "sendNet": { "amount": "500.00", "currency": "USDC" },
+        "receiveGross": { "amount": "500.00", "currency": "USD" },
+        "receiveNet": { "amount": "500.00", "currency": "USD" },
+        "rate": "1.00",
+        "conversionFee": null,
+        "expiresAt": "2026-07-25T22:00:00.000Z"
+    },
+    "developerFee": {
+        "id": "b9551a87-6d9a-5963-b198-efaaf9061668",
+        "transactionHash": null,
+        "fees": [
+          {
+            "type": "PERCENTAGE",
+            "value": "1",
+            "amount": "0.200000",
+            "walletAddress": "0x366B759bAA089Fa57a08edd3F2E028E86b97f8D7"
+          },
+          {
+            "type": "FLAT",
+            "value": "5",
+            "amount": "5.000000",
+            "walletAddress": "0x366B759bAA089Fa57a08edd3F2E028E86b97f8D6"
+          }
+        ]
+    },
+    "depositInfo": null,
+    "sameDayAch": false,
+    "achMessage": null,
+    "sepaMessage": null,
+    "wireMessage": null,
+    "swiftMessage": null,
+    "purposeOfPayment": null,
+    "returnAddress": null,
+    "developerFee": null,
+    "description": null,
+    "createdAt": "2026-07-24T22:00:00.000Z",
+    "updatedAt": "2026-07-24T22:00:00.000Z"
+}
+```
+
+<Tip>
+  `amountIncludeDeveloperFee` will be the total amount that debited from the sender user's wallet.
+</Tip>
+
+Once the quote looks right, accept it to execute the transfer:
+
+```bash
+curl -X POST "https://sandbox.hifibridge.com/v3/offramps/fa3c7411-8288-4247-98b2-2f90a7053f83/quote/accept" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+<Info>
+  For detailed field documentation, see [Create an Offramp](/v3/core/transactions/offramps).
+</Info>
+
+## Getting Help
+
+- 📧 **Email:** [support@hifi.com](mailto:support@hifi.com)
+- 💬 **Slack:** Message us in our shared Slack channel
+
+## Related Resources
+
+- [Offramps](/api-reference/transactions/offramps) - Complete guide to creating offramp transactions
+- [Create an Offramp](/api-reference/transactions/offramps) - Complete endpoint documentation

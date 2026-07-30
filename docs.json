@@ -227,7 +227,11 @@
               },
               {
                 "group": "Features",
-                "pages": []
+                "pages": [
+                  "v3/features/transaction-approval",
+                  "v3/features/developer-fee",
+                  "v3/features/settlement-rule"
+                ]
               },
               {
                 "group": "Compliance",
