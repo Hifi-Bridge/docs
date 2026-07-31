@@ -507,7 +507,8 @@
                       "GET /v2/wallets/swaps",
                       "GET /v2/wallets/swaps/{swapId}",
                       "POST /v2/wallets/swaps",
-                      "POST /v2/wallets/swaps/{swapId}/accept"
+                      "POST /v2/wallets/swaps/{swapId}/accept",
+                      "POST /v2/wallets/swaps/{swapId}/cancel"
                     ]
                   },
                   {
