@@ -1,0 +1,38 @@
+---
+title: "Liveness Checks"
+description: "Enhanced verification for UBOs or Individuals."
+---
+
+Users and businesses from high risk regions can be onboarded with additional compliance measures, and must complete a hosted identity and liveness check before the user can be onboarded.
+
+<Tip>
+  Check out [High Risk Regions](/v3/compliance/regions#high-risk-regions) for the countries that apply and the supported user types.
+</Tip>
+
+## Requirements
+
+<CardGroup cols={1}>
+  <Card title="10% UBO threshold" icon="users">
+    All UBOs with 10% ownership or above must complete full individual KYC before the entity can be approved.
+  </Card>
+
+  <Card title="Hosted liveness check" icon="camera">
+    Qualifying UBOs must complete biometric liveness verification.
+  </Card>
+</CardGroup>
+
+## Integration Guide
+
+<Card title="Implement liveness checks" icon="code" href="/guides/liveness-checks">
+  Learn how to interpret the KYC Status response, identify UBOs who still need to act, and send them to the hosted verification flow.
+</Card>
+
+## Related Pages
+
+- [Coverage](/coverage)
+- [USD Rail](/rails/usd)
+- [Regions](/compliance/regions)
+- [KYC Links](/features/kyc-links)
+- [KYC Requirements](/kyc/kyc-requirements)
+- [KYB Status](/kyc/kyb-status)
+- [Liveness Checks guide](/guides/liveness-checks)

@@ -1,0 +1,239 @@
+---
+title: "Webhooks"
+description: "Every webhook event type HIFI supports, grouped by resource."
+---
+
+Event types follow one of two shapes: `RESOURCE.EVENT` for one-time events like creation or deletion, or `RESOURCE.EVENT.VALUE` for events tied to an enum - most commonly `RESOURCE.STATUS.<STATUS>`, one per value the resource's `status` field can take. Use the exact strings below in `subscriptions` when [registering an endpoint](/v3/core/webhooks/overview#register-an-endpoint), or call [`GET /webhook-endpoints/event-types`](/v3/core/webhooks/overview#list-supported-event-types) for the same list at any time.
+
+<Info>
+  A resource with both a `CREATED` event and a `STATUS` enum that includes a `CREATED` value fires both `RESOURCE.CREATED` and `RESOURCE.STATUS.CREATED` when it's first created — they're two distinct events, not duplicates of each other.
+</Info>
+
+## User
+
+| Event Type | Description |
+| --- | --- |
+| `USER.CREATED` | A user was created. |
+| `USER.STATUS.ACTIVE` | The user is active. |
+| `USER.STATUS.INACTIVE` | The user is inactive. |
+
+## Compliance
+
+| Event Type | Description |
+| --- | --- |
+| `COMPLIANCE.CREATED` | A compliance record was created for a user. |
+| `COMPLIANCE.STATUS.NOT_SUBMITTED` | No compliance information has been submitted yet. |
+| `COMPLIANCE.STATUS.PENDING` | Information submitted; queued for review. |
+| `COMPLIANCE.STATUS.IN_REVIEW` | Actively under review. |
+| `COMPLIANCE.STATUS.APPROVED` | Compliance cleared. |
+| `COMPLIANCE.STATUS.REJECTED` | Compliance rejected. |
+| `COMPLIANCE.STATUS.REQUIRES_INFO` | Our compliance team has requested updates to the applicant's data before resubmission. |
+
+## Wallet
+
+| Event Type | Description |
+| --- | --- |
+| `WALLET.CREATED` | A wallet was provisioned for a user. |
+| `WALLET.DEPOSIT` | An on-chain deposit landed in a wallet. |
+| `WALLET.OFFER.RECEIVED` | A Canton wallet received a transfer offer. |
+| `WALLET.OFFER.PENDING` | An offer's accept/reject request is being processed on-chain. |
+| `WALLET.OFFER.ACCEPTED` | An offer was accepted; the transfer executed. |
+| `WALLET.OFFER.REJECTED` | An offer was rejected; the locked asset was released back to the sender. |
+| `WALLET.OFFER.WITHDRAWN` | The sender withdrew an offer before it was actioned. |
+| `WALLET.OFFER.EXPIRED` | An offer expired before being actioned. |
+
+## Counter Party
+
+| Event Type | Description |
+| --- | --- |
+| `COUNTER_PARTY.CREATED` | A counterparty was created. |
+| `COUNTER_PARTY.UPDATED` | A counterparty's fields were updated. |
+| `COUNTER_PARTY.DELETED` | A counterparty was deleted. |
+| `COUNTER_PARTY.STATUS.ACTIVE` | The counterparty is active. |
+| `COUNTER_PARTY.STATUS.PENDING` | The counterparty is pending. |
+| `COUNTER_PARTY.STATUS.INACTIVE` | The counterparty is inactive. |
+
+## External Wallet
+
+| Event Type | Description |
+| --- | --- |
+| `EXTERNAL_WALLET.CREATED` | An external wallet (a counterparty's on-chain address) was registered. |
+| `EXTERNAL_WALLET.DELETED` | An external wallet was deleted. |
+
+## External Account
+
+| Event Type | Description |
+| --- | --- |
+| `EXTERNAL_ACCOUNT.CREATED` | An external account (a counterparty's bank account) was registered. |
+| `EXTERNAL_ACCOUNT.STATUS.ACTIVE` | The external account is active. |
+| `EXTERNAL_ACCOUNT.STATUS.INACTIVE` | The external account is inactive. |
+| `EXTERNAL_ACCOUNT.DELETED` | An external account was deleted. |
+
+## External Card
+
+| Event Type | Description |
+| --- | --- |
+| `EXTERNAL_CARD.CREATED` | An external card (a counterparty's card) was registered. |
+| `EXTERNAL_CARD.STATUS.ACTIVE` | The external card is active. |
+| `EXTERNAL_CARD.STATUS.INACTIVE` | The external card is inactive. |
+| `EXTERNAL_CARD.SESSION.PENDING` | An External Card Session was generated and is awaiting the recipient. |
+| `EXTERNAL_CARD.SESSION.PROCESSING` | The recipient submitted the hosted form; the card and counterparty are being created. |
+| `EXTERNAL_CARD.SESSION.COMPLETED` | The session finished; the resulting card and counterparty exist. |
+| `EXTERNAL_CARD.SESSION.EXPIRED` | The session expired before the recipient completed it. |
+| `EXTERNAL_CARD.SESSION.FAILED` | The session failed. |
+| `EXTERNAL_CARD.DELETED` | An external card was deleted. |
+
+## Virtual Account
+
+| Event Type | Description |
+| --- | --- |
+| `VIRTUAL_ACCOUNT.CREATED` | A virtual account was provisioned for a user. |
+| `VIRTUAL_ACCOUNT.STATUS.ACTIVE` | The virtual account is active. |
+| `VIRTUAL_ACCOUNT.STATUS.INACTIVE` | The virtual account is inactive. |
+| `VIRTUAL_ACCOUNT.DELETED` | A virtual account was deleted. |
+| `VIRTUAL_ACCOUNT.MICRODEPOSIT` | A small verification deposit landed in a virtual account. |
+
+## Onramp
+
+| Event Type | Description |
+| --- | --- |
+| `ONRAMP.CREATED` | An onramp was created. |
+| `ONRAMP.STATUS.NOT_INITIATED` | Never got underway. |
+| `ONRAMP.STATUS.CREATED` | Onramp created; quote being generated. |
+| `ONRAMP.STATUS.OPEN_QUOTE` | Quote ready, awaiting accept. |
+| `ONRAMP.STATUS.IN_REVIEW` | Quote accepted; awaiting or initiating the fiat deposit. |
+| `ONRAMP.STATUS.FIAT_INITIATED` | Fiat deposit being initiated. |
+| `ONRAMP.STATUS.AWAITING_FUNDS` | Awaiting the fiat deposit. |
+| `ONRAMP.STATUS.FIAT_PENDING` | Fiat deposit received and processing. |
+| `ONRAMP.STATUS.FIAT_PROCESSED` | Fiat settled; conversion to stablecoin starting. |
+| `ONRAMP.STATUS.CRYPTO_INITIATED` | On-chain payout initiated. |
+| `ONRAMP.STATUS.CRYPTO_PENDING` | On-chain payout confirming. |
+| `ONRAMP.STATUS.COMPLETED` | Stablecoins delivered. |
+| `ONRAMP.STATUS.FIAT_FAILED` | Fiat deposit failed. |
+| `ONRAMP.STATUS.FIAT_RETURNED` | Fiat deposit was received but returned. |
+| `ONRAMP.STATUS.CRYPTO_FAILED` | On-chain payout failed. |
+| `ONRAMP.STATUS.QUOTE_FAILED` | No quote could be generated. |
+| `ONRAMP.STATUS.EXPIRED` | Expired before being funded. |
+| `ONRAMP.STATUS.CANCELLED` | Cancelled before completing. |
+
+## Offramp
+
+| Event Type | Description |
+| --- | --- |
+| `OFFRAMP.CREATED` | An offramp was created. |
+| `OFFRAMP.STATUS.NOT_INITIATED` | Never got underway. |
+| `OFFRAMP.STATUS.CREATED` | Offramp created; quote being generated. |
+| `OFFRAMP.STATUS.PENDING_APPROVAL` | Awaiting approval. |
+| `OFFRAMP.STATUS.OPEN_QUOTE` | Quote ready, awaiting accept. |
+| `OFFRAMP.STATUS.CRYPTO_INITIATED` | Crypto leg initiating. |
+| `OFFRAMP.STATUS.AWAITING_FUNDS` | Awaiting the crypto deposit (External Wallet source). |
+| `OFFRAMP.STATUS.CRYPTO_PENDING` | Crypto leg confirming. |
+| `OFFRAMP.STATUS.CRYPTO_PROCESSED` | Crypto leg settled. |
+| `OFFRAMP.STATUS.FIAT_INITIATED` | Fiat payout initiating. |
+| `OFFRAMP.STATUS.FIAT_PENDING` | Fiat payout processing. |
+| `OFFRAMP.STATUS.COMPLETED` | Fiat delivered to the destination. |
+| `OFFRAMP.STATUS.FIAT_FAILED` | Fiat payout failed. |
+| `OFFRAMP.STATUS.FIAT_RETURNED` | Fiat payout was returned. |
+| `OFFRAMP.STATUS.CRYPTO_RETURNED` | Crypto leg was returned. |
+| `OFFRAMP.STATUS.CRYPTO_FAILED` | Crypto leg failed. |
+| `OFFRAMP.STATUS.QUOTE_FAILED` | No quote could be generated, or it expired before being accepted. |
+| `OFFRAMP.STATUS.IN_REVIEW` | Quote accepted (HIFI Wallet source); settlement queued. |
+| `OFFRAMP.STATUS.REJECTED` | Approval was rejected. |
+| `OFFRAMP.STATUS.EXPIRED` | Expired before settling. |
+| `OFFRAMP.STATUS.CANCELLED` | Cancelled before completing. |
+
+## Crypto Transfer
+
+Covers both single and batch on-chain transfers — a batch transfer's `status` reflects the whole batch, not individual recipients.
+
+| Event Type | Description |
+| --- | --- |
+| `CRYPTO_TRANSFER.CREATED` | A transfer was created. |
+| `CRYPTO_TRANSFER.STATUS.NOT_INITIATED` | Never got underway. |
+| `CRYPTO_TRANSFER.STATUS.CREATED` | Transfer created; queued for execution. |
+| `CRYPTO_TRANSFER.STATUS.PENDING_APPROVAL` | Awaiting approval. |
+| `CRYPTO_TRANSFER.STATUS.APPROVED` | Approved; proceeding to execution. |
+| `CRYPTO_TRANSFER.STATUS.REJECTED` | Approval was rejected. |
+| `CRYPTO_TRANSFER.STATUS.EXPIRED` | Expired before being approved. |
+| `CRYPTO_TRANSFER.STATUS.INITIATED` | On-chain transaction submitted. |
+| `CRYPTO_TRANSFER.STATUS.IN_REVIEW` | On-chain transaction is currently under compliance review. |
+| `CRYPTO_TRANSFER.STATUS.PENDING` | On-chain transaction confirming. |
+| `CRYPTO_TRANSFER.STATUS.COMPLETED` | Transfer settled. |
+| `CRYPTO_TRANSFER.STATUS.FAILED` | Transfer failed. |
+| `CRYPTO_TRANSFER.STATUS.CANCELLED` | Cancelled before completing. |
+
+## Batch Crypto Transfer
+
+Uses the same status values as [Crypto Transfer](#crypto-transfer), under its own event type prefix.
+
+| Event Type | Description |
+| --- | --- |
+| `BATCH_CRYPTO_TRANSFER.CREATED` | A batch transfer was created. |
+| `BATCH_CRYPTO_TRANSFER.STATUS.NOT_INITIATED` | Never got underway. |
+| `BATCH_CRYPTO_TRANSFER.STATUS.CREATED` | Batch created; queued for execution. |
+| `BATCH_CRYPTO_TRANSFER.STATUS.PENDING_APPROVAL` | Awaiting approval. |
+| `BATCH_CRYPTO_TRANSFER.STATUS.APPROVED` | Approved; proceeding to execution. |
+| `BATCH_CRYPTO_TRANSFER.STATUS.REJECTED` | Approval was rejected. |
+| `BATCH_CRYPTO_TRANSFER.STATUS.EXPIRED` | Expired before being approved. |
+| `BATCH_CRYPTO_TRANSFER.STATUS.INITIATED` | On-chain transaction submitted. |
+| `BATCH_CRYPTO_TRANSFER.STATUS.IN_REVIEW` | On-chain transaction is currently under compliance review. |
+| `BATCH_CRYPTO_TRANSFER.STATUS.PENDING` | On-chain transaction confirming. |
+| `BATCH_CRYPTO_TRANSFER.STATUS.COMPLETED` | Batch settled. |
+| `BATCH_CRYPTO_TRANSFER.STATUS.FAILED` | Batch failed. |
+| `BATCH_CRYPTO_TRANSFER.STATUS.CANCELLED` | Cancelled before completing. |
+
+## Swap
+
+| Event Type | Description |
+| --- | --- |
+| `SWAP.CREATED` | A swap was created. |
+| `SWAP.STATUS.OPEN_QUOTE` | Quote ready, awaiting accept. |
+| `SWAP.STATUS.QUOTE_FAILED` | No route/liquidity for the pair, or insufficient balance at accept time. |
+| `SWAP.STATUS.CREATED` | Quote accepted; queued for execution. |
+| `SWAP.STATUS.IN_REVIEW` | Conversion is under compliance review |
+| `SWAP.STATUS.PENDING` | Conversion executing. |
+| `SWAP.STATUS.COMPLETED` | Conversion settled. |
+| `SWAP.STATUS.FAILED` | Execution failed. |
+| `SWAP.STATUS.CANCELLED` | Cancelled before completing. |
+
+## Bridge
+
+| Event Type | Description |
+| --- | --- |
+| `BRIDGE.CREATED` | A bridge was created. |
+| `BRIDGE.STATUS.NOT_INITIATED` | Never got underway. |
+| `BRIDGE.STATUS.OPEN_QUOTE` | Quote ready, awaiting accept. |
+| `BRIDGE.STATUS.CREATED` | Bridge created. |
+| `BRIDGE.STATUS.IN_REVIEW` | Bridge is under compliance review. |
+| `BRIDGE.STATUS.SOURCE_INITIATED` | Source-chain leg initiating. |
+| `BRIDGE.STATUS.SOURCE_PENDING` | Source-chain leg confirming. |
+| `BRIDGE.STATUS.SOURCE_PROCESSED` | Source-chain leg settled. |
+| `BRIDGE.STATUS.SOURCE_FAILED` | Source-chain leg failed. |
+| `BRIDGE.STATUS.DESTINATION_INITIATED` | Destination-chain leg initiating. |
+| `BRIDGE.STATUS.DESTINATION_PENDING` | Destination-chain leg confirming. |
+| `BRIDGE.STATUS.COMPLETED` | Stablecoins delivered on the destination chain. |
+| `BRIDGE.STATUS.DESTINATION_FAILED` | Destination-chain leg failed. |
+| `BRIDGE.STATUS.QUOTE_FAILED` | No quote could be generated, or it expired before being accepted. |
+| `BRIDGE.STATUS.PENDING_APPROVAL` | Awaiting approval. |
+| `BRIDGE.STATUS.APPROVED` | Approved; proceeding to execution. |
+| `BRIDGE.STATUS.REJECTED` | Approval was rejected. |
+| `BRIDGE.STATUS.EXPIRED` | Expired before settling. |
+
+## Transfer Approval
+
+| Event Type | Description |
+| --- | --- |
+| `TRANSFER_APPROVAL.CREATED` | A transfer approval request was created. |
+| `TRANSFER_APPROVAL.STATUS.PENDING` | Awaiting a vote. |
+| `TRANSFER_APPROVAL.STATUS.APPROVED` | Approved. |
+| `TRANSFER_APPROVAL.STATUS.REJECTED` | Rejected. |
+| `TRANSFER_APPROVAL.STATUS.EXPIRED` | Expired before being voted on. |
+
+## Getting Help
+
+- 📧 **Email:** [support@hifi.com](mailto:support@hifi.com)
+- 💬 **Slack:** Message us in our shared Slack channel
+
+## Related Resources
+
+- [Webhooks Overview](/v3/core/webhooks/overview) — Register endpoints, verify signatures, handle retries

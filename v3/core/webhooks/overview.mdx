@@ -1,0 +1,160 @@
+---
+title: "Overview"
+description: "Get notified in real time as resources change, instead of polling for updates."
+---
+
+Most HIFI resources settle asynchronously - an [Onramp](/v3/core/transactions/onramps) clears a fiat deposit, a Compliance review resolves, a [Bridge](/v3/core/transactions/bridge) confirms on the destination chain. Webhooks push each of these changes to your own endpoint as they happen, so you don't have to poll `GET` endpoints to find out. See [Webhooks](/v3/core/webhooks/webhooks) for the full list of event types HIFI can send.
+
+## Register an endpoint
+
+Registers a URL to receive deliveries and returns a `signingSecret` for verifying them. `subscriptions` is the list of event types to receive - an endpoint only receives events it's explicitly subscribed to. A profile can register up to 16 endpoints.
+
+**Request**
+
+```shell
+curl -X POST https://sandbox.hifi.com/v3/webhook-endpoints \
+  -H "Idempotency-Key: <unique-key>" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -d '{
+    "name": "Production webhook",
+    "url": "https://yourapp.com/webhooks/hifi",
+    "description": "Primary delivery endpoint",
+    "subscriptions": ["ONRAMP.STATUS.COMPLETED", "OFFRAMP.STATUS.COMPLETED", "USER.STATUS.ACTIVE"]
+  }'
+```
+
+**Response**
+
+```json
+{
+    "id": "we_a1b2c3d4e5",
+    "name": "Production webhook",
+    "url": "https://yourapp.com/webhooks/hifi",
+    "description": "Primary delivery endpoint",
+    "subscriptions": ["ONRAMP.STATUS.COMPLETED", "OFFRAMP.STATUS.COMPLETED", "USER.STATUS.ACTIVE"],
+    "status": "ACTIVE",
+    "signingSecret": "3f2504e04f8911d39a0c0305e82c3301b1f2c9e8a7d6f5e4c3b2a1908f7e6d5",
+    "createdAt": "2026-07-24T22:00:00.000Z",
+    "updatedAt": "2026-07-24T22:00:00.000Z"
+}
+```
+
+<Info>
+  `signingSecret` is only ever returned once, in this response — store it right away. It isn't included in any later `GET`, and there's currently no endpoint to rotate it; if it's compromised, delete the endpoint and register a new one.
+</Info>
+
+## Event payload
+
+Every delivery is a `POST` with this envelope. `data` is always the resource's full current state - the same shape you'd get back from `GET`.
+
+```json
+{
+    "id": "evt_9f8e7d6c5b4a",
+    "eventType": "ONRAMP.STATUS.COMPLETED",
+    "eventCreatedAt": 1721856000000,
+    "data": {
+        "id": "onramp_QW1e2r3t4y",
+        "status": "COMPLETED",
+        "...": "full resource, same shape as the equivalent GET response"
+    }
+}
+```
+
+## Verify the signature
+
+Every delivery includes a `hifi-signature` header so you can confirm it actually came from HIFI:
+
+```text
+hifi-signature: t=1721856000,v1=5257a869e7bff6cd0e07e1e9b1eb2a4f...
+```
+
+- `t` — the Unix timestamp (seconds) the request was signed.
+- `v1` — an HMAC-SHA256 hex digest of `{t}.{raw request body}`, keyed with the endpoint's `signingSecret`.
+
+Recompute the digest over the exact raw body and compare against `v1` with a constant-time comparison:
+
+**Javascript Example**
+
+```js
+const crypto = require("crypto");
+
+function verifyHifiSignature(rawBody, signatureHeader, signingSecret) {
+  const [tPart, v1Part] = signatureHeader.split(",");
+  const timestamp = tPart.split("=")[1];
+  const signature = v1Part.split("=")[1];
+
+  const expected = crypto
+    .createHmac("sha256", signingSecret)
+    .update(`${timestamp}.${rawBody}`, "utf8")
+    .digest("hex");
+
+  return crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expected));
+}
+```
+
+<Info>
+  Verify against the raw request body, before any JSON parsing - re-serializing the parsed object won't necessarily byte-match what was signed. We also recommend rejecting requests where `t` is too far in the past, to guard against replay.
+</Info>
+
+## Retries
+
+A delivery succeeds on any 2xx response. Anything else - a non-2xx status, a timeout, no response - is retried with exponential backoff: 30 seconds, then doubling each attempt (with a little jitter) up to a cap of 24 hours, for up to 10 attempts total. After the final failed attempt, that event type's subscription on that endpoint is disabled - nothing further is sent for it until you re-subscribe (`PATCH` the endpoint with `subscriptions` again).
+
+## Webhooks can arrive out of order
+
+Events are queued and retried independently of each other, so your endpoint isn't guaranteed to receive them in the order the underlying changes actually happened. A resource can go `PENDING` → `COMPLETED`, but a retried or delayed delivery means the `PENDING` event's request can land at your endpoint _after_ the `COMPLETED` one.
+
+Don't treat "a webhook arrived" as the update itself. Instead, do one of:
+
+- **Trust the payload's own status, with a forward-only guard.** Read `data.status` (or the resource's equivalent field) off the event and compare it against whatever you last recorded for that resource. Only apply the update if it represents the same or a later point in that resource's lifecycle than what you already have - an event carrying an earlier-stage status than what you've already recorded should be discarded, not applied. Once a resource reaches a terminal status, no later event should be able to move it out of that state.
+- **Treat the webhook only as a signal, not as data.** On receipt, ignore `data` entirely and call `GET` on the resource by its `id` instead, then apply whatever that response says. This sidesteps ordering completely, since a fresh `GET` always reflects current state regardless of which webhook happened to arrive first.
+
+## Resend a delivery
+
+Re-queues a specific event for redelivery to a specific endpoint - useful after fixing whatever caused it to fail.
+
+**Request**
+
+```shell
+curl -X POST https://sandbox.hifi.com/v3/webhook-endpoints/we_a1b2c3d4e5/events/evt_9f8e7d6c5b4a/resend \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+**Response**
+
+```json
+{
+    "id": "evt_9f8e7d6c5b4a",
+    "resent": true
+}
+```
+
+## Delivery status
+
+| Status | Meaning |
+| --- | --- |
+| `PENDING` | Delivery created, not yet queued. |
+| `ENQUEUED` | Queued for the next delivery attempt. |
+| `PROCESSING` | Attempt in flight. |
+| `DELIVERED` | Endpoint responded 2xx. Terminal. |
+| `RETRY` | Attempt failed; another is scheduled. |
+| `FAILED` | All 10 attempts exhausted. |
+
+## Endpoint status
+
+| Status | Meaning |
+| --- | --- |
+| `ACTIVE` | Receiving deliveries for its subscriptions. |
+| `PAUSED` | Temporarily stopped. |
+| `DISABLED` | Deleted via the delete endpoint call. |
+
+## Getting Help
+
+- 📧 **Email:** [support@hifi.com](mailto:support@hifi.com)
+- 💬 **Slack:** Message us in our shared Slack channel
+
+## Related Resources
+
+- [Webhooks](/v3/core/webhooks/webhooks) — Every event type HIFI supports, by resource
+- [Onramps](/v3/core/transactions/onramps) — Convert fiat into stablecoins
+- [Offramps](/v3/core/transactions/offramps) — Convert stablecoins into fiat

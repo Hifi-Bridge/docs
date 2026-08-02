@@ -1,3 +1,298 @@
 ---
-title: "Transaction Approval"
+title: "Transfer Approvals"
+description: "Transfer approvals provide multi-party authorization for transactions, adding security and compliance controls to your organization's transaction workflow. Require approval before executing high-value or sensitive transactions."
 ---
+
+<Info>
+  Transfer approvals apply to on-chain stablecoin transfers ([Onchain Transfer](/v3/core/transactions/onchain-transfer), including batch transfers), [Bridge](/v3/core/transactions/bridge), and [Offramps](/v3/core/transactions/offramps). Onramps do not support approval workflows.
+</Info>
+
+## How Transfer Approvals Work
+
+<Steps>
+  <Step title="Create transfer with approval">
+    Include `requireApproval: true` when creating a transfer via API.
+  </Step>
+  <Step title="Transfer enters pending state">
+    Transfer status becomes `PENDING_APPROVAL` and does not execute. A corresponding `TransferApproval` record is created with status `PENDING`.
+  </Step>
+  <Step title="Admin notification">
+    Admins who have opted in to transfer approval emails receive a notification about the pending approval.
+  </Step>
+  <Step title="Approve or reject">
+    Authorized admins review and either approve or reject the transfer via `POST /v3/transfer-approvals/{id}/approve` or `/reject`.
+  </Step>
+  <Step title="Execution or cancellation">
+    If approved, transfer proceeds (bridge and offramp move to quoting; onchain and batch transfers execute directly). If rejected, transfer is cancelled.
+  </Step>
+</Steps>
+
+## Implementation Options
+
+Transfer approvals work differently depending on where transactions are initiated:
+
+### Dashboard Approvals
+
+When transfers are created in the HIFI Dashboard, whether the transfer requires approval depends only on the initiating profile's organization role - not on transfer type:
+
+- **Member-initiated transfers** (wallet transfer, batch transfer, bridge, or offramp) **always** require Admin approval before execution.
+- **Admin-initiated transfers** execute without approval, regardless of type.
+
+### API Approvals
+
+When using the API:
+
+- Include `requireApproval: true` when creating transfers.
+- Transfers enter the approval workflow until approved or rejected.
+- Supported on Onchain Transfer (single and batch), Bridge, and Offramp.
+- Transactions enter the transfer approval flow **only** if `requireApproval: true` is set in the request body - the dashboard role logic above does not apply to API-initiated transfers.
+- Can be integrated into your application's approval logic.
+
+## Creating Transfers with Approval
+
+Add the `requireApproval` parameter to any supported transaction endpoint.
+
+**Request**
+
+```shell
+curl -X POST https://sandbox.hifi.com/v3/crypto-transfers \
+  -H "Idempotency-Key: <unique-key>" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -d '{
+    "requestId": "a40ea2aa-7937-4be9-bb1f-b75f1489bcc6",
+    "source": {
+      "walletId": "wlt_wOm1XYoNqj4WwJUeL58SI"
+    },
+    "destination": {
+      "walletId": "wlt_8GcOwGmLDQjg24Gq2PXEd"
+    },
+    "amount": 10000,
+    "currency": "USDC",
+    "requireApproval": true
+  }'
+```
+
+**Response**
+
+```json
+{
+    "id": "ctx_HtgURm58uWMF0EzmG8DAl",
+    "requestId": "a40ea2aa-7937-4be9-bb1f-b75f1489bcc6",
+    "status": "PENDING_APPROVAL",
+    "amount": 10000,
+    "currency": "USDC"
+}
+```
+
+<Info>
+  The transfer response itself does not embed the approval object - look up the approval separately via `GET /v3/transfer-approvals?status=PENDING` or `GET /v3/transfer-approvals/{id}`.
+</Info>
+
+### Supported Endpoints
+
+The `requireApproval` parameter works with:
+
+| Endpoint | Transfer Type |
+| --- | --- |
+| `POST /v3/crypto-transfers` | Single onchain transfers |
+| `POST /v3/batch-transfers` | Batch transfers (up to 50 recipients) |
+| `POST /v3/bridges` | Cross-chain bridging transfers |
+| `POST /v3/offramps` | Offramp transfers (stablecoin to fiat) |
+
+<Info>
+  **Bridging and Offramp Note:** for bridging transfers and offramps, quotes are generated **after** approval. This prevents quotes from expiring while awaiting review.
+</Info>
+
+## Listing Pending Approvals
+
+Retrieve all transactions awaiting approval. Cursor-paginated (`limit`, `startingAfter`, `endingBefore`); filter with `status`.
+
+**Request**
+
+```shell
+curl "https://sandbox.hifi.com/v3/transfer-approvals?status=PENDING&limit=20" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+**Response**
+
+```json
+{
+    "data": [
+        {
+            "id": "ta_QW1e2r3t4y",
+            "status": "PENDING",
+            "transferId": "ctx_HtgURm58uWMF0EzmG8DAl",
+            "transferType": "CRYPTO_TRANSFER",
+            "fromDashboard": false,
+            "initiatorProfileId": null,
+            "createdAt": "2026-07-30T16:11:36.654Z",
+            "updatedAt": "2026-07-30T16:11:36.654Z",
+            "votes": []
+        },
+        {
+            "id": "ta_Ab12Cd34Ef",
+            "status": "PENDING",
+            "transferId": "bctx_Gh56Ij78Kl",
+            "transferType": "BATCH_CRYPTO_TRANSFER",
+            "fromDashboard": true,
+            "initiatorProfileId": "prf_8GcOwGmLDQjg24Gq2PXEd",
+            "createdAt": "2026-07-30T15:15:00.000Z",
+            "updatedAt": "2026-07-30T15:15:00.000Z",
+            "votes": []
+        }
+    ],
+    "pagination": {
+        "hasMore": false,
+        "startCursor": "ta_QW1e2r3t4y",
+        "endCursor": "ta_Ab12Cd34Ef"
+    }
+}
+```
+
+`transferType` is one of `CRYPTO_TRANSFER`, `BATCH_CRYPTO_TRANSFER`, `BRIDGE`, `OFFRAMP`. `fromDashboard` and `initiatorProfileId` identify dashboard-initiated approvals; both are absent (`false` / `null`) for API-initiated ones. Use this endpoint to build approval dashboards or automate approval workflows.
+
+## Getting a Transfer Approval
+
+**Request**
+
+```shell
+curl "https://sandbox.hifi.com/v3/transfer-approvals/ta_QW1e2r3t4y" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+**Response**
+
+```json
+{
+    "id": "ta_QW1e2r3t4y",
+    "status": "PENDING",
+    "transferId": "ctx_HtgURm58uWMF0EzmG8DAl",
+    "transferType": "CRYPTO_TRANSFER",
+    "fromDashboard": false,
+    "initiatorProfileId": null,
+    "createdAt": "2026-07-30T16:11:36.654Z",
+    "updatedAt": "2026-07-30T16:11:36.654Z",
+    "votes": []
+}
+```
+
+## Approving Transfers
+
+**Request**
+
+```shell
+curl -X POST https://sandbox.hifi.com/v3/transfer-approvals/ta_QW1e2r3t4y/approve \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -d '{
+    "comment": "Approved after reviewing transaction details"
+  }'
+```
+
+**Response**
+
+```json
+{
+    "id": "ta_QW1e2r3t4y",
+    "status": "APPROVED",
+    "transferId": "ctx_HtgURm58uWMF0EzmG8DAl",
+    "transferType": "CRYPTO_TRANSFER",
+    "fromDashboard": false,
+    "initiatorProfileId": null,
+    "createdAt": "2026-07-30T16:11:36.654Z",
+    "updatedAt": "2026-07-30T16:14:02.000Z",
+    "votes": [
+        {
+            "approverId": "prf_wOm1XYoNqj4WwJUeL58SI",
+            "vote": "APPROVE",
+            "comment": "Approved after reviewing transaction details",
+            "createdAt": "2026-07-30T16:14:02.000Z"
+        }
+    ]
+}
+```
+
+`comment` is optional. After approval, onchain and batch transfers execute immediately; bridge and offramp transfers move to quoting (see the quote-timing note above) before executing.
+
+## Rejecting Transfers
+
+**Request**
+
+```shell
+curl -X POST https://sandbox.hifi.com/v3/transfer-approvals/ta_QW1e2r3t4y/reject \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -d '{
+    "comment": "Transfer amount exceeds daily limit"
+  }'
+```
+
+**Response**
+
+```json
+{
+    "id": "ta_QW1e2r3t4y",
+    "status": "REJECTED",
+    "transferId": "ctx_HtgURm58uWMF0EzmG8DAl",
+    "transferType": "CRYPTO_TRANSFER",
+    "fromDashboard": false,
+    "initiatorProfileId": null,
+    "createdAt": "2026-07-30T16:11:36.654Z",
+    "updatedAt": "2026-07-30T16:14:02.000Z",
+    "votes": [
+        {
+            "approverId": "prf_wOm1XYoNqj4WwJUeL58SI",
+            "vote": "REJECT",
+            "comment": "Transfer amount exceeds daily limit",
+            "createdAt": "2026-07-30T16:14:02.000Z"
+        }
+    ]
+}
+```
+
+<Warning>
+  The reject request body field is **`comment`**, the same as approve - not `reason`. The request body schema rejects unrecognized fields.
+</Warning>
+
+Rejected transfers are cancelled and will not execute.
+
+<Info>
+  Both approve and reject require the calling profile to have the `ADMIN` organization role, and the approval must belong to your organization - approvals scoped to other organizations return a 404.
+</Info>
+
+## Approval Status
+
+| Status | Meaning |
+| --- | --- |
+| `PENDING` | Awaiting admin approval. |
+| `APPROVED` | Approved - the underlying transfer proceeds. |
+| `REJECTED` | Rejected - the underlying transfer is cancelled. |
+| `EXPIRED` | Reserved for a future automatic-expiration mechanism - not currently set by any code path. |
+
+Once `APPROVED`, the underlying transfer moves into its normal status progression (e.g. `CREATED` → `INITIATED` → ... → `COMPLETED`).
+
+<Warning>
+  **No automatic expiration today:** `EXPIRED` is a defined status value and appears in the webhook catalog, but nothing in the codebase currently transitions a `PENDING` approval to `EXPIRED` - there is no expiration job and no expiration window is enforced. A transfer left in `PENDING_APPROVAL` stays there indefinitely until an admin approves or rejects it.
+</Warning>
+
+## Webhooks
+
+| Event | Fires when |
+| --- | --- |
+| `TRANSFER_APPROVAL.STATUS.APPROVED` | The approval is approved. |
+| `TRANSFER_APPROVAL.STATUS.REJECTED` | The approval is rejected. |
+
+<Warning>
+  `TRANSFER_APPROVAL.CREATED` and `TRANSFER_APPROVAL.STATUS.PENDING` are declared in the webhook event catalog but are never actually emitted - no webhook fires when an approval is created. Poll `GET /v3/transfer-approvals?status=PENDING` if you need to detect new pending approvals; subscribe to the two events above for the resolution.
+</Warning>
+
+## Getting Help
+
+- 📧 **Email:** [support@hifi.com](mailto:support@hifi.com)
+- 💬 **Slack:** Message us in our shared Slack channel
+
+## Related Resources
+
+- [Onchain Transfer](/v3/core/transactions/onchain-transfer) - Single and batch wallet transfers
+- [Bridge](/v3/core/transactions/bridge) - Cross-chain transfers
+- [Offramps](/v3/core/transactions/offramps) - Stablecoin to fiat transfers
+- [Transactions Overview](/v3/core/transactions/overview) - Transactions resources

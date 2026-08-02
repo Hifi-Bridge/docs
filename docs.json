@@ -222,6 +222,13 @@
                       "v3/core/eligibility/corridors",
                       "v3/core/eligibility/virtual-account-routes"
                     ]
+                  },
+                  {
+                    "group": "Webhooks",
+                    "pages": [
+                      "v3/core/webhooks/overview",
+                      "v3/core/webhooks/webhooks"
+                    ]
                   }
                 ]
               },
@@ -235,7 +242,11 @@
               },
               {
                 "group": "Compliance",
-                "pages": []
+                "pages": [
+                  "v3/compliance/industries",
+                  "v3/compliance/regions",
+                  "v3/compliance/liveness-checks"
+                ]
               },
               {
                 "group": "Payments",
