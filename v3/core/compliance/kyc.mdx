@@ -19,7 +19,7 @@ Different information is required for verification, including both non-documenta
 | `physicalAddress` | Residential address (line1, city, state, postalCode, country) | Yes |
 | `taxId` | Tax identification number in the user's country | Yes |
 | `taxIdType` | Tax identification number (e.g. SSN, ITIN) | No |
-| `taxIdCountry` |  | No |
+| `taxIdCountry` | Tax identification number issuance country | No |
 | `nationality` | User's nationality | Yes |
 
 {/* TODO: Replace with the actual field list and requirement rules — 
@@ -38,6 +38,10 @@ For more details check [Documents](/v3/core/compliance/documents)
 
 <Tip>
   For US and Canadian users, proof of address is optional if a driver's license, national ID, or resident permit is submitted as the government-issued ID.
+</Tip>
+
+<Tip>
+  `proofOfResidence` needs to be issued within the **last 3 months** 
 </Tip>
 
 ## Questionnaire (Optional)
