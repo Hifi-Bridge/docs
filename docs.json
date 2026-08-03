@@ -250,7 +250,15 @@
               },
               {
                 "group": "Payments",
-                "pages": []
+                "pages": [
+                  {
+                    "group": "Exceptions",
+                    "pages": [
+                      "v3/payments/exceptions/inbounds",
+                      "v3/payments/exceptions/outbounds"
+                    ]
+                  }
+                ]
               },
               {
                 "group": "References",
