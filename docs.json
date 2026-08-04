@@ -219,12 +219,6 @@
                     ]
                   },
                   {
-                    "group": "Testing",
-                    "pages": [
-                      "testing/magic-values"
-                    ]
-                  },
-                  {
                     "group": "Reporting",
                     "pages": [
                       "reporting/metrics"
@@ -235,6 +229,16 @@
               {
                 "group": "Features",
                 "pages": [
+                  {
+                    "group": "Magic Values",
+                    "tag": "NEW",
+                    "pages": [
+                      "features/magic-values/overview",
+                      "features/magic-values/offramp",
+                      "features/magic-values/onramp",
+                      "features/magic-values/submit-kyc"
+                    ]
+                  },
                   {
                     "group": "Canton",
                     "tag": "NEW",
@@ -464,8 +468,7 @@
                       "POST /v2/onramps",
                       "POST /v2/onramps/{transferId}/cancel",
                       "POST /v2/onramps/{transferId}/quote/refresh",
-                      "POST /v2/onramps/{transferId}/quote/accept",
-                      "POST /v2/onramps/{transferId}/simulate-return"
+                      "POST /v2/onramps/{transferId}/quote/accept"
                     ]
                   },
                   {
@@ -476,8 +479,7 @@
                       "GET /v2/offramps/rates",
                       "POST /v2/offramps",
                       "POST /v2/offramps/{transferId}/cancel",
-                      "POST /v2/offramps/{transferId}/quote/accept",
-                      "POST /v2/offramps/{transferId}/simulate-return"
+                      "POST /v2/offramps/{transferId}/quote/accept"
                     ]
                   },
                   {
@@ -563,6 +565,10 @@
     ]
   },
   "redirects": [
+    {
+      "source": "/testing/magic-values",
+      "destination": "/features/magic-values/overview"
+    },
     {
       "source": "/compliance/enhanced-verification",
       "destination": "/compliance/liveness-checks"

@@ -72,14 +72,13 @@ All money movement in sandbox is simulated:
 
 Failures and returns can be forced in sandbox, following the same statuses and webhooks as a real one:
 
-- **Forced failures** - Pass `sandboxScenario` (`FIAT_FAILED` or `CRYPTO_FAILED`) when creating an offramp, or when simulating the deposit that creates an onramp
-- **Offramp returns** - From `FIAT_FAILED`, simulate a return to send the crypto back to the sender
-- **Onramp returns** - From `CRYPTO_FAILED`, simulate a return to send the held fiat back to the sender
+- **Forced outcomes** - Pass `sandboxScenario` when creating an offramp (`CRYPTO_FAILED`, `FIAT_FAILED`, or `COMPLETED`), or when simulating the deposit that creates an onramp (`FIAT_FAILED` or `COMPLETED`)
+- **Automatic returns** - Every forced outcome resolves to its true terminal status 3 minutes later: `CRYPTO_RETURNED` for offramps, `FIAT_RETURNED` for onramps. No follow-up call is needed
 
-See [Magic values](/testing/magic-values) for every value you can pass and the outcome each one forces, including KYC.
+See [Magic values](/features/magic-values/overview) for every value you can pass and the outcome each one forces, including KYC.
 
 <Warning>
-  `sandboxScenario` is rejected with a `400` in production, and the simulate-return endpoints do not exist there.
+  `sandboxScenario` is rejected with a `400` in production, and the simulate-deposit endpoint does not exist there.
 </Warning>
 
 ---
@@ -91,7 +90,7 @@ When you're ready to move from sandbox to production:
 1. **Generate production API keys** in the dashboard
 2. **Update your base URL** from `sandbox.hifibridge.com` to `production.hifibridge.com`
 3. **Update API keys** in your environment variables
-4. **Remove simulation calls** - Delete any simulate-deposit or simulate-return endpoint usage, and drop `sandboxScenario` from offramp and simulate-deposit requests
+4. **Remove simulation calls** - Delete any simulate-deposit endpoint usage, and drop `sandboxScenario` from offramp and simulate-deposit requests
 5. **Enable real KYC** - Provide real user information and documents
 6. **Test thoroughly** - Start with small transactions before scaling
 

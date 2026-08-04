@@ -1,0 +1,63 @@
+---
+title: "Offramp"
+description: "Use magic values in sandbox to force an offramp into a particular outcome, so you can test how your integration handles failures and returns."
+---
+
+Every scenario resolves on its own. You force a scenario at create time, the offramp reaches the status you asked for, and **3 minutes later** it moves to its true terminal status, `CRYPTO_RETURNED`. No follow-up API call is needed.
+
+<Warning>
+  Magic values are sandbox only. In production, `sandboxScenario` is rejected with a `400`.
+</Warning>
+
+## Magic values
+
+You can force an offramp outcome by providing a magic value on the `sandboxScenario` field when making requests to the [create an offramp endpoint](https://docs.hifi.com/api-reference/offramp/create-an-offramp). The following table outlines the magic values and their effects:
+
+| Magic value     | Response                                                                                                                                                                                                                              |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `CRYPTO_FAILED` | Transfer is rejected before the fiat leg starts.                                                                                                                                                                                       |
+| `FIAT_FAILED`   | Transfer fails at the fiat payout leg after the crypto has already left the source wallet. The offramp is returned with its normal creation status in the synchronous response, then progresses through the usual statuses before a webhook updates it to `FIAT_FAILED`. |
+| `COMPLETED`     | Transfer completes cleanly and the payout reaches the destination bank, then is reversed after settlement.                                                                                                                              |
+
+All three resolve to `CRYPTO_RETURNED` 3 minutes after reaching the status they force. The offramp reports an intermediate `FIAT_RETURNED` on the way, matching the production progression, so expect webhooks for both statuses. Testnet crypto is delivered on chain to the sender's wallet as part of the return, and `CRYPTO_RETURNED` is reached once that delivery confirms.
+
+## Example request
+
+```bash
+curl -X POST "https://sandbox.hifibridge.com/v2/offramps" \
+  -H "Authorization: Bearer YOUR_SANDBOX_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "requestId": "201ca31d-700f-4c76-ac4b-961623acbb79",
+    "sandboxScenario": "FIAT_FAILED",
+    "source": {
+      "currency": "usdc",
+      "chain": "POLYGON",
+      "userId": "7d54a7a7-dac3-4313-8b09-27fa4b7fd1ee",
+      "amount": 10
+    },
+    "destination": {
+      "currency": "usd",
+      "accountId": "12c1c496-8f57-41a1-8292-dbe6547791ce",
+      "userId": "7d54a7a7-dac3-4313-8b09-27fa4b7fd1ee"
+    }
+  }'
+```
+
+## Coverage
+
+Offramp magic values are wired into USD offramps and global network offramps, and all three resolve to `CRYPTO_RETURNED`. Values that are not listed above either fall through to the standard sandbox behavior or return an error.
+
+## Getting help
+
+- 📧 **Email:** [support@hifi.com](mailto:support@hifi.com)
+- 💬 **Slack:** Message us in our shared Slack channel
+
+## Related resources
+
+- [Magic values overview](/features/magic-values/overview) - What magic values are and where they apply
+- [Onramp magic values](/features/magic-values/onramp) - Force an onramp outcome from the deposit that creates it
+- [Submit KYC magic values](/features/magic-values/submit-kyc) - Drive a KYC application to a particular status
+- [Sandbox](/sandbox) - Environment setup and how sandbox differs from production
+- [Offramps](/transactions/offramps#failed-payouts-and-returns) - Full offramp status progression, including returns
+- [Offramp events](/webhooks/offramp-events) - Webhook events emitted during failures and returns

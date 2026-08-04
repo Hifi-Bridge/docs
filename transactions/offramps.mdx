@@ -273,7 +273,7 @@ An offramp can fail on either leg, and what happens to the funds depends on whic
 - **`CRYPTO_FAILED`**: Transfer was rejected before the fiat leg started. When the offramp is funded from a HIFI wallet, nothing left the wallet. When it is funded from an external wallet, crypto is returned to the sender and offramp continues on to `CRYPTO_RETURNED`.
 - **`FIAT_FAILED`**: Fiat payout failed after the crypto had already left the source wallet. Crypto is returned to the sender, and the offramp progresses to `CRYPTO_RETURNED` once that on-chain delivery confirms. Depending on the rail, it may report an intermediate `FIAT_RETURNED` first.
 
-Returns are available on USD offramps and global network offramps. To test them in sandbox, see [Magic values](/testing/magic-values).
+Returns are available on USD offramps and global network offramps. To test them in sandbox, see [Offramp magic values](/features/magic-values/offramp).
 
 
 ## Tracking Offramps
