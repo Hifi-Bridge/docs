@@ -176,7 +176,7 @@ curl -X POST https://sandbox.hifi.com/v3/offramps/offramp_QW1e2r3t4y/quote/accep
 | `CANCELLED` | Cancelled via the [cancel](#cancel-an-offramp) endpoint. | Yes |
 
 <Note>
-  A transaction in `COMPLETED` status can transition to `FIAT_FAILED`, and `FIAT_RETURNED` if a payment is returned by the recipient.
+  A transaction in `COMPLETED` status can transition to `FIAT_FAILED` or `FIAT_RETURNED` if a payment is returned by the recipient.
 </Note>
 
 ## Cancel an offramp
@@ -246,19 +246,19 @@ Some destinations require a `purposeOfPayment` describing why the payment is bei
 
     The quote is only generated once the transfer request is approved. Accept the quote afterward to kick off the transaction flow.
 
-    Checkout Transfer Approval for more details
+    Checkout Transfer Approval for more details.
   </Accordion>
 
   <Accordion title="Exchange fees">
-    Some stablecoin offramps include a real conversion fee priced off live market rates, reflected in `quote.conversionFee` — depending on your billing preference, it's either deducted from the transaction (`ON_TRANSACTION`) or billed separately (`ON_INVOICE`). 
+    Some stablecoin offramps include a real conversion fee priced off live market rates, reflected in `quote.conversionFee` - depending on your billing preference, it's either deducted from the transaction (`ON_TRANSACTION`) or billed separately (`ON_INVOICE`). 
 
-    Checkout Exchange Fees for more details
+    Checkout Exchange Fees for more details.
   </Accordion>
 
   <Accordion title="Developer fees">
-    You can attach your own fee on top of an offramp by setting `developerFee`
+    You can attach your own fee on top of an offramp by setting `developerFee`.
 
-    Checkout Developer Fees for more details
+    Checkout Developer Fees for more details.
   </Accordion>
 </AccordionGroup>
 
@@ -270,6 +270,6 @@ Some destinations require a `purposeOfPayment` describing why the payment is bei
 ## Related Resources
 
 - [Transactions Overview](/v3/core/transactions/overview) - Transactions resources
-- [Onramps](/v3/core/transactions/onramps) — Convert fiat to stablecoins
-- [External Account](/v3/core/counter-party/external-account) — Bank account payout destinations
-- [External Card](/v3/core/counter-party/external-card) — Card payout destinations
+- [Onramps](/v3/core/transactions/onramps) - Convert fiat to stablecoins
+- [External Account](/v3/core/counter-party/external-account) - Bank account payout destinations
+- [External Card](/v3/core/counter-party/external-card) - Card payout destinations

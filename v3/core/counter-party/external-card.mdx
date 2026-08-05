@@ -10,7 +10,7 @@ An External Card is a debit, prepaid or credit card belonging to a [Counter Part
 | Method | Who can use it | How it works |
 | --- | --- | --- |
 | [Card API](#add-an-external-card) | Clients certified **PCI DSS Level 1** | Your backend collects the card number/CVV and sends them directly to HIFI. |
-| [External Card Session](#external-card-sessions) | All other clients | The recipient enters their card details on a HIFI-hosted page — raw card data never touches your servers. |
+| [External Card Session](#external-card-sessions) | All other developers | The recipient enters their card details on a HIFI-hosted page - raw card data never touches your servers. |
 
 <Info>
   If you aren't PCI DSS Level 1 certified, use an External Card Session instead of calling the Card API directly - contact HIFI if you're unsure which applies to you.
@@ -26,11 +26,11 @@ The counterparty must be `ACTIVE`, and have the following [accepted fields](/v3/
 | Business | `phoneNumber`, `email`, `address` |
 
 <Info>
-  If a required field is missing, HIFI rejects the request with `ACTION_NOT_ALLOWED` (422) — [update the counterparty](/v3/core/counter-party/counter-party#update-a-counter-party) with the missing field and retry.
+  If a required field is missing, HIFI rejects the request with `ACTION_NOT_ALLOWED` (422) - [update the counterparty](/v3/core/counter-party/counter-party#update-a-counter-party) with the missing field and retry.
 </Info>
 
 <Tip>
-  The counterparty doesn't need to be created upfront if the card is added through an [External Card Session](https://docs.hifi.com/#external-card-sessions) submission, since the session's own schema already enforces these fields. Otherwise, you can also pass `counterpartyId` as an optional fields when create the session.
+  The counterparty doesn't need to be created upfront if the card is added through an [External Card Session](https://docs.hifi.com/#external-card-sessions) submission, since the session's own schema already enforces these fields. Otherwise, you can also pass `counterpartyId` as an optional fields when creating the session.
 </Tip>
 
 ## Supported Card Network
@@ -183,7 +183,7 @@ curl -X POST https://sandbox.hifi.com/v3/users/usr_x1y2z3/external-card-sessions
 ```
 
 <Info>
-  Retrieving or submitting a session directly from your own backend isn't supported — that's handled entirely by the hosted page. Subscribe to `EXTERNAL_CARD` and `COUNTER_PARTY` webhook events to know when the resulting resources are created.
+  Retrieving or submitting a session directly from your own backend isn't supported - that's handled entirely by the hosted page. Subscribe to `EXTERNAL_CARD` and `COUNTER_PARTY` webhook events to know when the resulting resources are created.
 </Info>
 
 ## Getting Help

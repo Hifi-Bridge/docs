@@ -40,7 +40,7 @@ curl -X POST https://sandbox.hifi.com/v3/webhook-endpoints \
 ```
 
 <Info>
-  `signingSecret` is only ever returned once, in this response — store it right away. It isn't included in any later `GET`, and there's currently no endpoint to rotate it; if it's compromised, delete the endpoint and register a new one.
+  `signingSecret` is only ever returned once, in this response - store it right away. It isn't included in any later `GET`, and there's currently no endpoint to rotate it; if it's compromised, delete the endpoint and register a new one.
 </Info>
 
 ## Event payload
@@ -68,8 +68,8 @@ Every delivery includes a `hifi-signature` header so you can confirm it actually
 hifi-signature: t=1721856000,v1=5257a869e7bff6cd0e07e1e9b1eb2a4f...
 ```
 
-- `t` — the Unix timestamp (seconds) the request was signed.
-- `v1` — an HMAC-SHA256 hex digest of `{t}.{raw request body}`, keyed with the endpoint's `signingSecret`.
+- `t` - the Unix timestamp (seconds) the request was signed.
+- `v1` - an HMAC-SHA256 hex digest of `{t}.{raw request body}`, keyed with the endpoint's `signingSecret`.
 
 Recompute the digest over the exact raw body and compare against `v1` with a constant-time comparison:
 
@@ -155,6 +155,6 @@ curl -X POST https://sandbox.hifi.com/v3/webhook-endpoints/we_a1b2c3d4e5/events/
 
 ## Related Resources
 
-- [Webhooks](/v3/core/webhooks/webhooks) — Every event type HIFI supports, by resource
-- [Onramps](/v3/core/transactions/onramps) — Convert fiat into stablecoins
-- [Offramps](/v3/core/transactions/offramps) — Convert stablecoins into fiat
+- [Webhooks](/v3/core/webhooks/webhooks) - Every event type HIFI supports, by resource
+- [Onramps](/v3/core/transactions/onramps) - Convert fiat into stablecoins
+- [Offramps](/v3/core/transactions/offramps) - Convert stablecoins into fiat

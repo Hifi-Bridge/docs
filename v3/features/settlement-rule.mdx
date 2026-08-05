@@ -34,8 +34,8 @@ Each entry in `rules` (1-10 per Settlement Rule) describes one cut of the deposi
   </Accordion>
 
   <Accordion title="calculationModel">
-    - `FIXED` : a single rate/amount for every deposit
-    - `TIERED` : rate/amount varies by deposit size
+    - `FIXED` : a single rate/amount for every deposit.
+    - `TIERED` : rate/amount varies by deposit size.
   </Accordion>
 
   <Accordion title="value">
@@ -46,7 +46,7 @@ Each entry in `rules` (1-10 per Settlement Rule) describes one cut of the deposi
   </Accordion>
 
   <Accordion title="tiers">
-    Required when `calculationModel` is `TIERED`, omitted when `FIXED`. Array of `{ upTo, value }` (up to 10), where `value` follows the same bounds as above based on the rule's `type`. Exactly one tier must have `upTo: null` — that's the open-ended top tier covering everything above the highest breakpoint.
+    Required when `calculationModel` is `TIERED`, omitted when `FIXED`. Array of `{ upTo, value }` (up to 10), where `value` follows the same bounds as above based on the rule's `type`. Exactly one tier must have `upTo: null` - that's the open-ended top tier covering everything above the highest breakpoint.
 
     <Tip>
       `upTo` is exclusive. For example, below, a \$1000 deposit will fall under the 0.0005 band.

@@ -130,7 +130,7 @@ curl -X PATCH https://sandbox.hifi.com/v3/users/usr_gBlMyGTbuyknSPXlZtwlS/orches
 
 ### Deactivate
 
-Deactivate the address with a `walletAddress` to receive any remaining refunds. 
+Deactivate the address with a `walletAddress` to receive any remaining refunds.
 
 Deactivation:
 
@@ -154,7 +154,7 @@ curl -X DELETE https://sandbox.hifi.com/v3/users/usr_gBlMyGTbuyknSPXlZtwlS/orche
 
 ### Manual trigger
 
-Batches whatever is currently `PENDING` right now, regardless of mode - useful for forcing an early settlement instead of waiting for the next scheduled tick or threshold crossing. 
+Batches whatever is currently `PENDING` right now, regardless of mode - useful for forcing an early settlement instead of waiting for the next scheduled tick or threshold crossing.
 
 **Request**
 
@@ -227,7 +227,7 @@ curl "https://sandbox.hifi.com/v3/users/usr_gBlMyGTbuyknSPXlZtwlS/orchestration-
 | Status | Details |
 | --- | --- |
 | `PENDING` | Received deposits and awaiting to be batched |
-| `BATCHED` | Deposits that being batched for payout |
+| `BATCHED` | Deposits are being batched for payout |
 | `IGNORED` | Deposits that will not be processed and batched |
 | `REFUNDED` | Deposits that are refunded |
 

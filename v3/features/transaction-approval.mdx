@@ -23,7 +23,7 @@ description: "Transfer approvals provide multi-party authorization for transacti
     Authorized admins review and either approve or reject the transfer via `POST /v3/transfer-approvals/{id}/approve` or `/reject`.
   </Step>
   <Step title="Execution or cancellation">
-    If approved, transfer proceeds (bridge and offramp move to quoting; onchain and batch transfers execute directly). If rejected, transfer is cancelled.
+    If approved, transfer proceeds (bridge and offramp move to quoting; onchain and batch transfers execute directly). If rejected, the transfer is cancelled.
   </Step>
 </Steps>
 
@@ -264,8 +264,8 @@ Rejected transfers are cancelled and will not execute.
 | Status | Meaning |
 | --- | --- |
 | `PENDING` | Awaiting admin approval. |
-| `APPROVED` | Approved - the underlying transfer proceeds. |
-| `REJECTED` | Rejected - the underlying transfer is cancelled. |
+| `APPROVED` | The underlying transfer proceeds. |
+| `REJECTED` | The underlying transfer is cancelled. |
 | `EXPIRED` | Reserved for a future automatic-expiration mechanism - not currently set by any code path. |
 
 Once `APPROVED`, the underlying transfer moves into its normal status progression (e.g. `CREATED` → `INITIATED` → ... → `COMPLETED`).

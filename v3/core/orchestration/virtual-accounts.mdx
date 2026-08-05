@@ -6,7 +6,7 @@ description: "A persistent USD deposit account - every deposit automatically min
 A Virtual Account is a persistent USD bank account bound to one user, one destination [HIFI Wallet](/v3/core/wallets/hifi-wallet) or [External Wallet](/v3/core/wallets/external-wallet), and one destination stablecoin. Once created, it keeps its deposit instructions forever - the user (or anyone paying them) can send USD to it via ACH, Wire, or RTP at any time, and each deposit automatically mints the equivalent stablecoin to the destination wallet as an [Onramp](/v3/core/transactions/onramps) transaction. There's no quote or accept step per deposit.
 
 <Tip>
-  Virtual account accepts both first-party and third-party deposit.
+  Virtual account accepts both first-party and third-party deposits.
 </Tip>
 
 ## How it works
@@ -19,7 +19,7 @@ A Virtual Account is a persistent USD bank account bound to one user, one destin
     Pass the returned `depositInstructions` to whoever is going to send USD - your user, or a third party paying them. Unlike an Onramp, there's no specific expected amount or deadline attached.
   </Step>
   <Step title="Funds arrive, any time">
-    The sender wires, ACHes, or RTPs USD to those instructions whenever they want, for any amount. No API call is needed to "expect" the deposit - the account is always listening.
+    The sender sends USD via wire, ACH, or RTP to those instructions whenever they want, for any amount. No API call is needed to "expect" the deposit - the account is always listening.
   </Step>
   <Step title="HIFI detects the deposit">
     The bank notifies HIFI, which matches the incoming payment to this Virtual Account's sub-account. If it's a small (under \$1.00) bank verification payment instead of a real deposit, it surfaces as a [microdeposit](#microdeposits) rather than triggering a conversion.
@@ -214,13 +214,13 @@ curl -X POST https://sandbox.hifi.com/v3/users/usr_gBlMyGTbuyknSPXlZtwlS/virtual
   <Accordion title="Settlement Rules">
     A Virtual Account can have a Settlement Rule attached that automatically splits each incoming deposit across multiple destination wallets (e.g. by percentage or fixed amount, with tiered breakpoints). 
 
-    Checkout Settlement Rules for more information
+    Check out Settlement Rules for more information.
   </Accordion>
 
   <Accordion title="Routing Eligibility">
     Before creating a Virtual Account, you can check whether a given country/currency/transfer-rail/destination-chain combination is currently supported via `GET /v3/virtual-accounts/routes/eligibility`.
 
-    Checkout [Virtual Account Routing](/v3/core/eligibility/virtual-account-routing) for more information
+    Check out [Virtual Account Routing](/v3/core/eligibility/virtual-account-routing) for more information.
 
      
   </Accordion>

@@ -1,66 +1,34 @@
 ---
 title: "Availability"
-description: "We operate on weekdays - Monday through Friday, excluding Federal Reserve holidays (for USD transactions)."
+description: "Processing schedules and cut-off times vary by payment rail. Some rails operate on business days only, while others process 24/7."
+mode: "wide"
 ---
 
-## USD Domestic Payments
+Availability depends on the payment rail. Some rails operate on business days only and observe banking holidays, while others process 24/7. Cut-off times and settlement windows are listed per rail below.
 
-### Wire transfers
+<Tip>
+  All USDT operations require a minimum of 10 USD
+</Tip>
 
-Wire transfers can be processed Monday through Friday, from 9:00 PM ET of the previous business day through 7:00 PM ET of the current business day.
-
-**Cut-off times:**
-
-- Wire requests received before 3:00 PM ET are typically processed the same business day
-- Requests received after 3:00 PM ET may be processed the next business day
-- Processing after 5:00 PM ET cannot be guaranteed
-
-**Holds:**
-
-- Outgoing and incoming wires placed on hold before 3:00 PM ET are generally cleared the same business day
-- Wires on hold after 3:00 PM ET may be cleared the next business day
-- Manual hold clearance is available 9:00 AM to 5:00 PM ET, Monday through Friday
-
-### ACH (Automated Clearing House)
-
-ACH payments process according to NACHA's ACH settlement windows:
-
-**Same Day ACH:**
-
-- Morning window: 10:00 AM ET cut-off
-- Afternoon window: 2:00 PM ET cut-off
-- Evening window: 4:00 PM ET cut-off
-
-**Standard ACH:** Requests after Same Day cut-offs settle the next business day.
-
-**Settlement:** Same Day ACH settles the current business day. Standard ACH settles the next business day.
-
-<Note>
-  **Federal Reserve holiday schedule:** For holidays falling on Saturday, banks are open the preceding Friday. For holidays falling on Sunday, banks are closed the following Monday.
-</Note>
-
-### **RTP (Real-Time Payments)**
-
-RTP payments process 24/7/365, including weekends and holidays, with no cut-off times.
-
-**Settlement:**
-
-- Payments settle within seconds of initiation from the bank, with funds immediately available to the recipient
-- Confirmation is sent to both sender and recipient once the transaction completes
-- Transactions are final and irrevocable once settled. Return or recall of funds can only be requested on a best-effort basis and is not guaranteed, particularly if the funds are no longer available in the recipient's account
-
----
-
-## International Payments
-
-### SWIFT
-
-SWIFT (Society for Worldwide Interbank Financial Telecommunication) enables secure international payments through a global messaging network between financial institutions.
-
-**Settlement:** Typically 1-5 business days.
-
-### Local rails
-
-Local payment rails like CHATS (Hong Kong) or Mobile Money (Kenya) route payments through banks in the recipient's country.
-
-**Settlement:** Instant to T\+2, depending on the local clearing system.
+| Payment Rail | Currencies | Cut-off Times | Settlement Time | Minimum | Maximum | Sender Naming |
+| --- | --- | --- | --- | --- | --- | --- |
+| FedWire | USD | 3:00 PM ET (Mon–Fri)<br />Requests after 3:00 PM ET may process the next business day | T\+0 | 1 USD | 5M USD | User |
+| ACH - Same Day | USD | Morning window: 10:00 AM ET cut-off<br />Afternoon window: 2:00 PM ET cut-off<br />Evening window: 4:00 PM ET cut-off | T\+0 | 1 USD | 1M USD | Your Business Name with user's name<br />Example: ACME - John Doe |
+| ACH - Standard | USD | 4:00 PM ET (Mon–Fri)<br />Requests after Same Day cut-offs settle the next business day | T\+1 | 1 USD | 1M USD | Your Business Name with user's name<br />Example: ACME - John Doe |
+| RTP | USD | 24/7 | Real-time | 1 USD | 1M USD | Your Business Name with user's name<br />Example: ACME - John Doe |
+| SWIFT (Cross River Bank) | USD | 11:30 AM ET (Mon–Fri)<br />Requests after cut-off begin processing early the next business day | T\+1 - T\+5 | 5 USD | 3M USD | User |
+| SWIFT (Standard Chartered Bank) | USD, CNY, HKD, EUR | 4:00 PM ET (Mon–Fri)<br />Saturday treated as a non-working day from 11:59 AM ET Friday | T\+1 - T\+5 | 31 USD | 10M USD | User |
+| SEPA | EUR | 8:00 AM ET (Mon–Fri) | T\+1 | 100k USD | 5M USD | User |
+| SEPA Instant | EUR | 24/7 | Real-time | 11 USD | 100k USD | User |
+| PIX | BRL | 24/7 | Real-time | 10 USD | 1M USD | Payout Partner |
+| CHATS | HKD | 3:00 AM ET (Mon–Fri) | Real-time | 11 USD | 99,970 USD | Payout Partner |
+| SPEI | MXN | 24/7 | Real-time | 11 USD | 1M USD | Payout Partner |
+| Bank Transfer (Local) | NGN | 24/7 | Real-time | 3 USD | 20,760 USD | Payout Partner |
+| Bank Transfer (IPP/FTS) | AED | 11:45 AM ET (Mon–Fri) | T\+0 | 7 USD | 5M USD | HIFI |
+| Bank Transfer (ACH) | COP | 1:00 PM ET (Mon–Fri) | T\+0 | 10 USD | 400K USD | Payout Partner |
+| NEQUI | COP |  |  | 10 USD | 100K USD |  |
+| Bank Transfer (FAST) | SGD | 24/7 | Real-time | 11 USD | 157,716 USD | User |
+| Instapay | PHP | 24/7 | Real-time | 2 USD | 811 USD | User |
+| PESONet | PHP | 1:30 AM ET (Mon–Fri) | T\+0 | 2 USD | 300K USD | User |
+| IMPS | INR |  |  | 10 USD | 5,257 USD | User |
+| NEFT, RTGS | INR |  |  | 10 USD | 21,031 USD | User |

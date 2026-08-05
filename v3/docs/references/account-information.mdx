@@ -1,3 +1,248 @@
 ---
 title: "Account Information"
+description: "Which fields are required to add an External Account, by currency, payment rail, and country."
 ---
+
+Every [External Account](/v3/core/counter-party/external-account) is identified by a combination of `currency`, `transferType`, and `bankAddress.country` - together these select the payment rail, and the rail determines which fields are required. Requests are strict about this: a field outside the rail's set (e.g. `iban` on an ACH account) is rejected the same as a missing required one.
+
+## USD
+
+### ACH
+
+**Country:** United States
+
+| Field | Required | Notes |
+| --- | --- | --- |
+| `accountNumber` | Required |  |
+| `routingNumber` | Required | Exactly 9 digits |
+| `accountType` | Required | `CHECKING` or `SAVINGS` |
+| `bankName` | Required | Free text |
+| `bankAddress.country` | Required | `USA` |
+| `bankAddress` (rest) | Optional |  |
+
+### WIRE
+
+**Country:** United States
+
+| Field | Required | Notes |
+| --- | --- | --- |
+| `accountNumber` | Required |  |
+| `routingNumber` | Required | Exactly 9 digits |
+| `accountType` | Required | `CHECKING` or `SAVINGS` |
+| `bankName` | Required | Free text |
+| `bankAddress.country` | Required | `USA` |
+| `bankAddress` (rest) | Optional |  |
+
+### RTP
+
+**Country:** United States
+
+| Field | Required | Notes |
+| --- | --- | --- |
+| `accountNumber` | Required |  |
+| `routingNumber` | Required | Exactly 9 digits |
+| `accountType` | Required | `CHECKING` or `SAVINGS` |
+| `bankName` | Required | Free text |
+| `bankAddress.country` | Required | `USA` |
+| `bankAddress` (rest) | Optional |  |
+
+### SWIFT
+
+Countries: Check out Coverage for supported countries for SWIFT
+
+| Field | Required | Notes |
+| --- | --- | --- |
+| `swiftCode` | Required | 8 or 11 characters, SWIFT/BIC format |
+| `accountNumber` | Optional\* | One of `accountNumber` and `iban` is required |
+| `iban` | Optional\* | One of `accountNumber` and `iban` is required |
+| `accountType` | Optional | `CHECKING` or `SAVINGS` |
+| `bankName` | Required | Free text\* |
+| `bankAddress` | Required | Full address, `country` must be one of the list above |
+
+<AccordionGroup>
+  <Accordion title="Countries expect iban">
+    Albania, Andorra, Austria, Belgium, Brazil, Bulgaria, Croatia, Cyprus, Czech Republic, Denmark, Estonia, Finland, France, Georgia, Germany, Greece, Hungary, Iceland, Ireland, Israel, Italy, Latvia, Liechtenstein, Lithuania, Luxembourg, Malta, Moldova, Monaco, Montenegro, Netherlands, North Macedonia, Norway, Poland, Portugal, Romania, San Marino, Saudi Arabia, Serbia, Slovakia, Slovenia, Spain, Sweden, Switzerland, Turkey, United Arab Emirates, United Kingdom, Vatican City.
+  </Accordion>
+
+  <Accordion title="Countries expect accountNumber">
+    Argentina, Australia, Canada, Chile, China, Colombia, Hong Kong, Indonesia, Japan, Kenya, Mexico, New Zealand, Nigeria, Panama, Paraguay, Philippines, Singapore, South Africa, South Korea, Taiwan, Thailand.
+  </Accordion>
+</AccordionGroup>
+
+Some countries require exact bank name match, check out below bank name list for details
+
+<Accordion title="Indonesia bank names">
+  This rail accepts ~140 Indonesian banks, including Bank Central Asia (BCA), Bank Mandiri, Bank Rakyat Indonesia (BRI), Bank Negara Indonesia (BNI), Bank CIMB Niaga, Bank Permata, Bank Danamon, Bank BJB, Citibank, HSBC Indonesia, Standard Chartered Bank, and the regional Bank Pembangunan Daerah network. See `IDN_BANK_NAMES` in [`src/externalAccount/enums.js`](/../../src/externalAccount/enums.js) for the exact list and spelling required.
+</Accordion>
+
+## EUR
+
+### SEPA
+
+**Countries (40):** Albania, Andorra, Austria, Belgium, Croatia, Cyprus, Czech Republic, Denmark, Estonia, Finland, France, Germany, Greece, Hungary, Iceland, Ireland, Italy, Latvia, Liechtenstein, Lithuania, Luxembourg, Malta, Moldova, Monaco, Montenegro, Netherlands, North Macedonia, Norway, Poland, Portugal, Romania, San Marino, Serbia, Slovakia, Slovenia, Spain, Sweden, Switzerland, United Kingdom, Hong Kong.
+
+| Field | Required | Notes |
+| --- | --- | --- |
+| `iban` | Required |  |
+| `swiftCode` | Required | 8 or 11 characters, SWIFT/BIC format |
+| `bankName` | Required | Free text |
+| `bankAddress` | Required | Full address, `country` must be one of the list above |
+
+## BRL
+
+### PIX
+
+**Country:** Brazil
+
+| Field | Required | Notes |
+| --- | --- | --- |
+| `pixKey` | Required |  |
+| `bankName` | Required | Free text |
+| `bankAddress` | Required | Full address |
+
+## CNY
+
+### CIPS
+
+**Country:** China
+
+| Field | Required | Notes |
+| --- | --- | --- |
+| `accountNumber` | Required |  |
+| `bankName` | Required | Free text |
+| `bankAddress` | Required | Full address |
+
+## COP
+
+### NEQUI
+
+**Country:** Colombia
+
+| Field | Required | Notes |
+| --- | --- | --- |
+| `phoneNumber` | Required | E.164 format |
+| `bankName` | Required | Free text |
+| `bankAddress` | Required | Full address |
+
+### BANK
+
+**Country:** Colombia
+
+| Field | Required | Notes |
+| --- | --- | --- |
+| `phoneNumber` | Required | E.164 format |
+| `bankName` | Required | Must match a fixed bank name (list below) |
+| `accountType` | Required | `CHECKING` or `SAVINGS` |
+| `bankAddress` | Required | Full address |
+
+<Accordion title="Colombia bank names">
+  COINK SA, Banco de Bogota, Banco Popular, Bancolombia, Citibank, Banco GNB Sudameris, Banco BBVA, Itaú CorpBanca Colombia S.A, Banco Colpatria (Scotiabank), Banco de Occidente, Bancoldex, Banco Caja Social, Banco Agrario, Banco Davivienda, AV Villas, Banco Pichincha, Banco Coomeva, Banco Falabella, Banco Santander de Negocios Col., Banco Cooperativo Coopcentral, Confiar S.A., Coltefinanciera S.A., Nequi, Banco W S.A., Daviplata, Lulo Bank, Banco Itaú, Bancamia S.A., Banco Serfinanza, Banco Union, Bancien, Banco JP Morgan, Iris, Movii SA, Ding Tecnipagos SA, Powwi, Uala, Banco BTG Pactual Colombia S.A., Pibank, Rappipay, Banco Mundo Mujer, Global66, Nu, JFK Cooperativa Financiera, Bold CF, Banco Contactar S.A.
+</Accordion>
+
+## HKD
+
+### CHATS
+
+**Country:** Hong Kong
+
+| Field | Required | Notes |
+| --- | --- | --- |
+| `accountNumber` | Required |  |
+| `bankCode` | Required | Free text |
+| `swiftCode` | Required | 8 or 11 characters, SWIFT/BIC format |
+| `bankName` | Required | Free text |
+| `bankAddress` | Required | Full address |
+
+### FPS
+
+**Country:** Hong Kong
+
+| Field | Required | Notes |
+| --- | --- | --- |
+| `accountNumber` | Required |  |
+| `fpsId` | Required | Free text |
+| `bankName` | Required | Free text |
+| `bankAddress.country` | Required | `HKG` |
+| `bankAddress` (rest) | Optional |  |
+
+## MXN
+
+### SPEI
+
+**Country:** Mexico
+
+| Field | Required | Notes |
+| --- | --- | --- |
+| `clabe` | Required | Exactly 18 characters |
+| `bankName` | Required | Free text |
+| `bankAddress` | Required | Full address |
+
+## NGN
+
+### BANK
+
+**Country:** Nigeria
+
+| Field | Required | Notes |
+| --- | --- | --- |
+| `accountNumber` | Required |  |
+| `bankName` | Required | Must match a fixed bank name (list below) |
+| `bankAddress` | Required | Full address |
+
+<Accordion title="Nigeria bank names">
+  Access Bank, Access Bank (Diamond), Accion MFB, Alternative Bank, Bellbank Microfinance, Bowen MFB, Citibank Nigeria, Ecobank Nigeria, Enterprise Bank, Fairmoney Microfinance Bank Ltd, Fidelity Bank, First Bank of Nigeria, First City Monument Bank, GT Bank, Globus Bank, GoMoney, Guaranty Trust Bank, Heritage Bank, Jaiz Bank, Keystone Bank, Kuda Microfinance Bank, Lotus Bank, Mainstreet Bank, Mint-Finex Microfinance Bank, Moniepoint Microfinance Bank, MoMo PSB, NET MFB, Nomba Bank, Nownow (Contec Global), Nova MB, 9JAPAY MICROFINANCE, OPay, Optimus Bank, PalmPay, Paga, Parallex Bank, Polaris Bank, Premium Trust Bank, PremiumTrust Bank, Providus Bank, Stanbic IBTC Bank, Standard Chartered Bank, Sterling Bank, Suntrust Bank, Taj Bank, Titan Trust Bank, Titan-Paystack, Union Bank of Nigeria, United Bank for Africa, Unity Bank, VFD Microfinance Bank, Wema Bank, Zenith Bank.
+</Accordion>
+
+## PHP
+
+### INSTAPAY
+
+**Country:** Philippines
+
+| Field | Required | Notes |
+| --- | --- | --- |
+| `accountNumber` | Required |  |
+| `bankName` | Required | Must match a fixed bank name (list below) |
+| `bankAddress` | Required | Full address |
+
+<Accordion title="Philippines InstaPay bank names">
+  This rail accepts ~85 Philippine banks and e-wallets, including BDO Bank, BPI, Metrobank, Security Bank, UnionBank, RCBC, Landbank, GCash, Maya Bank, ShopeePay, GrabPay, and PalawanPay. See `PHL_INSTAPAY_BANK_NAMES` in [`src/externalAccount/enums.js`](/../../src/externalAccount/enums.js) for the exact list and spelling required.
+</Accordion>
+
+### PESONET
+
+**Country:** Philippines
+
+| Field | Required | Notes |
+| --- | --- | --- |
+| `accountNumber` | Required |  |
+| `bankName` | Required | Must match a fixed bank name (list below) |
+| `bankAddress` | Required | Full address |
+
+<Accordion title="Philippines PESONet bank names">
+  This rail accepts ~100 Philippine banks, overlapping with the InstaPay list plus additional rural banks and correspondent branches (e.g. Citibank N.A. - Manila Branch, HSBC, Deutsche Bank AG - Manila Branch, JP Morgan Chase Bank N.A. - Manila Branch). See `PHL_PESONET_BANK_NAMES` in [`src/externalAccount/enums.js`](/../../src/externalAccount/enums.js) for the exact list and spelling required.
+</Accordion>
+
+## SGD
+
+### BANK
+
+**Country:** Singapore
+
+| Field | Required | Notes |
+| --- | --- | --- |
+| `accountNumber` | Required |  |
+| `swiftCode` | Required | 8 or 11 characters, SWIFT/BIC format |
+| `bankName` | Required | Free text |
+| `bankAddress` | Required | Full address |
+
+## Getting Help
+
+- 📧 **Email:** [support@hifi.com](mailto:support@hifi.com)
+- 💬 **Slack:** Message us in our shared Slack channel
+
+## Related Resources
+
+- [Counterparty Overview](/v3/core/counter-party/overview) - Counterparty resources
+- [External Account](/v3/core/counter-party/external-account) - Create and manage bank accounts for a counterparty
+- [Counter Party](/v3/core/counter-party/counter-party) - Create and manage recipients/payers
