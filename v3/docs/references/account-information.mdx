@@ -5,6 +5,10 @@ description: "Which fields are required to add an External Account, by currency,
 
 Every [External Account](/v3/core/counter-party/external-account) is identified by a combination of `currency`, `transferType`, and `bankAddress.country` - together these select the payment rail, and the rail determines which fields are required. Requests are strict about this: a field outside the rail's set (e.g. `iban` on an ACH account) is rejected the same as a missing required one.
 
+<Tip>
+  External account creation will always require `currency` , `transferType` and `bankAddress.country`
+</Tip>
+
 ## USD
 
 ### ACH
@@ -15,6 +19,8 @@ Every [External Account](/v3/core/counter-party/external-account) is identified 
 | --- | --- | --- |
 | `accountNumber` | Required |  |
 | `routingNumber` | Required | Exactly 9 digits |
+| `currency` | Required | `USD` |
+| `transferType` | Required | `ACH` |
 | `accountType` | Required | `CHECKING` or `SAVINGS` |
 | `bankName` | Required | Free text |
 | `bankAddress.country` | Required | `USA` |
@@ -28,6 +34,8 @@ Every [External Account](/v3/core/counter-party/external-account) is identified 
 | --- | --- | --- |
 | `accountNumber` | Required |  |
 | `routingNumber` | Required | Exactly 9 digits |
+| `currency` | Required | `USD` |
+| `transferType` | Required | `WIRE` |
 | `accountType` | Required | `CHECKING` or `SAVINGS` |
 | `bankName` | Required | Free text |
 | `bankAddress.country` | Required | `USA` |
@@ -41,6 +49,8 @@ Every [External Account](/v3/core/counter-party/external-account) is identified 
 | --- | --- | --- |
 | `accountNumber` | Required |  |
 | `routingNumber` | Required | Exactly 9 digits |
+| `transferType` | Required | `RTP` |
+| `currency` | Required | `USD` |
 | `accountType` | Required | `CHECKING` or `SAVINGS` |
 | `bankName` | Required | Free text |
 | `bankAddress.country` | Required | `USA` |
@@ -48,12 +58,14 @@ Every [External Account](/v3/core/counter-party/external-account) is identified 
 
 ### SWIFT
 
-Countries: Check out Coverage for supported countries for SWIFT
+Countries: Check out [Coverage](/v3/docs/references/coverage) for SWIFT supported countries
 
 | Field | Required | Notes |
 | --- | --- | --- |
 | `swiftCode` | Required | 8 or 11 characters, SWIFT/BIC format |
 | `accountNumber` | Optional\* | One of `accountNumber` and `iban` is required |
+| `currency` | Required | `USD` |
+| `transferType` | Required | `SWIFT` |
 | `iban` | Optional\* | One of `accountNumber` and `iban` is required |
 | `accountType` | Optional | `CHECKING` or `SAVINGS` |
 | `bankName` | Required | Free text\* |
@@ -79,14 +91,17 @@ Some countries require exact bank name match, check out below bank name list for
 
 ### SEPA
 
-**Countries (40):** Albania, Andorra, Austria, Belgium, Croatia, Cyprus, Czech Republic, Denmark, Estonia, Finland, France, Germany, Greece, Hungary, Iceland, Ireland, Italy, Latvia, Liechtenstein, Lithuania, Luxembourg, Malta, Moldova, Monaco, Montenegro, Netherlands, North Macedonia, Norway, Poland, Portugal, Romania, San Marino, Serbia, Slovakia, Slovenia, Spain, Sweden, Switzerland, United Kingdom, Hong Kong.
+Countries: Check out [Coverage](/v3/docs/references/coverage) for SEPA supported countries
 
 | Field | Required | Notes |
 | --- | --- | --- |
 | `iban` | Required |  |
 | `swiftCode` | Required | 8 or 11 characters, SWIFT/BIC format |
+| `currency` | Required | `EUR` |
+| `transferType` | Required | `SEPA` |
 | `bankName` | Required | Free text |
-| `bankAddress` | Required | Full address, `country` must be one of the list above |
+| `bankAddress.country` | Required | `country` must be one of the list above |
+| `bankAddress` (rest) | Optional |  |
 
 ## BRL
 
@@ -96,21 +111,38 @@ Some countries require exact bank name match, check out below bank name list for
 
 | Field | Required | Notes |
 | --- | --- | --- |
-| `pixKey` | Required |  |
-| `bankName` | Required | Free text |
-| `bankAddress` | Required | Full address |
+| `pixKey` | Optional\* | EVP; One of `pixKey`, `email` , `phone` `cpf` or `cnpj` is required |
+| `cpf` | Optional\* | One of `pixKey`, `email` , `phone` `cpf` or `cnpj` is required |
+| `cnpj` | Optional\* | One of `pixKey`, `email` , `phone` `cpf` or `cnpj` is required |
+| `email` | Optional\* | One of `pixKey`, `email` , `phone` `cpf` or `cnpj` is required |
+| `phone` | Optional\* | One of `pixKey`, `email` , `phone` `cpf` or `cnpj` is required |
+| `transferType` | Required | `PIX` |
+| `currency` | Required | `BRL` |
+| `bankAddress.country` | Required | `BRA` |
+| `bankAddress` (rest) | Optional |  |
+
+### Additional Counterparty Information Required
+
+| Field | Notes |
+| --- | --- |
+| `taxId` | external account holder's tax id |
 
 ## CNY
 
-### CIPS
+### SWIFT
 
 **Country:** China
 
 | Field | Required | Notes |
-| --- | --- | --- |
+| :-- | :-- | :-- |
+| `swiftCode` | Required | 8 or 11 characters, SWIFT/BIC format |
 | `accountNumber` | Required |  |
-| `bankName` | Required | Free text |
-| `bankAddress` | Required | Full address |
+| `currency` | Required | `CNY` |
+| `transferType` | Required | `SWIFT` |
+| `accountType` | Optional | `CHECKING` or `SAVINGS` |
+| `bankName` | Required | Free text\* |
+| `bankAddress.country` | Required | `CHN` |
+| `bankAddress` (rest) | Required |  |
 
 ## COP
 
@@ -121,23 +153,41 @@ Some countries require exact bank name match, check out below bank name list for
 | Field | Required | Notes |
 | --- | --- | --- |
 | `phoneNumber` | Required | E.164 format |
-| `bankName` | Required | Free text |
-| `bankAddress` | Required | Full address |
+| `bankAddress.country` | Required | `COL` |
+| `bankAddress` (rest) | Required |  |
+| `currency` | Required | `COP` |
+| `transferType` | Required | `NEQUI` |
 
-### BANK
+### Additional Counterparty Information Required
+
+| Field | Notes |
+| :-- | :-- |
+| `taxId` | external account holder's tax id |
+| `phoneNumber` | external account holder's phone number |
+
+### BANK (ACH)
 
 **Country:** Colombia
 
 | Field | Required | Notes |
 | --- | --- | --- |
-| `phoneNumber` | Required | E.164 format |
+| `accountNumber` | Required |  |
 | `bankName` | Required | Must match a fixed bank name (list below) |
 | `accountType` | Required | `CHECKING` or `SAVINGS` |
-| `bankAddress` | Required | Full address |
+| `bankAddress.country` | Required | `COL` |
+| `bankAddress` (rest) | Optional |  |
+| `currency` | Required | `COP` |
 
 <Accordion title="Colombia bank names">
   COINK SA, Banco de Bogota, Banco Popular, Bancolombia, Citibank, Banco GNB Sudameris, Banco BBVA, Itaú CorpBanca Colombia S.A, Banco Colpatria (Scotiabank), Banco de Occidente, Bancoldex, Banco Caja Social, Banco Agrario, Banco Davivienda, AV Villas, Banco Pichincha, Banco Coomeva, Banco Falabella, Banco Santander de Negocios Col., Banco Cooperativo Coopcentral, Confiar S.A., Coltefinanciera S.A., Nequi, Banco W S.A., Daviplata, Lulo Bank, Banco Itaú, Bancamia S.A., Banco Serfinanza, Banco Union, Bancien, Banco JP Morgan, Iris, Movii SA, Ding Tecnipagos SA, Powwi, Uala, Banco BTG Pactual Colombia S.A., Pibank, Rappipay, Banco Mundo Mujer, Global66, Nu, JFK Cooperativa Financiera, Bold CF, Banco Contactar S.A.
 </Accordion>
+
+### Additional Counterparty Information Required
+
+| Field | Notes |
+| :-- | :-- |
+| `taxId` | external account holder's tax id |
+| `phoneNumber` | external account holder's phone number |
 
 ## HKD
 
@@ -151,19 +201,10 @@ Some countries require exact bank name match, check out below bank name list for
 | `bankCode` | Required | Free text |
 | `swiftCode` | Required | 8 or 11 characters, SWIFT/BIC format |
 | `bankName` | Required | Free text |
-| `bankAddress` | Required | Full address |
-
-### FPS
-
-**Country:** Hong Kong
-
-| Field | Required | Notes |
-| --- | --- | --- |
-| `accountNumber` | Required |  |
-| `fpsId` | Required | Free text |
-| `bankName` | Required | Free text |
 | `bankAddress.country` | Required | `HKG` |
 | `bankAddress` (rest) | Optional |  |
+| `currency` | Required | `HKD` |
+| `transferType` | Required | `CHATS` |
 
 ## MXN
 
@@ -174,8 +215,10 @@ Some countries require exact bank name match, check out below bank name list for
 | Field | Required | Notes |
 | --- | --- | --- |
 | `clabe` | Required | Exactly 18 characters |
-| `bankName` | Required | Free text |
-| `bankAddress` | Required | Full address |
+| `bankAddress.country` | Required | `MEX` |
+| `bankAddress` (rest) | Optional |  |
+| `currency` | Required | `MXN` |
+| `transferType` | Required | `SPEI` |
 
 ## NGN
 
@@ -187,10 +230,13 @@ Some countries require exact bank name match, check out below bank name list for
 | --- | --- | --- |
 | `accountNumber` | Required |  |
 | `bankName` | Required | Must match a fixed bank name (list below) |
-| `bankAddress` | Required | Full address |
+| `currency` | Required | `NGN` |
+| `transferType` | Required | `BANK` |
+| `bankAddress.country` | Required | `NGA` |
+| `bankAddress` (rest) | Optional |  |
 
 <Accordion title="Nigeria bank names">
-  Access Bank, Access Bank (Diamond), Accion MFB, Alternative Bank, Bellbank Microfinance, Bowen MFB, Citibank Nigeria, Ecobank Nigeria, Enterprise Bank, Fairmoney Microfinance Bank Ltd, Fidelity Bank, First Bank of Nigeria, First City Monument Bank, GT Bank, Globus Bank, GoMoney, Guaranty Trust Bank, Heritage Bank, Jaiz Bank, Keystone Bank, Kuda Microfinance Bank, Lotus Bank, Mainstreet Bank, Mint-Finex Microfinance Bank, Moniepoint Microfinance Bank, MoMo PSB, NET MFB, Nomba Bank, Nownow (Contec Global), Nova MB, 9JAPAY MICROFINANCE, OPay, Optimus Bank, PalmPay, Paga, Parallex Bank, Polaris Bank, Premium Trust Bank, PremiumTrust Bank, Providus Bank, Stanbic IBTC Bank, Standard Chartered Bank, Sterling Bank, Suntrust Bank, Taj Bank, Titan Trust Bank, Titan-Paystack, Union Bank of Nigeria, United Bank for Africa, Unity Bank, VFD Microfinance Bank, Wema Bank, Zenith Bank.
+  Suntrust Bank, Accion MFB, Standard Chartered Bank, Nova MB, Citibank Nigeria, Wema Bank, Bowen MFB, Unity Bank, Premium Trust bank, Mint-Finex Microfinance Bank, United Bank for Africa, Access Bank (Diamond), Kuda Microfinance Bank, Union Bank of Nigeria, Ecobank Nigeria, Providus Bank, PremiumTrust Bank, Access Bank, Stanbic Ibtc Bank, Polaris Bank, Taj Bank, Lotus Bank, Titan Trust Bank, Parallex Bank, PalmPay, Keystone Bank, Nomba Bank, Moniepoint Microfinance Bank, OPay, GoMoney, Optimus Bank, Zenith Bank, Fairmoney Microfinance Bank Ltd, Heritage Bank, Enterprise Bank, Guaranty Trust Bank, GT Bank, MoMo PSB, 9JAPAY MICROFINANCE, First City Monument Bank, Bellbank Microfinance, First Bank of Nigeria, Titan-Paystack, Mainstreet Bank, Sterling Bank, VFD Microfinance Bank, Nownow（Contec Global), NET MFB, Jaiz Bank, Paga, Fidelity Bank, Globus Bank, Alternative Bank
 </Accordion>
 
 ## PHP
@@ -203,10 +249,13 @@ Some countries require exact bank name match, check out below bank name list for
 | --- | --- | --- |
 | `accountNumber` | Required |  |
 | `bankName` | Required | Must match a fixed bank name (list below) |
-| `bankAddress` | Required | Full address |
+| `bankAddress.country` | Required | `PHL` |
+| `bankAddress` (rest) | Optional |  |
+| `currency` | Required | `PHP` |
+| `transferType` | Required | `INSTAPAY` |
 
 <Accordion title="Philippines InstaPay bank names">
-  This rail accepts ~85 Philippine banks and e-wallets, including BDO Bank, BPI, Metrobank, Security Bank, UnionBank, RCBC, Landbank, GCash, Maya Bank, ShopeePay, GrabPay, and PalawanPay. See `PHL_INSTAPAY_BANK_NAMES` in [`src/externalAccount/enums.js`](/../../src/externalAccount/enums.js) for the exact list and spelling required.
+  AllBank (A Thrift Bank), Inc., Asenso, Asia United Bank, BananaPay, Bangko Mabuhay, Bank of China, Bank of Commerce, BanKo, A subsidiary of BPI, BDO Bank, BDO Network Bank, Binangonan Rural Bank (BRBDigital), BPI, Camalig Bank, Cantilan Bank, CARD Bank, CARD SME Bank, Cebuana Lhuillier Bank/ Cebuana Xpress, China Bank, China Bank Savings, CIMB Bank Philippines, CIS Bayad Center/ Bayad, City Savings Bank, CTBC Bank (Philippines) Corp., Development Bank of the Philippines, Dumaguete Bank, Dungganon Bank, EastWest Bank, Easy Pay Global EMI Corp, Equicom Savings Bank, GCash, GoTyme Bank, GrabPay, I-Remit/iCASH, Infoserve / Nationlink, ISLABANK, JuanCash, Komo/ EastWest Rural Bank, LANDBANK / OFBank, Lazada Wallet (Alipay Ph.), Legazpi Savings Bank, Luzon Development Bank, Malayan Bank Savings, MarCoPay, MariBank, Maya Bank, Maybank, Metrobank, Mindanao Consolidated CoopBank, NetBank, Omnipay, Inc., Own Bank, PalawanPay, Partner Rural Bank (Cotabato), Inc., PayMaya/ Maya Wallet, PayMongo, PBCOM, PDAX, Peppermint Bizmoto Inc., Philippine Business Bank, Inc., A Savings Bank, Philippine Veterans Bank, PhilTrust Bank, PNB, Producers Savings Bank Corporation, PSBank, Queenbank, Quezon Capital Rural Bank, RCBC / Diskartech, Robinsons Bank, Security Bank, ShopeePay, SpeedyPay, Standard Chartered Bank, Starpay, Sterling Bank of Asia, Sun Savings Bank, TayoCash, Tonik Bank, TraxionPay/ DigiCOOP/ COOPNET, UCPB Savings Bank, Union Bank of the Philippines, UnionDigital Bank, UNOBank, USSC, Wealth Bank, Wise Pilipinas, Inc., Yuanta Bank
 </Accordion>
 
 ### PESONET
@@ -214,13 +263,16 @@ Some countries require exact bank name match, check out below bank name list for
 **Country:** Philippines
 
 | Field | Required | Notes |
-| --- | --- | --- |
+| :-- | :-- | :-- |
 | `accountNumber` | Required |  |
 | `bankName` | Required | Must match a fixed bank name (list below) |
-| `bankAddress` | Required | Full address |
+| `bankAddress.country` | Required | `PHL` |
+| `bankAddress` (rest) | Optional |  |
+| `currency` | Required | `PHP` |
+| `transferType` | Required | `PESONET` |
 
 <Accordion title="Philippines PESONet bank names">
-  This rail accepts ~100 Philippine banks, overlapping with the InstaPay list plus additional rural banks and correspondent branches (e.g. Citibank N.A. - Manila Branch, HSBC, Deutsche Bank AG - Manila Branch, JP Morgan Chase Bank N.A. - Manila Branch). See `PHL_PESONET_BANK_NAMES` in [`src/externalAccount/enums.js`](/../../src/externalAccount/enums.js) for the exact list and spelling required.
+  Agribusiness Banking Corporation-A Rural Bank, Al-Amanah Islamic Invest. Bank, AllBank (A Thrift Bank), Inc., ANZ Banking Group Ltd, Asenso, Asia United Bank, Bangko Kabayan, Bangko Mabuhay, Bangko Nuestra Señora Del Pilar, Bangkok Bank - Manila Branch, Bank of America, N.A. - Manila Branch, Bank of China, Bank of Commerce, Bank of Florida, Bank Of Makati (A Savings Bank), Inc., BanKo, A subsidiary of BPI, Bayanihan Bank, Inc., BDO Bank, BDO Network Bank, Biñan Rural Bank, Inc., BPI, Camalig Bank, Cantilan Bank, Cathay United Bank - Manila Branch, Cebuana Lhuillier Bank/ Cebuana Xpress, China Bank, China Bank Savings, CIMB Bank Philippines, Citibank, N.A. - Manila Branch, City Savings Bank, Community Rural Bank of Romblon (Romblon), Inc., Cooperative Bank Of Quezon Province, CTBC Bank (Philippines) Corp., Deutsche Bank AG - Manila Branch, Development Bank of the Philippines, Dumaguete Bank, Dungganon Bank, EastWest Bank, Easy Pay Global EMI Corp, Equicom Savings Bank, First Consolidated Bank, Gateway Rural Bank, Inc., GCash, GoTyme Bank, GrabPay, Guagua Rural Bank, HSBC, Industrial and Commercial Bank of China Limited - Manila Branch, Industrial Bank of Korea - Manila, ING Bank N.V, Innovative Bank, Inc. (A Rural Bank), JP Morgan Chase Bank, N.A - Manila Branch, JuanCash, KEB Hana Bank – Manila Branch, Komo/ EastWest Rural Bank, Laguna Prestige Bank, LANDBANK / OFBank, LOLC Bank Philippines, Inc. A Thrift Bank, Lulu Money, Malarayat Rural Bank, Inc., Malayan Bank Savings, MariBank, Maya Bank, Maybank, Mega Int'l Commercial Bank - Manila Branch, Metrobank, Mizuho Bank, Ltd. – Manila Branch, Money Mall Rural Bank, Inc., MUFG Bank, Ltd. - Manila Branch, MVSM Bank (A Rural Bank Since 1953) Inc.\[Marikina Valley San Mateo Bank\], NetBank, New Rural Bank Of San Leonardo (Nueva Ecija), Inc., Own Bank, PalawanPay, PayMaya/ Maya Wallet, PayMongo, PBCOM, PDAX, Philippine Business Bank, Inc., A Savings Bank, Philippine Veterans Bank, PhilTrust Bank, PNB, Producers Savings Bank Corporation, PSBank, Queenbank, Rang-Ay Bank, RBT Bank, RCBC / Diskartech, Robinsons Bank, Rural Bank of Angeles, Inc., Rural Bank Of Bacolod City, Inc., Rural Bank Of Bauang, Inc., Rural Bank of Digos, Rural Bank Of La Paz, Inc., Rural Bank Of Lebak (Sultan Kudarat), Incorporated, Rural Bank of Mangaldan, Inc., Rural Bank of Montalban, Rural Bank Of Porac (Pampanga), Inc., Rural Bank of Rosario (La Union), Inc., Rural Bank Of Sagay, Inc.
 </Accordion>
 
 ## SGD
@@ -234,7 +286,10 @@ Some countries require exact bank name match, check out below bank name list for
 | `accountNumber` | Required |  |
 | `swiftCode` | Required | 8 or 11 characters, SWIFT/BIC format |
 | `bankName` | Required | Free text |
-| `bankAddress` | Required | Full address |
+| `bankAddress.country` | Required | `SGP` |
+| `bankAddress` (rest) | Optional |  |
+| `currency` | Required | `SGD` |
+| `transferType` | Required | `BANK` |
 
 ## Getting Help
 
