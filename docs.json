@@ -230,6 +230,16 @@
                 "group": "Features",
                 "pages": [
                   {
+                    "group": "Magic Values",
+                    "tag": "NEW",
+                    "pages": [
+                      "features/magic-values/overview",
+                      "features/magic-values/offramp",
+                      "features/magic-values/onramp",
+                      "features/magic-values/submit-kyc"
+                    ]
+                  },
+                  {
                     "group": "Canton",
                     "tag": "NEW",
                     "pages": [
@@ -557,6 +567,10 @@
     ]
   },
   "redirects": [
+    {
+      "source": "/testing/magic-values",
+      "destination": "/features/magic-values/overview"
+    },
     {
       "source": "/compliance/enhanced-verification",
       "destination": "/compliance/liveness-checks"

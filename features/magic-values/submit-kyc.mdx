@@ -1,0 +1,45 @@
+---
+title: "Submit KYC"
+description: "Use magic values in sandbox to drive a KYC application to a particular status, so you can test how your integration handles each outcome."
+---
+
+KYC uses a separate name-based convention from transfers. Rather than a `sandboxScenario` field, you set a name field to a magic value and the application is driven to the matching status.
+
+<Warning>
+  Magic values are sandbox only. In production, KYC applications undergo real compliance review and these names carry no special meaning.
+</Warning>
+
+## Magic values
+
+Set `lastName` (for individuals) or `businessName` (for businesses) to a magic value when making requests to the [submit KYC endpoint](https://docs.hifi.com/api-reference/kyc/submit-kyc) to drive the application to a particular status:
+
+| Magic value | Response                                                                                                     |
+| ----------- | -------------------------------------------------------------------------------------------------------------- |
+| `APPROVED`  | Application is approved and the user reaches `ACTIVE`.                                                       |
+| `PENDING`   | Stuck application. The user stays in `PENDING`.                                                              |
+| `REJECTED`  | Application is rejected and the user reaches `REJECTED`.                                                     |
+| `RFI`       | The user enters `RFI_PENDING`, then auto-resolves to `ACTIVE` after roughly 10 minutes with no action needed. |
+
+<Note>
+  **Note:** Any other value results in the standard sandbox behavior, where KYC is typically auto-approved. Some compliance checks, such as PEP screening, can still block approval in sandbox regardless of the name used.
+</Note>
+
+See [KYC status](/kyc/kyc-status) and [KYB status](/kyc/kyb-status) for what each status means.
+
+## Coverage
+
+KYC magic values cover `APPROVED`, `PENDING`, `REJECTED`, and the `RFI_PENDING` lifecycle. `RFI` only auto-resolves to `ACTIVE`.
+
+## Getting help
+
+- 📧 **Email:** [support@hifi.com](mailto:support@hifi.com)
+- 💬 **Slack:** Message us in our shared Slack channel
+
+## Related resources
+
+- [Magic values overview](/features/magic-values/overview) - What magic values are and where they apply
+- [Offramp magic values](/features/magic-values/offramp) - Force an offramp outcome at create time
+- [Onramp magic values](/features/magic-values/onramp) - Force an onramp outcome from the deposit that creates it
+- [Sandbox](/sandbox) - Environment setup and how sandbox differs from production
+- [KYC requirements](/kyc/kyc-requirements) - What each application needs to submit
+- [KYC events](/webhooks/kyc-events) - Webhook events emitted as an application changes status

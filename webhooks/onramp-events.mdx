@@ -36,6 +36,10 @@ description: "You can expect to receive webhook events whenever an onramp transf
 | **ONRAMP.STATUS.CRYPTO_FAILED**    | Blockchain transaction failed                         |
 | **ONRAMP.STATUS.COMPLETED**        | Stablecoins delivered to wallet, transaction complete |
 
+<Note>
+  A failed onramp may be followed by a return event as the fiat is sent back to the sender. See [Failed Deposits and Returns](/transactions/onramps#failed-deposits-and-returns) for how the statuses progress.
+</Note>
+
 ### RFI Events
 
 | Status                | Description                                                                                                           |

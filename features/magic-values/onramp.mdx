@@ -1,0 +1,59 @@
+---
+title: "Onramp"
+description: "Use magic values in sandbox to force an onramp into a particular outcome, so you can test how your integration handles failures and returns."
+---
+
+Every scenario resolves on its own. You force a scenario on the deposit that creates the onramp, the onramp reaches the status you asked for, and **3 minutes later** it moves to its true terminal status, `FIAT_RETURNED`. No follow-up API call is needed.
+
+<Warning>
+  Magic values are sandbox only. In production, `sandboxScenario` is rejected with a `400`.
+</Warning>
+
+## Magic values
+
+Onramps funded by a USD virtual account are created by the deposit itself, so onramp magic values are passed on the `sandboxScenario` field of the [simulate a deposit to a virtual account endpoint](https://docs.hifi.com/api-reference/virtual-account/simulate-a-deposit-to-a-virtual-account) rather than on an onramp create request. The following table outlines the magic values and their effects on the onramp the deposit creates:
+
+| Magic value   | Response                                                                                                                        |
+| ------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `FIAT_FAILED` | Deposit is rejected during review, before any crypto is delivered, and a webhook updates the onramp to `FIAT_FAILED`.             |
+| `COMPLETED`   | Deposit is accepted and the crypto is delivered to the destination wallet, then the deposit is reversed after settlement.          |
+
+Both resolve to `FIAT_RETURNED` 3 minutes after reaching the status they force, with a webhook for the change. The onramp moves straight there, and `FIAT_RETURNED` is terminal. The fiat is returned to the sender's bank account as part of the return.
+
+## Example request
+
+```bash
+curl -X POST "https://sandbox.hifibridge.com/v2/users/7d54a7a7-dac3-4313-8b09-27fa4b7fd1ee/virtual-accounts/938e3b36-3be7-5535-ba12-8d89eb683e6b/simulate-deposit" \
+  -H "Authorization: Bearer YOUR_SANDBOX_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "requestId": "0dd0f1a1-5b2f-4f2f-9a6a-2f0a4f2b6c11",
+    "amount": "100",
+    "paymentRail": "WIRE",
+    "sandboxScenario": "FIAT_FAILED",
+    "source": {
+      "routingNumber": "021000021",
+      "accountNumber": "1234567890",
+      "name": "John Doe",
+      "bankName": "Test Bank"
+    }
+  }'
+```
+
+## Coverage
+
+Onramp magic values are wired into USD onramps, triggered from the virtual account deposit that creates them, and both resolve to `FIAT_RETURNED`. This is available regardless of which rail funded the deposit. Values that are not listed above either fall through to the standard sandbox behavior or return an error.
+
+## Getting help
+
+- 📧 **Email:** [support@hifi.com](mailto:support@hifi.com)
+- 💬 **Slack:** Message us in our shared Slack channel
+
+## Related resources
+
+- [Magic values overview](/features/magic-values/overview) - What magic values are and where they apply
+- [Offramp magic values](/features/magic-values/offramp) - Force an offramp outcome at create time
+- [Submit KYC magic values](/features/magic-values/submit-kyc) - Drive a KYC application to a particular status
+- [Sandbox](/sandbox) - Environment setup and how sandbox differs from production
+- [Onramps](/transactions/onramps#failed-deposits-and-returns) - Full onramp status progression, including returns
+- [Onramp events](/webhooks/onramp-events) - Webhook events emitted during failures and returns
