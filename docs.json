@@ -654,6 +654,16 @@
                 "group": "Features",
                 "pages": [
                   {
+                    "group": "Magic Values",
+                    "tag": "NEW",
+                    "pages": [
+                      "features/magic-values/overview",
+                      "features/magic-values/offramp",
+                      "features/magic-values/onramp",
+                      "features/magic-values/submit-kyc"
+                    ]
+                  },
+                  {
                     "group": "Canton",
                     "tag": "NEW",
                     "pages": [
@@ -677,6 +687,7 @@
                 "pages": [
                   "compliance/industries",
                   "compliance/regions",
+                  "compliance/liveness-checks",
                   {
                     "group": "Documents",
                     "pages": [
@@ -742,6 +753,7 @@
                 "pages": [
                   "guides/quickstart",
                   "guides/submit-kyc",
+                  "guides/liveness-checks",
                   "guides/receive-money",
                   "guides/send-money",
                   "guides/send-eur-offramps",
@@ -928,7 +940,9 @@
                       "GET /v2/wallets/swaps",
                       "GET /v2/wallets/swaps/{swapId}",
                       "POST /v2/wallets/swaps",
-                      "POST /v2/wallets/swaps/{swapId}/accept"
+                      "POST /v2/wallets/swaps/{swapId}/accept",
+                      "POST /v2/wallets/swaps/{swapId}/cancel",
+                      "GET /v2/wallets/swaps/rate"
                     ]
                   },
                   {
@@ -978,6 +992,18 @@
     ]
   },
   "redirects": [
+    {
+      "source": "/testing/magic-values",
+      "destination": "/features/magic-values/overview"
+    },
+    {
+      "source": "/compliance/enhanced-verification",
+      "destination": "/compliance/liveness-checks"
+    },
+    {
+      "source": "/guides/enhanced-verification-ubos",
+      "destination": "/guides/liveness-checks"
+    },
     {
       "source": "/quickstart",
       "destination": "/guides/quickstart"

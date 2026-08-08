@@ -1,0 +1,50 @@
+---
+title: "Overview"
+---
+
+## What are Magic Values
+
+Magic values are special input values, recognized only in sandbox, that force a transfer or KYC application into a particular outcome. You pass one when you create the record, and HIFI drives it to the status you asked for instead of the status it would otherwise reach.
+
+They exist because the interesting paths in an integration are the ones that are hard to trigger on purpose:
+
+- A payout that fails after the crypto has already moved
+- A deposit that gets reversed after settlement
+- A KYC application that stalls awaiting more information
+
+Magic values let you reach those states on demand.
+
+Magic values change the **outcome** a record lands on, not the path it takes to get there. The same steps, statuses, and webhooks fire as in a real failure or reversal, so what you build against sandbox behaves the same way in production.
+
+## Why Use Magic Values
+
+- Test **failure and return handling** without waiting for a real failure
+- Verify your **webhook handlers** against every status your integration can receive
+- Exercise **terminal states** like `CRYPTO_RETURNED` and `FIAT_RETURNED` deterministically
+- Reproduce **KYC outcomes**, including rejections and stalled applications
+
+## Where They Apply
+
+| Area                                                | How you pass it                                                       | Outcomes                                                    |
+| --------------------------------------------------- | --------------------------------------------------------------------- | ----------------------------------------------------------- |
+| [Offramp](/features/magic-values/offramp)           | `sandboxScenario` on the create offramp request                       | Resolve to `CRYPTO_RETURNED` after 3 minutes                 |
+| [Onramp](/features/magic-values/onramp)             | `sandboxScenario` on the simulated deposit that creates the onramp    | Resolve to `FIAT_RETURNED` after 3 minutes                   |
+| [Submit KYC](/features/magic-values/submit-kyc)     | `lastName` or `businessName` on the submit KYC request                | Drive the application to a particular status                 |
+
+Transfer scenarios resolve on their own. You force a scenario, the transfer reaches the status you asked for, and 3 minutes later it moves to its true terminal status with no follow-up API call.
+
+<Warning>
+  Magic values are sandbox only. In production, `sandboxScenario` is rejected with a `400`, and the KYC name values carry no special meaning.
+</Warning>
+
+## Getting Help
+
+- 📧 **Email:** [support@hifi.com](mailto:support@hifi.com)
+- 💬 **Slack:** Message us in our shared Slack channel
+
+## Related Resources
+
+- [Offramp](/features/magic-values/offramp) - Force an offramp outcome at create time
+- [Onramp](/features/magic-values/onramp) - Force an onramp outcome from the deposit that creates it
+- [Submit KYC](/features/magic-values/submit-kyc) - Drive a KYC application to a particular status
+- [Sandbox](/sandbox) - Environment setup and how sandbox differs from production

@@ -199,7 +199,7 @@ The response contains the offramp quote information:
 
 ## Accepting Quotes
 
-After reviewing the quote, accept it to execute the conversion using the [Accept Quote](https://docs.hifi.com/api-reference/offramp/accept-quote) endpoint.
+After reviewing the quote, accept it to execute the conversion using the [Accept Quote](https://docs.hifi.com/api-reference/offramp/accept-an-offramp-quote) endpoint.
 
 **Request:**
 
@@ -254,16 +254,27 @@ Offramps progress through several phases:
 | **CRYPTO_PENDING**   | Blockchain transaction awaiting confirmation           |
 | **CRYPTO_PROCESSED** | Stablecoins successfully converted                     |
 | **CRYPTO_FAILED**    | Blockchain transaction failed                          |
-| **CRYPTO_RETURNED**  | Failed transaction refunded to user's wallet           |
+| **CRYPTO_RETURNED**  | Crypto returned on chain to the sender's wallet         |
 
 ### Fiat Processing Phase
 
-| Status             | Description                                 |
-| :----------------- | :------------------------------------------ |
-| **FIAT_INITIATED** | Fiat payout process started                 |
-| **FIAT_PENDING**   | Fiat transaction awaiting settlement        |
-| **FIAT_FAILED**    | Fiat transaction failed                     |
-| **COMPLETED**      | Fiat successfully delivered to bank account |
+| Status             | Description                                        |
+| :----------------- | :------------------------------------------------- |
+| **FIAT_INITIATED** | Fiat payout process started                        |
+| **FIAT_PENDING**   | Fiat transaction awaiting settlement               |
+| **FIAT_FAILED**    | Fiat transaction failed                            |
+| **FIAT_RETURNED**  | Fiat leg reversed, crypto return not yet delivered |
+| **COMPLETED**      | Fiat successfully delivered to bank account        |
+
+## Failed Payouts and Returns
+
+An offramp can fail on either leg, and what happens to the funds depends on which leg failed:
+
+- **`CRYPTO_FAILED`**: Transfer was rejected before the fiat leg started. When the offramp is funded from a HIFI wallet, nothing left the wallet. When it is funded from an external wallet, crypto is returned to the sender and offramp continues on to `CRYPTO_RETURNED`.
+- **`FIAT_FAILED`**: Fiat payout failed after the crypto had already left the source wallet. Crypto is returned to the sender, and the offramp progresses to `CRYPTO_RETURNED` once that on-chain delivery confirms. Depending on the rail, it may report an intermediate `FIAT_RETURNED` first.
+
+Returns are available on USD offramps and global network offramps. To test them in sandbox, see [Offramp magic values](/features/magic-values/offramp).
+
 
 ## Tracking Offramps
 

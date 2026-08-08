@@ -8,7 +8,7 @@ description: "Our sandbox environment provides a safe testing space to integrate
 
 ### Generate a sandbox API key
 
-1. **Request Access** - Visit [app.hifi.com/request-access](https://app.hifi.com/request-access) to schedule a call with our team and get onboarded.
+1. **Request Access** - Visit [hifi.com/contact](https://www.hifi.com/contact?utm_source=docs&utm_medium=referral&utm_campaign=request_access) to schedule a call with our team and get onboarded.
 2. **Navigate to API Keys** - Once approved, go to the Developer Dashboard
 3. **Create New Key** - Click the "New API Key" button under Sandbox
 
@@ -68,6 +68,19 @@ All money movement in sandbox is simulated:
 - **Testnet Token** - Transaction uses testnet tokens and is processed on a testnet network
 - **Testnet Wallets** - All wallet addresses are on blockchain testnets
 
+### Simulated Failures and Returns
+
+Failures and returns can be forced in sandbox, following the same statuses and webhooks as a real one:
+
+- **Forced outcomes** - Pass `sandboxScenario` when creating an offramp (`CRYPTO_FAILED`, `FIAT_FAILED`, or `COMPLETED`), or when simulating the deposit that creates an onramp (`FIAT_FAILED` or `COMPLETED`)
+- **Automatic returns** - Every forced outcome resolves to its true terminal status 3 minutes later: `CRYPTO_RETURNED` for offramps, `FIAT_RETURNED` for onramps. No follow-up call is needed
+
+See [Magic values](/features/magic-values/overview) for every value you can pass and the outcome each one forces, including KYC.
+
+<Warning>
+  `sandboxScenario` is rejected with a `400` in production, and the simulate-deposit endpoint does not exist there.
+</Warning>
+
 ---
 
 ## Transitioning to production
@@ -77,7 +90,7 @@ When you're ready to move from sandbox to production:
 1. **Generate production API keys** in the dashboard
 2. **Update your base URL** from `sandbox.hifibridge.com` to `production.hifibridge.com`
 3. **Update API keys** in your environment variables
-4. **Remove simulation calls** - Delete any simulate-deposit endpoint usage
+4. **Remove simulation calls** - Delete any simulate-deposit endpoint usage, and drop `sandboxScenario` from offramp and simulate-deposit requests
 5. **Enable real KYC** - Provide real user information and documents
 6. **Test thoroughly** - Start with small transactions before scaling
 

@@ -1,0 +1,50 @@
+---
+title: "Liveness Checks"
+description: "Enhanced verification for UBOs."
+---
+
+Business users incorporated in certain countries must have qualifying Ultimate Beneficial Owners (UBOs) complete a hosted identity and liveness check before USD virtual accounts can be enabled.
+
+## Countries
+
+The following countries require qualifying UBOs to complete biometric liveness verification before USD virtual accounts can be enabled.
+
+| Country | ISO Code | Capability |
+| :-- | :-- | :-- |
+| Bolivia | BO | USD Virtual Account |
+| India | IN | USD Virtual Account |
+| Nigeria | NG | USD Virtual Account |
+| Panama | PA | USD Virtual Account |
+| Philippines | PH | USD Virtual Account |
+| Saudi Arabia | SA | USD Virtual Account |
+| Vietnam | VN | USD Virtual Account |
+
+## Requirements
+
+<CardGroup cols={1}>
+  <Card title="10% UBO threshold" icon="users">
+    All UBOs with 10% ownership or above must complete full individual KYC
+    before the entity can be approved.
+  </Card>
+
+  <Card title="Hosted liveness check" icon="camera">
+    Qualifying UBOs must complete biometric liveness verification.
+  </Card>
+</CardGroup>
+
+## Integration Guide
+
+<Card title="Implement liveness checks" icon="code" href="/guides/liveness-checks">
+  Learn how to interpret the KYC Status response, identify UBOs who still need
+  to act, and send them to the hosted verification flow.
+</Card>
+
+## Related Pages
+
+- [Coverage](/coverage)
+- [USD Rail](/rails/usd)
+- [Regions](/compliance/regions)
+- [KYC Links](/features/kyc-links)
+- [KYC Requirements](/kyc/kyc-requirements)
+- [KYB Status](/kyc/kyb-status)
+- [Liveness Checks guide](/guides/liveness-checks)

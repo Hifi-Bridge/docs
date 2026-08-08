@@ -25,16 +25,21 @@ description: "You can expect to receive webhook events whenever an offramp trans
 | **OFFRAMP.STATUS.CRYPTO_PENDING**   | Blockchain transaction awaiting confirmation           |
 | **OFFRAMP.STATUS.CRYPTO_PROCESSED** | Stablecoins successfully converted                     |
 | **OFFRAMP.STATUS.CRYPTO_FAILED**    | Blockchain transaction failed                          |
-| **OFFRAMP.STATUS.CRYPTO_RETURNED**  | Failed transaction refunded to user's wallet           |
+| **OFFRAMP.STATUS.CRYPTO_RETURNED**  | Crypto returned on chain to the sender's wallet        |
 
 ### Fiat Processing Events
 
-| Status                            | Description                                 |
-| :-------------------------------- | :------------------------------------------ |
-| **OFFRAMP.STATUS.FIAT_INITIATED** | Fiat payout process started                 |
-| **OFFRAMP.STATUS.FIAT_PENDING**   | Fiat transaction awaiting settlement        |
-| **OFFRAMP.STATUS.FIAT_FAILED**    | Fiat transaction failed                     |
-| **OFFRAMP.STATUS.COMPLETED**      | Fiat successfully delivered to bank account |
+| Status                            | Description                                        |
+| :-------------------------------- | :------------------------------------------------- |
+| **OFFRAMP.STATUS.FIAT_INITIATED** | Fiat payout process started                        |
+| **OFFRAMP.STATUS.FIAT_PENDING**   | Fiat transaction awaiting settlement               |
+| **OFFRAMP.STATUS.FIAT_FAILED**    | Fiat transaction failed                            |
+| **OFFRAMP.STATUS.FIAT_RETURNED**  | Fiat leg reversed, crypto return not yet delivered |
+| **OFFRAMP.STATUS.COMPLETED**      | Fiat successfully delivered to bank account        |
+
+<Note>
+  A failed offramp is typically followed by return events as the crypto is sent back to the sender. See [Failed Payouts and Returns](/transactions/offramps#failed-payouts-and-returns) for how the statuses progress.
+</Note>
 
 ### RFI Events
 
