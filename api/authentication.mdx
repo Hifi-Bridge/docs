@@ -3,22 +3,14 @@ title: "Authentication"
 description: "All requests to the HIFI API must be authenticated using API keys. This guide covers how to create, secure, and manage your keys."
 ---
 
-## Prerequisites
-
-To get your API keys, you'll need access to the HIFI Dashboard. **Don't have access?** Schedule a call with our team.
-
-<Card title="Request access" href="https://app.hifi.com/request-access">
-  Describe your use case and schedule an intro call
-</Card>
-
 ## API Environments
 
 HIFI provides two environments for development and production:
 
 | Environment | Base URL | Purpose |
 | :-- | :-- | :-- |
-| **Sandbox** | `https://sandbox.hifibridge.com` | Testing and development with simulated transactions |
-| **Production** | `https://production.hifibridge.com` | Live transactions with real money movement |
+| **Sandbox** | `https://sandbox.hifi.com` | Testing and development with simulated transactions |
+| **Production** | `https://production.hifi.com` | Live transactions with real money movement |
 
 ## Creating API Keys
 
@@ -40,14 +32,13 @@ Choose which environment you're creating keys for:
 
 ### Generate a New API Key
 
-1. Click the **"Create API Key"** or **"New API Key"** button
-2. Provide a descriptive name that identifies the key's purpose\
-   Examples:
+1. Click the **"New API Key"** button
+2. Provide a descriptive name that identifies the key's purpose<br />Examples:
    - "Production Web App"
    - "Staging Server"
    - "Mobile App Development"
    - "Webhook Service"
-3. Click **"Generate"** to create the key
+3. Click **"Create"** to create the key
 
 ### Copy and Secure Your API Key
 
@@ -61,14 +52,6 @@ Choose which environment you're creating keys for:
 2. ✅ **Store it securely** in your environment variables or secrets manager
 3. ✅ **Never commit keys** to version control (Git, SVN, etc.)
 4. ✅ **Never expose keys** in client-side code or public repositories
-
-**Example of secure storage:**
-
-```bash
-# .env file (add to .gitignore)
-HIFI_API_KEY=zpka_1234567890abcdef
-HIFI_ENVIRONMENT=sandbox
-```
 
 ## Managing API Keys
 
@@ -85,73 +68,14 @@ If a key is compromised or no longer needed:
   Deleted keys stop working immediately. Ensure you've updated your application with a new key before deleting the old one.
 </Warning>
 
-## API Key Security Requirements
+## Use Your API Key
 
-All customers and integrators are required to handle HIFI API keys in accordance with the following security practices.
-
-### Transmission
-
-- **Only transmit API keys over encrypted channels (HTTPS/TLS).** Never send a key via email, chat, SMS, or any unencrypted medium.
-- When making API requests, always use the `Authorization: Bearer YOUR_API_KEY` header over HTTPS — never include keys in URLs or unencrypted request bodies.
-
-### Storage
-
-- Store API keys in environment variables or a dedicated secrets manager (e.g., AWS Secrets Manager, HashiCorp Vault, GCP Secret Manager).
-- **Never hardcode keys** in application source code or configuration files committed to version control.
-- **Never expose keys** in client-side code, browser bundles, or public repositories.
-- Restrict access to keys using least-privilege principles — only the systems and personnel that require the key should have access to it.
-
-### Rotation
-
-- Rotate API keys **at least once every 12 months** as part of routine key hygiene.
-- Rotate immediately if a key is suspected to be compromised, accidentally exposed, or if a team member with access departs.
-- **Rotation procedure:**
-  1. Generate a new API key in the HIFI Dashboard under **Developer** → **API Keys**
-  2. Update your application or secrets manager with the new key
-  3. Verify the new key is working correctly
-  4. Delete the old key from the dashboard
-
-<Info>
-  If you believe your key has been compromised, delete it immediately and generate a replacement. Contact [support@hifi.com](mailto:support@hifi.com) if you need assistance.
-</Info>
-
-## Testing Your API Key
-
-Verify your API key is working correctly with the ping endpoint:
+All API requests to HIFI should include the API key in the `Authorization` header, prefixed with `Bearer`
 
 ```bash
-curl -X GET "https://sandbox.hifibridge.com/ping" \
+curl -X GET "https://sandbox.hifi.com/ping" \
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
-
-**Successful response:**
-
-```json
-{
-  "message": "pong"
-}
-```
-
-**Authentication error:**
-
-```json
-{
-  "error": "Not authorized"
-}
-```
-
----
-
-## Next Steps
-
-Now that you have your API keys set up:
-
-- [**Quickstart Guide**](/docs/quickstart) - Build your first integration
-- [**API Reference**](https://docs.hifi.com/api-reference) - Explore available endpoints
-- [**Webhooks**](/docs/webhooks) - Set up real-time event notifications
-- [**Error Handling**](https://docs.hifi.com/docs/api/errors) - Learn how to handle API errors gracefully
-
----
 
 ## Getting Help
 
