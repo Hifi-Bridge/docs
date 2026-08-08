@@ -302,6 +302,17 @@
                     "pages": [
                       "GET /ping"
                     ]
+                  },
+                  {
+                    "group": "Users",
+                    "pages": [
+                      "POST /v3/users",
+                      "GET /v3/users/{userId}",
+                      "GET /v3/users",
+                      "POST /v3/tos-link",
+                      "GET /v3/tos-link/{signedAgreementId}",
+                      "POST /v3/tos-link/{signedAgreementId}/accept"
+                    ]
                   }
                 ]
               }
