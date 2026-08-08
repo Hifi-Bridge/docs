@@ -266,7 +266,29 @@
                   "v3/docs/references/availability",
                   "v3/docs/references/coverage",
                   "v3/docs/references/onchain-assets",
-                  "v3/docs/references/account-information"
+                  "v3/docs/references/account-information",
+                  {
+                    "group": "Business Industries",
+                    "pages": [
+                      "untitled-page",
+                      "references/business-industries/mining-energy",
+                      "references/business-industries/construction",
+                      "references/business-industries/manufacturing",
+                      "references/business-industries/wholesale-retail-trade",
+                      "references/business-industries/transportation-logistics",
+                      "references/business-industries/information-media",
+                      "references/business-industries/finance-insurance",
+                      "references/business-industries/professional-technical-services",
+                      "references/business-industries/administrative-support-services",
+                      "references/business-industries/real-estate-leasing",
+                      "references/business-industries/education",
+                      "references/business-industries/health-social-services",
+                      "references/business-industries/arts-recreation-entertainment",
+                      "references/business-industries/hospitality-food",
+                      "references/business-industries/public-administration",
+                      "references/business-industries/other-services"
+                    ]
+                  }
                 ]
               }
             ]
