@@ -432,6 +432,109 @@
                       "POST /v3/users/{userId}/virtual-accounts/{virtualAccountId}/settlement-rules/{settlementRuleId}",
                       "DELETE /v3/users/{userId}/virtual-accounts/{virtualAccountId}/settlement-rules"
                     ]
+                  },
+                  {
+                    "group": "Orchestration Addresses",
+                    "pages": [
+                      "POST /v3/users/{userId}/orchestration-addresses",
+                      "GET /v3/users/{userId}/orchestration-addresses",
+                      "GET /v3/users/{userId}/orchestration-addresses/{orchestrationAddressId}",
+                      "PATCH /v3/users/{userId}/orchestration-addresses/{orchestrationAddressId}",
+                      "DELETE /v3/users/{userId}/orchestration-addresses/{orchestrationAddressId}",
+                      "GET /v3/users/{userId}/orchestration-addresses/{orchestrationAddressId}/deposits",
+                      "GET /v3/users/{userId}/orchestration-addresses/{orchestrationAddressId}/deposits/{orchestrationDepositId}",
+                      "GET /v3/users/{userId}/orchestration-addresses/{orchestrationAddressId}/batches",
+                      "GET /v3/users/{userId}/orchestration-addresses/{orchestrationAddressId}/batches/{orchestrationBatchId}",
+                      "POST /v3/users/{userId}/orchestration-addresses/{orchestrationAddressId}/orchestrate"
+                    ]
+                  },
+                  {
+                    "group": "Onramps",
+                    "pages": [
+                      "GET /v3/onramps/rates",
+                      "POST /v3/onramps",
+                      "POST /v3/onramps/{onrampId}/quote/accept",
+                      "GET /v3/onramps/{onrampId}",
+                      "GET /v3/onramps",
+                      "POST /v3/onramps/{onrampId}/cancel",
+                      "POST /v3/onramps/{onrampId}/simulate-deposits"
+                    ]
+                  },
+                  {
+                    "group": "Offramps",
+                    "pages": [
+                      "GET /v3/offramps/rates",
+                      "POST /v3/offramps",
+                      "POST /v3/offramps/{offrampId}/quote/accept",
+                      "GET /v3/offramps/{offrampId}",
+                      "GET /v3/offramps",
+                      "POST /v3/offramps/{offrampId}/cancel"
+                    ]
+                  },
+                  {
+                    "group": "Crypto Transfers",
+                    "pages": [
+                      "POST /v3/crypto-transfers",
+                      "GET /v3/crypto-transfers/{cryptoTransferId}",
+                      "GET /v3/crypto-transfers",
+                      "POST /v3/batch-transfers",
+                      "GET /v3/batch-transfers/{batchCryptoTransferId}",
+                      "GET /v3/batch-transfers"
+                    ]
+                  },
+                  {
+                    "group": "Swaps",
+                    "pages": [
+                      "POST /v3/swaps",
+                      "POST /v3/swaps/{swapId}/quote/accept",
+                      "GET /v3/swaps/{swapId}",
+                      "GET /v3/swaps"
+                    ]
+                  },
+                  {
+                    "group": "Bridges",
+                    "pages": [
+                      "POST /v3/bridges",
+                      "GET /v3/bridges/{bridgeId}",
+                      "POST /v3/bridges/{bridgeId}/quote/accept",
+                      "GET /v3/bridges"
+                    ]
+                  },
+                  {
+                    "group": "Transfer Approvals",
+                    "pages": [
+                      "POST /v3/transfer-approvals/{transferApprovalId}/approve",
+                      "POST /v3/transfer-approvals/{transferApprovalId}/reject",
+                      "GET /v3/transfer-approvals",
+                      "GET /v3/transfer-approvals/{transferApprovalId}"
+                    ]
+                  },
+                  {
+                    "group": "Corridors",
+                    "pages": [
+                      "GET /v3/corridors/{corridorId}",
+                      "GET /v3/corridors",
+                      "GET /v3/users/{userId}/corridors/eligibility"
+                    ]
+                  },
+                  {
+                    "group": "Migration",
+                    "pages": [
+                      "GET /v3/id-mappings"
+                    ]
+                  },
+                  {
+                    "group": "Webhook Endpoints",
+                    "pages": [
+                      "GET /v3/webhook-endpoints/event-types",
+                      "POST /v3/webhook-endpoints",
+                      "PATCH /v3/webhook-endpoints/{webhookEndpointId}",
+                      "GET /v3/webhook-endpoints/{webhookEndpointId}",
+                      "GET /v3/webhook-endpoints",
+                      "DELETE /v3/webhook-endpoints/{webhookEndpointId}",
+                      "GET /v3/webhook-endpoints/{webhookEndpointId}/history",
+                      "POST /v3/webhook-endpoints/{webhookEndpointId}/events/{webhookEventId}/resend"
+                    ]
                   }
                 ]
               }
