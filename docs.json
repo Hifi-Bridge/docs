@@ -313,6 +313,32 @@
                       "GET /v3/tos-link/{signedAgreementId}",
                       "POST /v3/tos-link/{signedAgreementId}/accept"
                     ]
+                  },
+                  {
+                    "group": "Compliance",
+                    "pages": [
+                      "GET /v3/users/{userId}/compliance/profile",
+                      "PATCH /v3/users/{userId}/compliance/profile",
+                      "GET /v3/users/{userId}/compliance/questionnaire",
+                      "PATCH /v3/users/{userId}/compliance/questionnaire",
+                      "POST /v3/users/{userId}/compliance/associated-parties",
+                      "PATCH /v3/users/{userId}/compliance/associated-parties/{associatedPartyId}",
+                      "DELETE /v3/users/{userId}/compliance/associated-parties/{associatedPartyId}",
+                      "GET /v3/users/{userId}/compliance/associated-parties/{associatedPartyId}",
+                      "GET /v3/users/{userId}/compliance/associated-parties",
+                      "POST /v3/users/{userId}/compliance/documents",
+                      "PATCH /v3/users/{userId}/compliance/documents/{documentId}",
+                      "DELETE /v3/users/{userId}/compliance/documents/{documentId}",
+                      "GET /v3/users/{userId}/compliance/documents/{documentId}",
+                      "GET /v3/users/{userId}/compliance/documents",
+                      "POST /v3/users/{userId}/compliance/associated-parties/{associatedPartyId}/documents",
+                      "PATCH /v3/users/{userId}/compliance/associated-parties/{associatedPartyId}/documents/{documentId}",
+                      "DELETE /v3/users/{userId}/compliance/associated-parties/{associatedPartyId}/documents/{documentId}",
+                      "GET /v3/users/{userId}/compliance/associated-parties/{associatedPartyId}/documents/{documentId}",
+                      "GET /v3/users/{userId}/compliance/associated-parties/{associatedPartyId}/documents",
+                      "POST /v3/users/{userId}/compliance/submit",
+                      "GET /v3/users/{userId}/compliance/status"
+                    ]
                   }
                 ]
               }
