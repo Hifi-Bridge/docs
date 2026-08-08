@@ -75,21 +75,25 @@ curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/accounts" \
 </ResponseField>
 
 <ResponseField name="accountHolder" type="object" required>
-  Account holder information. Must match user's KYC data for compliance.
+  Account holder information.
 
   <Expandable title="properties">
     <ResponseField name="type" type="string" required>
       Account holder type: `individual` or `business`
     </ResponseField>
+
     <ResponseField name="name" type="string" required>
       Account holder's full name
     </ResponseField>
+
     <ResponseField name="phone" type="string" required>
       Contact phone number
     </ResponseField>
+
     <ResponseField name="email" type="string" required>
       Contact email address
     </ResponseField>
+
     <ResponseField name="address" type="object" required>
       Account holder's address
     </ResponseField>
@@ -103,18 +107,23 @@ curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/accounts" \
     <ResponseField name="transferType" type="string" required>
       Payment method: `wire`, `ach`, or `rtp`
     </ResponseField>
+
     <ResponseField name="accountType" type="string" required>
       Bank account type: `checking` or `savings`
     </ResponseField>
+
     <ResponseField name="accountNumber" type="string" required>
       Bank account number
     </ResponseField>
+
     <ResponseField name="routingNumber" type="string" required>
       Bank routing number
     </ResponseField>
+
     <ResponseField name="bankName" type="string" required>
       Name of the bank
     </ResponseField>
+
     <ResponseField name="currency" type="string" required>
       Currency code: `usd`
     </ResponseField>
@@ -189,6 +198,7 @@ Global Network accounts support multiple countries including China, Hong Kong, B
     - `nationality` - Must be `CHN`
     - `swiftCode` - Bank's SWIFT code
   </Accordion>
+
   <Accordion title="Hong Kong (HKD)">
     ```bash
     curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/accounts" \
@@ -227,6 +237,7 @@ Global Network accounts support multiple countries including China, Hong Kong, B
     - `nationality` - Must be `HKG`
     - `swiftCode` - Bank's SWIFT code
   </Accordion>
+
   <Accordion title="Brazil (BRL) - PIX">
     ```bash
     curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/accounts" \
@@ -263,6 +274,7 @@ Global Network accounts support multiple countries including China, Hong Kong, B
     - `nationality` - Must be `BRA`
     - `pix` - PIX key (email, phone, or CPF)
   </Accordion>
+
   <Accordion title="Mexico (MXN) - SPEI">
     ```bash
     curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/accounts" \
@@ -299,6 +311,7 @@ Global Network accounts support multiple countries including China, Hong Kong, B
     - `nationality` - Must be `MEX`
     - `speiClabe` - 18-digit CLABE number for SPEI transfers
   </Accordion>
+
   <Accordion title="Nigeria (NGN)">
     ```bash
     curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/accounts" \
@@ -426,18 +439,17 @@ curl -X POST "https://sandbox.hifibridge.com/v2/offramps" \
 The `accountId` from the account creation response tells HIFI which bank account should receive the fiat funds.
 
 <Info>
-  **Complete Offramp Flow:** See the [Offramps
-  documentation](/docs/transactions/offramps) for the full process including quote acceptance, status tracking, and settlement timing.
+  **Complete Offramp Flow:** See the [Offramps documentation](/docs/transactions/offramps) for the full process including quote acceptance, status tracking, and settlement timing.
 </Info>
 
 ## Account Validation
 
 After creating an offramp account, HIFI validates the account details:
 
-| Status       | Description                                                   |
-| :----------- | :------------------------------------------------------------ |
-| **ACTIVE**   | Account validated and ready to receive funds                  |
-| **PENDING**  | Account being validated (typically resolves within minutes)   |
+| Status | Description |
+| :-- | :-- |
+| **ACTIVE** | Account validated and ready to receive funds |
+| **PENDING** | Account being validated (typically resolves within minutes) |
 | **REJECTED** | Validation failed - check `invalidFields` for specific issues |
 
 ## Key Concepts
@@ -453,17 +465,19 @@ After creating an offramp account, HIFI validates the account details:
     - One MXN account for SPEI transfers
     - Multiple accounts in the same currency for different banks
   </Accordion>
+
   {" "}
 
   <Accordion title="Account Types vs Transfer Types">
     Don't confuse these two concepts: - **Account Type** (`type` field): The region or country (e.g., `us`, `brazil`, `mexico`) - **Transfer Type** (within account-specific fields): The payment method (e.g., `wire`, `ach`, `pix`, `spei`) Not all transfer types are available in all regions. Check the API reference for supported combinations.
   </Accordion>
+
   {" "}
 
   <Accordion title="First Party vs Third Party Payments">
-    Offramp accounts support two payment scenarios: **First Party Payments:** Funds sent to the account holder (the user who completed KYC). This is the standard case where users receive money in their own bank account. **Third
-    Party Payments:** Funds sent to someone other than the account holder. This enables use cases like: - Sending money to family members - Paying business partners or vendors - Disbursing funds to beneficiaries Both are supported, but third party payments may require additional compliance verification.
+    Offramp accounts support two payment scenarios: **First Party Payments:** Funds sent to the account holder (the user who completed KYC). This is the standard case where users receive money in their own bank account. **Third Party Payments:** Funds sent to someone other than the account holder. This enables use cases like: - Sending money to family members - Paying business partners or vendors - Disbursing funds to beneficiaries Both are supported, but third party payments may require additional compliance verification.
   </Accordion>
+
   <Accordion title="Regional Payment Methods">
     Different regions support different payment methods:
 
@@ -588,7 +602,6 @@ After creating an offramp account, HIFI validates the account details:
       }'
     ```
 
-    
     ```bash BRL
     curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/accounts" \
       -H "Authorization: Bearer YOUR_API_KEY" \
@@ -617,7 +630,6 @@ After creating an offramp account, HIFI validates the account details:
       }'
     ```
 
-    
     ```bash MXN
     curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/accounts" \
       -H "Authorization: Bearer YOUR_API_KEY" \
@@ -646,7 +658,6 @@ After creating an offramp account, HIFI validates the account details:
       }'
     ```
 
-    
     ```bash NGN
     curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/accounts" \
       -H "Authorization: Bearer YOUR_API_KEY" \
@@ -676,7 +687,6 @@ After creating an offramp account, HIFI validates the account details:
       }'
     ```
 
-    
     ```bash HKD
     curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/accounts" \
       -H "Authorization: Bearer YOUR_API_KEY" \
@@ -707,7 +717,6 @@ After creating an offramp account, HIFI validates the account details:
       }'
     ```
 
-    
     ```bash CNY
     curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/accounts" \
       -H "Authorization: Bearer YOUR_API_KEY" \
