@@ -1,0 +1,187 @@
+---
+title: "External Account"
+description: "Register and manage bank accounts for a counterparty, used as offramp destinations or onramp funding sources."
+---
+
+An External Account is a bank account belonging to a [Counter Party](/v3/core/counter-party/counter-party). Once registered, it can act as:
+
+- The **destination** for an [Offramp](/v3/core/offramp/overview) - stablecoins converted and paid out to this account.
+- The **source** for an ACH-pull [Onramp](/v3/core/onramp/overview) - HIFI debits this account to fund the onramp, instead of the user sending fiat in directly.
+
+HIFI supports many payment rails (ACH, WIRE, RTP, SEPA, PIX, SWIFT, and others), each requiring a different set of fields. The rail is selected by the combination of `bankAddress.country`, `currency`, and `transferType` - not every combination is supported, so an unsupported combination is rejected with a validation error.
+
+For more details checkout [Coverage](/v3/docs/references/coverage) and [Account Information](/v3/docs/references/account-information).
+
+## Counterparty requirements
+
+The counterparty must be `ACTIVE`, and have the following [accepted fields](/v3/core/counter-party/counter-party#accepted-fields) set in addition to its own minimum, before you can add an external account for them:
+
+| Counterparty type | Additional required fields |
+| --- | --- |
+| Individual | `address` |
+| Business | `address` |
+
+<Note>
+  For some corridors we may require additional information for the counterparty - for example, MXN and BRL, which require the counterparty's `taxId`. See [Account Information](/v3/docs/references/account-information) for more details.
+</Note>
+
+If a required field is missing, HIFI rejects the request with `ACTION_NOT_ALLOWED` (422) - update the counterparty with the missing field and retry.
+
+## Add an external account
+
+Registers a bank account for a counterparty. Requires an `Idempotency-Key` header. The example below is a US ACH account; other rails require different fields (e.g. `iban` \+ `swiftCode` for SEPA, `pixKey` for PIX).
+
+**Request**
+
+```shell
+curl -X POST https://sandbox.hifi.com/v3/users/usr_x1y2z3/counter-parties/cpty_a1b2c3/external-accounts \
+  -H "Idempotency-Key: <unique-key>" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -d '{
+    "transferType": "WIRE",
+    "currency": "USD",
+    "accountNumber": "000123456789",
+    "routingNumber": "021000021",
+    "accountType": "CHECKING",
+    "bankName": "Chase"
+  }'
+```
+
+**Response**
+
+```json
+{
+    "id": "extacct_UFvAKwZc530MxRZXnk1vF",
+    "userId": "usr_x1y2z3",
+    "counterPartyId": "cpty_a1b2c3",
+    "accountNumber": "****6789",
+    "routingNumber": "021000021",
+    "accountType": "CHECKING",
+    "iban": null,
+    "swiftCode": null,
+    "sortCode": null,
+    "pixKey": null,
+    "phoneNumber": null,
+    "bankName": "Chase",
+    "bankAddress": null,
+    "currency": "USD",
+    "transferType": "WIRE",
+    "fpsId": null,
+    "clabe": null,
+    "status": "ACTIVE",
+    "createdAt": "2026-07-25T19:34:48.798Z",
+    "updatedAt": "2026-07-25T19:34:48.798Z"
+}
+```
+
+<Info>
+  Sensitive fields (`accountNumber`, `iban`, `pixKey`, etc.) are returned masked to the last 4 characters on every read after creation.
+</Info>
+
+## Deactivate an external account
+
+Revokes a previously-added bank account. A deactivated account can no longer be used as an offramp destination or onramp source, but its record and history are preserved.
+
+**Request**
+
+```shell
+curl -X DELETE https://sandbox.hifi.com/v3/users/usr_x1y2z3/counter-parties/cpty_a1b2c3/external-accounts/extacct_QW1e2r3t4y \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+**Response**
+
+```json
+{
+    "id": "extacct_UFvAKwZc530MxRZXnk1vF",
+    "userId": "usr_x1y2z3",
+    "counterPartyId": "cpty_a1b2c3",
+    "accountNumber": "****6789",
+    "routingNumber": "021000021",
+    "accountType": "CHECKING",
+    "iban": null,
+    "swiftCode": null,
+    "sortCode": null,
+    "pixKey": null,
+    "phoneNumber": null,
+    "bankName": "Chase",
+    "bankAddress": null,
+    "currency": "USD",
+    "transferType": "WIRE",
+    "fpsId": null,
+    "clabe": null,
+    "status": "INACTIVE",
+    "createdAt": "2026-07-25T19:34:48.798Z",
+    "updatedAt": "2026-07-25T19:34:48.798Z"
+}
+```
+
+## Retrieve a counterparty's external accounts
+
+List a counterparty's registered bank accounts, optionally filtered by `status`, `transferType`, or `currency`.
+
+**Request**
+
+```shell
+curl https://sandbox.hifi.com/v3/users/usr_x1y2z3/counter-parties/cpty_a1b2c3/external-accounts?limit=10&transferType=WIRE&currency=USD \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+**Response**
+
+```json
+{
+    "data": [
+        {
+            "id": "extacct_UFvAKwZc530MxRZXnk1vF",
+            "userId": "usr_x1y2z3",
+            "counterPartyId": "cpty_a1b2c3",
+            "accountNumber": "****6789",
+            "routingNumber": "021000021",
+            "accountType": "CHECKING",
+            "iban": null,
+            "swiftCode": null,
+            "sortCode": null,
+            "pixKey": null,
+            "phoneNumber": null,
+            "bankName": "Chase",
+            "bankAddress": null,
+            "currency": "USD",
+            "transferType": "WIRE",
+            "fpsId": null,
+            "clabe": null,
+            "status": "INACTIVE",
+            "createdAt": "2026-07-25T19:34:48.798Z",
+            "updatedAt": "2026-07-25T19:34:48.798Z"
+        }
+    ],
+    "pagination": {
+        "hasMore": false,
+        "startCursor": "extacct_UFvAKwZc530MxRZXnk1vF",
+        "endCursor": "extacct_UFvAKwZc530MxRZXnk1vF"
+    }
+}
+```
+
+## Using an external account as an onramp source
+
+Instead of a user sending fiat in directly, an onramp can be funded by pulling from a counterparty's external account - pass `source.externalAccountId` instead of `source.userId` when creating the onramp. See [Onramp](/v3/core/onramp/overview) for the full request shape.
+
+<Info>
+  ACH-pull funding only works with `transferType: "ACH"` accounts, and the onramp's `source.currency` must match the external account's `currency`. 
+</Info>
+
+<Info>
+  ACH-pull is only available to a restricted set of customers - contact HIFI support for more information.
+</Info>
+
+## Getting Help
+
+- 📧 **Email:** [support@hifi.com](mailto:support@hifi.com)
+- 💬 **Slack:** Message us in our shared Slack channel
+
+## Related Resources
+
+- [Counterparty Overview](/v3/core/counter-party/overview) - Counterparty resources
+- [Counter Party](/v3/core/counter-party/counter-party) - Create and manage recipients/payers
+- [External Card](/v3/core/counter-party/external-card) - Cards for a counterparty

@@ -1,0 +1,136 @@
+---
+title: "Deposit Offers"
+description: "Accept or reject incoming Canton transfers, which settle as two-step, consent-based offers instead of direct deposits."
+---
+
+## What Is a Deposit Offer?
+
+On Canton, asset transfers are modeled as **offers** rather than immediate, unilateral transactions like those found on most public blockchains.
+
+A deposit offer represents a **two-step, consent-based transfer**:
+
+1. The sender creates a transfer specifying the recipient and amount either from an external wallet or HIFI Wallet
+2. The recipient's HIFI Wallet receives it as an offer, which must be explicitly **accepted or rejected** before the asset moves.
+
+This differs from HIFI Wallets on other chains, where an incoming transfer just shows up as a [deposit](/v3/core/wallets/balances-deposits) with nothing to action.
+
+## Deposit Offer Lifecycle
+
+<Steps>
+  <Step title="Sender initiates a transfer">
+    The sender sends to a Canton wallet using the existing on-chain transfer functionality. The asset is locked and cannot be used while the offer is pending.
+  </Step>
+  <Step title="Offer is received by the destination wallet">
+    The offer becomes visible on the recipient's HIFI Wallet, in status `RECEIVED`.
+  </Step>
+  <Step title="Accept or reject the offer">
+    The recipient explicitly accepts or rejects the offer. Accepting executes the transfer and credits the wallet; rejecting declines it and releases the locked asset back to the sender.
+  </Step>
+</Steps>
+
+## List a wallet's offers
+
+Get every offer received by a Canton wallet, or a specific one by ID.
+
+**Request**
+
+```shell
+curl https://sandbox.hifi.com/v3/users/usr_x1y2z3/wallets/wlt_a1b2c3/offers \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+**Response**
+
+```json
+{
+    "data": [
+        {
+            "id": "ofr_3b6f7b9a1f3a",
+            "status": "RECEIVED",
+            "amount": "100.00",
+            "currency": "usdcx",
+            "source": {
+                "party": "HIFI-validator-1::1220c44096409d3244021ae82992ccae3a1208fa79cacf450760b6f2cd9dfee2daa6"
+            },
+            "destination": {
+                "userId": "usr_x1y2z3",
+                "walletId": "wlt_a1b2c3",
+                "party": "HIFI-validator-1::1220e636b510224be2c15b4436c0eb72558fdd6a93268b3605fad7f27f58192910e6"
+            },
+            "creationTransactionHash": "122095966f1d10cbf4de93e55fd0ecca745b7aba0ae48647c9ae298dbc6f57de9ef8",
+            "executionTransactionHash": null,
+            "createdAt": "2026-07-24T18:21:00.000Z",
+            "updatedAt": "2026-07-24T18:21:00.000Z",
+            "expiresAt": "2026-07-25T18:21:00.000Z"
+        }
+    ],
+    "pagination": { "hasMore": false, "startCursor": "ofr_3b6f7b9a1f3a", "endCursor": "ofr_3b6f7b9a1f3a" }
+}
+```
+
+<Info>
+  Listen for `OFFER.STATUS.RECEIVED` to know when a new incoming offer needs action
+</Info>
+
+## Accept or reject an offer
+
+Once an offer is `RECEIVED`, the recipient decides whether to accept it (crediting the wallet) or reject it (declining it, with the locked asset released back to the sender). 
+
+**Request**
+
+```shell
+curl -X POST https://sandbox.hifi.com/v3/users/usr_x1y2z3/wallets/wlt_a1b2c3/offers/ofr_3b6f7b9a1f3a/accept \
+  -H "Idempotency-Key: <unique-key>" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+**Response**
+
+```json
+{
+    "id": "ofr_3b6f7b9a1f3a",
+    "status": "PENDING",
+    "amount": "100.00",
+    "currency": "usdcx",
+    "source": { "party": "HIFI-validator-1::1220c44096409d3244021ae82992ccae3a1208fa79cacf450760b6f2cd9dfee2daa6" },
+    "destination": {
+        "userId": "usr_x1y2z3",
+        "walletId": "wlt_a1b2c3",
+        "party": "HIFI-validator-1::1220e636b510224be2c15b4436c0eb72558fdd6a93268b3605fad7f27f58192910e6"
+    },
+    "creationTransactionHash": "122095966f1d10cbf4de93e55fd0ecca745b7aba0ae48647c9ae298dbc6f57de9ef8",
+    "executionTransactionHash": null,
+    "createdAt": "2026-07-24T18:21:00.000Z",
+    "updatedAt": "2026-07-24T18:22:00.000Z",
+    "expiresAt": "2026-07-25T18:21:00.000Z"
+}
+```
+
+`/reject` works the same way — swap the path segment.
+
+<Info>
+  Accept and reject are onchain actions that also need to be posted onchain, and are submitted asynchronously.
+</Info>
+
+## Offer Statuses
+
+| Status | Description |
+| --- | --- |
+| `RECEIVED` | The offer has been received by the destination wallet and is ready to be accepted or rejected. |
+| `PENDING` | The accept/reject request has been submitted and is being processed on-chain. |
+| `ACCEPTED` | The recipient accepted the offer. The transfer executed and the asset moved. |
+| `REJECTED` | The recipient rejected the offer. No transfer occurred; the locked asset was released back to the sender. |
+| `WITHDRAWN` | The sender withdrew the offer before it was accepted or rejected. |
+| `EXPIRED` | The offer passed its `expiresAt` time and can no longer be accepted or rejected. |
+
+## Getting Help
+
+- 📧 **Email:** [support@hifi.com](mailto:support@hifi.com)
+- 💬 **Slack:** Message us in our shared Slack channel
+
+## Related Resources
+
+- [Wallets Overview](/v3/core/wallets/overview) - Wallets resources
+- [HIFI Wallet](/v3/core/wallets/hifi-wallet) — Provision wallets and read balances
+- [External Wallet](/v3/core/wallets/external-wallet) — Manage externally owned wallets
+- [Onchain Asset Support](/v3/docs/references/onchain-assets)

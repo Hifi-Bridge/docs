@@ -1,0 +1,225 @@
+---
+title: "Counter Party"
+description: "Create and manage the individual or business counterparties a user transacts with."
+---
+
+A Counter Party is the individual or business on the other side of a transaction from a user, a recipient a user pays out to, or a payer a user is funded by. It holds the identity information (name, address, tax ID) shared across all of that counterparty's accounts: an [External Account](/v3/core/counter-party/external-account), [External Card](/v3/core/counter-party/external-card), or [External Wallet](/v3/core/wallets/external-wallet).
+
+<Info>
+  `type` is set once at creation and can't be changed. Individuals use `firstName`/`lastName`; businesses use `businessName`.
+</Info>
+
+## Accepted fields
+
+Every field below can be set at creation or added later with an [update](#update-a-counter-party). Only the fields marked **Required** are needed to create the counterparty - the rest are optional at creation, **though some are required before you can add specific account types (see each account's own page)**.
+
+### Individual
+
+| Field | Type | Required |
+| --- | --- | :-: |
+| `firstName` | string | Yes |
+| `lastName` | string | Yes |
+| `phoneNumber` | string | No\* |
+| `email` | string | No\* |
+| `address` | object - `addressLine1`, `addressLine2` (optional), `city`, `stateProvinceRegion`, `postalCode`, `country` (ISO 3166-1 alpha-3) | No\* |
+| `dateOfBirth` | date (`YYYY-MM-DD`) | No\* |
+| `nationality` | ISO 3166-1 alpha-3 | No\* |
+| `taxId` | string | No\* |
+| `taxIdType` | `SSN`, `ITIN`, `OTHER` | No\* |
+| `taxIdCountry` | ISO 3166-1 alpha-3 | No\* |
+
+### Business
+
+| Field | Type | Required |
+| --- | --- | :-: |
+| `businessName` | string | Yes |
+| `phoneNumber` | string | No\* |
+| `email` | string | No\* |
+| `address` | object - `addressLine1`, `addressLine2` (optional), `city`, `stateProvinceRegion`, `postalCode`, `country` (ISO 3166-1 alpha-3) | No\* |
+| `incorporationDate` | date (`YYYY-MM-DD`) | No\* |
+| `incorporationCountry` | ISO 3166-1 alpha-3 | No\* |
+| `registrationNumber` | string | No\* |
+| `taxId` | string | No\* |
+| `taxIdType` | `EIN`, `VAT`, `OTHER` | No\* |
+| `taxIdCountry` | ISO 3166-1 alpha-3 | No\* |
+
+## Create a counter party
+
+Registers a new counterparty for a user. Only minimal identity fields are required to create one - enough to reference the counterparty later when adding an account.
+
+**Request**
+
+```shell
+curl -X POST https://sandbox.hifi.com/v3/users/usr_x1y2z3/counter-parties \
+  -H "Idempotency-Key: <unique-key>" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -d '{
+    "type": "INDIVIDUAL",
+    "firstName": "Jane",
+    "lastName": "Doe"
+  }'
+```
+
+**Response**
+
+```json
+{
+    "id": "cpty_a1b2c3d4e5",
+    "userId": "usr_x1y2z3",
+    "type": "INDIVIDUAL",
+    "firstName": "Jane",
+    "lastName": "Doe",
+    "businessName": null,
+    "phoneNumber": null,
+    "email": null,
+    "taxId": null,
+    "taxIdType": null,
+    "taxIdCountry": null,
+    "registrationNumber": null,
+    "dateOfBirth": null,
+    "incorporationDate": null,
+    "incorporationCountry": null,
+    "nationality": null,
+    "address": null,
+    "status": "ACTIVE",
+    "createdAt": "2026-07-24T22:00:00.000Z",
+    "updatedAt": "2026-07-24T22:00:00.000Z"
+}
+```
+
+<Info>
+  Each account type needs more than this baseline: an External Account requires `address`; an External Card requires `phoneNumber`, `email`, and `address`. Add the fields upfront if you know which accounts you'll need, or [update the counter party](#update-a-counter-party) later - HIFI rejects the account creation with `ACTION_NOT_ALLOWED` (422) if a required field is missing.
+</Info>
+
+<Tip>
+  Make sure the counterparty's status is `ACTIVE` before moving forward to add external accounts, cards, and wallets.
+</Tip>
+
+## Update a counter party
+
+Adds or corrects identity fields on an existing counterparty - for example, filling in `address` before adding an External Account.
+
+**Request**
+
+```shell
+curl -X PATCH https://sandbox.hifi.com/v3/users/usr_x1y2z3/counter-parties/cpty_a1b2c3d4e5 \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -d '{
+    "address": {
+      "addressLine1": "1 Market St",
+      "city": "San Francisco",
+      "stateProvinceRegion": "CA",
+      "postalCode": "94105",
+      "country": "USA"
+    }
+  }'
+```
+
+**Response**
+
+```json
+{
+    "id": "cpty_a1b2c3d4e5",
+    "userId": "usr_x1y2z3",
+    "type": "INDIVIDUAL",
+    "firstName": "Jane",
+    "lastName": "Doe",
+    "businessName": null,
+    "phoneNumber": null,
+    "email": null,
+    "taxId": null,
+    "taxIdType": null,
+    "taxIdCountry": null,
+    "registrationNumber": null,
+    "dateOfBirth": null,
+    "incorporationDate": null,
+    "incorporationCountry": null,
+    "nationality": null,
+    "address": {
+        "addressLine1": "1 Market St",
+        "addressLine2": null,
+        "city": "San Francisco",
+        "stateProvinceRegion": "CA",
+        "postalCode": "94105",
+        "country": "USA"
+    },
+    "status": "ACTIVE",
+    "createdAt": "2026-07-24T22:00:00.000Z",
+    "updatedAt": "2026-07-24T22:05:00.000Z"
+}
+```
+
+<Info>
+  You can only update fields that apply to the counter party's `type` - you can't turn an individual into a business, and `type` itself isn't updatable.
+</Info>
+
+<Tip>
+  Make sure the counterparty's status is `ACTIVE` before moving forward to add external accounts, cards, and wallets.
+</Tip>
+
+## Deactivate a counter party
+
+Marks a counterparty inactive. Its record and accounts are preserved for history, but new accounts can no longer be added under it.
+
+**Request**
+
+```shell
+curl -X DELETE https://sandbox.hifi.com/v3/users/usr_x1y2z3/counter-parties/cpty_a1b2c3d4e5 \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+**Response**
+
+```json
+{
+    "id": "cpty_a1b2c3d4e5",
+    "userId": "usr_x1y2z3",
+    "type": "INDIVIDUAL",
+    "firstName": "Jane",
+    "lastName": "Doe",
+    "businessName": null,
+    "phoneNumber": null,
+    "email": null,
+    "taxId": null,
+    "taxIdType": null,
+    "taxIdCountry": null,
+    "registrationNumber": null,
+    "dateOfBirth": null,
+    "incorporationDate": null,
+    "incorporationCountry": null,
+    "nationality": null,
+    "address": {
+        "addressLine1": "1 Market St",
+        "addressLine2": null,
+        "city": "San Francisco",
+        "stateProvinceRegion": "CA",
+        "postalCode": "94105",
+        "country": "USA"
+    },
+    "status": "INACTVE",
+    "createdAt": "2026-07-24T22:00:00.000Z",
+    "updatedAt": "2026-07-24T22:05:00.000Z"
+}
+```
+
+## Counterparty Status
+
+Check the counterparty's status before adding external accounts, cards, or wallets. Get the status via `GET /v3/users/:userId/counter-parties/:counterPartyId` , or subscribe for counterparty status updates.
+
+| Status | Description |
+| --- | --- |
+| `ACTIVE` | Default status on creation. Accounts (External Account, External Card, External Wallet) can be added under the counterparty. |
+| `PENDING` | When the counterparty is undergoing compliance review |
+| `INACTIVE` | Set when the counterparty is [deactivated](#deactivate-a-counter-party). New accounts can no longer be added under it; existing accounts and history are preserved. |
+
+## Getting Help
+
+- 📧 **Email:** [support@hifi.com](mailto:support@hifi.com)
+- 💬 **Slack:** Message us in our shared Slack channel
+
+## Related Resources
+
+- [Counterparty Overview](/v3/core/counter-party/overview) - Counterparty resources
+- [External Account](/v3/core/counter-party/external-account) - Bank accounts for a counterparty
+- [External Card](/v3/core/counter-party/external-card) - Cards for a counterparty
+- [External Wallet](/v3/core/wallets/external-wallet) - On-chain addresses for a counterparty

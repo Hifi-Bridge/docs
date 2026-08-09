@@ -1,0 +1,46 @@
+---
+title: "Outbound Payment Exceptions"
+description: "How HIFI handles returns, recalls, and refunds for outbound payments when funds cannot be delivered to the recipient."
+sidebarTitle: "Outbound"
+---
+
+Outbound payment exceptions occur when a payment sent from a HIFI Virtual Account cannot be delivered to the recipient and is returned. This page covers why returns happen, how recalls and payment information amendments are handled, and how refunds are processed back to the sender.
+
+## Return Reasons
+
+An outbound payment may be returned for the following reasons:
+
+| Reason | Description |
+| :-- | :-- |
+| Recipient bank rejection | The receiving bank rejects the funds. |
+| Invalid account number | The destination account number is invalid. |
+| Sender-requested recall | The sender requests a recall through HIFI. This is **best effort only**. |
+
+<Warning>
+  An external account that triggers an invalid account number error will be automatically deactivated.
+</Warning>
+
+## Recalls
+
+A sender can request a recall of an outbound payment through HIFI. Recalls are **best effort only** - HIFI cannot guarantee that funds will be recovered, as success depends on the receiving bank and whether the funds are still available.
+
+## Payment Information Amendments
+
+A sender can request an amendment to payment information if it was submitted incorrectly. Like recalls, amendments are **best effort only** and subject to the receiving bank's cooperation.
+
+## Refunds
+
+Once HIFI confirms that a returned payment has been received, the funds are refunded to the original sender's wallet.
+
+<Warning>
+  The refunded amount may not match the original payment amount. HIFI returns the amount received minus any fees deducted by the banks during the return.
+</Warning>
+
+## Getting Help
+
+- 📧 **Email:** [support@hifi.com](mailto:support@hifi.com)
+- 💬 **Slack:** Message us in our shared Slack channel
+
+## Related Resources
+
+- [Inbound Exceptions](/v3/payments/exceptions/inbounds) - Exceptions for incoming payments

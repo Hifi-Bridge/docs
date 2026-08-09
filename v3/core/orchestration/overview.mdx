@@ -1,0 +1,45 @@
+---
+title: "Overview"
+description: "Standing infrastructure that automatically converts value every time it arrives, instead of a one-off call per transfer."
+---
+
+Orchestration resources are persistent infrastructure - a bank account or an on-chain address you set up once - that automatically convert currency every time value arrives at them. Unlike [Onramps](/v3/core/transactions/onramps) and [Offramps](/v3/core/transactions/offramps), which convert one specific amount you request, an Orchestration resource sits there indefinitely and reacts to deposits as they show up.
+
+## Resources
+
+- [**Virtual Accounts**](/v3/core/orchestration/virtual-accounts) - a persistent USD deposit account. Every deposit a user sends to it automatically mints stablecoins to a wallet - no quote or accept step.
+- [**Orchestration Address**](/v3/core/orchestration/orchestration-address) - a persistent on-chain address. Every stablecoin deposit it receives is automatically off-ramped to a bank account - immediately, on a schedule, or once a balance threshold is met.
+
+## Mirror images of each other
+
+|  | Virtual Account | Orchestration Address |
+| --- | --- | --- |
+| Direction | Fiat → stablecoin | Stablecoin → fiat |
+| Deposit | User sends USD via ACH, Wire, or RTP | User sends USDC/USDT on-chain |
+| Destination | A HIFI Wallet or External Wallet | An External Account |
+| Underlying transaction created | One [Onramp](/v3/core/transactions/onramps) per deposit | One [Offramp](/v3/core/transactions/offramps) per batch |
+| Timing | Immediate, per deposit | Configurable - per deposit, on a schedule, or once a threshold is reached |
+
+Both are **set up once, then forgotten**: create the resource, share the resulting deposit instructions or address with whoever is sending funds, and HIFI handles the conversion every time value shows up - with no further API calls required per deposit.
+
+## Common Conventions
+
+- **No quote step**: unlike Onramp, Offramp, Swap, and Bridge, neither resource is created through a quote-then-accept flow. Deposits convert at the live rate when they're detected.
+- **Idempotency**: creating either resource takes a client-supplied `requestId` (UUID) or an `Idempotency-Key` header. Reusing the same key with the same payload returns the existing record instead of creating a duplicate; reusing it with a different payload is rejected with `RESOURCE_CONFLICT` (409).
+- **Underlying transactions**: every deposit still produces a normal Onramp or Offramp transaction under the hood. Tracking a specific conversion works the same way you'd track any other transaction - `GET` it directly, or subscribe to its webhooks.
+
+## Transaction Monitoring
+
+Every transaction an Orchestration resource produces goes through the same compliance monitoring as any directly-created Onramp or Offramp. While a produced transaction is being reviewed, its `status` remains `IN_REVIEW` until compliance clears it. If HIFI's compliance team needs more information to clear it, we will send a Request for Information (RFI).
+
+## Getting Help
+
+- 📧 **Email:** [support@hifi.com](mailto:support@hifi.com)
+- 💬 **Slack:** Message us in our shared Slack channel
+
+## Related Resources
+
+- [Virtual Accounts](/v3/core/orchestration/virtual-accounts) - Persistent USD deposit accounts
+- [Orchestration Address](/v3/core/orchestration/orchestration-address) - Persistent on-chain deposit addresses
+- [Onramps](/v3/core/transactions/onramps) - Fund a wallet from fiat
+- [Offramps](/v3/core/transactions/offramps) - Pay out stablecoins to fiat

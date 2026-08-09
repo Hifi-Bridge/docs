@@ -1,0 +1,156 @@
+---
+title: "Swap"
+description: "Convert between stablecoins held in a HIFI Wallet."
+---
+
+A Swap converts one stablecoin held in a [HIFI Wallet](/v3/core/wallets/hifi-wallet) into another. The destination can be the same wallet, a different HIFI Wallet, or an [External Wallet](/v3/core/wallets/external-wallet) - and can be on a different chain than the source. Like Onramp, Offramp, and Bridge, it's a **quote-then-accept** flow.
+
+For supported pairs check out [Supported Onchain Asset](/v3/docs/references/onchain-assets).
+
+<Info>
+  HIFI sources liquidity from both CEXs and DEXs to ensure the best execution.
+</Info>
+
+## Create a swap (quote)
+
+Requires an `Idempotency-Key` header. Either `source.amount` or `destination.amount` can drive the conversion, not both.
+
+The source and destination chains are derived from source wallet and destination wallet.
+
+**Request**
+
+```shell
+curl -X POST https://sandbox.hifi.com/v3/swaps \
+  -H "Idempotency-Key: <unique-key>" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -d '{
+    "requestId": "154116da-3f51-4ed6-bb13-85f39183e176",
+    "source": {
+        "amount": "100",
+        "currency": "USDC",
+        "walletId": "{{wallet_id}}"
+    },
+    "destination": {
+        "currency": "USDT",
+        "walletId": "{{wallet_id}}"
+    }
+  }'
+```
+
+**Response**
+
+```json
+{
+    "id": "swp_3OGYSITbryTfff41XfaPx",
+    "requestId": "154116da-3f51-4ed6-bb13-85f39183e176",
+    "status": "OPEN_QUOTE",
+    "error": null,
+    "errorDetails": null,
+    "amount": "100",
+    "source": {
+        "userId": "usr_WiamhlKfB151vdSch1Ble",
+        "walletId": "wlt_cq1lx3hQArvCUSxdGsSC1",
+        "currency": "USDC",
+        "chain": "ETHEREUM"
+    },
+    "destination": {
+        "userId": "usr_WiamhlKfB151vdSch1Ble",
+        "walletId": "wlt_cq1lx3hQArvCUSxdGsSC1",
+        "currency": "USDC",
+        "chain": "ETHEREUM"
+    },
+    "receipt": {
+        "transactionHash": null
+    },
+    "quote": {
+        "sendGross": {
+            "amount": "100.00",
+            "currency": "USDC"
+        },
+        "sendNet": {
+            "amount": "100.00",
+            "currency": "USDC"
+        },
+        "receiveGross": {
+            "amount": "100.06",
+            "currency": "USDT"
+        },
+        "receiveNet": {
+            "amount": "100.06",
+            "currency": "USDT"
+        },
+        "rate": "1.00060",
+        "expiresAt": "2026-07-27T01:04:48.202+00:00"
+    },
+    "createdAt": "2026-07-27T01:04:18.142Z",
+    "updatedAt": "2026-07-27T01:04:18.202Z"
+}
+```
+
+<Info>
+  `quote.expiresAt` reflects when the quoted rate was locked in
+</Info>
+
+## Accept a swap quote
+
+Checks the source wallet's on-chain balance against the quoted amount before proceeding.
+
+**Request**
+
+```shell
+curl -X POST https://sandbox.hifi.com/v3/swaps/swp_3OGYSITbryTfff41XfaPx/quote/accept \
+  -H "Idempotency-Key: <unique-key>" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+**Response**
+
+```json
+{
+    "id": "swp_QW1e2r3t4y",
+    "status": "CREATED",
+    "...": "other fields unchanged"
+}
+```
+
+<Info>
+  If the source wallet's balance is too low to cover the quoted amount, this returns a `200` with `status: "QUOTE_FAILED"` and `error: "INSUFFICIENT_BALANCE"` rather than an error response
+</Info>
+
+## Status
+
+| Status | Meaning | Terminal |
+| --- | --- | --- |
+| `OPEN_QUOTE` | Quote ready, awaiting accept. | No |
+| `QUOTE_FAILED` | No route/liquidity for the pair, or insufficient balance at accept time. | Yes |
+| `CREATED` | Quote accepted; queued for execution. | No |
+| `PENDING` | Conversion executing. | No |
+| `COMPLETED` | Conversion settled. | Yes |
+| `FAILED` | Execution failed. | Yes |
+| `PENDING_APPROVAL` | Awaiting approval (only if `requireApproval: true` was set). | No |
+| `APPROVED` | Approved; proceeding to execution. | No |
+| `REJECTED` | Approval was rejected. | Yes |
+
+## Additional information
+
+<AccordionGroup>
+  <Accordion title="Transfer approval">
+    Swaps can be routed through an approval workflow before they settle - `status` shows `PENDING_APPROVAL` until someone approves it, or `REJECTED` if it's declined. 
+
+    The quote is only generated once the transfer request is approved. Accept the quote afterward to kick off the transaction flow.
+
+    Checkout Transfer Approval for more details.
+  </Accordion>
+</AccordionGroup>
+
+## Getting Help
+
+- 📧 **Email:** [support@hifi.com](mailto:support@hifi.com)
+- 💬 **Slack:** Message us in our shared Slack channel
+
+## Related Resources
+
+- [Transactions Overview](/v3/core/transactions/overview) - Transactions resources
+- [Bridge](/v3/core/transactions/bridge) - Move a stablecoin across chains
+- [Onchain Transfer](/v3/core/transactions/onchain-transfer) - Move stablecoins on the same chain
+- [HIFI Wallet](/v3/core/wallets/hifi-wallet) - Provision wallets and read balances

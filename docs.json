@@ -141,6 +141,430 @@
   "navigation": {
     "versions": [
       {
+        "version": "v3",
+        "tag": "Beta",
+        "tabs": [
+          {
+            "tab": "Docs",
+            "pages": [
+              {
+                "group": "Introduction",
+                "pages": [
+                  "v3/docs/introduction/welcome",
+                  "v3/docs/introduction/overview",
+                  "v3/docs/introduction/sandbox",
+                  "v3/docs/introduction/dashboard"
+                ]
+              },
+              {
+                "group": "Core concepts",
+                "pages": [
+                  {
+                    "group": "Users",
+                    "pages": [
+                      "v3/core/users/overview",
+                      "v3/core/users/terms-of-service"
+                    ]
+                  },
+                  {
+                    "group": "Compliance",
+                    "pages": [
+                      "v3/core/compliance/overview",
+                      "v3/core/compliance/kyc",
+                      "v3/core/compliance/kyb",
+                      "v3/core/compliance/associated-party",
+                      "v3/core/compliance/questionnaire",
+                      "v3/core/compliance/documents",
+                      "v3/core/compliance/compliance-link"
+                    ]
+                  },
+                  {
+                    "group": "Wallets",
+                    "pages": [
+                      "v3/core/wallets/overview",
+                      "v3/core/wallets/hifi-wallet",
+                      "v3/core/wallets/external-wallet",
+                      "v3/core/wallets/deposit-offers"
+                    ]
+                  },
+                  {
+                    "group": "Counterparties",
+                    "pages": [
+                      "v3/core/counter-party/overview",
+                      "v3/core/counter-party/counterparty",
+                      "v3/core/counter-party/external-account",
+                      "v3/core/counter-party/external-card"
+                    ]
+                  },
+                  {
+                    "group": "Transaction",
+                    "pages": [
+                      "v3/core/transactions/overview",
+                      "v3/core/transactions/onramps",
+                      "v3/core/transactions/offramps",
+                      "v3/core/transactions/onchain-transfer",
+                      "v3/core/transactions/swap",
+                      "v3/core/transactions/bridge"
+                    ]
+                  },
+                  {
+                    "group": "Orchestration",
+                    "pages": [
+                      "v3/core/orchestration/overview",
+                      "v3/core/orchestration/virtual-accounts",
+                      "v3/core/orchestration/orchestration-address"
+                    ]
+                  },
+                  {
+                    "group": "Eligibility",
+                    "pages": [
+                      "v3/core/eligibility/overview",
+                      "v3/core/eligibility/corridors",
+                      "v3/core/eligibility/virtual-account-routes"
+                    ]
+                  },
+                  {
+                    "group": "Webhooks",
+                    "pages": [
+                      "v3/core/webhooks/overview",
+                      "v3/core/webhooks/webhooks"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "Features",
+                "pages": [
+                  "v3/features/transaction-approval",
+                  "v3/features/developer-fee",
+                  "v3/features/settlement-rule"
+                ]
+              },
+              {
+                "group": "Compliance",
+                "pages": [
+                  "v3/compliance/industries",
+                  "v3/compliance/regions",
+                  "v3/compliance/liveness-checks"
+                ]
+              },
+              {
+                "group": "Payments",
+                "pages": [
+                  {
+                    "group": "Exceptions",
+                    "pages": [
+                      "v3/payments/exceptions/inbounds",
+                      "v3/payments/exceptions/outbounds"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "References",
+                "pages": [
+                  "v3/docs/references/availability",
+                  "v3/docs/references/coverage",
+                  "v3/docs/references/onchain-assets",
+                  "v3/docs/references/account-information",
+                  {
+                    "group": "Business Industries",
+                    "pages": [
+                      "untitled-page",
+                      "references/business-industries/mining-energy",
+                      "references/business-industries/construction",
+                      "references/business-industries/manufacturing",
+                      "references/business-industries/wholesale-retail-trade",
+                      "references/business-industries/transportation-logistics",
+                      "references/business-industries/information-media",
+                      "references/business-industries/finance-insurance",
+                      "references/business-industries/professional-technical-services",
+                      "references/business-industries/administrative-support-services",
+                      "references/business-industries/real-estate-leasing",
+                      "references/business-industries/education",
+                      "references/business-industries/health-social-services",
+                      "references/business-industries/arts-recreation-entertainment",
+                      "references/business-industries/hospitality-food",
+                      "references/business-industries/public-administration",
+                      "references/business-industries/other-services"
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "Guides",
+            "pages": [
+              {
+                "group": "Guides",
+                "pages": []
+              }
+            ]
+          },
+          {
+            "tab": "Changelog"
+          },
+          {
+            "tab": "API Reference",
+            "pages": [
+              {
+                "group": "Overview",
+                "pages": [
+                  "api/authentication",
+                  "api/errors"
+                ]
+              },
+              {
+                "group": "Endpoints",
+                "openapi": "https://production.hifi.com/api/v3/openapi.json",
+                "pages": [
+                  {
+                    "group": "Common",
+                    "pages": [
+                      "GET /ping"
+                    ]
+                  },
+                  {
+                    "group": "Users",
+                    "pages": [
+                      "POST /v3/users",
+                      "GET /v3/users/{userId}",
+                      "GET /v3/users",
+                      "POST /v3/tos-link",
+                      "GET /v3/tos-link/{signedAgreementId}",
+                      "POST /v3/tos-link/{signedAgreementId}/accept"
+                    ]
+                  },
+                  {
+                    "group": "Compliance",
+                    "pages": [
+                      "GET /v3/users/{userId}/compliance/profile",
+                      "PATCH /v3/users/{userId}/compliance/profile",
+                      "GET /v3/users/{userId}/compliance/questionnaire",
+                      "PATCH /v3/users/{userId}/compliance/questionnaire",
+                      "POST /v3/users/{userId}/compliance/associated-parties",
+                      "PATCH /v3/users/{userId}/compliance/associated-parties/{associatedPartyId}",
+                      "DELETE /v3/users/{userId}/compliance/associated-parties/{associatedPartyId}",
+                      "GET /v3/users/{userId}/compliance/associated-parties/{associatedPartyId}",
+                      "GET /v3/users/{userId}/compliance/associated-parties",
+                      "POST /v3/users/{userId}/compliance/documents",
+                      "PATCH /v3/users/{userId}/compliance/documents/{documentId}",
+                      "DELETE /v3/users/{userId}/compliance/documents/{documentId}",
+                      "GET /v3/users/{userId}/compliance/documents/{documentId}",
+                      "GET /v3/users/{userId}/compliance/documents",
+                      "POST /v3/users/{userId}/compliance/associated-parties/{associatedPartyId}/documents",
+                      "PATCH /v3/users/{userId}/compliance/associated-parties/{associatedPartyId}/documents/{documentId}",
+                      "DELETE /v3/users/{userId}/compliance/associated-parties/{associatedPartyId}/documents/{documentId}",
+                      "GET /v3/users/{userId}/compliance/associated-parties/{associatedPartyId}/documents/{documentId}",
+                      "GET /v3/users/{userId}/compliance/associated-parties/{associatedPartyId}/documents",
+                      "POST /v3/users/{userId}/compliance/submit",
+                      "GET /v3/users/{userId}/compliance/status"
+                    ]
+                  },
+                  {
+                    "group": "Compliance Links",
+                    "pages": [
+                      "POST /v3/compliance-links",
+                      "GET /v3/compliance-links/{complianceLinkId}"
+                    ]
+                  },
+                  {
+                    "group": "File",
+                    "pages": [
+                      "POST /v3/files"
+                    ]
+                  },
+                  {
+                    "group": "Wallets",
+                    "pages": [
+                      "POST /v3/users/{userId}/wallets",
+                      "GET /v3/users/{userId}/wallets/{walletId}",
+                      "GET /v3/users/{userId}/wallets/{walletId}/deposits",
+                      "GET /v3/users/{userId}/wallets/{walletId}/deposits/{depositId}",
+                      "GET /v3/users/{userId}/wallets",
+                      "GET /v3/users/{userId}/wallets/{walletId}/balance",
+                      "GET /v3/users/{userId}/wallets/{walletId}/offers",
+                      "GET /v3/users/{userId}/wallets/{walletId}/offers/{offerId}",
+                      "POST /v3/users/{userId}/wallets/{walletId}/offers/{offerId}/accept",
+                      "POST /v3/users/{userId}/wallets/{walletId}/offers/{offerId}/reject"
+                    ]
+                  },
+                  {
+                    "group": "Counter Parties",
+                    "pages": [
+                      "POST /v3/users/{userId}/counter-parties",
+                      "PATCH /v3/users/{userId}/counter-parties/{counterPartyId}",
+                      "DELETE /v3/users/{userId}/counter-parties/{counterPartyId}",
+                      "GET /v3/users/{userId}/counter-parties/{counterPartyId}",
+                      "GET /v3/users/{userId}/counter-parties"
+                    ]
+                  },
+                  {
+                    "group": "External Accounts",
+                    "pages": [
+                      "POST /v3/users/{userId}/counter-parties/{counterPartyId}/external-accounts",
+                      "DELETE /v3/users/{userId}/counter-parties/{counterPartyId}/external-accounts/{externalAccountId}",
+                      "GET /v3/users/{userId}/counter-parties/{counterPartyId}/external-accounts/{externalAccountId}",
+                      "GET /v3/users/{userId}/counter-parties/{counterPartyId}/external-accounts"
+                    ]
+                  },
+                  {
+                    "group": "External Cards",
+                    "pages": [
+                      "POST /v3/users/{userId}/counter-parties/{counterPartyId}/external-cards",
+                      "DELETE /v3/users/{userId}/counter-parties/{counterPartyId}/external-cards/{externalCardId}",
+                      "GET /v3/users/{userId}/counter-parties/{counterPartyId}/external-cards/{externalCardId}",
+                      "GET /v3/users/{userId}/counter-parties/{counterPartyId}/external-cards",
+                      "POST /v3/users/{userId}/external-card-sessions",
+                      "GET /v3/users/{userId}/external-card-sessions/{cardSessionId}",
+                      "POST /v3/users/{userId}/external-card-sessions/{cardSessionId}/submit"
+                    ]
+                  },
+                  {
+                    "group": "External Wallets",
+                    "pages": [
+                      "POST /v3/users/{userId}/counter-parties/{counterPartyId}/external-wallets",
+                      "DELETE /v3/users/{userId}/counter-parties/{counterPartyId}/external-wallets/{externalWalletId}",
+                      "GET /v3/users/{userId}/counter-parties/{counterPartyId}/external-wallets/{externalWalletId}",
+                      "GET /v3/users/{userId}/counter-parties/{counterPartyId}/external-wallets"
+                    ]
+                  },
+                  {
+                    "group": "Virtual Accounts",
+                    "pages": [
+                      "GET /v3/users/{userId}/virtual-accounts/routes/eligibility",
+                      "POST /v3/users/{userId}/virtual-accounts",
+                      "DELETE /v3/users/{userId}/virtual-accounts/{virtualAccountId}",
+                      "GET /v3/users/{userId}/virtual-accounts/{virtualAccountId}",
+                      "GET /v3/users/{userId}/virtual-accounts",
+                      "POST /v3/users/{userId}/virtual-accounts/{virtualAccountId}/simulate-deposits",
+                      "GET /v3/virtual-accounts/routes",
+                      "GET /v3/virtual-accounts/routes/{vaRouteId}"
+                    ]
+                  },
+                  {
+                    "group": "Settlement Rules",
+                    "pages": [
+                      "POST /v3/virtual-accounts/settlement-rules",
+                      "GET /v3/virtual-accounts/settlement-rules/{settlementRuleId}",
+                      "GET /v3/virtual-accounts/settlement-rules",
+                      "PATCH /v3/virtual-accounts/settlement-rules/{settlementRuleId}",
+                      "DELETE /v3/virtual-accounts/settlement-rules/{settlementRuleId}",
+                      "POST /v3/users/{userId}/virtual-accounts/{virtualAccountId}/settlement-rules/{settlementRuleId}",
+                      "DELETE /v3/users/{userId}/virtual-accounts/{virtualAccountId}/settlement-rules"
+                    ]
+                  },
+                  {
+                    "group": "Orchestration Addresses",
+                    "pages": [
+                      "POST /v3/users/{userId}/orchestration-addresses",
+                      "GET /v3/users/{userId}/orchestration-addresses",
+                      "GET /v3/users/{userId}/orchestration-addresses/{orchestrationAddressId}",
+                      "PATCH /v3/users/{userId}/orchestration-addresses/{orchestrationAddressId}",
+                      "DELETE /v3/users/{userId}/orchestration-addresses/{orchestrationAddressId}",
+                      "GET /v3/users/{userId}/orchestration-addresses/{orchestrationAddressId}/deposits",
+                      "GET /v3/users/{userId}/orchestration-addresses/{orchestrationAddressId}/deposits/{orchestrationDepositId}",
+                      "GET /v3/users/{userId}/orchestration-addresses/{orchestrationAddressId}/batches",
+                      "GET /v3/users/{userId}/orchestration-addresses/{orchestrationAddressId}/batches/{orchestrationBatchId}",
+                      "POST /v3/users/{userId}/orchestration-addresses/{orchestrationAddressId}/orchestrate"
+                    ]
+                  },
+                  {
+                    "group": "Onramps",
+                    "pages": [
+                      "GET /v3/onramps/rates",
+                      "POST /v3/onramps",
+                      "POST /v3/onramps/{onrampId}/quote/accept",
+                      "GET /v3/onramps/{onrampId}",
+                      "GET /v3/onramps",
+                      "POST /v3/onramps/{onrampId}/cancel",
+                      "POST /v3/onramps/{onrampId}/simulate-deposits"
+                    ]
+                  },
+                  {
+                    "group": "Offramps",
+                    "pages": [
+                      "GET /v3/offramps/rates",
+                      "POST /v3/offramps",
+                      "POST /v3/offramps/{offrampId}/quote/accept",
+                      "GET /v3/offramps/{offrampId}",
+                      "GET /v3/offramps",
+                      "POST /v3/offramps/{offrampId}/cancel"
+                    ]
+                  },
+                  {
+                    "group": "Crypto Transfers",
+                    "pages": [
+                      "POST /v3/crypto-transfers",
+                      "GET /v3/crypto-transfers/{cryptoTransferId}",
+                      "GET /v3/crypto-transfers",
+                      "POST /v3/batch-transfers",
+                      "GET /v3/batch-transfers/{batchCryptoTransferId}",
+                      "GET /v3/batch-transfers"
+                    ]
+                  },
+                  {
+                    "group": "Swaps",
+                    "pages": [
+                      "POST /v3/swaps",
+                      "POST /v3/swaps/{swapId}/quote/accept",
+                      "GET /v3/swaps/{swapId}",
+                      "GET /v3/swaps"
+                    ]
+                  },
+                  {
+                    "group": "Bridges",
+                    "pages": [
+                      "POST /v3/bridges",
+                      "GET /v3/bridges/{bridgeId}",
+                      "POST /v3/bridges/{bridgeId}/quote/accept",
+                      "GET /v3/bridges"
+                    ]
+                  },
+                  {
+                    "group": "Transfer Approvals",
+                    "pages": [
+                      "POST /v3/transfer-approvals/{transferApprovalId}/approve",
+                      "POST /v3/transfer-approvals/{transferApprovalId}/reject",
+                      "GET /v3/transfer-approvals",
+                      "GET /v3/transfer-approvals/{transferApprovalId}"
+                    ]
+                  },
+                  {
+                    "group": "Corridors",
+                    "pages": [
+                      "GET /v3/corridors/{corridorId}",
+                      "GET /v3/corridors",
+                      "GET /v3/users/{userId}/corridors/eligibility"
+                    ]
+                  },
+                  {
+                    "group": "Migration",
+                    "pages": [
+                      "GET /v3/id-mappings"
+                    ]
+                  },
+                  {
+                    "group": "Webhook Endpoints",
+                    "pages": [
+                      "GET /v3/webhook-endpoints/event-types",
+                      "POST /v3/webhook-endpoints",
+                      "PATCH /v3/webhook-endpoints/{webhookEndpointId}",
+                      "GET /v3/webhook-endpoints/{webhookEndpointId}",
+                      "GET /v3/webhook-endpoints",
+                      "DELETE /v3/webhook-endpoints/{webhookEndpointId}",
+                      "GET /v3/webhook-endpoints/{webhookEndpointId}/history",
+                      "POST /v3/webhook-endpoints/{webhookEndpointId}/events/{webhookEventId}/resend"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
         "version": "v2",
         "tabs": [
           {
@@ -360,7 +784,6 @@
                 "group": "Overview",
                 "pages": [
                   "api/authentication",
-                  "api/responses",
                   "api/errors"
                 ]
               },
@@ -562,7 +985,9 @@
               }
             ]
           }
-        ]
+        ],
+        "default": true,
+        "tag": "Stable"
       }
     ]
   },

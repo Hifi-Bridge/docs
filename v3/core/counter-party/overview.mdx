@@ -1,0 +1,31 @@
+---
+title: "Overview"
+description: "Represent the people and businesses your users send money and assets to, or receive money and assets from."
+---
+
+## Resources
+
+- [**Counter Party**](/v3/core/counter-party/counter-party) - the recipient/payer record itself: `INDIVIDUAL` or `BUSINESS`, with identity and address details.
+
+- [**External Card**](/v3/core/counter-party/external-card) - a debit/prepaid card for a counterparty, used as the destination for a card payout.
+- [**External Wallet**](/v3/core/wallets/external-wallet) - an on-chain address for a counterparty, used as the destination for on-chain operation.
+
+## Individual vs. Business
+
+Every counterparty is created with a `type` of `INDIVIDUAL` or `BUSINESS`, which determines which fields apply, for example `firstName`/`lastName` for individuals, `businessName` for businesses. This type can't change after creation.
+
+<Info>
+  Creating a counterparty only requires the minimum identifying fields (name, or business name). Adding an External Account or External Card to that counterparty requires more - see each resource's page for its specific requirements. If the counterparty is missing a required field, HIFI returns `ACTION_NOT_ALLOWED` (422) and you'll need to [update the counterparty](/v3/core/counter-party/counter-party#update-a-counter-party) with the missing information before retrying.
+</Info>
+
+## Getting Help
+
+- 📧 **Email:** [support@hifi.com](mailto:support@hifi.com)
+- 💬 **Slack:** Message us in our shared Slack channel
+
+## Related Resources
+
+- [Counter Party](/v3/core/counter-party/counterparty) - Create and manage recipients/payers
+- [External Account](/v3/core/counter-party/external-account) - Bank accounts for a counterparty
+- [External Card](/v3/core/counter-party/external-card) - Cards for a counterparty
+- [External Wallet](/v3/core/wallets/external-wallet) - On-chain addresses for a counterparty

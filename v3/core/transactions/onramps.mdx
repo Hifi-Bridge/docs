@@ -1,0 +1,367 @@
+---
+title: "Onramps"
+description: "Convert fiat into stablecoins, funded by a user deposit or an ACH pull from an External Account."
+---
+
+An Onramp converts fiat (USD today) into stablecoins, landing in a [HIFI Wallet](/v3/core/wallets/hifi-wallet) or [External Wallet](/v3/core/wallets/external-wallet). It's a **quote-then-accept** flow: creating an onramp returns a quote without moving any funds; accepting it generates the deposit instructions (or kicks off an ACH pull) and starts the settlement process.
+
+## Two ways to fund an onramp
+
+| Method | Source fields | How it works |
+| --- | --- | --- |
+| User deposit | `source.userId` \+ `source.transferType` (`ACH`, `WIRE`, `RTP`) | HIFI gives you bank deposit instructions once the quote is accepted; the user send the funds manually. |
+| ACH pull | `source.externalAccountId` | HIFI debits a counterparty's registered [External Account](/v3/core/counter-party/external-account) directly - no manual deposit needed. |
+
+## Get indicative rates
+
+Returns an informational conversion rate - not a quote, not persisted, and unrelated to the quote you get from actually creating an onramp.
+
+**Request**
+
+```shell
+curl "https://sandbox.hifi.com/v3/onramps/rates?sourceCurrency=USD&destinationCurrency=USDC" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+**Response**
+
+```json
+{
+    "sourceCurrency": "USD",
+    "destinationCurrency": "USDC",
+    "rate": "1.00"
+}
+```
+
+## Create an onramp (quote)
+
+Creates the onramp in `OPEN_QUOTE` status. Requires an `Idempotency-Key` header and a `requestId`. Either `source.amount` or `destination.amount` can drive the conversion, not both.
+
+**Request**
+
+```shell
+curl -X POST https://sandbox.hifi.com/v3/onramps \
+  -H "Idempotency-Key: <unique-key>" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -d '{
+    "requestId": "3f2504e0-4f89-11d3-9a0c-0305e82c3301",
+    "source": {
+      "userId": "usr_gBlMyGTbuyknSPXlZtwlS",
+      "transferType": "ACH",
+      "currency": "USD",
+      "amount": 10
+    },
+    "destination": {
+      "walletId": "wlt_wOm1XYoNqj4WwJUeL58SI",
+      "currency": "USDC"
+    }
+  }'
+```
+
+**Response**
+
+```json
+{
+    "id": "onramp_HtgURm58uWMF0EzmG8DAl",
+    "requestId": "8dfcfb0c-ebc5-4a19-98ba-3a0bf993fccb",
+    "status": "OPEN_QUOTE",
+    "failedReason": null,
+    "error": null,
+    "errorDetails": null,
+    "source": {
+        "amount": 10,
+        "currency": "USD",
+        "userId": "usr_gBlMyGTbuyknSPXlZtwlS",
+        "externalAccountId": null,
+        "virtualAccountId": null,
+        "depositInstructions": null,
+        "depositTracking": null
+    },
+    "destination": {
+        "chain": "POLYGON",
+        "amount": 10,
+        "currency": "USDC",
+        "userId": "usr_8GcOwGmLDQjg24Gq2PXEd",
+        "walletId": "wlt_wOm1XYoNqj4WwJUeL58SI",
+        "externalWalletId": null,
+        "walletAddress": "0xDE49949a9f590421b529c83b339635d5B5783727"
+    },
+    "receipt": {
+        "transactionHash": null
+    },
+    "quote": {
+        "rate": "1.00",
+        "railFee": {
+            "amount": "0.00",
+            "currency": "USDC"
+        },
+        "sendNet": {
+            "amount": "10.00",
+            "currency": "USD"
+        },
+        "expiresAt": "N/A",
+        "sendGross": {
+            "amount": "10.00",
+            "currency": "USD"
+        },
+        "receiveNet": {
+            "amount": "10.00",
+            "currency": "USDC"
+        },
+        "receiveGross": {
+            "amount": "10.00",
+            "currency": "USDC"
+        },
+        "conversionFee": {
+            "amount": "0",
+            "timing": "N/A",
+            "currency": "USDC",
+            "description": "No conversion fee applicable"
+        }
+    },
+    "microDeposits": {
+        "count": 0,
+        "data": []
+    },
+    "sameDayAch": false,
+    "createdAt": "2026-07-25T23:54:02.679Z",
+    "updatedAt": "2026-07-25T23:54:03.580Z"
+}
+```
+
+<Tip>
+  For an exact sending amount, set `source.amount`; for an exact received stablecoin amount, set `destination.amount`.
+</Tip>
+
+## Accept an onramp quote
+
+Moves the onramp into `AWAITING_FUNDS`. For a user deposit, this generates the bank deposit instructions; for an ACH pull, this initiates the debit against the external account.
+
+**Request**
+
+```shell
+curl -X POST https://sandbox.hifi.com/v3/onramps/onramp_HtgURm58uWMF0EzmG8DAl/quote/accept \
+  -H "Idempotency-Key: <unique-key>" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+**Response**
+
+```json
+{
+    "id": "onramp_HtgURm58uWMF0EzmG8DAl",
+    "requestId": "8dfcfb0c-ebc5-4a19-98ba-3a0bf993fccb",
+    "status": "AWAITING_FUNDS",
+    "failedReason": null,
+    "error": null,
+    "errorDetails": null,
+    "source": {
+        "amount": 10,
+        "currency": "USD",
+        "userId": "usr_gBlMyGTbuyknSPXlZtwlS",
+        "externalAccountId": null,
+        "virtualAccountId": null,
+        "depositInstructions": {
+            "bankName": "Cross River Bank",
+            "bankAddress": "885 Teaneck Road, Teaneck, NJ 07666",
+            "beneficiary": {
+                "name": "Random Bizz",
+                "address": "Example St 3., Hoboken, NJ, 07030, US"
+            },
+            "ach": {
+                "routingNumber": "021214891",
+                "accountNumber": "393523564374"
+            },
+            "wire": {
+                "routingNumber": "021214891",
+                "accountNumber": "393523564374"
+            },
+            "rtp": {
+                "routingNumber": "021214891",
+                "accountNumber": "393523564374"
+            },
+            "reference": "HFPDJIF56M",
+            "depositBy": "2026-08-02T00:01:35.839Z",
+            "instruction": "Please deposit only one payment with the exact amount of usd and the reference code HFPDJIF56M to the designated bank account by 2026-08-02T00:01:35.839Z. Missing or incorrect reference codes, discrepancies in the amount, or additional payments may result in the funds being lost. Ensure that the beneficiary name matches the provided account holder name, otherwise the payment may be rejected."
+        },
+        "depositTracking": null
+    },
+    "destination": {
+        "chain": "POLYGON",
+        "amount": 10,
+        "currency": "USDC",
+        "userId": "usr_8GcOwGmLDQjg24Gq2PXEd",
+        "walletId": "wlt_wOm1XYoNqj4WwJUeL58SI",
+        "externalWalletId": null,
+        "walletAddress": "0xDE49949a9f590421b529c83b339635d5B5783727"
+    },
+    "receipt": {
+        "transactionHash": null
+    },
+    "quote": {
+        "rate": "1.00",
+        "railFee": {
+            "amount": "0.00",
+            "currency": "USDC"
+        },
+        "sendNet": {
+            "amount": "10.00",
+            "currency": "USD"
+        },
+        "expiresAt": "N/A",
+        "sendGross": {
+            "amount": "10.00",
+            "currency": "USD"
+        },
+        "receiveNet": {
+            "amount": "10.00",
+            "currency": "USDC"
+        },
+        "receiveGross": {
+            "amount": "10.00",
+            "currency": "USDC"
+        },
+        "conversionFee": {
+            "amount": "0",
+            "timing": "N/A",
+            "currency": "USDC",
+            "description": "No conversion fee applicable"
+        }
+    },
+    "microDeposits": {
+        "count": 0,
+        "data": []
+    },
+    "sameDayAch": false,
+    "createdAt": "2026-07-25T23:54:02.679Z",
+    "updatedAt": "2026-07-26T00:01:35.839Z"
+}
+```
+
+<Info>
+  `depositInstructions` is only populated for the user-deposit path - not for ACH pulls, since HIFI initiates those itself. Once a matching deposit is detected, `depositTracking` fills in with the originating bank's details (sender name, routing/account number, reference) so you can reconcile who actually sent the funds.
+</Info>
+
+<Warning>
+  Always deposit with the reference provided under `depositInstructions`; a missing or incorrect reference can lead to failed reconciliation. Reach out to HIFI if the deposit is made but the onramp status hasn't transitioned.
+</Warning>
+
+## Microdeposits
+
+`microDeposits` populates once an onramp reaches `AWAITING_FUNDS`, surfacing small (under \$1.00) verification deposits sent by the user's bank. Some banks require the account holder to confirm these amounts in their own banking app before releasing the real payment - if you see this field populated, pass the amount(s) along to your user so they can complete that verification step with their bank.
+
+```json
+"microDeposits": {
+    "count": 1,
+    "data": [
+        {
+            "createdAt": "2026-07-24T22:05:00.000Z",
+            "currency": "USD",
+            "amount": "0.32",
+            "sourceBankInfo": {
+                "bankName": "Chase",
+                "senderName": "Jane Doe",
+                "routingNumber": "021000021",
+                "accountNumber": "000123456789",
+                "paymentRail": "ach"
+            }
+        }
+    ]
+}
+```
+
+<Info>
+  A microdeposit never counts toward the expected deposit amount and never changes the onramp's `status` - the full amount still needs to arrive in one matching payment for the onramp to proceed.
+</Info>
+
+## Status
+
+| Status | Meaning | Terminal |
+| --- | --- | --- |
+| `CREATED` | Onramp created; quote being generated. | No |
+| `OPEN_QUOTE` | Quote ready, awaiting [accept](#accept-an-onramp-quote). | No |
+| `IN_REVIEW` / `FIAT_INITIATED` / `AWAITING_FUNDS` | Quote accepted; awaiting or initiating the fiat deposit. | No |
+| `FIAT_PENDING` | Fiat deposit received and processing. | No |
+| `FIAT_PROCESSED` | Fiat settled; conversion to stablecoin starting. | No |
+| `CRYPTO_INITIATED` | On-chain payout initiated. | No |
+| `CRYPTO_PENDING` | On-chain payout confirming. | No |
+| `COMPLETED` | Stablecoins delivered. | Yes\* |
+| `FIAT_FAILED` | Fiat deposit failed. | Yes\* |
+| `FIAT_RETURNED` | Fiat deposit was received but returned. | Yes |
+| `CRYPTO_FAILED` | On-chain payout failed. | Yes |
+| `QUOTE_FAILED` | No quote could be generated. | Yes |
+| `EXPIRED` | Onramp expired before being funded. | Yes |
+| `CANCELLED` | Cancelled via the [cancel](#cancel-an-onramp) endpoint. | Yes |
+
+<Note>
+  A transaction in `COMPLETED` status can transition to `FIAT_RETURNED` if a post-payment-completion return is requested and succeeds. A transaction in `FIAT_FAILED` status can transition to `FIAT_RETURNED` if the deposited funds have already landed but are rejected by our compliance review.
+</Note>
+
+## Cancel an onramp
+
+Only allowed while status is `IN_REVIEW` - after accepting the quote, before a deposit has been detected. Any other status returns `RESOURCE_NOT_ELIGIBLE` (422).
+
+**Request**
+
+```shell
+curl -X POST https://sandbox.hifi.com/v3/onramps/onramp_QW1e2r3t4y/cancel \
+  -H "Idempotency-Key: <unique-key>" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+**Response**
+
+```json
+{
+    "id": "onramp_QW1e2r3t4y",
+    "status": "CANCELLED",
+    "...": "other fields unchanged"
+}
+```
+
+## Simulate deposits (sandbox only)
+
+Mock an inbound deposit hitting the onramp's dedicated bank sub-account, so you can progress an onramp past `AWAITING_FUNDS` in sandbox without a real bank transfer. 
+
+**Request**
+
+```shell
+curl -X POST https://sandbox.hifi.com/v3/onramps/onramp_QW1e2r3t4y/simulate-deposits \
+  -H "Idempotency-Key: <unique-key>" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -d '{
+    "amount": 500,
+    "transferType": "RTP",
+    "reference": "HFPDJIF56M"
+    "source": {
+      "routingNumber": "021000021",
+      "accountNumber": "000123456789",
+      "name": "Jane Doe",
+      "bankName": "Chase"
+    }
+  }'
+```
+
+<Tip>
+  use `RTP` as the `transferType` for faster simulation
+</Tip>
+
+**Response**
+
+```json
+{
+    "message": "Deposit simulated successfully"
+}
+```
+
+## Getting Help
+
+- 📧 **Email:** [support@hifi.com](mailto:support@hifi.com)
+- 💬 **Slack:** Message us in our shared Slack channel
+
+## Related Resources
+
+- [Transactions Overview](/v3/core/transactions/overview) - Transactions resources
+- [Offramps](/v3/core/transactions/offramps) - Convert stablecoins to fiat
+- [External Account](/v3/core/counter-party/external-account) - Bank accounts, including ACH-pull sources
+- [Availability](/v3/docs/references/availability) - Banking hours for each payment methods

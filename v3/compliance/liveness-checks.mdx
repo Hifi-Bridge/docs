@@ -1,0 +1,62 @@
+---
+title: "Liveness Checks"
+description: "Enhanced verification for UBOs or Individuals."
+---
+
+Users and businesses from high risk regions - or any case where our compliance team requires additional information - can be onboarded with additional compliance measures, and must complete a hosted identity and liveness check before being onboarded.
+
+Check out [High Risk Regions](/v3/compliance/regions#high-risk-regions) for the countries that apply and the supported user types.
+
+## How it works
+
+<Steps>
+  <Step title="Submit compliance check">
+    Once the user's KYC/KYB information is updated, submit the information for compliance review.
+
+    <Tip>
+      For more details check out [KYC](/v3/core/compliance/kyc) and [KYB](/v3/core/compliance/kyb)
+    </Tip>
+  </Step>
+  <Step title="Retrieve the verification link">
+    If the UBO or the individual requires a liveness check, the verification link will be returned under `rfiActions`with type `COMPLETE_LIVENESS_CHECK`. 
+
+    **Example**
+
+    ```json
+    {
+        "userId": "usr_V3leEgLs3FJ4jcI7rfPWJ",
+        "complianceStatus": "IN_REVIEW",
+        "message": null,
+        "rfiActions": [
+            {
+                "type": "COMPLETE_LIVENESS_CHECK",
+                "message": "Please complete the liveness check via verification link",
+                "verificationLink": "https://in.sumsub.com/websdk/p/sbx_iNZi5pTWEjmzOPEQ",
+                "associatedPartyId": "ap_tIFGUMSVnyUrkc68kPqtV"
+            }
+        ]
+    }
+    ```
+
+    <Info>
+      Our compliance team may also reach out via email, including the liveness check link as an RFI.
+    </Info>
+  </Step>
+  <Step title="Complete liveness check">
+    Share the link with your user to complete the liveness check requirement. Once the liveness check is submitted, the compliance status will update if the result is valid.
+  </Step>
+  <Step title="Keep track of status update">
+    Subscribe to the compliance webhook to receive real-time updates on the user's KYC/KYB status, or poll `GET /v3/users/:userId/compliance/status`.
+  </Step>
+</Steps>
+
+## Getting Help
+
+- 📧 **Email:** [support@hifi.com](mailto:support@hifi.com)
+- 💬 **Slack:** Message us in our shared Slack channel
+
+## Related Resources
+
+- [KYC (Individual)](/v3/core/compliance/kyc) - Individual verification requirements
+- [KYB (Business)](/v3/core/compliance/kyb) - Business verification requirements
+- [Associated Parties](/v3/core/compliance/associated-parties) - UBO and control person requirements

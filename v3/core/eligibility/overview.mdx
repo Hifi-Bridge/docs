@@ -1,0 +1,30 @@
+---
+title: "Overview"
+description: "Check which corridors and routes are supported - globally, and for a specific user - before you create a transaction or resource."
+---
+
+Not every combination of country, currency, transfer rail, chain, and stablecoin is available everywhere, and availability can differ per user depending on which corridors HIFI has enabled for your profile and the user's compliance profile. Eligibility resources let you check what's actually usable before you call a creation endpoint, instead of finding out from a failed request.
+
+## Resources
+
+- [**Corridors**](/v3/core/eligibility/corridors) - which fiat ↔ stablecoin combinations are supported for [Onramps](/v3/core/transactions/onramps) and [Offramps](/v3/core/transactions/offramps).
+- [**Virtual Account Routes**](/v3/core/eligibility/virtual-account-routes) - which fiat → stablecoin combinations are supported for [Virtual Accounts](/v3/core/orchestration/virtual-accounts).
+
+A route or corridor can appear in the catalog but not in a given user's eligibility list - **most commonly because the user hasn't finished onboarding with the underlying bank yet or the user's compliance profile is not allowed to access that specific product.** If a combination doesn't show up in the eligibility response, creating the corresponding resource with it will fail.
+
+## Common Conventions
+
+- **Cursor pagination**: `limit`, `startingAfter`, `endingBefore` - the same cursor convention used across the rest of the v3 API.
+- **Filters are optional**: omit every filter to see everything currently eligible; add `fiatCurrency`, `fiatCountry`, `transferType`, etc. filters to narrow down to one specific combination.
+
+## Getting Help
+
+- 📧 **Email:** [support@hifi.com](mailto:support@hifi.com)
+- 💬 **Slack:** Message us in our shared Slack channel
+
+## Related Resources
+
+- [Corridors](/v3/core/eligibility/corridors) - Onramp/Offramp availability
+- [Virtual Account Routes](/v3/core/eligibility/virtual-account-routes) - Virtual Account availability
+- [Onramps](/v3/core/transactions/onramps) / [Offramps](/v3/core/transactions/offramps) - Gated by Corridors
+- [Virtual Accounts](/v3/core/orchestration/virtual-accounts) - Gated by Virtual Account Routes

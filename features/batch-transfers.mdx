@@ -3,7 +3,6 @@ title: "Batch Transfers"
 description: "Batch transfers send stablecoins to up to 50 recipients in a single blockchain transaction. This reduces gas costs and simplifies bulk distributions like payroll, airdrops, or rewards."
 ---
 
-
 ## How Batch Transfers Work
 
 <Steps>
@@ -20,12 +19,12 @@ description: "Batch transfers send stablecoins to up to 50 recipients in a singl
 
 ## Benefits of Batching
 
-| Benefit                  | Description                                                       |
-| :----------------------- | :---------------------------------------------------------------- |
-| **Gas Efficiency**       | Pay gas fees once for 50 transfers instead of 50 separate fees   |
-| **Atomic Execution**     | All transfers succeed or fail together - no partial completion    |
-| **Faster Processing**    | Single transaction reduces blockchain congestion                  |
-| **Simplified Tracking**  | One transaction hash covers the entire batch                      |
+| Benefit | Description |
+| :-- | :-- |
+| **Gas Efficiency** | Pay gas fees once for 50 transfers instead of 50 separate fees |
+| **Atomic Execution** | All transfers succeed or fail together - no partial completion |
+| **Faster Processing** | Single transaction reduces blockchain congestion |
+| **Simplified Tracking** | One transaction hash covers the entire batch |
 
 ## Creating Batch Transfers
 
@@ -72,6 +71,7 @@ curl -X POST "https://sandbox.hifi.com/v2/wallets/transfers/batches" \
 - **destination.batch** (required): Array of up to 50 recipients
 
 **Each batch recipient includes:**
+
 - **userId** OR **walletAddress**: Destination (provide one, not both)
 - **amount** (required): Amount to send (e.g., "10" for 10 USDC)
 
@@ -119,25 +119,25 @@ curl -X POST "https://sandbox.hifi.com/v2/wallets/transfers/batches" \
 ```
 
 <Info>
-For detailed field documentation, see the [Create Batch Transfer](https://docs.hifi.com/api-reference/crypto-transfer/create-a-batch-transfer) API reference.
+  For detailed field documentation, see the [Create Batch Transfer](https://docs.hifi.com/api-reference/crypto-transfer/create-a-batch-transfer) API reference.
 </Info>
 
 ## Transaction Status
 
 Batch transfers progress through several statuses:
 
-| Status              | Description                                                       |
-| :------------------ | :---------------------------------------------------------------- |
-| **NOT_INITIATED**   | Transfer not submitted due to validation error                    |
-| **CREATED**         | Batch transfer request created and awaiting processing            |
-| **INITIATED**       | Batch transfer submitted to blockchain                            |
-| **PENDING**         | Transaction awaiting on-chain confirmation                        |
-| **COMPLETED**       | All transfers in batch successfully confirmed                     |
-| **FAILED**          | Batch transfer failed (check `failedReason` for details)          |
-| **UNKNOWN**         | Transfer status could not be determined                           |
+| Status | Description |
+| :-- | :-- |
+| **NOT\_INITIATED** | Transfer not submitted due to validation error |
+| **CREATED** | Batch transfer request created and awaiting processing |
+| **INITIATED** | Batch transfer submitted to blockchain |
+| **PENDING** | Transaction awaiting on-chain confirmation |
+| **COMPLETED** | All transfers in batch successfully confirmed |
+| **FAILED** | Batch transfer failed (check `failedReason` for details) |
+| **UNKNOWN** | Transfer status could not be determined |
 
 <Note>
-**Atomic Execution:** If any transfer in the batch fails, the entire batch fails and no funds are moved. This ensures consistency - all recipients get paid or none do.
+  **Atomic Execution:** If any transfer in the batch fails, the entire batch fails and no funds are moved. This ensures consistency - all recipients get paid or none do.
 </Note>
 
 ## Tracking Batch Transfers
@@ -170,27 +170,28 @@ curl -X GET "https://sandbox.hifi.com/v2/wallets/transfers/bat_abc123" \
 Use the `transactionHash` to view the batch transaction on [Polygonscan](https://polygonscan.com/).
 
 <Note>
-**Status Updates:** Subscribe to `WALLET.TRANSFER.BATCH.UPDATE` webhook events to receive real-time status notifications. See [Webhooks](/docs/webhooks) for setup instructions.
+  **Status Updates:** Subscribe to `WALLET.TRANSFER.BATCH.UPDATE` webhook events to receive real-time status notifications. See [Webhooks](/docs/webhooks) for setup instructions.
 </Note>
 
 ## Batch Requirements and Limits
 
 ### Current Limitations
 
-| Requirement         | Value                                                        |
-| :------------------ | :----------------------------------------------------------- |
-| **Max recipients**  | 50 per batch                                                 |
-| **Supported chains**| POLYGON only                                                 |
-| **Supported tokens**| USDC only                                                    |
-| **Min amount**      | 0.000001 USDC per recipient                                  |
+| Requirement | Value |
+| :-- | :-- |
+| **Max recipients** | 50 per batch |
+| **Supported chains** | POLYGON only |
+| **Supported tokens** | USDC only |
+| **Min amount** | 0.000001 USDC per recipient |
 
 <Info>
-**Expanding Soon:** Support for additional chains (Ethereum, Base) and tokens (USDT) is coming. Contact support if you need these features.
+  **Expanding Soon:** Support for additional chains (Ethereum, Base) and tokens (USDT) is coming. Contact support if you need these features.
 </Info>
 
 ### Exceeding Limits
 
 If you need to send to more than 50 recipients:
+
 1. Split into multiple batches of 50 or fewer
 2. Submit multiple batch transfer requests
 3. Each batch gets its own transaction hash
@@ -220,6 +221,7 @@ curl -X POST "https://sandbox.hifi.com/v2/wallets/transfers/batches" \
 ```
 
 When `requireApproval: true`:
+
 1. Batch enters `PENDING_APPROVAL` status
 2. Dashboard admins are notified via email and webhook
 3. Any admin can approve or reject the batch
@@ -254,7 +256,7 @@ When `requireApproval: true`:
 ```
 
 <Note>
-**Configuring Approvers:** Manage team roles in the HIFI Dashboard. Members can create batch transfers, but only admins can approve.
+  **Configuring Approvers:** Manage team roles in the HIFI Dashboard. Members can create batch transfers, but only admins can approve.
 </Note>
 
 ## Key Concepts
@@ -262,20 +264,22 @@ When `requireApproval: true`:
 <AccordionGroup>
   <Accordion title="Gas Cost Savings">
     Batch transfers dramatically reduce gas costs:
-    
+
     **Individual transfers:**
-    - 50 transfers × $0.10 gas = $5.00 total
-    
+
+    - 50 transfers × $$0.10 gas = $$5.00 total
+
     **Batch transfer:**
-    - 1 batch × $0.30 gas = $0.30 total
+
+    - 1 batch × $$0.30 gas = $$0.30 total
     - **94% cost reduction**
-    
+
     The more recipients, the greater the savings. Gas fees are paid from the source wallet.
   </Accordion>
 
   <Accordion title="Mixed Recipient Types">
     You can mix HIFI users and external wallets in the same batch:
-    
+
     ```json
     {
       "destination": {
@@ -292,18 +296,20 @@ When `requireApproval: true`:
       }
     }
     ```
-    
+
     Each recipient can be specified by `userId` (HIFI users) or `walletAddress` (any wallet).
   </Accordion>
 
   <Accordion title="Batch vs Single Transfers">
     **Use batch transfers when:**
-    - Sending to 2+ recipients at once
+
+    - Sending to 2\+ recipients at once
     - Running payroll or recurring distributions
     - Executing airdrops or rewards
     - Cost efficiency matters
-    
+
     **Use single transfers when:**
+
     - Sending to one recipient
     - Different chains per recipient
     - Transfers need independent timing
@@ -312,18 +318,18 @@ When `requireApproval: true`:
 
   <Accordion title="Failed Batch Recovery">
     If a batch transfer fails, no funds are moved (atomic execution). Common causes:
-    
-    - **Insufficient balance:** Ensure source wallet has enough for all recipients + gas
+
+    - **Insufficient balance:** Ensure source wallet has enough for all recipients \+ gas
     - **Invalid recipient:** Check all addresses are valid
     - **Network congestion:** Retry during lower activity
-    
+
     Check `failedReason` for specific error details, fix the issue, and submit a new batch.
   </Accordion>
 </AccordionGroup>
 
 ## Getting Help
 
-- 📧 **Email:** support@hifi.com
+- 📧 **Email:** [support@hifi.com](mailto:support@hifi.com)
 - 💬 **Slack:** Message us in our shared Slack channel
 
 ## Related Resources

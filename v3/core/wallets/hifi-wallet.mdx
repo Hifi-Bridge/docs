@@ -1,0 +1,174 @@
+---
+title: "HIFI Wallet"
+description: "Provision custodial, multi-chain wallets for a user and read their on-chain balances."
+---
+
+A HIFI Wallet is a custodial wallet HIFI provisions and secures on behalf of a user - one per chain. It's the on-chain balance a user's stablecoins live in - funded by [deposits](/v3/core/wallets/balances-deposits) or onramps and drawn down by offramps or on-chain transfers.
+
+<Info>
+  The wallet providers HIFI works with manage the private keys for security and regulatory compliance. This enables features such as account recovery and compliance monitoring, while users still retain full control over their funds through HIFI’s API.
+</Info>
+
+## What you can do with a HIFI Wallet
+
+A HIFI Wallet is the on/off-ramp for everything else a user does on-chain. Once a user has a wallet, it can act as the source or destination for:
+
+- **Onramp** - convert fiat into the wallet as stablecoins.
+- **Offramp** - convert the wallet's stablecoins to fiat and disburse globally.
+- **Crypto Transfer** - send stablecoins on-chain to another HIFI wallet or an [external wallet](/v3/core/wallets/external-wallet), including batched transfers to multiple recipients at once.
+- **Swap** - convert between stablecoins held in the wallet (e.g. USDC → USDT).
+- **Bridge** - move the same stablecoin from this wallet to a wallet or external wallet on a _different_ chain.
+
+## Provision a wallet
+
+Create a wallet for the user on all the chains supported by HIFI
+
+**Request**
+
+```shell
+curl -X POST https://sandbox.hifi.com/v3/users/usr_x1y2z3/wallets \
+  -H "Idempotency-Key: <unique-key>" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -d '{ "chains": ["POLYGON", "ETHEREUM", "TRON"] }'
+```
+
+**Response**
+
+```json
+{
+    "data": [
+        {
+            "id": "wlt_fkc0E4OsfHWZPNXiPhj4q",
+            "userId": "usr_iGSSehJJwKGY38hhc8py3",
+            "chain": "POLYGON",
+            "address": "0xEBf25E3eCA55Cf4300b637c0569fB6995DEb8153",
+            "createdAt": "2026-07-24T22:03:10.923Z",
+            "updatedAt": "2026-07-24T22:03:10.923Z"
+        },
+        {
+            "id": "wlt_IhAKCJ16xEcYkAzqIVqnu",
+            "userId": "usr_iGSSehJJwKGY38hhc8py3",
+            "chain": "ETHEREUM",
+            "address": "0x94AFE8D964Af80086d81B1b0F67504eA864482de",
+            "createdAt": "2026-07-24T22:03:11.006Z",
+            "updatedAt": "2026-07-24T22:03:11.006Z"
+        },
+        {
+            "id": "wlt_EQ0ElMR5x4qRy0P38jFRJ",
+            "userId": "usr_iGSSehJJwKGY38hhc8py3",
+            "chain": "TRON",
+            "address": "TBRPmgBL32FuZGuPffWqN4XfWKQ6S8ReB8",
+            "createdAt": "2026-07-24T22:03:14.726Z",
+            "updatedAt": "2026-07-24T22:03:14.726Z"
+        }
+    ],
+    "pagination": {
+        "hasMore": false,
+        "startCursor": "wlt_fkc0E4OsfHWZPNXiPhj4q",
+        "endCursor": "wlt_EQ0ElMR5x4qRy0P38jFRJ"
+    }
+}
+```
+
+<Info>
+  A user can only have one wallet per chain. If any requested chain already has one, the whole request fails with `RESOURCE_CONFLICT` (409) - nothing is provisioned, even for the chains that didn't conflict.
+</Info>
+
+## Retrieve a wallet's balance
+
+Reads the _live_ on-chain balance for a currency - useful right before quoting or initiating a transaction to confirm funds have actually settled.
+
+### Example: Retrieve a wallet's USDC balance
+
+Passing `currency=USDC` as the query params to retrieve the USDC balance
+
+**Request**
+
+```shell
+curl -X GET https://sandbox.hifi.com/v3/users/usr_x1y2z3/wallets/wlt_fkc0E4OsfHWZPNXiPhj4q/balance?currency=USDC \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+```
+
+**Response**
+
+```json
+{
+    "balance": "0",
+    "displayBalance": "0",
+    "tokenInfo": {
+        "tokenAddress": "0x41e94eb019c0762f9bfcf9fb1e58725bfb0e7582",
+        "standard": "ERC20",
+        "name": "USDC",
+        "symbol": "USDC",
+        "decimals": 6
+    }
+}
+```
+
+<Info>
+  `balance` is the raw onchain balance (unformatted); `displayBalance` is the balance formatted to the corresponding decimal places.
+</Info>
+
+## Retrieve a wallet's deposit history
+
+Get a list of incoming deposits for supported assets for a given wallet.
+
+### Example: Retrieving all USDC Deposits
+
+**Request**
+
+```shellscript
+curl -X GET https://sandbox.hifi.com/v3/users/usr_Cu7daJpEqY6gIAzG30R9s/wallets/wlt_ETUnJO1R8j9hDlthRnqNp/deposits?currency=USDT \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+```
+
+**Response**
+
+```json
+{
+    "data": [
+        {
+            "id": "760d0d4d-0b31-5bf9-8e75-61d5eaf1a679",
+            "userId": "usr_Cu7daJpEqY6gIAzG30R9s",
+            "createdAt": 1784926651388,
+            "updatedAt": 1784926651388,
+            "wallet": {
+                "id": "wlt_ETUnJO1R8j9hDlthRnqNp",
+                "address": "0xE153A986dE3E910E1221cC554a908a57abDd3a8f",
+                "chain": "ETHEREUM"
+            },
+            "transaction": {
+                "transactionHash": "0x7abebe03abbe08030435c1d567b11fb03fc6cedd467c5267c9b7ae395dba6fee",
+                "chain": "ETHEREUM",
+                "currency": "USDT",
+                "status": "COMPLETED",
+                "sourceAddress": "0x49042c4A9141A0bF388C07d971098E59D13D80c3",
+                "destinationAddress": "0xE153A986dE3E910E1221cC554a908a57abDd3a8f",
+                "contractAddress": "0x5532B426Bb07Bf73E2e28c106b6a593e7797f07E",
+                "amount": 499.5,
+                "unitAmount": "499500000"
+            }
+        }
+    ],
+    "pagination": {
+        "hasMore": false,
+        "startCursor": "760d0d4d-0b31-5bf9-8e75-61d5eaf1a679",
+        "endCursor": "dep_gO38BgTY7bV4h9VWWtxGQ"
+    }
+}
+```
+
+<Info>
+  Incoming deposits are also sent out via webhook messages, subscribe to receive real-time updates.
+</Info>
+
+## Getting Help
+
+- 📧 **Email:** [support@hifi.com](mailto:support@hifi.com)
+- 💬 **Slack:** Message us in our shared Slack channel
+
+## Related Resources
+
+- [Wallets Overview](/v3/core/wallets/overview) - Wallets resources
+- [External Wallet](/v3/core/wallets/external-wallet) - Manage externally owned wallets
+- [Deposit Offers](/v3/core/wallets/deposit-offers) - Accept/reject Canton transfers

@@ -1,0 +1,153 @@
+---
+title: "Onchain Transfer"
+description: "Move stablecoins between wallets on the same chain - to one recipient, or up to 50 at once."
+---
+
+An Onchain Transfer moves stablecoins from a [HIFI Wallet](/v3/core/wallets/hifi-wallet) to another wallet - a HIFI Wallet or an [External Wallet](/v3/core/wallets/external-wallet) - on the **same chain**. Unlike Onramp, Offramp, Swap, and Bridge, this isn't a quote-then-accept flow: it executes immediately on creation. Track progress with `GET` or webhooks.
+
+## Two types
+
+| Type | Settlement |
+| --- | --- |
+| Crypto Transfer | A single on-chain transaction. |
+| Batch Transfer | One on-chain transaction covering every recipient; `status` and `receipt` are batch-level only, not per-recipient. |
+
+## Create a crypto transfer
+
+Requires an `Idempotency-Key` header. Resubmitting the same `requestId` returns the existing transfer rather than creating a duplicate, regardless of its current status.
+
+**Request**
+
+```shell
+curl -X POST https://sandbox.hifi.com/v3/crypto-transfers \
+  -H "Idempotency-Key: <unique-key>" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -d '{
+    "requestId": "3f2504e0-4f89-11d3-9a0c-0305e82c3301",
+    "currency": "USDC",
+    "amount": 100,
+    "source": { "walletId": "wlt_fkc0E4OsfHWZPNXiPhj4q" },
+    "destination": { "walletId": "wlt_IhAKCJ16xEcYkAzqIVqnu" }
+  }'
+```
+
+**Response**
+
+```json
+{
+    "id": "ctx_QW1e2r3t4y",
+    "requestId": "3f2504e0-4f89-11d3-9a0c-0305e82c3301",
+    "status": "CREATED",
+    "currency": "USDC",
+    "amount": "100.00",
+    "failedReason": null,
+    "source": {
+        "userId": "usr_x1y2z3",
+        "walletId": "wlt_fkc0E4OsfHWZPNXiPhj4q"
+    },
+    "destination": {
+        "userId": "usr_a1b2c3",
+        "walletId": "wlt_IhAKCJ16xEcYkAzqIVqnu",
+        "externalWalletId": null
+    },
+    "contractAddress": "0x41e94eb019c0762f9bfcf9fb1e58725bfb0e7582",
+    "receipt": {
+        "transactionHash": null,
+        "userOpHash": null
+    },
+    "chain": "POLYGON",
+    "createdAt": "2026-07-24T22:00:00.000Z",
+    "updatedAt": "2026-07-24T22:00:00.000Z"
+}
+```
+
+## Create a batch transfer
+
+Similar to single transfer, but `destinations` takes multiple entries, each with its own `amount`. The whole batch settles as a single on-chain transaction with one `receipt`.
+
+**Request**
+
+```shell
+curl -X POST https://sandbox.hifi.com/v3/batch-transfers \
+  -H "Idempotency-Key: <unique-key>" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -d '{
+    "requestId": "3f2504e0-4f89-11d3-9a0c-0305e82c3302",
+    "currency": "USDC",
+    "source": { "walletId": "wlt_fkc0E4OsfHWZPNXiPhj4q" },
+    "destinations": [
+      { "walletId": "wlt_IhAKCJ16xEcYkAzqIVqnu", "amount": 100 },
+      { "externalWalletId": "extwlt_QW1e2r3t4y", "amount": 50 }
+    ]
+  }'
+```
+
+**Response**
+
+```json
+{
+    "id": "bctx_QW1e2r3t4y",
+    "requestId": "3f2504e0-4f89-11d3-9a0c-0305e82c3302",
+    "currency": "USDC",
+    "status": "CREATED",
+    "failedReason": null,
+    "source": {
+        "userId": "usr_x1y2z3",
+        "walletId": "wlt_fkc0E4OsfHWZPNXiPhj4q"
+    },
+    "destinations": [
+        { "userId": "usr_a1b2c3", "walletId": "wlt_IhAKCJ16xEcYkAzqIVqnu", "externalWalletId": null, "amount": "100.00" },
+        { "userId": null, "walletId": null, "externalWalletId": "extwlt_QW1e2r3t4y", "amount": "50.00" }
+    ],
+    "contractAddress": "0x41e94eb019c0762f9bfcf9fb1e58725bfb0e7582",
+    "receipt": {
+        "transactionHash": null,
+        "userOpHash": null
+    },
+    "chain": "POLYGON",
+    "createdAt": "2026-07-24T22:00:00.000Z",
+    "updatedAt": "2026-07-24T22:00:00.000Z"
+}
+```
+
+<Info>
+  `status` and `receipt` are batch-level only. Since the whole batch settles as one on-chain transaction, once `status` is `COMPLETED` every destination in the list has been paid.
+</Info>
+
+## Status
+
+| Status | Meaning | Terminal |
+| --- | --- | --- |
+| `CREATED` | Transfer created; queued for execution. | No |
+| `PENDING_APPROVAL` | Awaiting approval (only if `requireApproval: true` was set). | No |
+| `APPROVED` | Approved; proceeding to execution. | No |
+| `REJECTED` | Approval was rejected. | Yes |
+| `EXPIRED` | Expired before being approved. | Yes |
+| `INITIATED` | On-chain transaction submitted. | No |
+| `PENDING` | On-chain transaction confirming. | No |
+| `COMPLETED` | Transfer settled. | Yes |
+| `FAILED` | Transfer failed. | Yes |
+| `NOT_INITIATED` | Never got underway (e.g. insufficient balance, caught during execution rather than at request time). | Yes |
+| `CANCELLED` | Cancelled. | Yes |
+
+## Additional information
+
+<AccordionGroup>
+  <Accordion title="Transfer approval">
+    Offramps can be routed through an approval workflow before they settle - `status` shows `PENDING_APPROVAL` until someone approves it, or `REJECTED` if it's declined. Dedicated page coming soon.
+
+    Checkout Transfer Approval for more details.
+  </Accordion>
+</AccordionGroup>
+
+## Getting Help
+
+- 📧 **Email:** [support@hifi.com](mailto:support@hifi.com)
+- 💬 **Slack:** Message us in our shared Slack channel
+
+## Related Resources
+
+- [Transactions Overview](/v3/core/transactions/overview) - Transactions resources
+- [Bridge](/v3/core/transactions/bridge) - Move a stablecoin across chains
+- [HIFI Wallet](/v3/core/wallets/hifi-wallet) - Provision wallets and read balances
+- [External Wallet](/v3/core/wallets/external-wallet) - On-chain addresses for a counterparty

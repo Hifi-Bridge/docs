@@ -1,0 +1,76 @@
+---
+title: "Inbound Payment Exceptions"
+description: "How HIFI handles disputes, returns, reversals, and recalls for inbound payments across ACH, Wire, and RTP."
+sidebarTitle: "Inbound"
+---
+
+Inbound payment exceptions occur when a settled or in-flight payment into a HIFI Virtual Account is disputed, returned, reversed, or recalled. This page covers how each payment method handles these cases and what happens to the affected User and Virtual Account.
+
+<Note>
+  ACH Pull is restricted across HIFI by default. A Developer must enter into an additional agreement to enable ACH Pull.
+</Note>
+
+## Exception Handling
+
+When an inbound exception occurs, our compliance team will reach out to your compliance team to coordinate investigation.
+
+While an exception is under investigation:
+
+- The corresponding Virtual Account is **temporarily disabled**.
+- The associated User may be **frozen** and unable to create future Transactions.
+
+Both restrictions remain in place until the investigation is completed and finalized.
+
+## Pull Payments (ACH Debit)
+
+Disputes are initiated by the Receiver and processed through the ACH network as returns.
+
+### Common Return Codes
+
+| Category | Codes |
+| :-- | :-- |
+| Unauthorized | R05, R07, R10, R11, R29 |
+| Insufficient Funds | R01 |
+| Invalid / Closed Account | R02, R03, R04 |
+
+### Timeframes
+
+| Type | Window |
+| :-- | :-- |
+| Standard | 2 business days |
+| Unauthorized (consumer) | Up to 60 days |
+
+### Handling
+
+1. A reversal request is received via our sponsor bank.
+2. Returns are automatically processed by the network, and funds are debited from our account. Client balances may go negative and are covered by reserves.
+3. Compliance team will reach out for additional information.
+
+<Info>
+  Risk sits with the client (originator), mitigated via reserves and internal monitoring.
+</Info>
+
+## Push Payments (ACH Credit, Wire, RTP)
+
+Disputes are initiated by the Sender after funds have settled. Credits cannot be automatically reversed.
+
+### Handling
+
+1. A recall request is received via our sponsor bank.
+2. Compliance team review funds availability and the fraud / error context, and notify your compliance for additional information.
+3. Decision:
+   - **Funds available** → return processed.
+   - **Funds unavailable** → denied.
+
+<Info>
+  Risk sits with the sender. Coordination with HIFI compliance team to arrange return if funds are still available.
+</Info>
+
+## Getting Help
+
+- 📧 **Email:** [support@hifi.com](mailto:support@hifi.com)
+- 💬 **Slack:** Message us in our shared Slack channel
+
+## Related Resources
+
+- [Outbound Exceptions](/v3/payments/exceptions/outbounds) - Exceptions for out going payments

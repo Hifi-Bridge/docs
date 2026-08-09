@@ -1,0 +1,194 @@
+---
+title: "Settlement Rules"
+description: "Automatically split each Virtual Account deposit across multiple wallets, using flat, percentage, or tiered fee calculations."
+---
+
+<Info>
+  Looking to charge fees on Offramps instead? See [Developer Fees](/v3/core/features/developer-fees).
+</Info>
+
+A Settlement Rule is a reusable, profile-level resource that describes how to split an incoming [Virtual Account](/v3/core/orchestration/virtual-accounts) deposit across one or more destination wallets - as flat amounts, percentages, or tiered breakpoints based on deposit size. Create it once, then apply it to any Virtual Account on the same chain; every future deposit into that account is split automatically at conversion time.
+
+## How it works
+
+<Steps>
+  <Step title="Create a Settlement Rule">
+    Define up to 10 fee rules and their destination wallets. Not tied to any one Virtual Account - it's a standalone resource you can reuse across accounts on the same chain.
+  </Step>
+  <Step title="Apply it to a Virtual Account">
+    Associate the rule with a specific user's Virtual Account by ID. The rule's `chain` must match the account's destination chain.
+  </Step>
+  <Step title="Automatic distribution">
+    Each deposit is split the moment it converts: the destination wallet receives the remainder, and each rule's cut is sent on-chain to its configured wallet.
+  </Step>
+</Steps>
+
+## Rule Settings
+
+Each entry in `rules` (1-10 per Settlement Rule) describes one cut of the deposit:
+
+<AccordionGroup>
+  <Accordion title="type">
+    - `PERCENTAGE` : Fee amount is based on a percentage of the ticket size.
+    - `FIXED` : Fee amount is fixed and does not change based on ticket size.
+  </Accordion>
+
+  <Accordion title="calculationModel">
+    - `FIXED` : a single rate/amount for every deposit.
+    - `TIERED` : rate/amount varies by deposit size.
+  </Accordion>
+
+  <Accordion title="value">
+    Required when `calculationModel` is `FIXED`, omitted when `TIERED`.
+
+    - `PERCENTAGE` : a decimal between 0.0001 and 0.5 (0.01%-50%).
+    - `FIXED` : a flat stablecoin amount between 0.01 and 10,000,000.
+  </Accordion>
+
+  <Accordion title="tiers">
+    Required when `calculationModel` is `TIERED`, omitted when `FIXED`. Array of `{ upTo, value }` (up to 10), where `value` follows the same bounds as above based on the rule's `type`. Exactly one tier must have `upTo: null` - that's the open-ended top tier covering everything above the highest breakpoint.
+
+    <Tip>
+      `upTo` is exclusive. For example, below, a \$1000 deposit will fall under the 0.0005 band.
+    </Tip>
+
+    **Example**
+
+    ```json
+        {
+          "type": "PERCENTAGE",
+          "calculationModel": "TIERED",
+          "tiers": [
+            { "upTo": 1000, "value": 0.0007 },
+            { "upTo": 2000, "value": 0.0005 },
+            { "upTo": null, "value": 0.0002 }
+          ],
+          "walletAddress": "0xf2d048164BEeC0F1A111a840427b7ED67ceFb889"
+        }
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## How the Fee Math Works
+
+<Steps>
+  <Step title="Flat fees come off first">
+    Every `FIXED`-type rule deducts its amount directly from the deposit. For `TIERED` flat rules, the tier is picked using the deposit's full size, not any already-reduced remainder.
+  </Step>
+  <Step title="Percentage fees are solved against what's left, not the deposit">
+    All `PERCENTAGE`-type rules' rates are summed into one combined rate, then the destination wallet's share is solved so that `destinationAmount + (destinationAmount × combined rate)` equals the amount remaining after flat fees. Each percentage rule then takes its own rate _of that destination share_ - **so a 1% rule doesn't take 1% of the deposit, it takes 1% of what the destination wallet ends up with**. `TIERED` percentage rules pick their rate the same way as tiered flat fees, off the full deposit size.
+  </Step>
+  <Step title="The destination wallet gets the remainder">
+    Whatever's left after every flat and percentage cut is sent to the Virtual Account's destination wallet, on-chain, in the same batch as the fee payouts.
+  </Step>
+</Steps>
+
+### Example
+
+A 1,000 USDC deposit with a flat fee of 5 USDC and a percentage fee of 2%:
+
+1. The flat fee comes off first: `1,000 − 5 = 995` remaining.
+2. The percentage fee is solved against that remainder: `destinationAmount = 995 / 1.02 ≈ 975.49`, so the percentage-fee wallet receives `995 − 975.49 = 19.51` (2% of the destination's share, not of the original 995).
+3. Final split: `5` to the flat-fee wallet, `19.51` to the percentage-fee wallet, `975.49` to the Virtual Account's destination wallet.
+
+## Create a Settlement Rule
+
+**Request**
+
+```shell
+curl -X POST https://sandbox.hifi.com/v3/virtual-accounts/settlement-rules \
+  -H "Idempotency-Key: <unique-key>" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -d '{
+    "requestId": "550e8400-e29b-41d4-a716-446655440000",
+    "chain": "BASE",
+    "rules": [
+      {
+        "type": "PERCENTAGE",
+        "calculationModel": "FIXED",
+        "value": 0.001,
+        "walletAddress": "0xf2d048164BEeC0F1A111a840427b7ED67ceFb889"
+      },
+      {
+        "type": "FIXED",
+        "calculationModel": "FIXED",
+        "value": 0.5,
+        "walletAddress": "0xf2d048164BEeC0F1A111a840427b7ED67ceFb889"
+      }
+    ]
+  }'
+```
+
+**Response**
+
+```json
+{
+  "id": "sr_15c786fbde7a520ca4b3f312",
+  "requestId": "550e8400-e29b-41d4-a716-446655440000",
+  "chain": "BASE",
+  "rules": [
+    {
+      "type": "PERCENTAGE",
+      "calculationModel": "FIXED",
+      "value": 0.001,
+      "tiers": null,
+      "walletAddress": "0xf2d048164BEeC0F1A111a840427b7ED67ceFb889"
+    },
+    {
+      "type": "FIXED",
+      "calculationModel": "FIXED",
+      "value": 0.5,
+      "tiers": null,
+      "walletAddress": "0xf2d048164BEeC0F1A111a840427b7ED67ceFb889"
+    }
+  ],
+  "includeHIFIFee": false,
+  "createdAt": "2026-07-30T18:04:02.679Z",
+  "updatedAt": "2026-07-30T18:04:02.679Z"
+}
+```
+
+## Apply a Settlement Rule to a Virtual Account
+
+<Warning>
+  The Settlement Rule's `chain` must match the Virtual Account's destination chain.
+</Warning>
+
+```shell
+curl -X POST https://sandbox.hifi.com/v3/users/usr_gBlMyGTbuyknSPXlZtwlS/virtual-accounts/va_HtgURm58uWMF0EzmG8DAl/settlement-rules/sr_15c786fbde7a520ca4b3f312 \
+  -H "Idempotency-Key: <unique-key>" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+```json
+{
+  "message": "Settlement rule applied to virtual account successfully"
+}
+```
+
+Once applied, the Virtual Account's `settlementRuleId` field reflects the active rule - see [Virtual Accounts](/v3/core/orchestration/virtual-accounts#create-a-virtual-account).
+
+## Remove a Settlement Rule from a Virtual Account
+
+Future deposits stop being split; the Virtual Account's full deposit amount goes to its destination wallet again.
+
+```shell
+curl -X DELETE https://sandbox.hifi.com/v3/users/usr_gBlMyGTbuyknSPXlZtwlS/virtual-accounts/va_HtgURm58uWMF0EzmG8DAl/settlement-rules \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+```json
+{
+  "message": "Settlement rule removed from virtual account successfully"
+}
+```
+
+## Getting Help
+
+- 📧 **Email:** [support@hifi.com](mailto:support@hifi.com)
+- 💬 **Slack:** Message us in our shared Slack channel
+
+## Related Resources
+
+- [Virtual Accounts](/v3/core/orchestration/virtual-accounts) - The deposit accounts Settlement Rules attach to
+- [Developer Fees](/v3/core/features/developer-fees) - Fee calculation for Offramp transactions

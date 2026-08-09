@@ -1,0 +1,104 @@
+---
+title: "Corridors"
+description: "Which fiat ↔ stablecoin combinations are supported for Onramps and Offramps, globally and per user."
+---
+
+A Corridor is one supported combination of fiat country, fiat currency, transfer type, stablecoin, chain, and direction (`ONRAMP` or `OFFRAMP`). Before creating an [Onramp](/v3/core/transactions/onramps) or [Offramp](/v3/core/transactions/offramps), check whether the corridor you need is available - both in general, and for the specific user you're transacting on behalf of.
+
+## The corridor catalog
+
+`GET /v3/corridors` and `GET /v3/corridors/:corridorId` return the global catalog - every corridor HIFI could support, independent of any one profile or user.
+
+**Request**
+
+```shell
+curl "https://sandbox.hifi.com/v3/corridors?fiatCurrency=USD&direction=ONRAMP" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+**Response**
+
+```json
+{
+    "data": [
+        {
+            "id": "crd_Ab12Cd34Ef",
+            "fiatCurrency": "USD",
+            "fiatCountry": "USA",
+            "transferType": "ACH",
+            "cryptoCurrency": "USDC",
+            "chain": "POLYGON",
+            "direction": "ONRAMP",
+            "status": "ACTIVE"
+        }
+    ],
+    "pagination": {
+        "hasMore": false,
+        "startCursor": "crd_Ab12Cd34Ef",
+        "endCursor": "crd_Ab12Cd34Ef"
+    }
+}
+```
+
+Filter with `status`, `fiatCurrency`, `fiatCountry`, `transferType`, and `direction` - all optional.
+
+## Check corridor eligibility
+
+`GET /v3/users/:userId/corridors/eligibility` filters the catalog down to what a specific user can actually transact on right now.
+
+**Request**
+
+```shell
+curl "https://sandbox.hifi.com/v3/users/usr_gBlMyGTbuyknSPXlZtwlS/corridors/eligibility?fiatCurrency=USD&direction=OFFRAMP" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+**Response**
+
+```json
+{
+    "data": [
+        "crd_jowZoKVFDhwCZ9dobo1Os",
+    ],
+    "pagination": {
+        "hasMore": false,
+        "startCursor": "crd_jowZoKVFDhwCZ9dobo1Os",
+        "endCursor": "crd_jowZoKVFDhwCZ9dobo1Os"
+    }
+}
+```
+
+By default (`expand` omitted or `false`), `data` is just an array of corridor `id` strings - pass `expand=true` for the full objects shown below.
+
+```json
+{
+    "data": [
+        {
+            "id": "crd_jowZoKVFDhwCZ9dobo1Os",
+            "fiatCurrency": "USD",
+            "fiatCountry": "PHL",
+            "transferType": "SWIFT",
+            "cryptoCurrency": "USDC",
+            "chain": "SOLANA",
+            "direction": "OFFRAMP",
+            "status": "ACTIVE"
+        }
+    ],
+    "pagination": {
+        "hasMore": false,
+        "startCursor": "crd_jowZoKVFDhwCZ9dobo1Os",
+        "endCursor": "crd_jowZoKVFDhwCZ9dobo1Os"
+    }
+}
+```
+
+## Getting Help
+
+- 📧 **Email:** [support@hifi.com](mailto:support@hifi.com)
+- 💬 **Slack:** Message us in our shared Slack channel
+
+## Related Resources
+
+- [Eligibility Overview](/v3/core/eligibility/overview) - Eligibility resources
+- [Virtual Account Routes](/v3/core/eligibility/virtual-account-routes) - The equivalent check for Virtual Accounts
+- [Onramps](/v3/core/transactions/onramps) / [Offramps](/v3/core/transactions/offramps) - Gated by these corridors
