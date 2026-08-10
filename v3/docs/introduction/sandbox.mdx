@@ -1,0 +1,82 @@
+---
+title: "Sandbox"
+description: "Our sandbox environment provides a safe testing space to integrate our APIs. All transactions are simulated and hold no real-world value."
+---
+
+### Sandbox Base URL
+
+All sandbox API requests should be made to:
+
+```text
+https://sandbox.hifi.com/v3/
+```
+
+**Example request:**
+
+```bash
+curl -X GET "https://sandbox.hifi.com/ping" \
+  -H "Authorization: Bearer YOUR_SANDBOX_API_KEY"
+```
+
+---
+
+## Sandbox vs Production
+
+The sandbox environment is designed to simulate production behavior while providing a safe testing environment:
+
+| Feature | Sandbox | Production |
+| :-- | :-- | :-- |
+| **API Base URL** | `https://sandbox.`hifi`.com` | `https://production.`hifi`.com` |
+| **KYC Processing** | Auto-approved | Real-world compliance checks |
+| **Blockchain** | Testnet | Mainnet |
+| **Tokens** | No real value | Real token |
+
+### Automated Compliance Approval
+
+In sandbox, the compliance process is streamlined for testing:
+
+- **Auto-Approved** - Compliance submissions are usually approved within minutes
+- **Dummy Data** - Use mock data as inputs to simulate the flow
+- **Magic Value** - Use magic values to trigger different behaviors for testing
+
+<Info>
+  In production, KYC/B applications undergo real compliance review
+</Info>
+
+### Simulated Transactions
+
+All money movement in sandbox is simulated:
+
+- **Virtual Account Deposits** - Use the simulate deposit endpoint to mimic bank deposits
+- **Testnet Token** - Transactions use testnet tokens and are processed on a testnet network
+- **Testnet Wallets** - All wallet addresses are on blockchain testnets
+
+<Warning>
+  Only send testnet assets to testnet wallets. Real-world funds sent to testnet wallets cannot be recovered, and HIFI is not responsible for any resulting loss.
+</Warning>
+
+---
+
+## Transitioning to production
+
+When you're ready to move from sandbox to production:
+
+1. **Generate production API keys** in the dashboard
+2. **Update your base URL** from `sandbox.hifi.com` to `production.hifi.com`
+3. **Update API keys** in your environment variables
+4. **Remove simulation calls** - Delete any simulate-deposit endpoint usage
+5. **Enable real KYC** - Provide real user information and documents
+6. **Test thoroughly** - Start with small transactions before scaling
+
+---
+
+## Getting help
+
+If you encounter issues or have suggestions for improving the sandbox experience:
+
+- 📧 **Email:** [support@hifi.com](mailto:support@hifi.com)
+- 💬 **Slack:** Message us in our shared Slack channel
+
+<Info>
+  The sandbox environment is continuously updated to reflect production changes. If you notice discrepancies between sandbox and production behavior, please let us know.
+</Info>
