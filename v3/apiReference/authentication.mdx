@@ -1,0 +1,91 @@
+---
+title: "Authentication"
+description: "All requests to the HIFI API must be authenticated using API keys. This guide covers how to create, secure, and manage your keys."
+---
+
+## API Environments
+
+HIFI provides two environments for development and production:
+
+| Environment | Base URL | Purpose |
+| :-- | :-- | :-- |
+| **Sandbox** | `https://sandbox.hifi.com` | Testing and development with simulated transactions |
+| **Production** | `https://production.hifi.com` | Live transactions with real money movement |
+
+## Creating API Keys
+
+### Access the API Keys Section
+
+1. Log in to the [HIFI Dashboard](https://app.hifi.com)
+2. Navigate to **Developer** → **API Keys**
+
+### Select Your Environment
+
+Choose which environment you're creating keys for:
+
+- **Sandbox** - For testing and development
+- **Production** - For live operations
+
+<Info>
+  **Best Practice:** Start with sandbox keys to build and test your integration before moving to production.
+</Info>
+
+### Generate a New API Key
+
+1. Click the **"New API Key"** button
+2. Provide a descriptive name that identifies the key's purpose<br />Examples:
+   - "Production Web App"
+   - "Staging Server"
+   - "Mobile App Development"
+   - "Webhook Service"
+3. Click **"Create"** to create the key
+
+### Copy and Secure Your API Key
+
+<Warning>
+  API keys are shown only once at creation. If you lose your key, you'll need to generate a new one and update your application.
+</Warning>
+
+**After generation:**
+
+1. ✅ **Immediately copy the API key** from the dashboard
+2. ✅ **Store it securely** in your environment variables or secrets manager
+3. ✅ **Never commit keys** to version control (Git, SVN, etc.)
+4. ✅ **Never expose keys** in client-side code or public repositories
+
+## Managing API Keys
+
+### Deleting API Keys
+
+If a key is compromised or no longer needed:
+
+1. Navigate to **Developer** → **API Keys** in the dashboard
+2. Find the key you want to delete
+3. Click **"Delete"** or the delete icon
+4. Confirm the deletion
+
+<Warning>
+  Deleted keys stop working immediately. Ensure you've updated your application with a new key before deleting the old one.
+</Warning>
+
+## Use Your API Key
+
+All API requests to HIFI should include the API key in the `Authorization` header, prefixed with `Bearer`
+
+```bash
+curl -X GET "https://sandbox.hifi.com/ping" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+## Getting Help
+
+**Having trouble with authentication?**
+
+1. ✅ Verify your API key is active in the dashboard
+2. ✅ Check the header format: `Authorization: Bearer YOUR_KEY`
+3. ✅ Ensure you're using the correct environment endpoint
+
+**Still need help?**
+
+- 📧 **Email:** [support@hifi.com](mailto:support@hifi.com)
+- 💬 **Slack:** Message us in our shared Slack channel
