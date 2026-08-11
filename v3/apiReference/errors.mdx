@@ -1,0 +1,72 @@
+---
+title: "Error Codes"
+description: "When a request fails, the HIFI API returns a JSON body describing what went wrong. This guide covers the error format and how to handle each error type."
+---
+
+## Error Format
+
+Every error response has the same shape: a `type` you can branch on programmatically, and a human-readable `message`.
+
+```json
+{
+  "type": "VALIDATION_ERROR",
+  "message": "One or more fields are invalid or missing."
+}
+```
+
+When an error is tied to specific input fields, the response also includes a `fields` array with one entry per problem field:
+
+```json
+{
+  "type": "VALIDATION_ERROR",
+  "message": "One or more fields are invalid or missing.",
+  "fields": [
+    {
+      "code": "TOO_SMALL",
+      "field": "source.amount",
+      "message": "Amount must be greater than 0"
+    },
+    {
+      "code": "INVALID_TYPE",
+      "field": "destination.externalAccountId",
+      "message": "Expected string, received number"
+    }
+  ]
+}
+```
+
+Use `type` (and the HTTP status code) to decide how your integration should react. Use `fields[].field` to point a user at exactly what needs fixing. Treat `message` and `fields[].message` as text for humans — they can change wording over time.
+
+## Error Types
+
+| Status | Type | Meaning |
+| :-- | :-- | :-- |
+| 400 | `VALIDATION_ERROR` | The request body, params, or query failed schema validation. Check `fields` for details. |
+| 401 | `UNAUTHORIZED` | The request wasn't authenticated, or the API key isn't authorized for this resource/environment. |
+| 403 | `ACTION_NOT_ALLOWED` | The authenticated caller doesn't have permission to perform this action. |
+| 404 | `RESOURCE_NOT_FOUND` | A resource referenced by the request (in the path, body, or query) doesn't exist or doesn't belong to your account. |
+| 409 | `RESOURCE_CONFLICT` | The request conflicts with the current state of a resource — for example, reusing an `Idempotency-Key` for a request that's still processing. |
+| 422 | `RESOURCE_NOT_USABLE` | A referenced resource exists but isn't in a usable state (e.g. an inactive external account). |
+| 422 | `RESOURCE_NOT_ELIGIBLE` | A referenced resource exists and is active, but isn't eligible for this specific operation (e.g. a currency mismatch between source and destination). |
+| 422 | `RESOURCE_LIMIT_EXCEEDED` | A resource limit was exceeded. |
+| 422 | `ACTION_NOT_SUPPORTED` | The requested action isn't supported in this context. |
+| 422 | `ACTION_NOT_ALLOWED` | The action isn't allowed given the current account configuration (e.g. a feature that isn't enabled for your account). Same `type` as the 403 case above — key off the status code to tell them apart. |
+| 422 | `IDEMPOTENCY_KEY_CONFLICT` | An `Idempotency-Key` was reused with a request body that doesn't match the original request. |
+| 500 | `INTERNAL_SERVER_ERROR` | Something went wrong on our end. Safe to retry with backoff. |
+
+<Info>
+  `ACTION_NOT_ALLOWED` is returned for two distinct situations — a 403 (you're not permitted to take this action at all) and a 422 (the action is disallowed by your account's current configuration). Branch on the HTTP status code, not just the `type` string, to tell them apart.
+</Info>
+
+## Idempotency Conflicts
+
+If you send a request with an `Idempotency-Key` header, HIFI stores the key alongside a hash of the request. Reusing that key later behaves differently depending on what changed:
+
+- **Same key, same request body:** while the original request is still processing, you'll get a `409 RESOURCE_CONFLICT`. Once it completes, HIFI replays the original response instead of re-executing the request (look for the `Idempotent-Replayed` response header).
+- **Same key, different request body:** you'll get a `422 IDEMPOTENCY_KEY_CONFLICT` — the key is already tied to a different payload.
+
+**General guidance:**
+
+- **4xx errors** mean the request itself needs to change — don't retry without fixing the input.
+- **5xx errors** are safe to retry with exponential backoff.
+- Log the full error body, not just `type` — `fields` and `message` are essential for debugging.
