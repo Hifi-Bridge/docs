@@ -16,7 +16,7 @@ Different information is required for verification, including both non-documenta
 | `dateOfBirth` | Date of birth (YYYY-MM-DD) | Yes |
 | `email` | Contact email address | Yes |
 | `phoneNumber` | Phone number with country code | Yes |
-| `physicalAddress` | Residential address (line1, city, state, postalCode, country) | Yes |
+| `physicalAddress` | Residential address (line 1, city, state, postal code, country) | Yes |
 | `taxId` | Tax identification number in the party's country | Yes |
 | `taxIdType` | Tax identification number type (e.g. SSN, ITIN) | No |
 | `taxIdCountry` | Tax identification number issuance country | No |
@@ -203,7 +203,7 @@ For more details check [Documents](/v3/core/compliance/documents)
   </Step>
 </Steps>
 
-Associated parties are verified as part of the business's KYB application — they do not have a separate compliance status. Once all parties are added, submit the business's application and track its status as described in [KYB (Business)](/v3/core/compliance/kyb).
+Associated parties are verified as part of the business's KYB application - they do not have a separate compliance status. Once all parties are added, submit the business's application and track its status as described in [KYB (Business)](/v3/core/compliance/kyb).
 
 If an associated party's information needs updating, the business's application will move to `REQUIRES_INFO` with an `UPDATE_ASSOCIATED_PARTY` action in the `rfiActions` field, including the `associatedPartyId` and the fields to correct.
 

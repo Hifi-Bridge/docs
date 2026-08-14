@@ -14,7 +14,7 @@ An Orchestration Address is the **inverse** of a [Virtual Account](/v3/core/orch
 Each Orchestration Address is bound to **one user, one chain, one source token (USDC or USDT), and one destination [External Account](/v3/core/counter-party/external-account)**. The address is persistent - once created it lives forever and keeps accepting deposits, even after deactivation.
 
 <Note>
-  Once orchestration address is deactivated, no new conversion will be triggered.
+  Once an orchestration address is deactivated, no new conversions will be triggered.
 </Note>
 
 ## How Orchestration Addresses Work
@@ -233,7 +233,7 @@ curl "https://sandbox.hifi.com/v3/users/usr_gBlMyGTbuyknSPXlZtwlS/orchestration-
 
 ## Tracking Batches
 
-Use the GET `v3/users/:userId/orchestration-addresses/:orchId/batches` to retrieve a list of created batches of an orchestration addresses with optional query filter.
+Use GET `v3/users/:userId/orchestration-addresses/:orchId/batches` to retrieve a list of created batches for an orchestrion address. You can also pass in optional query filters.
 
 **Request**
 

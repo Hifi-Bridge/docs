@@ -246,19 +246,17 @@ Some destinations require a `purposeOfPayment` describing why the payment is bei
 
     The quote is only generated once the transfer request is approved. Accept the quote afterward to kick off the transaction flow.
 
-    Checkout Transfer Approval for more details.
+    Check out [Transfer Approval](/v3/core/transactions/offramps#transfer-approval) for more details.
   </Accordion>
 
   <Accordion title="Exchange fees">
-    Some stablecoin offramps include a real conversion fee priced off live market rates, reflected in `quote.conversionFee` - depending on your billing preference, it's either deducted from the transaction (`ON_TRANSACTION`) or billed separately (`ON_INVOICE`). 
-
-    Checkout Exchange Fees for more details.
+    Some stablecoin offramps include a real conversion fee priced off live market rates, reflected in `quote.conversionFee` - depending on your billing preference, it's either deducted from the transaction (`ON_TRANSACTION`) or billed separately (`ON_INVOICE`).
   </Accordion>
 
   <Accordion title="Developer fees">
     You can attach your own fee on top of an offramp by setting `developerFee`.
 
-    Checkout Developer Fees for more details.
+    Check out [Developer Fees](https://docs.hifi.com/v3/features/developer-fee) for more details.
   </Accordion>
 </AccordionGroup>
 

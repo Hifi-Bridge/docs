@@ -35,7 +35,7 @@ A Virtual Account is a persistent USD bank account bound to one user, one destin
 Steps 3 through 6 repeat automatically for every future deposit - the Virtual Account never needs to be recreated or re-armed.
 
 <Tip>
-  For supported pairs check out [Virtual Account Routing](/v3/core/eligibility/virtual-account-routing)
+  For supported pairs check out [Virtual Account Routing](/v3/core/eligibility/virtual-account-routing).
 </Tip>
 
 ## Create a Virtual Account
@@ -197,7 +197,7 @@ curl -X POST https://sandbox.hifi.com/v3/users/usr_gBlMyGTbuyknSPXlZtwlS/virtual
 ```
 
 <Tip>
-  use `RTP` as the `transferType` for faster simulation
+  Use `RTP` as the `transferType` for faster simulation.
 </Tip>
 
 **Response**
@@ -212,17 +212,15 @@ curl -X POST https://sandbox.hifi.com/v3/users/usr_gBlMyGTbuyknSPXlZtwlS/virtual
 
 <AccordionGroup>
   <Accordion title="Settlement Rules">
-    A Virtual Account can have a Settlement Rule attached that automatically splits each incoming deposit across multiple destination wallets (e.g. by percentage or fixed amount, with tiered breakpoints). 
+    A Virtual Account can have a Settlement Rule attached that automatically splits each incoming deposit across multiple destination wallets (e.g. by percentage or fixed amount, with tiered breakpoints).
 
-    Check out Settlement Rules for more information.
+    Check out [Settlement Rules](https://docs.hifi.com/v3/features/settlement-rule) for more information.
   </Accordion>
 
   <Accordion title="Routing Eligibility">
     Before creating a Virtual Account, you can check whether a given country/currency/transfer-rail/destination-chain combination is currently supported via `GET /v3/virtual-accounts/routes/eligibility`.
 
     Check out [Virtual Account Routing](/v3/core/eligibility/virtual-account-routing) for more information.
-
-     
   </Accordion>
 </AccordionGroup>
 

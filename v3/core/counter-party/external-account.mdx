@@ -3,7 +3,7 @@ title: "External Account"
 description: "Register and manage bank accounts for a counterparty, used as offramp destinations or onramp funding sources."
 ---
 
-An External Account is a bank account belonging to a [Counter Party](/v3/core/counter-party/counter-party). Once registered, it can act as:
+An External Account is a bank account belonging to a [Counterparty](/v3/core/counter-party/counter-party). Once registered, it can act as:
 
 - The **destination** for an [Offramp](/v3/core/offramp/overview) - stablecoins converted and paid out to this account.
 - The **source** for an ACH-pull [Onramp](/v3/core/onramp/overview) - HIFI debits this account to fund the onramp, instead of the user sending fiat in directly.
@@ -168,7 +168,7 @@ curl https://sandbox.hifi.com/v3/users/usr_x1y2z3/counter-parties/cpty_a1b2c3/ex
 Instead of a user sending fiat in directly, an onramp can be funded by pulling from a counterparty's external account - pass `source.externalAccountId` instead of `source.userId` when creating the onramp. See [Onramp](/v3/core/onramp/overview) for the full request shape.
 
 <Info>
-  ACH-pull funding only works with `transferType: "ACH"` accounts, and the onramp's `source.currency` must match the external account's `currency`. 
+  ACH-pull funding only works with `transferType: "ACH"` accounts, and the onramp's `source.currency` must match the external account's `currency`.
 </Info>
 
 <Info>

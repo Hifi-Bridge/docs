@@ -4,7 +4,7 @@ description: "Transfer approvals provide multi-party authorization for transacti
 ---
 
 <Info>
-  Transfer approvals apply to on-chain stablecoin transfers ([Onchain Transfer](/v3/core/transactions/onchain-transfer), including batch transfers), [Bridge](/v3/core/transactions/bridge), and [Offramps](/v3/core/transactions/offramps). Onramps do not support approval workflows.
+  Transfer approvals apply to on-chain stablecoin transfers ([Onchain Transfer](/v3/core/transactions/onchain-transfer), including batch transfers), [Bridges](/v3/core/transactions/bridge), and [Offramps](/v3/core/transactions/offramps). Onramps do not support approval workflows.
 </Info>
 
 ## How Transfer Approvals Work
@@ -44,7 +44,7 @@ When using the API:
 
 - Include `requireApproval: true` when creating transfers.
 - Transfers enter the approval workflow until approved or rejected.
-- Supported on Onchain Transfer (single and batch), Bridge, and Offramp.
+- Supported on Onchain Transfers (single and batch), Bridges, and Offramps.
 - Transactions enter the transfer approval flow **only** if `requireApproval: true` is set in the request body - the dashboard role logic above does not apply to API-initiated transfers.
 - Can be integrated into your application's approval logic.
 

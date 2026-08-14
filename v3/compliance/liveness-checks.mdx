@@ -10,15 +10,15 @@ Check out [High Risk Regions](/v3/compliance/regions#high-risk-regions) for the 
 ## How it works
 
 <Steps>
-  <Step title="Submit compliance check">
+  <Step title="Submit for compliance review">
     Once the user's KYC/KYB information is updated, submit the information for compliance review.
 
     <Tip>
-      For more details check out [KYC](/v3/core/compliance/kyc) and [KYB](/v3/core/compliance/kyb)
+      For more details check out [KYC](/v3/core/compliance/kyc) and [KYB](/v3/core/compliance/kyb).
     </Tip>
   </Step>
   <Step title="Retrieve the verification link">
-    If the UBO or the individual requires a liveness check, the verification link will be returned under `rfiActions`with type `COMPLETE_LIVENESS_CHECK`. 
+    If the UBO or the individual requires a liveness check, the verification link will be returned under `rfiActions`with type `COMPLETE_LIVENESS_CHECK`.
 
     **Example**
 
@@ -45,7 +45,7 @@ Check out [High Risk Regions](/v3/compliance/regions#high-risk-regions) for the 
   <Step title="Complete liveness check">
     Share the link with your user to complete the liveness check requirement. Once the liveness check is submitted, the compliance status will update if the result is valid.
   </Step>
-  <Step title="Keep track of status update">
+  <Step title="Keep track of status updates">
     Subscribe to the compliance webhook to receive real-time updates on the user's KYC/KYB status, or poll `GET /v3/users/:userId/compliance/status`.
   </Step>
 </Steps>

@@ -1,9 +1,9 @@
 ---
-title: "Counter Party"
+title: "Counterparty"
 description: "Create and manage the individual or business counterparties a user transacts with."
 ---
 
-A Counter Party is the individual or business on the other side of a transaction from a user, a recipient a user pays out to, or a payer a user is funded by. It holds the identity information (name, address, tax ID) shared across all of that counterparty's accounts: an [External Account](/v3/core/counter-party/external-account), [External Card](/v3/core/counter-party/external-card), or [External Wallet](/v3/core/wallets/external-wallet).
+A Counterparty is the individual or business on the other side of a transaction from a user, a recipient a user pays out to, or a payer a user is funded by. It holds the identity information (name, address, tax ID) shared across all of that counterparty's accounts: an [External Account](/v3/core/counter-party/external-account), [External Card](/v3/core/counter-party/external-card), or [External Wallet](/v3/core/wallets/external-wallet).
 
 <Info>
   `type` is set once at creation and can't be changed. Individuals use `firstName`/`lastName`; businesses use `businessName`.
@@ -43,7 +43,7 @@ Every field below can be set at creation or added later with an [update](#update
 | `taxIdType` | `EIN`, `VAT`, `OTHER` | No\* |
 | `taxIdCountry` | ISO 3166-1 alpha-3 | No\* |
 
-## Create a counter party
+## Create a counterparty
 
 Registers a new counterparty for a user. Only minimal identity fields are required to create one - enough to reference the counterparty later when adding an account.
 
@@ -88,14 +88,14 @@ curl -X POST https://sandbox.hifi.com/v3/users/usr_x1y2z3/counter-parties \
 ```
 
 <Info>
-  Each account type needs more than this baseline: an External Account requires `address`; an External Card requires `phoneNumber`, `email`, and `address`. Add the fields upfront if you know which accounts you'll need, or [update the counter party](#update-a-counter-party) later - HIFI rejects the account creation with `ACTION_NOT_ALLOWED` (422) if a required field is missing.
+  Each account type needs more than this baseline: an External Account requires `address`; an External Card requires `phoneNumber`, `email`, and `address`. Add the fields upfront if you know which accounts you'll need, or [update the counterparty](#update-a-counter-party) later - HIFI rejects the account creation with `ACTION_NOT_ALLOWED` (422) if a required field is missing.
 </Info>
 
 <Tip>
   Make sure the counterparty's status is `ACTIVE` before moving forward to add external accounts, cards, and wallets.
 </Tip>
 
-## Update a counter party
+## Update a counterparty
 
 Adds or corrects identity fields on an existing counterparty - for example, filling in `address` before adding an External Account.
 
@@ -150,14 +150,14 @@ curl -X PATCH https://sandbox.hifi.com/v3/users/usr_x1y2z3/counter-parties/cpty_
 ```
 
 <Info>
-  You can only update fields that apply to the counter party's `type` - you can't turn an individual into a business, and `type` itself isn't updatable.
+  You can only update fields that apply to the counterparty's `type` - you can't turn an individual into a business, and `type` itself isn't updatable.
 </Info>
 
 <Tip>
   Make sure the counterparty's status is `ACTIVE` before moving forward to add external accounts, cards, and wallets.
 </Tip>
 
-## Deactivate a counter party
+## Deactivate a counterparty
 
 Marks a counterparty inactive. Its record and accounts are preserved for history, but new accounts can no longer be added under it.
 

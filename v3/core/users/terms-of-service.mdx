@@ -126,7 +126,7 @@ Alternatively, you can collect user consent through HIFI-hosted pages. This appr
 
 <Steps>
   <Step title="Generate ToS link">
-    When the user accepts your privacy policy (which includes HIFI's terms by reference), generate a HIFI ToS Link in the background
+    When the user accepts your privacy policy (which includes HIFI's terms by reference), generate a HIFI ToS Link in the background.
 
     **Request:**
 
@@ -160,7 +160,7 @@ Alternatively, you can collect user consent through HIFI-hosted pages. This appr
     </Frame>
   </Step>
   <Step title="Wait for webhook message">
-    After the ToS Link is accepted, HIFI will send out webhook message to the registered URL.
+    After the ToS Link is accepted, HIFI will send out a webhook message to the registered URL.
 
     **Response:**
 
@@ -176,7 +176,7 @@ Alternatively, you can collect user consent through HIFI-hosted pages. This appr
     ```
   </Step>
   <Step title="Create User">
-    Create User with the accepted ToS Link ID
+    Create User with the accepted ToS Link ID.
 
     **Request:**
 
@@ -210,8 +210,8 @@ White-label the ToS page with your branding and include a redirect URL for once 
 
 1. **Upload Branding:** Upload your company logo via [https://app.hifi.com/sandbox/developer/template](https://app.hifi.com/sandbox/developer/template)
 2. **Receive Template ID:** Once the logo is uploaded, you will receive the template ID on the same page
-3. **Use Template ID:** Include `templateId` when generating ToS Link
-4. **Include redirect URL**: Include `redirectUrl` when you want to send user to a different page once terms of service is accepted.
+3. **Use Template ID:** Include `templateId` when generating the ToS Link
+4. **Include redirect URL**: Include `redirectUrl` when you want to send the user to a different page once the terms of service is accepted
 
 ```bash
 curl -X POST "https://sandbox.hifi.com/v3/tos-link" \
@@ -232,5 +232,5 @@ curl -X POST "https://sandbox.hifi.com/v3/tos-link" \
 ## Related Resources
 
 - [Users](/v3/core/users/overview) - Create user accounts after ToS acceptance
-- [HIFI Terms & Conditions](https://www.hifi.com/terms-conditions) - View the terms users accept
-- [HIFI Privacy Policy](https://www.hifi.com/privacy-policy) - View the privacy policy users accept
+- [HIFI Terms & Conditions](https://www.hifi.com/terms-conditions) - View the terms users' accept
+- [HIFI Privacy Policy](https://www.hifi.com/privacy-policy) - View the privacy policy users' accept

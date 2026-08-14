@@ -16,7 +16,7 @@ Different information is required for verification, including both non-documenta
 | `dateOfBirth` | Date of birth (YYYY-MM-DD) | Yes |
 | `email` | Contact email address | Yes |
 | `phoneNumber` | Phone number with country code | Yes |
-| `physicalAddress` | Residential address (line1, city, state, postalCode, country) | Yes |
+| `physicalAddress` | Residential address (line 1, city, state, postal code, country) | Yes |
 | `taxId` | Tax identification number in the user's country | Yes |
 | `taxIdType` | Tax identification number (e.g. SSN, ITIN) | No |
 | `taxIdCountry` | Tax identification number issuance country | No |
@@ -41,7 +41,7 @@ For more details check [Documents](/v3/core/compliance/documents)
 </Tip>
 
 <Tip>
-  `proofOfResidence` needs to be issued within the **last 3 months** 
+  `proofOfResidence` needs to be issued within the **last 3 months**
 </Tip>
 
 ## Questionnaire (Optional)
@@ -310,7 +310,7 @@ After submission, the application has the following possible states:
   </Accordion>
 
   <Accordion title="PENDING">
-    ?
+    No action required - the information has been uploaded and is awaiting processing.
   </Accordion>
 
   <Accordion title="IN_REVIEW">
@@ -319,7 +319,7 @@ After submission, the application has the following possible states:
     **What you can expect:**
 
     - An RFI may be sent to your compliance mailbox requesting additional information
-    - The status may move to `REQUIRES_INFO` after our compliance check — use GET `/v3/users/:user_id/compliance/status` to see what additional information is required
+    - The status may move to `REQUIRES_INFO` after our compliance check - use GET `/v3/users/:user_id/compliance/status` to see what additional information is required
     - The status may move to `REJECTED` or `APPROVED` when a final decision is made by our compliance team
   </Accordion>
 
@@ -371,8 +371,8 @@ When a submitted application needs updated information, the status transitions t
 
 | Type | Action |
 | :-- | --- |
-| `UPDATE_PROFILE` | Update the user's profile information before resubmission, a common reason is information that doesn't match the submitted documentation. |
-| `RESUBMIT_DOCUMENT` | Update the user's documentation before resubmission, common reasons include expired, blurry, or unqualified documents. |
+| `UPDATE_PROFILE` | Update the user's profile information before resubmission - a common reason is information that doesn't match the submitted documentation. |
+| `RESUBMIT_DOCUMENT` | Update the user's documentation before resubmission - common reasons include expired, blurry, or unqualified documents. |
 
 ## Getting Help
 

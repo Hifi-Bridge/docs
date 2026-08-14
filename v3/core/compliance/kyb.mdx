@@ -24,7 +24,7 @@ A KYB application consists of information about the business itself and each of 
 
 ## Information Required
 
-Different information is required for verification, including both non-documentary and documentary checks. For business users, associated party and ultimate beneficial owner (UBO) information is required in addition to the company information.
+Different information is required for verification, including both non-documentary and documentary checks. For business users, associated parties, and ultimate beneficial owners (UBOs), information is required in addition to the company information.
 
 ### Profile
 
@@ -34,15 +34,15 @@ Different information is required for verification, including both non-documenta
 | `businessDescription` | Description of the business activities | Yes |
 | `email` | Contact email address | Yes |
 | `phoneNumber` | Phone number with country code | Yes |
-| `businessType` | Legal entity type (e.g. LLC, CORPORATION) | Yes |
+| `businessType` | Legal entity type (e.g. LLC, Corporation) | Yes |
 | `businessIndustry` | Industry code of the business | Yes |
 | `registrationNumber` | Business registration number | Yes |
 | `incorporationDate` | Date of business incorporation | Yes |
-| `physicalAddress` | Business address (line1, city, state, postalCode, country) | Yes |
+| `physicalAddress` | Business address (line 1, city, state, postal code, country) | Yes |
 | `taxId` | Tax identification number (e.g. EIN for US businesses) | Yes |
 | `taxIdType` | Tax identification number (e.g. SSN, ITIN) | Yes |
 | `taxIdCountry` | Tax identification number issuance country | Yes |
-| `registeredAddress` | Registered business address (line1, city, state, postalCode, country) | Yes |
+| `registeredAddress` | Registered business address (line 1, city, state, postal code, country) | Yes |
 | `website` | Business website | Yes |
 
 ### Documentation
@@ -61,7 +61,7 @@ For more details check [Documents](/v3/core/compliance/documents)
 </Tip>
 
 <Tip>
-  `companyDetails` needs to be issued within the **last 3 months** 
+  `companyDetails` needs to be issued within the **last 3 months**
 </Tip>
 
 ### Associated Parties
@@ -169,7 +169,7 @@ Each UBO or person with significant control of the business must be added as an 
 
     {/* TODO: Replace with a real sandbox request/response pair */}
   </Step>
-  <Step title="Add Busines Documentation">
+  <Step title="Add Business Documentation">
     Upload the documentation to fulfill the business `legalPresence`, `ownershipStructure`, `controlStructure` and `companyDetails` requirements
 
     <Info>
@@ -517,7 +517,7 @@ After submission, the application has the following possible states:
 
 <AccordionGroup>
   <Accordion title="APPROVED">
-    No additional action is needed — the user has already passed HIFI's compliance check.
+    No additional action is needed - the user has already passed HIFI's compliance check.
 
     **What's next:**
 
@@ -525,7 +525,7 @@ After submission, the application has the following possible states:
   </Accordion>
 
   <Accordion title="PENDING">
-    No action required — the information has been uploaded and is awaiting processing.
+    No action required - the information has been uploaded and is awaiting processing.
   </Accordion>
 
   <Accordion title="IN_REVIEW">
@@ -534,7 +534,7 @@ After submission, the application has the following possible states:
     **What you can expect:**
 
     - An RFI may be sent to your compliance mailbox requesting additional information
-    - The status may move to `REQUIRES_INFO` after our compliance check — use GET `/v3/users/:user_id/compliance/status` to see what additional information is required
+    - The status may move to `REQUIRES_INFO` after our compliance check - use GET `/v3/users/:user_id/compliance/status` to see what additional information is required
     - The status may move to `REJECTED` or `APPROVED` when a final decision is made by our compliance team
     - A verification link may be included in the `rfiActions` field when a liveness check is required for an associated party with type `COMPLETE_LIVENESS_CHECK`.
 
@@ -608,9 +608,9 @@ After submission, the application has the following possible states:
     }
     ```
 
-    **Breaksdown**
+    **Breakdown**
 
-    For the above example, there are 2 update requirements for the business information — these come in objects that do not include an `associatedPartyId`:
+    For the above example, there are 2 update requirements for the business information - these come in objects that do not include an `associatedPartyId`:
 
     - `UPDATE_PROFILE`: registrationNumber
     - `UPLOAD_DOCUMENT`: `doc_pu0aoLYYTST8xxewiyblK`
