@@ -61,7 +61,7 @@ For more details check [Documents](/v3/core/compliance/documents)
 </Tip>
 
 <Tip>
-  `companyDetails` needs to be issued within the **last 3 months** 
+  `companyDetails` needs to be issued within the **last 3 months**
 </Tip>
 
 ### Associated Parties
@@ -536,25 +536,6 @@ After submission, the application has the following possible states:
     - An RFI may be sent to your compliance mailbox requesting additional information
     - The status may move to `REQUIRES_INFO` after our compliance check — use GET `/v3/users/:user_id/compliance/status` to see what additional information is required
     - The status may move to `REJECTED` or `APPROVED` when a final decision is made by our compliance team
-    - A verification link may be included in the `rfiActions` field when a liveness check is required for an associated party with type `COMPLETE_LIVENESS_CHECK`.
-
-    **Example**
-
-    ```json
-    {
-        "userId": "usr_V3leEgLs3FJ4jcI7rfPWJ",
-        "complianceStatus": "IN_REVIEW",
-        "message": null,
-        "rfiActions": [
-            {
-                "type": "COMPLETE_LIVENESS_CHECK",
-                "message": "Please complete the liveness check via verification link",
-                "verificationLink": "https://in.sumsub.com/websdk/p/sbx_iNZi5pTWEjmzOPEQ",
-                "associatedPartyId": "ap_tIFGUMSVnyUrkc68kPqtV"
-            }
-        ]
-    }
-    ```
 
     <Info>
       KYB reviews typically take longer than individual KYC due to the additional entity and associated party verification.
@@ -603,6 +584,12 @@ After submission, the application has the following possible states:
                 "associatedPartyId": "apt_kF9sLm2QwXcVbN3yTzR8p",
                 "message": "Please upload a complete shareholder register including all pages.",
                 "documentId": "doc_puDSeif893FEyblK"
+            },
+            {
+                "type": "COMPLETE_LIVENESS_CHECK",
+                "message": "Please complete the liveness check via verification link",
+                "verificationLink": "https://in.sumsub.com/websdk/p/sbx_iNZi5pTWEjmzOPEQ",
+                "associatedPartyId": "ap_tIFGUMSVnyUrkc68kPqtV"
             }
         ]
     }
@@ -615,10 +602,11 @@ After submission, the application has the following possible states:
     - `UPDATE_PROFILE`: registrationNumber
     - `UPLOAD_DOCUMENT`: `doc_pu0aoLYYTST8xxewiyblK`
 
-    On top of that, there are also 2 update requirements for the associated party `apt_kF9sLm2QwXcVbN3yTzR8p` that needs updates:
+    On top of that, there are also 3 update requirements for the associated party `apt_kF9sLm2QwXcVbN3yTzR8p` that needs updates:
 
     - `UPDATE_PROFILE`: ownershipPercentage
     - `UPLOAD_DOCUMENT`: `doc_puDSeif893FEyblK`
+    - `COMPLETE_LIVENESS_CHECK`: Complete the liveness check via provided `verificationLink`
 
     Update the information, then use POST `/v3/users/:user_id/compliance/submit` to submit the application again.
   </Accordion>
