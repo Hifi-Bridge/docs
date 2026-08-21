@@ -353,6 +353,11 @@ After submission, the application has the following possible states:
                 "type": "UPLOAD_DOCUMENT",
                 "message": "Please upload the document including the expiration date page.",
                 "documentId": "doc_pu0aoLYYTST8xxewiyblK"
+            },
+            {
+                "type": "COMPLETE_LIVENESS_CHECK",
+                "message": "Please complete the liveness check via verification link",
+                "verificationLink": "https://in.sumsub.com/websdk/p/sbx_iNZi5pTWEjmzOPEQ",
             }
         ]
     }
@@ -373,6 +378,7 @@ When a submitted application needs updated information, the status transitions t
 | :-- | --- |
 | `UPDATE_PROFILE` | Update the user's profile information before resubmission, a common reason is information that doesn't match the submitted documentation. |
 | `RESUBMIT_DOCUMENT` | Update the user's documentation before resubmission, common reasons include expired, blurry, or unqualified documents. |
+| `COMPLETE_LIVENESS_CHECK` | Complete the required liveness check for each associated party via provided verification link. |
 
 ## Getting Help
 
