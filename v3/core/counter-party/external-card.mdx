@@ -3,13 +3,13 @@ title: "External Card"
 description: "Register a debit/prepaid or credit card for a counterparty, directly or through a hosted collection flow."
 ---
 
-An External Card is a debit, prepaid or credit card belonging to a [Counter Party](/v3/core/counter-party/counter-party), used as the destination for a push style card payout.
+An External Card is a debit, prepaid or credit card belonging to a [Counter Party](https://docs.hifi.com/v3/core/counter-party/counterparty), used as the destination for a push style card payout.
 
 ## Two ways to add a card
 
 | Method | Who can use it | How it works |
 | --- | --- | --- |
-| [Card API](#add-an-external-card) | Clients certified **PCI DSS Level 1** | Your backend collects the card number/CVV and sends them directly to HIFI. |
+| [Card API](https://docs.hifi.com/v3/core/counter-party/external-card#add-an-external-card-via-api) | Clients certified **PCI DSS Level 1** | Your backend collects the card number/CVV and sends them directly to HIFI. |
 | [External Card Session](#external-card-sessions) | All other developers | The recipient enters their card details on a HIFI-hosted page - raw card data never touches your servers. |
 
 <Info>
@@ -18,7 +18,7 @@ An External Card is a debit, prepaid or credit card belonging to a [Counter Part
 
 ## Counterparty requirements
 
-The counterparty must be `ACTIVE`, and have the following [accepted fields](/v3/core/counter-party/counter-party#accepted-fields) set in addition to its own minimum, before you can add an external card for them:
+The counterparty must be `ACTIVE`, and have the following [accepted fields](https://docs.hifi.com/v3/core/counter-party/counterparty#accepted-fields) set in addition to its own minimum, before you can add an external card for them:
 
 | Counterparty type | Additional required fields |
 | --- | --- |
@@ -26,7 +26,7 @@ The counterparty must be `ACTIVE`, and have the following [accepted fields](/v3/
 | Business | `phoneNumber`, `email`, `address` |
 
 <Info>
-  If a required field is missing, HIFI rejects the request with `ACTION_NOT_ALLOWED` (422) - [update the counterparty](/v3/core/counter-party/counter-party#update-a-counter-party) with the missing field and retry.
+  If a required field is missing, HIFI rejects the request with `ACTION_NOT_ALLOWED` (422) - [update the counterparty](https://docs.hifi.com/v3/core/counter-party/counterparty#update-a-counter-party) with the missing field and retry.
 </Info>
 
 <Tip>
@@ -108,7 +108,7 @@ curl -X DELETE https://sandbox.hifi.com/v3/users/usr_x1y2z3/counter-parties/cpty
 
 ## Retrieve a counterparty's external cards
 
-List a counterparty's registered cards
+List a counterparty's registered cards.
 
 **Request**
 
@@ -194,5 +194,5 @@ curl -X POST https://sandbox.hifi.com/v3/users/usr_x1y2z3/external-card-sessions
 ## Related Resources
 
 - [Counterparty Overview](/v3/core/counter-party/overview) - Counterparty resources
-- [Counter Party](/v3/core/counter-party/counter-party) - Create and manage recipients/payers
+- [Counter Party](https://docs.hifi.com/v3/core/counter-party/counterparty) - Create and manage recipients/payers
 - [External Account](/v3/core/counter-party/external-account) - Bank accounts for a counterparty

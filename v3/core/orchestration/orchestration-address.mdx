@@ -14,7 +14,7 @@ An Orchestration Address is the **inverse** of a [Virtual Account](/v3/core/orch
 Each Orchestration Address is bound to **one user, one chain, one source token (USDC or USDT), and one destination [External Account](/v3/core/counter-party/external-account)**. The address is persistent - once created it lives forever and keeps accepting deposits, even after deactivation.
 
 <Note>
-  Once orchestration address is deactivated, no new conversion will be triggered.
+  Once an orchestration address is deactivated, no new conversion will be triggered.
 </Note>
 
 ## How Orchestration Addresses Work
@@ -33,7 +33,7 @@ Each Orchestration Address is bound to **one user, one chain, one source token (
 
 ## Orchestration Modes
 
-Choose one of three modes at create time. The mode is changeable later via the [update](#update-an-orchestration-address) endpoint.
+Choose one of three modes at create time. The mode is changeable later via the [update](https://docs.hifi.com/v3/core/orchestration/orchestration-address#update) endpoint.
 
 - `PER_DEPOSIT` - a deposit at or above the minimum is batched immediately; a sub-minimum deposit is held `PENDING` and swept into the next qualifying batch.
 - `SCHEDULED` - a tick whose `PENDING` total is below the minimum batches nothing; the deposits roll into the next tick.
@@ -48,7 +48,7 @@ Every active address also supports a [manual trigger](#manual-trigger) that batc
 | Ethereum, Polygon, Base, Solana | ✅ | ✅ |
 | Tron | ❌ | ✅ |
 
-Unsupported pairs (for example, USDC on Tron) are rejected at create time.
+Unsupported pairs (for example, USDC on Tron) are rejected at creation time.
 
 ## Minimum Amounts
 
@@ -108,7 +108,7 @@ curl -X POST https://sandbox.hifi.com/v3/users/usr_gBlMyGTbuyknSPXlZtwlS/orchest
 </Info>
 
 <Tip>
-  [Get an Orchestration Address](#get-an-orchestration-address) (the single-address endpoint) also returns a live `balance` field - the on-chain balance of the source token held by the address - so you don't need a separate provider call to check funds in flight.
+  [Get an Orchestration Address](https://docs.hifi.com/v3/api-reference/orchestration-address/retrieve-an-orchestration-address) (the single-address endpoint) also returns a live `balance` field - the on-chain balance of the source token held by the address - so you don't need a separate provider call to check funds in flight.
 </Tip>
 
 ## Managing the Address Lifecycle
@@ -188,7 +188,7 @@ If there's nothing eligible to batch, `triggered` is `false` and `batch` is `nul
 
 ## Tracking Deposits
 
-Use the GET `v3/users/:userId/orchestration-addresses/:orchId/deposits` to retrieve a list of deposits of an orchestration addresses with optional query filter.
+Use GET `v3/users/:userId/orchestration-addresses/:orchId/deposits` to retrieve a list of deposits of an orchestration addresses. You can also pass in optional query filters.
 
 **Request**
 
@@ -226,14 +226,14 @@ curl "https://sandbox.hifi.com/v3/users/usr_gBlMyGTbuyknSPXlZtwlS/orchestration-
 
 | Status | Details |
 | --- | --- |
-| `PENDING` | Received deposits and awaiting to be batched |
-| `BATCHED` | Deposits are being batched for payout |
-| `IGNORED` | Deposits that will not be processed and batched |
-| `REFUNDED` | Deposits that are refunded |
+| `PENDING` | Received deposits and awaiting to be batched. |
+| `BATCHED` | Deposits are being batched for payout. |
+| `IGNORED` | Deposits that will not be processed and batched. |
+| `REFUNDED` | Deposits that are refunded. |
 
 ## Tracking Batches
 
-Use the GET `v3/users/:userId/orchestration-addresses/:orchId/batches` to retrieve a list of created batches of an orchestration addresses with optional query filter.
+Use GET `v3/users/:userId/orchestration-addresses/:orchId/batches` to retrieve a list of created batches for an orchestrion address. You can also pass in optional query filters.
 
 **Request**
 
@@ -271,9 +271,9 @@ curl "https://sandbox.hifi.com/v3/users/usr_gBlMyGTbuyknSPXlZtwlS/orchestration-
 
 | Status | Details |
 | :-- | :-- |
-| `PENDING` | Batch is built and awaiting for processing |
-| `PROCESSING` | Batch is currently being processed |
-| `COMPLETED` | The payout is completed for the batch |
+| `PENDING` | Batch is built and awaiting processing. |
+| `PROCESSING` | Batch is currently being processed. |
+| `COMPLETED` | The payout is completed for the batch. |
 | `FAILED` | Operation failed for the batch, reach out to HIFI for more information. |
 
 ## Additional Information

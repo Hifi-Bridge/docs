@@ -88,7 +88,7 @@ curl -X POST https://sandbox.hifi.com/v3/swaps \
 ```
 
 <Info>
-  `quote.expiresAt` reflects when the quoted rate was locked in
+  `quote.expiresAt` reflects when the quoted rate was locked in.
 </Info>
 
 ## Accept a swap quote
@@ -114,7 +114,7 @@ curl -X POST https://sandbox.hifi.com/v3/swaps/swp_3OGYSITbryTfff41XfaPx/quote/a
 ```
 
 <Info>
-  If the source wallet's balance is too low to cover the quoted amount, this returns a `200` with `status: "QUOTE_FAILED"` and `error: "INSUFFICIENT_BALANCE"` rather than an error response
+  If the source wallet's balance is too low to cover the quoted amount, this returns a `200` with `status: "QUOTE_FAILED"` and `error: "INSUFFICIENT_BALANCE"` rather than an error response.
 </Info>
 
 ## Status
@@ -139,7 +139,7 @@ curl -X POST https://sandbox.hifi.com/v3/swaps/swp_3OGYSITbryTfff41XfaPx/quote/a
 
     The quote is only generated once the transfer request is approved. Accept the quote afterward to kick off the transaction flow.
 
-    Checkout Transfer Approval for more details.
+    Check out [Transfer Approval](https://docs.hifi.com/v3/features/transaction-approval) for more details.
   </Accordion>
 </AccordionGroup>
 
@@ -151,6 +151,6 @@ curl -X POST https://sandbox.hifi.com/v3/swaps/swp_3OGYSITbryTfff41XfaPx/quote/a
 ## Related Resources
 
 - [Transactions Overview](/v3/core/transactions/overview) - Transactions resources
-- [Bridge](/v3/core/transactions/bridge) - Move a stablecoin across chains
+- [Bridge](/v3/core/transactions/bridge) - Move stablecoins across chains
 - [Onchain Transfer](/v3/core/transactions/onchain-transfer) - Move stablecoins on the same chain
 - [HIFI Wallet](/v3/core/wallets/hifi-wallet) - Provision wallets and read balances

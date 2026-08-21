@@ -63,7 +63,7 @@ curl -X POST https://sandbox.hifi.com/v3/crypto-transfers \
 
 ## Create a batch transfer
 
-Similar to single transfer, but `destinations` takes multiple entries, each with its own `amount`. The whole batch settles as a single on-chain transaction with one `receipt`.
+Similar to a single transfer, but `destinations` takes multiple entries, each with its own `amount`. The whole batch settles as a single on-chain transaction with one `receipt`.
 
 **Request**
 
@@ -136,7 +136,7 @@ curl -X POST https://sandbox.hifi.com/v3/batch-transfers \
   <Accordion title="Transfer approval">
     Offramps can be routed through an approval workflow before they settle - `status` shows `PENDING_APPROVAL` until someone approves it, or `REJECTED` if it's declined. Dedicated page coming soon.
 
-    Checkout Transfer Approval for more details.
+    Check out [Transfer Approval](https://docs.hifi.com/v3/features/transaction-approval) for more details.
   </Accordion>
 </AccordionGroup>
 

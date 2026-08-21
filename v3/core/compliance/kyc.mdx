@@ -16,7 +16,7 @@ Different information is required for verification, including both non-documenta
 | `dateOfBirth` | Date of birth (YYYY-MM-DD) | Yes |
 | `email` | Contact email address | Yes |
 | `phoneNumber` | Phone number with country code | Yes |
-| `physicalAddress` | Residential address (line1, city, state, postalCode, country) | Yes |
+| `physicalAddress` | Residential address (line 1, city, state, postal code, country) | Yes |
 | `taxId` | Tax identification number in the user's country | Yes |
 | `taxIdType` | Tax identification number (e.g. SSN, ITIN) | No |
 | `taxIdCountry` | Tax identification number issuance country | No |
@@ -41,7 +41,7 @@ For more details check [Documents](/v3/core/compliance/documents)
 </Tip>
 
 <Tip>
-  `proofOfResidence` needs to be issued within the **last 3 months** 
+  `proofOfResidence` needs to be issued within the **last 3 months.**
 </Tip>
 
 ## Questionnaire (Optional)
@@ -61,7 +61,7 @@ For more details check [Documents](/v3/core/compliance/documents)
 
 <Steps>
   <Step title="Update Compliance Profile">
-    Update user's non-documentary information
+    Update user's non-documentary information.
 
     **Request**
 
@@ -118,7 +118,7 @@ For more details check [Documents](/v3/core/compliance/documents)
     ```
   </Step>
   <Step title="Add Documentation">
-    Upload the documentation to fulfill both the ID and proof of address requirements
+    Upload the documentation to fulfill both the ID and proof of address requirements.
 
     <Info>
       Use the File endpoint to upload the file first, then add the documentation to the user with the returned file ID (e.g. `file_xxxxxxxxxxxx`).
@@ -254,8 +254,8 @@ For more details check [Documents](/v3/core/compliance/documents)
     }
     ```
   </Step>
-  <Step title="Submit Compliance Information for Check">
-    Once all the required information is updated, submit the application for compliance review
+  <Step title="Submit Compliance Information for review">
+    Once all the required information is updated, submit the application for compliance review.
 
     **Request**
 
@@ -276,7 +276,7 @@ For more details check [Documents](/v3/core/compliance/documents)
     ```
   </Step>
   <Step title="Get the KYC status ">
-    Listen to our webhook or polling the user's compliance status
+    Listen to our webhook or polling the user's compliance status.
 
     **Request**
 
@@ -310,7 +310,7 @@ After submission, the application has the following possible states:
   </Accordion>
 
   <Accordion title="PENDING">
-    ?
+    No action required - the information has been uploaded and is awaiting processing.
   </Accordion>
 
   <Accordion title="IN_REVIEW">
@@ -319,7 +319,7 @@ After submission, the application has the following possible states:
     **What you can expect:**
 
     - An RFI may be sent to your compliance mailbox requesting additional information
-    - The status may move to `REQUIRES_INFO` after our compliance check — use GET `/v3/users/:user_id/compliance/status` to see what additional information is required
+    - The status may move to `REQUIRES_INFO` after our compliance check - use GET `/v3/users/:user_id/compliance/status` to see what additional information is required
     - The status may move to `REJECTED` or `APPROVED` when a final decision is made by our compliance team
   </Accordion>
 
@@ -358,7 +358,7 @@ After submission, the application has the following possible states:
     }
     ```
 
-    Update the information, then use POST `/v3/users/:user_id/compliance/submit `to submit the application again.
+    Update the information, then use POST `/v3/users/:user_id/compliance/submit` to submit the application again.
   </Accordion>
 </AccordionGroup>
 
@@ -383,5 +383,5 @@ When a submitted application needs updated information, the status transitions t
 
 - [User Overview](/v3/core/users/overview) - User types and creation
 - [KYB (Business)](/v3/core/compliance/kyb) - Business verification requirements
-- Virtual Accounts - Set up fiat deposit accounts
-- API Reference: Complete endpoints
+- [Virtual Accounts](https://docs.hifi.com/v3/core/orchestration/virtual-accounts) - Set up fiat deposit accounts
+- [API Reference](https://docs.hifi.com/v3/api-reference/compliance/update-the-compliance-profile) - Complete endpoints

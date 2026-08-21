@@ -7,15 +7,15 @@ Transactions are the actual movement of value HIFI executes on a user's behalf -
 
 ## Resources
 
-- [**Onramps**](/v3/core/transactions/onramps) — convert fiat into stablecoins, landing in a HIFI Wallet or External Wallet.
-- [**Offramps**](/v3/core/transactions/offramps) — convert stablecoins into fiat, paid out to an External Account or External Card.
-- [**Onchain Transfer**](/v3/core/transactions/onchain-transfer) — move stablecoins between wallets on the same chain, to one recipient or many at once (batch).
-- [**Swap**](/v3/core/transactions/swap) — convert between stablecoins (e.g. USDC → USDT).
-- [**Bridge**](/v3/core/transactions/bridge) — move a stablecoin from a wallet on one chain to a wallet on a different chain.
+- [**Onramps**](/v3/core/transactions/onramps) - convert fiat into stablecoins, landing in a HIFI Wallet or External Wallet.
+- [**Offramps**](/v3/core/transactions/offramps) - convert stablecoins into fiat, paid out to an External Account or External Card.
+- [**Onchain Transfer**](/v3/core/transactions/onchain-transfer) - move stablecoins between wallets on the same chain, to one recipient or many at once (batch).
+- [**Swap**](/v3/core/transactions/swap) - convert between stablecoins (e.g. USDC → USDT).
+- [**Bridge**](/v3/core/transactions/bridge) - move a stablecoin from a wallet on one chain to a wallet on a different chain.
 
 ## Two flow shapes
 
-Onramp, Offramp, Swap, and Bridge are **quote-then-accept**: creating one returns a quote (rate, fees, expiry) without moving any funds; a separate accept call executes it. Onchain Transfer (single and batch) has no quote step — it executes immediately on creation, and you track progress via `GET` or webhooks.
+Onramp, Offramp, Swap, and Bridge are **quote-then-accept**: creating one returns a quote (rate, fees, expiry) without moving any funds; a separate accept call executes it. Onchain Transfer (single and batch) has no quote step - it executes immediately on creation, and you track progress via `GET` or webhooks.
 
 | Resource | Flow |
 | --- | --- |
@@ -28,7 +28,7 @@ Onramp, Offramp, Swap, and Bridge are **quote-then-accept**: creating one return
 ## Common Conventions
 
 - **Idempotency**: every create call takes a client-supplied `requestId` (UUID). Reusing one with the same payload returns the existing transaction instead of creating a duplicate; reusing one with a different payload is rejected with `RESOURCE_CONFLICT` (409).
-- **Status & webhooks**: every resource has a `status` field and its own status enum. Subscribe to webhooks to track progress asynchronously instead of polling — each resource emits a `CREATED` event plus one event per status value (e.g. `ONRAMP.STATUS.COMPLETED`).
+- **Status & webhooks**: every resource has a `status` field and its own status enum. Subscribe to webhooks to track progress asynchronously instead of polling - each resource emits a `CREATED` event plus one event per status value (e.g. `ONRAMP.STATUS.COMPLETED`).
 - **`error` / `errorDetails`**: resources that can fail return a user-facing `error` and `errorDetails` once in a failed/terminal state. Provider names never appear in these fields.
 
 ## Transaction Monitoring
@@ -42,8 +42,8 @@ Every transaction goes through HIFI's compliance monitoring. While a transaction
 
 ## Related Resources
 
-- [Onramps](/v3/core/transactions/onramps) — Fund a wallet from fiat
-- [Offramps](/v3/core/transactions/offramps) — Pay out stablecoins to fiat
-- [Onchain Transfer](/v3/core/transactions/onchain-transfer) — Move stablecoins between wallets
-- [Swap](/v3/core/transactions/swap) — Convert between stablecoins
-- [Bridge](/v3/core/transactions/bridge) — Move a stablecoin across chains
+- [Onramps](/v3/core/transactions/onramps) - Fund a wallet from fiat
+- [Offramps](/v3/core/transactions/offramps) - Pay out stablecoins to fiat
+- [Onchain Transfer](/v3/core/transactions/onchain-transfer) - Move stablecoins between wallets
+- [Swap](/v3/core/transactions/swap) - Convert between stablecoins
+- [Bridge](/v3/core/transactions/bridge) - Move a stablecoin across chains
