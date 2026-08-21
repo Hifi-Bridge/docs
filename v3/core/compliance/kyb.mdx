@@ -38,11 +38,11 @@ Different information is required for verification, including both non-documenta
 | `businessIndustry` | Industry code of the business | Yes |
 | `registrationNumber` | Business registration number | Yes |
 | `incorporationDate` | Date of business incorporation | Yes |
-| `physicalAddress` | Business address (line1, city, state, postalCode, country) | Yes |
+| `physicalAddress` | Business address (line 1, city, state, postal code, country) | Yes |
 | `taxId` | Tax identification number (e.g. EIN for US businesses) | Yes |
 | `taxIdType` | Tax identification number (e.g. SSN, ITIN) | Yes |
 | `taxIdCountry` | Tax identification number issuance country | Yes |
-| `registeredAddress` | Registered business address (line1, city, state, postalCode, country) | Yes |
+| `registeredAddress` | Registered business address (line 1, city, state, postal code, country) | Yes |
 | `website` | Business website | Yes |
 
 ### Documentation
@@ -61,12 +61,12 @@ For more details check [Documents](/v3/core/compliance/documents)
 </Tip>
 
 <Tip>
-  `companyDetails` needs to be issued within the **last 3 months**
+  `companyDetails` needs to be issued within the **last 3 months.**
 </Tip>
 
 ### Associated Parties
 
-Each UBO or person with significant control of the business must be added as an associated party, with their own profile information and identity documentation. For the required fields and endpoint details, see [Associated Parties](/v3/core/compliance/associated-parties).
+Each UBO or person with significant control of the business must be added as an associated party, with their own profile information and identity documentation. For the required fields and endpoint details, see [Associated Parties](https://docs.hifi.com/v3/core/compliance/associated-party).
 
 ## Questionnaire
 
@@ -88,7 +88,7 @@ Each UBO or person with significant control of the business must be added as an 
 
 <Steps>
   <Step title="Update Compliance Profile">
-    Update the business's non-documentary information
+    Update the business's non-documentary information.
 
     **Request**
 
@@ -169,8 +169,8 @@ Each UBO or person with significant control of the business must be added as an 
 
     {/* TODO: Replace with a real sandbox request/response pair */}
   </Step>
-  <Step title="Add Busines Documentation">
-    Upload the documentation to fulfill the business `legalPresence`, `ownershipStructure`, `controlStructure` and `companyDetails` requirements
+  <Step title="Add Business Documentation">
+    Upload the documentation to fulfill the business `legalPresence`, `ownershipStructure`, `controlStructure` and `companyDetails` requirements.
 
     <Info>
       Use the File endpoint to upload the file first, then add the documentation to the user with the returned file ID (e.g. `file_xxxxxxxxxxxx`).
@@ -178,7 +178,7 @@ Each UBO or person with significant control of the business must be added as an 
 
     #### Business Documents
 
-    Add `STATE_REGISTRY`to fulfill `legalPresence`, `ownershipStructure`, `controlStructure`requirements.
+    Add `STATE_REGISTRY`to fulfill `legalPresence`, `ownershipStructure`, and `controlStructure`requirements.
 
     **Request**
 
@@ -374,10 +374,10 @@ Each UBO or person with significant control of the business must be added as an 
     }
     ```
 
-    See [Associated Parties](/v3/core/compliance/associated-parties) for more details
+    See [Associated Parties](https://docs.hifi.com/v3/core/compliance/associated-party) for more details
   </Step>
   <Step title="Add Document for the Associated Party">
-    Upload the documentation to fulfill the associated party `identity`  and `proofOfResidence` requirements
+    Upload the documentation to fulfill the associated parties `identity`  and `proofOfResidence` requirements.
 
     <Info>
       Use the File endpoint to upload the file first, then add the documentation to the user with the returned file ID (e.g. `file_xxxxxxxxxxxx`).
@@ -467,8 +467,8 @@ Each UBO or person with significant control of the business must be added as an 
       For US and Canadian users, if a driver's license, national ID, or resident permit has already been submitted as the government-issued ID, no additional proof of address is needed.
     </Tip>
   </Step>
-  <Step title="Submit compliance information for check">
-    Once all the required information is updated, submit the application for compliance review
+  <Step title="Submit compliance information for review">
+    Once all the required information is updated, submit the application for compliance review.
 
     **Request**
 
@@ -489,7 +489,7 @@ Each UBO or person with significant control of the business must be added as an 
     ```
   </Step>
   <Step title="Get the KYB status">
-    Listen to our webhook or poll the user's compliance status
+    Listen to our webhook or poll the user's compliance status.
 
     **Request**
 
@@ -517,7 +517,7 @@ After submission, the application has the following possible states:
 
 <AccordionGroup>
   <Accordion title="APPROVED">
-    No additional action is needed — the user has already passed HIFI's compliance check.
+    No additional action is needed - the user has already passed HIFI's compliance check.
 
     **What's next:**
 
@@ -525,7 +525,7 @@ After submission, the application has the following possible states:
   </Accordion>
 
   <Accordion title="PENDING">
-    No action required — the information has been uploaded and is awaiting processing.
+    No action required - the information has been uploaded and is awaiting processing.
   </Accordion>
 
   <Accordion title="IN_REVIEW">
@@ -534,7 +534,7 @@ After submission, the application has the following possible states:
     **What you can expect:**
 
     - An RFI may be sent to your compliance mailbox requesting additional information
-    - The status may move to `REQUIRES_INFO` after our compliance check — use GET `/v3/users/:user_id/compliance/status` to see what additional information is required
+    - The status may move to `REQUIRES_INFO` after our compliance check - use GET `/v3/users/:user_id/compliance/status` to see what additional information is required
     - The status may move to `REJECTED` or `APPROVED` when a final decision is made by our compliance team
 
     <Info>
@@ -595,9 +595,9 @@ After submission, the application has the following possible states:
     }
     ```
 
-    **Breaksdown**
+    **Breakdown**
 
-    For the above example, there are 2 update requirements for the business information — these come in objects that do not include an `associatedPartyId`:
+    For the above example, there are 2 update requirements for the business information - these come in objects that do not include an `associatedPartyId`:
 
     - `UPDATE_PROFILE`: `registrationNumber`
     - `UPLOAD_DOCUMENT`: `doc_pu0aoLYYTST8xxewiyblK`
@@ -618,10 +618,10 @@ When a submitted application needs updated information, the `rfiActions` field w
 
 | Type | Action |
 | :-- | :-- |
-| `UPDATE_PROFILE` | Update the business's or associated party's profile information before resubmission, a common reason is information that doesn't match the submitted documentation. |
-| `RESUBMIT_DOCUMENT` | Update the business's or associated party's documentation before resubmission, common reasons include expired, blurry, or unqualified documents. |
+| `UPDATE_PROFILE` | Update the business's or associated parties profile information before resubmission, a common reason is information that doesn't match the submitted documentation. |
+| `RESUBMIT_DOCUMENT` | Update the business's or associated parties documentation before resubmission, common reasons include expired, blurry, or unqualified documents. |
 | `UPDATE_QUESTIONNAIRE` | Update the business's questionnaire before resubmission |
-| `COMPLETE_LIVENESS_CHECK` | Complete the required liveness check for each associated party via provided verification link. |
+| `COMPLETE_LIVENESS_CHECK` | Complete the required liveness check for each associated party via the provided verification link. |
 
 {/* TODO: Confirm the full list of rfiAction types for business users */}
 
@@ -638,6 +638,6 @@ When a submitted application needs updated information, the `rfiActions` field w
 
 - [User Overview](/v3/core/users/overview) - User types and creation
 - [KYC (Individual)](/v3/core/compliance/kyc) - Individual verification requirements
-- [Associated Parties](/v3/core/compliance/associated-parties) - UBO and control person requirements
+- [Associated Parties](https://docs.hifi.com/v3/core/compliance/associated-party) - UBO and control person requirements
 - [Virtual Accounts](/v3/core/orchestration/virtual-accounts) - Set up fiat deposit accounts
-- API Reference: Complete endpoints
+- [API Reference](https://docs.hifi.com/v3/api-reference/compliance/update-the-compliance-profile) - Complete endpoints

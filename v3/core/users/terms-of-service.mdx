@@ -14,9 +14,9 @@ If you already have a terms of service or privacy policy acceptance flow, you ca
 
 ### How It Works
 
-1. Include HIFI's terms by reference in your privacy policy or terms of service
-2. Collect acceptance through your existing flow (checkbox, button, etc.)
-3. When the user accepts, generate and accept the ToS Link in the background
+1. Include HIFI's terms by reference in your privacy policy or terms of service.
+2. Collect acceptance through your existing flow (checkbox, button, etc.).
+3. When the user accepts, generate and accept the ToS Link in the background.
 4. Create the user account, passing the accepted ToS Link ID as `signedAgreementId`
 
 ### Implementation
@@ -31,7 +31,7 @@ Add a reference to HIFI's terms in your privacy policy:
 
 <Steps>
   <Step title="Generate ToS Link:">
-    When the user accepts your privacy policy (which includes HIFI's terms by reference), generate a HIFI ToS Link in the background
+    When the user accepts your privacy policy (which includes HIFI's terms by reference), generate a HIFI ToS Link in the background.
 
     **Request:**
 
@@ -85,7 +85,7 @@ Add a reference to HIFI's terms in your privacy policy:
     ```
   </Step>
   <Step title="Create User">
-    Create User with the accepted ToS Link ID
+    Create User with the accepted ToS Link ID.
 
     **Request:**
 
@@ -126,7 +126,7 @@ Alternatively, you can collect user consent through HIFI-hosted pages. This appr
 
 <Steps>
   <Step title="Generate ToS link">
-    When the user accepts your privacy policy (which includes HIFI's terms by reference), generate a HIFI ToS Link in the background
+    When the user accepts your privacy policy (which includes HIFI's terms by reference), generate a HIFI ToS Link in the background.
 
     **Request:**
 
@@ -160,7 +160,7 @@ Alternatively, you can collect user consent through HIFI-hosted pages. This appr
     </Frame>
   </Step>
   <Step title="Wait for webhook message">
-    After the ToS Link is accepted, HIFI will send out webhook message to the registered URL.
+    After the ToS Link is accepted, HIFI will send out a webhook message to the registered URL.
 
     **Response:**
 
@@ -176,7 +176,7 @@ Alternatively, you can collect user consent through HIFI-hosted pages. This appr
     ```
   </Step>
   <Step title="Create User">
-    Create User with the accepted ToS Link ID
+    Create User with the accepted ToS Link ID.
 
     **Request:**
 
@@ -209,9 +209,9 @@ Alternatively, you can collect user consent through HIFI-hosted pages. This appr
 White-label the ToS page with your branding and include a redirect URL for once the user accepts the terms of service:
 
 1. **Upload Branding:** Upload your company logo via [https://app.hifi.com/sandbox/developer/template](https://app.hifi.com/sandbox/developer/template)
-2. **Receive Template ID:** Once the logo is uploaded, you will receive the template ID on the same page
-3. **Use Template ID:** Include `templateId` when generating ToS Link
-4. **Include redirect URL**: Include `redirectUrl` when you want to send user to a different page once terms of service is accepted.
+2. **Receive Template ID:** Once the logo is uploaded, you will receive the template ID on the same page.
+3. **Use Template ID:** Include `templateId` when generating ToS Link.
+4. **Include redirect URL**: Include `redirectUrl` when you want to send the user to a different page once the terms of service is accepted.
 
 ```bash
 curl -X POST "https://sandbox.hifi.com/v3/tos-link" \

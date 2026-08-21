@@ -4,7 +4,7 @@ description: "Automatically split each Virtual Account deposit across multiple w
 ---
 
 <Info>
-  Looking to charge fees on Offramps instead? See [Developer Fees](/v3/core/features/developer-fees).
+  Looking to charge fees on Offramps instead? See [Developer Fees](https://docs.hifi.com/v3/features/developer-fee).
 </Info>
 
 A Settlement Rule is a reusable, profile-level resource that describes how to split an incoming [Virtual Account](/v3/core/orchestration/virtual-accounts) deposit across one or more destination wallets - as flat amounts, percentages, or tiered breakpoints based on deposit size. Create it once, then apply it to any Virtual Account on the same chain; every future deposit into that account is split automatically at conversion time.
@@ -191,4 +191,4 @@ curl -X DELETE https://sandbox.hifi.com/v3/users/usr_gBlMyGTbuyknSPXlZtwlS/virtu
 ## Related Resources
 
 - [Virtual Accounts](/v3/core/orchestration/virtual-accounts) - The deposit accounts Settlement Rules attach to
-- [Developer Fees](/v3/core/features/developer-fees) - Fee calculation for Offramp transactions
+- [Developer Fees](https://docs.hifi.com/v3/features/developer-fee) - Fee calculation for Offramp transactions

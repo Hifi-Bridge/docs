@@ -6,7 +6,7 @@ description: "Which fields are required to add an External Account, by currency,
 Every [External Account](/v3/core/counter-party/external-account) is identified by a combination of `currency`, `transferType`, and `bankAddress.country` - together these select the payment rail, and the rail determines which fields are required. Requests are strict about this: a field outside the rail's set (e.g. `iban` on an ACH account) is rejected the same as a missing required one.
 
 <Tip>
-  External account creation will always require `currency` , `transferType` and `bankAddress.country`
+  External account creation will always require `currency` , `transferType` and `bankAddress.country`.
 </Tip>
 
 ## USD
@@ -72,16 +72,16 @@ Countries: Check out [Coverage](/v3/docs/references/coverage) for SWIFT supporte
 | `bankAddress` | Required | Full address, `country` must be one of the list above |
 
 <AccordionGroup>
-  <Accordion title="Countries expect iban">
+  <Accordion title="Countries that expect iban">
     Albania, Andorra, Austria, Belgium, Brazil, Bulgaria, Croatia, Cyprus, Czech Republic, Denmark, Estonia, Finland, France, Georgia, Germany, Greece, Hungary, Iceland, Ireland, Israel, Italy, Latvia, Liechtenstein, Lithuania, Luxembourg, Malta, Moldova, Monaco, Montenegro, Netherlands, North Macedonia, Norway, Poland, Portugal, Romania, San Marino, Saudi Arabia, Serbia, Slovakia, Slovenia, Spain, Sweden, Switzerland, Turkey, United Arab Emirates, United Kingdom, Vatican City.
   </Accordion>
 
-  <Accordion title="Countries expect accountNumber">
+  <Accordion title="Countries that expect accountNumber">
     Argentina, Australia, Canada, Chile, China, Colombia, Hong Kong, Indonesia, Japan, Kenya, Mexico, New Zealand, Nigeria, Panama, Paraguay, Philippines, Singapore, South Africa, South Korea, Taiwan, Thailand.
   </Accordion>
 </AccordionGroup>
 
-Some countries require exact bank name match, check out below bank name list for details
+Some countries require an exact bank name match, check out below bank name list for details.
 
 <Accordion title="Indonesia bank names">
   This rail accepts ~140 Indonesian banks, including Bank Central Asia (BCA), Bank Mandiri, Bank Rakyat Indonesia (BRI), Bank Negara Indonesia (BNI), Bank CIMB Niaga, Bank Permata, Bank Danamon, Bank BJB, Citibank, HSBC Indonesia, Standard Chartered Bank, and the regional Bank Pembangunan Daerah network. See `IDN_BANK_NAMES` in [`src/externalAccount/enums.js`](/../../src/externalAccount/enums.js) for the exact list and spelling required.
@@ -316,4 +316,4 @@ Countries: Check out [Coverage](/v3/docs/references/coverage) for SEPA supported
 
 - [Counterparty Overview](/v3/core/counter-party/overview) - Counterparty resources
 - [External Account](/v3/core/counter-party/external-account) - Create and manage bank accounts for a counterparty
-- [Counter Party](/v3/core/counter-party/counter-party) - Create and manage recipients/payers
+- [Counter Party](https://docs.hifi.com/v3/core/counter-party/counterparty) - Create and manage recipients/payers

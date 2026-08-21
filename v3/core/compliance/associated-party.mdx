@@ -16,7 +16,7 @@ Different information is required for verification, including both non-documenta
 | `dateOfBirth` | Date of birth (YYYY-MM-DD) | Yes |
 | `email` | Contact email address | Yes |
 | `phoneNumber` | Phone number with country code | Yes |
-| `physicalAddress` | Residential address (line1, city, state, postalCode, country) | Yes |
+| `physicalAddress` | Residential address (line 1, city, state, postal code, country) | Yes |
 | `taxId` | Tax identification number in the party's country | Yes |
 | `taxIdType` | Tax identification number type (e.g. SSN, ITIN) | No |
 | `taxIdCountry` | Tax identification number issuance country | No |
@@ -107,7 +107,7 @@ For more details check [Documents](/v3/core/compliance/documents)
     ```
   </Step>
   <Step title="Add Documentation">
-    Upload the documentation to fulfill the party's identity and proof of address requirements, using the `associatedPartyId` returned in the previous step
+    Upload the documentation to fulfill the party's identity and proof of address requirements, using the `associatedPartyId` returned in the previous step.
 
     <Info>
       Use the File endpoint to upload the file first, then add the documentation to the user with the returned file ID (e.g. `file_xxxxxxxxxxxx`).
@@ -203,7 +203,7 @@ For more details check [Documents](/v3/core/compliance/documents)
   </Step>
 </Steps>
 
-Associated parties are verified as part of the business's KYB application — they do not have a separate compliance status. Once all parties are added, submit the business's application and track its status as described in [KYB (Business)](/v3/core/compliance/kyb).
+Associated parties are verified as part of the business's KYB application - they do not have a separate compliance status. Once all parties are added, submit the business's application and track its status as described in [KYB (Business)](/v3/core/compliance/kyb).
 
 If an associated party's information needs updating, the business's application will move to `REQUIRES_INFO` with an `UPDATE_ASSOCIATED_PARTY` action in the `rfiActions` field, including the `associatedPartyId` and the fields to correct.
 

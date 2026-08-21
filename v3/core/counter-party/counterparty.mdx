@@ -11,7 +11,7 @@ A Counter Party is the individual or business on the other side of a transaction
 
 ## Accepted fields
 
-Every field below can be set at creation or added later with an [update](#update-a-counter-party). Only the fields marked **Required** are needed to create the counterparty - the rest are optional at creation, **though some are required before you can add specific account types (see each account's own page)**.
+Every field below can be set at creation or added later with an [update](https://docs.hifi.com/v3/core/counter-party/counterparty#update-a-counter-party). Only the fields marked **Required** are needed to create the counterparty - the rest are optional at creation, **though some are required before you can add specific account types (see each account's own page)**.
 
 ### Individual
 
@@ -88,7 +88,7 @@ curl -X POST https://sandbox.hifi.com/v3/users/usr_x1y2z3/counter-parties \
 ```
 
 <Info>
-  Each account type needs more than this baseline: an External Account requires `address`; an External Card requires `phoneNumber`, `email`, and `address`. Add the fields upfront if you know which accounts you'll need, or [update the counter party](#update-a-counter-party) later - HIFI rejects the account creation with `ACTION_NOT_ALLOWED` (422) if a required field is missing.
+  Each account type needs more than this baseline: an External Account requires `address`; an External Card requires `phoneNumber`, `email`, and `address`. Add the fields upfront if you know which accounts you'll need, or [update the counter party](https://docs.hifi.com/v3/core/counter-party/counterparty#update-a-counter-party) later - HIFI rejects the account creation with `ACTION_NOT_ALLOWED` (422) if a required field is missing.
 </Info>
 
 <Tip>
@@ -209,8 +209,8 @@ Check the counterparty's status before adding external accounts, cards, or walle
 | Status | Description |
 | --- | --- |
 | `ACTIVE` | Default status on creation. Accounts (External Account, External Card, External Wallet) can be added under the counterparty. |
-| `PENDING` | When the counterparty is undergoing compliance review |
-| `INACTIVE` | Set when the counterparty is [deactivated](#deactivate-a-counter-party). New accounts can no longer be added under it; existing accounts and history are preserved. |
+| `PENDING` | When the counterparty is undergoing compliance review. |
+| `INACTIVE` | Set when the counterparty is [deactivated](https://docs.hifi.com/v3/core/counter-party/counterparty#deactivate-a-counter-party). New accounts can no longer be added under it; existing accounts and history are preserved. |
 
 ## Getting Help
 

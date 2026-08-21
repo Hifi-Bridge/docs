@@ -279,7 +279,7 @@ curl -X POST https://sandbox.hifi.com/v3/onramps/onramp_HtgURm58uWMF0EzmG8DAl/qu
 | Status | Meaning | Terminal |
 | --- | --- | --- |
 | `CREATED` | Onramp created; quote being generated. | No |
-| `OPEN_QUOTE` | Quote ready, awaiting [accept](#accept-an-onramp-quote). | No |
+| `OPEN_QUOTE` | Quote ready, awaiting [accept](https://docs.hifi.com/v3/core/transactions/onramps#accept-an-onramp-quote). | No |
 | `IN_REVIEW` / `FIAT_INITIATED` / `AWAITING_FUNDS` | Quote accepted; awaiting or initiating the fiat deposit. | No |
 | `FIAT_PENDING` | Fiat deposit received and processing. | No |
 | `FIAT_PROCESSED` | Fiat settled; conversion to stablecoin starting. | No |
@@ -321,7 +321,7 @@ curl -X POST https://sandbox.hifi.com/v3/onramps/onramp_QW1e2r3t4y/cancel \
 
 ## Simulate deposits (sandbox only)
 
-Mock an inbound deposit hitting the onramp's dedicated bank sub-account, so you can progress an onramp past `AWAITING_FUNDS` in sandbox without a real bank transfer. 
+Mock an inbound deposit hitting the onramp's dedicated bank sub-account, so you can progress an onramp past `AWAITING_FUNDS` in sandbox without a real bank transfer.
 
 **Request**
 
@@ -343,7 +343,7 @@ curl -X POST https://sandbox.hifi.com/v3/onramps/onramp_QW1e2r3t4y/simulate-depo
 ```
 
 <Tip>
-  use `RTP` as the `transferType` for faster simulation
+  use `RTP` as the `transferType` for faster simulation.
 </Tip>
 
 **Response**

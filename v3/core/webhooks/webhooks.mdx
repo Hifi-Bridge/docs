@@ -6,7 +6,7 @@ description: "Every webhook event type HIFI supports, grouped by resource."
 Event types follow one of two shapes: `RESOURCE.EVENT` for one-time events like creation or deletion, or `RESOURCE.EVENT.VALUE` for events tied to an enum - most commonly `RESOURCE.STATUS.<STATUS>`, one per value the resource's `status` field can take. Use the exact strings below in `subscriptions` when [registering an endpoint](/v3/core/webhooks/overview#register-an-endpoint), or call [`GET /webhook-endpoints/event-types`](/v3/core/webhooks/overview#list-supported-event-types) for the same list at any time.
 
 <Info>
-  A resource with both a `CREATED` event and a `STATUS` enum that includes a `CREATED` value fires both `RESOURCE.CREATED` and `RESOURCE.STATUS.CREATED` when it's first created — they're two distinct events, not duplicates of each other.
+  A resource with both a `CREATED` event and a `STATUS` enum that includes a `CREATED` value fires both `RESOURCE.CREATED` and `RESOURCE.STATUS.CREATED` when it's first created - they're two distinct events, not duplicates of each other.
 </Info>
 
 ## User
@@ -144,7 +144,7 @@ Event types follow one of two shapes: `RESOURCE.EVENT` for one-time events like 
 
 ## Crypto Transfer
 
-Covers both single and batch on-chain transfers — a batch transfer's `status` reflects the whole batch, not individual recipients.
+Covers both single and batch on-chain transfers - a batch transfer's `status` reflects the whole batch, not individual recipients.
 
 | Event Type | Description |
 | --- | --- |
@@ -236,4 +236,4 @@ Uses the same status values as [Crypto Transfer](#crypto-transfer), under its ow
 
 ## Related Resources
 
-- [Webhooks Overview](/v3/core/webhooks/overview) — Register endpoints, verify signatures, handle retries
+- [Webhooks Overview](/v3/core/webhooks/overview) - Register endpoints, verify signatures, handle retries
