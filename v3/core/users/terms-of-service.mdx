@@ -63,12 +63,9 @@ Add a reference to HIFI's terms in your privacy policy:
     **Request:**
 
     ```shellscript
-    curl -X POST "https://sandbox.hifi.com/v3/tos-link" \
+    curl -X POST "https://sandbox.hifi.com/v3/tos-link/accept" \
       -H "Authorization: Bearer YOUR_API_KEY" \
       -H "Content-Type: application/json" \
-      -d '{
-        "sessionToken": "05477964-f29c-444d-abd6-36380980567f"
-       }'
     ```
 
     **Response:**
