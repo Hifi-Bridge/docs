@@ -50,10 +50,11 @@ Registers a new counterparty for a user. Only minimal identity fields are requir
 **Request**
 
 ```shell
-curl -X POST https://sandbox.hifi.com/v3/users/usr_x1y2z3/counter-parties \
+curl -X POST https://sandbox.hifi.com/v3/counter-parties \
   -H "Idempotency-Key: <unique-key>" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -d '{
+	"userId": "usr_x1y2z3",
     "type": "INDIVIDUAL",
     "firstName": "Jane",
     "lastName": "Doe"
@@ -102,7 +103,7 @@ Adds or corrects identity fields on an existing counterparty - for example, fill
 **Request**
 
 ```shell
-curl -X PATCH https://sandbox.hifi.com/v3/users/usr_x1y2z3/counter-parties/cpty_a1b2c3d4e5 \
+curl -X PATCH https://sandbox.hifi.com/v3/counter-parties/cpty_a1b2c3d4e5 \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -d '{
     "address": {
@@ -164,7 +165,7 @@ Marks a counterparty inactive. Its record and accounts are preserved for history
 **Request**
 
 ```shell
-curl -X DELETE https://sandbox.hifi.com/v3/users/usr_x1y2z3/counter-parties/cpty_a1b2c3d4e5 \
+curl -X DELETE https://sandbox.hifi.com/v3/counter-parties/cpty_a1b2c3d4e5 \
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
