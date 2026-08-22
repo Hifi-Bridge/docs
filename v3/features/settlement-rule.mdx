@@ -155,9 +155,12 @@ curl -X POST https://sandbox.hifi.com/v3/virtual-accounts/settlement-rules \
 </Warning>
 
 ```shell
-curl -X POST https://sandbox.hifi.com/v3/users/usr_gBlMyGTbuyknSPXlZtwlS/virtual-accounts/va_HtgURm58uWMF0EzmG8DAl/settlement-rules/sr_15c786fbde7a520ca4b3f312 \
+curl -X POST https://sandbox.hifi.com/v3/virtual-accounts/va_HtgURm58uWMF0EzmG8DAl/settlement-rules \
   -H "Idempotency-Key: <unique-key>" \
-  -H "Authorization: Bearer YOUR_API_KEY"
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -d '{
+    "settlementRuleId": "sr_15c786fbde7a520ca4b3f312",
+  }'
 ```
 
 ```json
