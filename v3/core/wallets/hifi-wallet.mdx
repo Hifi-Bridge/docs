@@ -26,10 +26,10 @@ Create a wallet for the user on all the chains supported by HIFI.
 **Request**
 
 ```shell
-curl -X POST https://sandbox.hifi.com/v3/users/usr_x1y2z3/wallets \
+curl -X POST https://sandbox.hifi.com/v3/wallets \
   -H "Idempotency-Key: <unique-key>" \
   -H "Authorization: Bearer YOUR_API_KEY" \
-  -d '{ "chains": ["POLYGON", "ETHEREUM", "TRON"] }'
+  -d '{ "userId": "usr_x1y2z3", "chains": ["POLYGON", "ETHEREUM", "TRON"] }'
 ```
 
 **Response**
