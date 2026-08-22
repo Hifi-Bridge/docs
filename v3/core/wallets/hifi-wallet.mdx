@@ -85,7 +85,7 @@ Passing `currency=USDC` as the query params to retrieve the USDC balance.
 **Request**
 
 ```shell
-curl -X GET https://sandbox.hifi.com/v3/users/usr_x1y2z3/wallets/wlt_fkc0E4OsfHWZPNXiPhj4q/balance?currency=USDC \
+curl -X GET https://sandbox.hifi.com/v3/wallets/wlt_fkc0E4OsfHWZPNXiPhj4q/balance?currency=USDC \
   -H "Authorization: Bearer YOUR_API_KEY" \
 ```
 
@@ -118,7 +118,7 @@ Get a list of incoming deposits for supported assets for a given wallet.
 **Request**
 
 ```shellscript
-curl -X GET https://sandbox.hifi.com/v3/users/usr_Cu7daJpEqY6gIAzG30R9s/wallets/wlt_ETUnJO1R8j9hDlthRnqNp/deposits?currency=USDT \
+curl -X GET https://sandbox.hifi.com/v3/wallets/wlt_ETUnJO1R8j9hDlthRnqNp/deposits?currency=USDT \
   -H "Authorization: Bearer YOUR_API_KEY" \
 ```
 
