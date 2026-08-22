@@ -124,7 +124,7 @@ List a counterparty's registered bank accounts, optionally filtered by `status`,
 **Request**
 
 ```shell
-curl https://sandbox.hifi.com/v3/users/usr_x1y2z3/counter-parties/cpty_a1b2c3/external-accounts?limit=10&transferType=WIRE&currency=USD \
+curl https://sandbox.hifi.com/v3/external-accounts?counterPartyId=cpty_a1b2c3&limit=10&transferType=WIRE&currency=USD \
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
