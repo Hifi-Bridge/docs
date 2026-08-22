@@ -58,17 +58,14 @@ Add a reference to HIFI's terms in your privacy policy:
     ```
   </Step>
   <Step title="Accept ToS Link:">
-    Accept the ToS Link with the `sessionToken`
+    Accept the ToS Link with the ToS Link ID
 
     **Request:**
 
     ```shellscript
-    curl -X POST "https://sandbox.hifi.com/v3/tos-link" \
+    curl -X POST "https://sandbox.hifi.com/v3/tos-link/48867c6c-1748-49a9-8e64-ed48f6815213/accept" \
       -H "Authorization: Bearer YOUR_API_KEY" \
       -H "Content-Type: application/json" \
-      -d '{
-        "sessionToken": "05477964-f29c-444d-abd6-36380980567f"
-       }'
     ```
 
     **Response:**

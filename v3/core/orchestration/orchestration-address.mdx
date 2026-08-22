@@ -67,11 +67,12 @@ Provisions the wallet and returns the address immediately - `status` is normally
 **Request**
 
 ```shellscript
-curl -X POST https://sandbox.hifi.com/v3/users/usr_gBlMyGTbuyknSPXlZtwlS/orchestration-addresses \
+curl -X POST https://sandbox.hifi.com/v3/orchestration-addresses \
   -H "Idempotency-Key: <unique-key>" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -d '{
     "requestId": "550e8400-e29b-41d4-a716-446655440000",
+	"userId": "usr_gBlMyGTbuyknSPXlZtwlS",
     "source": {
       "currency": "USDC",
       "chain": "BASE"
@@ -120,7 +121,7 @@ Change the mode, schedule, threshold, or destination account at any time while t
 **Request**
 
 ```shell
-curl -X PATCH https://sandbox.hifi.com/v3/users/usr_gBlMyGTbuyknSPXlZtwlS/orchestration-addresses/orchaddr_HtgURm58uWMF0EzmG8DAl \
+curl -X PATCH https://sandbox.hifi.com/v3/orchestration-addresses/orchaddr_HtgURm58uWMF0EzmG8DAl \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -d '{
     "mode": "THRESHOLD",
@@ -141,7 +142,7 @@ Deactivation:
 **Request**
 
 ```shell
-curl -X DELETE https://sandbox.hifi.com/v3/users/usr_gBlMyGTbuyknSPXlZtwlS/orchestration-addresses/orchaddr_HtgURm58uWMF0EzmG8DAl \
+curl -X DELETE https://sandbox.hifi.com/v3/orchestration-addresses/orchaddr_HtgURm58uWMF0EzmG8DAl \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -d '{
     "walletAddress": "0xYourRefundAddress..."
@@ -159,7 +160,7 @@ Batches whatever is currently `PENDING` right now, regardless of mode - useful f
 **Request**
 
 ```shell
-curl -X POST https://sandbox.hifi.com/v3/users/usr_gBlMyGTbuyknSPXlZtwlS/orchestration-addresses/orchaddr_HtgURm58uWMF0EzmG8DAl/orchestrate \
+curl -X POST https://sandbox.hifi.com/v3/orchestration-addresses/orchaddr_HtgURm58uWMF0EzmG8DAl/orchestrate \
   -H "Idempotency-Key: <unique-key>" \
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
@@ -193,7 +194,7 @@ Use GET `v3/users/:userId/orchestration-addresses/:orchId/deposits` to retrieve 
 **Request**
 
 ```shell
-curl "https://sandbox.hifi.com/v3/users/usr_gBlMyGTbuyknSPXlZtwlS/orchestration-addresses/orchaddr_HtgURm58uWMF0EzmG8DAl/deposits?status=PENDING" \
+curl "https://sandbox.hifi.com/v3/orchestration-addresses/orchaddr_HtgURm58uWMF0EzmG8DAl/deposits?status=PENDING" \
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
@@ -238,7 +239,7 @@ Use GET `v3/users/:userId/orchestration-addresses/:orchId/batches` to retrieve a
 **Request**
 
 ```shell
-curl "https://sandbox.hifi.com/v3/users/usr_gBlMyGTbuyknSPXlZtwlS/orchestration-addresses/orchaddr_HtgURm58uWMF0EzmG8DAl/batches" \
+curl "https://sandbox.hifi.com/v3/orchestration-addresses/orchaddr_HtgURm58uWMF0EzmG8DAl/batches" \
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
 

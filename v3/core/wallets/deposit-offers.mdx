@@ -35,7 +35,7 @@ Get every offer received by a Canton wallet, or a specific one by ID.
 **Request**
 
 ```shell
-curl https://sandbox.hifi.com/v3/users/usr_x1y2z3/wallets/wlt_a1b2c3/offers \
+curl https://sandbox.hifi.com/v3/wallets/wlt_a1b2c3/offers \
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
@@ -79,7 +79,7 @@ Once an offer is `RECEIVED`, the recipient decides whether to accept it (crediti
 **Request**
 
 ```shell
-curl -X POST https://sandbox.hifi.com/v3/users/usr_x1y2z3/wallets/wlt_a1b2c3/offers/ofr_3b6f7b9a1f3a/accept \
+curl -X POST https://sandbox.hifi.com/v3/wallets/wlt_a1b2c3/offers/ofr_3b6f7b9a1f3a/accept \
   -H "Idempotency-Key: <unique-key>" \
   -H "Authorization: Bearer YOUR_API_KEY"
 ```

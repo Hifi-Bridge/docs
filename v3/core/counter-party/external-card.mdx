@@ -46,10 +46,11 @@ Registers a card directly against an existing counterparty. Requires an `Idempot
 **Request**
 
 ```shell
-curl -X POST https://sandbox.hifi.com/v3/users/usr_x1y2z3/counter-parties/cpty_a1b2c3/external-cards \
+curl -X POST https://sandbox.hifi.com/v3/external-cards \
   -H "Idempotency-Key: <unique-key>" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -d '{
+	"counterPartyId": "cpty_a1b2c3",
     "firstName": "Jane",
     "lastName": "Doe",
     "cardNumber": "4111111111111234",
@@ -84,7 +85,7 @@ Revokes a previously-added card. A deactivated card can no longer be used as a p
 **Request**
 
 ```shell
-curl -X DELETE https://sandbox.hifi.com/v3/users/usr_x1y2z3/counter-parties/cpty_a1b2c3/external-cards/extcrd_QW1e2r3t4y \
+curl -X DELETE https://sandbox.hifi.com/v3/external-cards/extcrd_QW1e2r3t4y \
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
@@ -113,7 +114,7 @@ List a counterparty's registered cards.
 **Request**
 
 ```shell
-curl https://sandbox.hifi.com/v3/users/usr_x1y2z3/counter-parties/cpty_a1b2c3/external-cards \
+curl https://sandbox.hifi.com/v3/external-cards?counterPartyId=cpty_a1b2c3 \
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
@@ -155,9 +156,10 @@ An External Card Session is the hosted alternative to the Card API - **the requi
 **Request**
 
 ```shell
-curl -X POST https://sandbox.hifi.com/v3/users/usr_x1y2z3/external-card-sessions \
+curl -X POST https://sandbox.hifi.com/v3/external-card-sessions \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -d '{
+	"userId": "usr_x1y2z3",
     "requestId": "5c1b1e0a-1234-4a5b-8c9d-0e1f2a3b4c5d",
     "recipientEmail": "jane@example.com",
     "redirectUrl": "https://yourapp.com/card-collection-complete",

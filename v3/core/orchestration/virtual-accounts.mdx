@@ -45,10 +45,11 @@ Provisions the account and returns its deposit instructions immediately - the ac
 **Request**
 
 ```shell
-curl -X POST https://sandbox.hifi.com/v3/users/usr_gBlMyGTbuyknSPXlZtwlS/virtual-accounts \
+curl -X POST https://sandbox.hifi.com/v3/virtual-accounts \
   -H "Idempotency-Key: <unique-key>" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -d '{
+	"userId": "usr_gBlMyGTbuyknSPXlZtwlS",
     "source": {
       "currency": "USD",
       "country": "USA",
@@ -129,7 +130,7 @@ Closes the account so it no longer accepts deposits. All future deposits will au
 </Tip>
 
 ```shell
-curl -X DELETE https://sandbox.hifi.com/v3/users/usr_gBlMyGTbuyknSPXlZtwlS/virtual-accounts/va_HtgURm58uWMF0EzmG8DAl \
+curl -X DELETE https://sandbox.hifi.com/v3/virtual-accounts/va_HtgURm58uWMF0EzmG8DAl \
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
@@ -181,7 +182,7 @@ Mocks an inbound deposit hitting the Virtual Account's bank sub-account, so you 
 **Request**
 
 ```shell
-curl -X POST https://sandbox.hifi.com/v3/users/usr_gBlMyGTbuyknSPXlZtwlS/virtual-accounts/va_HtgURm58uWMF0EzmG8DAl/simulate-deposits \
+curl -X POST https://sandbox.hifi.com/v3/virtual-accounts/va_HtgURm58uWMF0EzmG8DAl/simulate-deposits \
   -H "Idempotency-Key: <unique-key>" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -d '{
