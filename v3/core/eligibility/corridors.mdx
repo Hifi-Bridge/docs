@@ -44,12 +44,12 @@ Filter with `status`, `fiatCurrency`, `fiatCountry`, `transferType`, and `direct
 
 ## Check corridor eligibility
 
-`GET /v3/users/:userId/corridors/eligibility` filters the catalog down to what a specific user can actually transact on right now.
+`GET /v3/corridors/eligibility?userId=usr_gBlMyGTbuyknSPXlZtwlS` filters the catalog down to what a specific user can actually transact on right now.
 
 **Request**
 
 ```shell
-curl "https://sandbox.hifi.com/v3/users/usr_gBlMyGTbuyknSPXlZtwlS/corridors/eligibility?fiatCurrency=USD&direction=OFFRAMP" \
+curl "https://sandbox.hifi.com/v3/corridors/eligibility?userId=usr_gBlMyGTbuyknSPXlZtwlS&fiatCurrency=USD&direction=OFFRAMP" \
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
