@@ -457,16 +457,16 @@
                   {
                     "group": "Orchestration Addresses",
                     "pages": [
-                      "POST /v3/users/{userId}/orchestration-addresses",
-                      "GET /v3/users/{userId}/orchestration-addresses",
-                      "GET /v3/users/{userId}/orchestration-addresses/{orchestrationAddressId}",
-                      "PATCH /v3/users/{userId}/orchestration-addresses/{orchestrationAddressId}",
-                      "DELETE /v3/users/{userId}/orchestration-addresses/{orchestrationAddressId}",
-                      "GET /v3/users/{userId}/orchestration-addresses/{orchestrationAddressId}/deposits",
-                      "GET /v3/users/{userId}/orchestration-addresses/{orchestrationAddressId}/deposits/{orchestrationDepositId}",
-                      "GET /v3/users/{userId}/orchestration-addresses/{orchestrationAddressId}/batches",
-                      "GET /v3/users/{userId}/orchestration-addresses/{orchestrationAddressId}/batches/{orchestrationBatchId}",
-                      "POST /v3/users/{userId}/orchestration-addresses/{orchestrationAddressId}/orchestrate"
+                      "POST /v3/orchestration-addresses",
+                      "GET /v3/orchestration-addresses",
+                      "GET /v3/orchestration-addresses/{orchestrationAddressId}",
+                      "PATCH /v3/orchestration-addresses/{orchestrationAddressId}",
+                      "DELETE /v3/orchestration-addresses/{orchestrationAddressId}",
+                      "GET /v3/orchestration-addresses/deposits",
+                      "GET /v3/orchestration-addresses/deposits/{orchestrationDepositId}",
+                      "GET /v3/orchestration-addresses/batches",
+                      "GET /v3/orchestration-addresses/batches/{orchestrationBatchId}",
+                      "POST /v3/orchestration-addresses/{orchestrationAddressId}/orchestrate"
                     ]
                   },
                   {
