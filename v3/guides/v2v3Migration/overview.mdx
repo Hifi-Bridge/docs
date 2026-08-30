@@ -1,0 +1,140 @@
+---
+title: "Overview"
+description: "What changed platform-wide when moving from HIFI API v2 to v3, and how to map your existing v2 records to their v3 equivalents."
+---
+
+v3 is not a like-for-like rename of v2 — every resource has a new schema, and several mechanics that used to be inconsistent per-resource (pagination, IDs, error shapes) are now standardized across the whole API. This page covers the platform-wide changes that apply no matter which resource you're migrating. Resource-specific changes (renamed fields, removed endpoints, behavior differences) live on each resource's own page, linked from the sidebar.
+
+<Info>
+  v2 is not being shut off on any fixed date announced here — v3 is additive. Migrate resource by resource, at your own pace, using the ID-mapping tool below to keep records correlated across both APIs during the transition.
+</Info>
+
+## IDs: opaque prefixed strings, not raw UUIDs
+
+Every v3 resource is identified by an opaque, prefixed public ID instead of a raw UUID — e.g. a user is `usr_a1B2c3D4e5F6g7H8i9J0k`, an offramp is `offramp_a1B2c3D4e5F6g7H8i9J0k`. The prefix tells you what kind of resource you're looking at just from the string.
+
+| Resource | v2 ID | v3 ID prefix |
+|---|---|---|
+| User | raw UUID | `usr_` |
+| Wallet | raw UUID | `wlt_` |
+| External Wallet | raw UUID | `extwlt_` |
+| Virtual Account | raw UUID | `va_` |
+| Counter Party | raw UUID | `cpty_` |
+| External Account | raw UUID | `extacct_` |
+| External Card | raw UUID | `extcrd_` |
+| Onramp | raw UUID | `onramp_` |
+| Offramp | raw UUID | `offramp_` |
+| Onchain Transfer | raw UUID | `ctx_`|
+| Onchain Batch Transfer | raw UUID | `bctx_`|
+| Swap | raw UUID | `swp_` |
+| Bridge | raw UUID | `brg_` |
+| Orchestration Address | raw UUID | `orchaddr_` |
+| Settlement Rule | raw UUID | `sr_` |
+| Webhook Endpoint | raw UUID | `we_` |
+| Transfer Approval | raw UUID | `ta_` |
+
+<Warning>
+  v3 IDs are opaque strings — don't parse them beyond the prefix, and don't assume a fixed length. Store whatever v3 returns as-is.
+</Warning>
+
+## Map v2 IDs to v3 IDs
+
+`GET /v3/id-mappings` takes a batch of `{ v2Id, resourceType }` pairs and returns the corresponding v3 ID for each one you own. Up to 1,000 IDs per call.
+
+**Request**
+
+```shell
+curl -G https://sandbox.hifi.com/v3/id-mappings \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "ids": [
+      { "v2Id": "7c9e6679-7425-40de-944b-e07fc1f90ae7", "resourceType": "USER" },
+      { "v2Id": "3fa85f64-5717-4562-b3fc-2c963f66afa6", "resourceType": "OFFRAMP" }
+    ]
+  }'
+```
+
+**Response**
+
+```json
+{
+  "ids": [
+    { "resourceType": "USER", "v2Id": "7c9e6679-7425-40de-944b-e07fc1f90ae7", "v3Id": "usr_a1B2c3D4e5F6g7H8i9J0k", "mapped": true },
+    { "resourceType": "OFFRAMP", "v2Id": "3fa85f64-5717-4562-b3fc-2c963f66afa6", "v3Id": null, "mapped": false }
+  ]
+}
+```
+
+`mapped: false` means either the ID doesn't belong to your profile, doesn't exist, or is for a resource type this endpoint doesn't support mapping for yet — it's not an error, so a batch with some unmapped entries still returns `200`.
+
+Supported `resourceType` values today:
+
+| `resourceType` | Mapping status |
+| --- | --- |
+| `USER` | Supported |
+| `WALLET` | Supported |
+| `WALLET_DEPOSIT` | Supported |
+| `EXTERNAL_WALLET` | Supported |
+| `OFFER` | Supported |
+| `VIRTUAL_ACCOUNT` | Supported |
+| `EXTERNAL_ACCOUNT` | Supported |
+| `ONRAMP` | Supported |
+| `OFFRAMP` | Supported |
+| `CRYPTO_TRANSFER` | Supported |
+| `BATCH_CRYPTO_TRANSFER` | Supported |
+| `SWAP` | Supported |
+| `BRIDGE` | Supported |
+| `SETTLEMENT_RULE` | Supported |
+| `ORCHESTRATION_ADDRESS` | Work in progress |
+| `ORCHESTRATION_DEPOSIT` | Work in progress |
+| `ORCHESTRATION_BATCH` | Work in progress|
+
+## Pagination: one envelope for every list endpoint
+
+v2's list endpoints were inconsistent — some returned `{ count, users }`, others `{ count, wallets, nextCursor }`, with cursors that were sometimes an opaque value and sometimes just a raw timestamp. Every v3 list endpoint uses the same shape:
+
+```json
+{
+  "data": [ /* ... */ ],
+  "pagination": {
+    "hasMore": true,
+    "startCursor": "usr_a1B2c3D4e5F6g7H8i9J0k",
+    "endCursor": "usr_z9Y8x7W6v5U4t3S2r1Q0p"
+  }
+}
+```
+
+Page backward/forward with `startingAfter` / `endingBefore` query params, both set to a resource ID (not a timestamp or offset) — `startCursor` and `endCursor` are just the first/last resource ID in the page you got back, not separate opaque tokens.
+
+## Errors: a single typed shape
+
+v2's error body varied by endpoint and generally looked like `{ code, error, errorDetails }`, with `error` being a loose string constant. Every v3 error is:
+
+```json
+{
+  "type": "RESOURCE_NOT_FOUND",
+  "message": "User not found.",
+  "fields": [
+    { "field": "userId", "code": "NOT_FOUND", "message": "user not found" }
+  ]
+}
+```
+
+`type` is a stable machine-readable error code (safe to switch on), `message` is human-readable, and `fields` (when present) points at exactly which request field(s) caused the error — useful for surfacing per-field validation errors in a UI without string-matching `message`.
+
+## Idempotency: a real header, not a body field
+
+v2 had no general request-idempotency mechanism — a couple of endpoints (like ToS link generation) took an ad hoc `idempotencyKey` body field, but most didn't support safe retries at all. Every v3 endpoint that creates or mutates something accepts a standard `Idempotency-Key` header:
+
+```shell
+curl -X POST https://sandbox.hifi.com/v3/offramps \
+  -H "Idempotency-Key: 3f2504e0-4f89-11d3-9a0c-0305e82c3301" \
+  ...
+```
+
+Retrying the same request with the same key returns the original result instead of creating a duplicate — safe to retry on a timeout or network error without double-executing a transfer.
+
+## Request validation: unknown fields are now rejected
+
+v2's request validation generally ignored fields it didn't recognize. v3 request bodies are closed schemas — sending a field that doesn't exist on a v3 endpoint (including a stale v2-only field name) returns a validation error instead of being silently dropped. If a v3 migration is failing with an "unrecognized field" style error, check the resource's own migration page for a renamed or removed field first.

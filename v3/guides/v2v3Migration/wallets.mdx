@@ -1,0 +1,86 @@
+---
+title: "Wallets"
+description: "What changed for the Wallets (HIFI Wallet) resource when migrating from HIFI API v2 to v3."
+---
+
+The biggest change: in v2, a wallet wasn't really an addressable resource — there was no single-wallet GET endpoint, no wallet ID. Wallets were just addresses attached to a user, read back as a `{chain: [addresses]}` map embedded on the user object or through balance/deposit endpoints keyed by `userId` + `chain`. v3 makes Wallet a first-class resource with its own ID, its own GET, and a flat top-level path. See the [platform-wide changes](/v3/guides/v2v3Migration/overview) for ID format, pagination, error shape, and idempotency.
+
+## Endpoints
+
+| v2 | v3 | Notes |
+|---|---|---|
+| `POST /v2/users/:userId/wallets/add` | `POST /v3/wallets` | `userId` moved from path to body. Response now returns the created wallet objects directly instead of the whole user object. |
+| *(none — no single-wallet lookup existed)* | `GET /v3/wallets/:walletId` | **New.** v2 had no way to fetch one wallet by ID; you could only read the full `{chain: addresses}` map off the user or filter balance/deposits by chain. |
+| *(none)* | `GET /v3/wallets` | **New.** List all of a user's wallets as discrete resources. |
+| `GET /v2/users/:userId/wallets/balance` | `GET /v3/wallets/:walletId/balance` | Now scoped to one wallet by ID instead of returning balances across all chains for a user in one call. |
+| `GET /v2/users/:userId/wallets/deposits` | `GET /v3/wallets/deposits` | `userId`/`walletId` now query filters instead of path segments. List envelope changed. |
+| `GET /v2/users/:userId/wallets/deposits/:depositId` | `GET /v3/wallets/deposits/:depositId` | |
+
+## Request changes: create a wallet
+
+**v2** — provisioning more wallets for an existing user, response returns the whole user object:
+
+```json
+{ "chains": ["POLYGON", "ETHEREUM"] }
+```
+`POST /v2/users/:userId/wallets/add`
+
+**v3** — `userId` moves into the body, response returns the created wallets directly:
+
+```json
+{ "userId": "usr_a1B2c3D4e5F6g7H8i9J0k", "chains": ["POLYGON", "ETHEREUM"] }
+```
+`POST /v3/wallets`
+
+## Response changes
+
+**v2** — no standalone wallet object. What you get back is either the user object's embedded map, or a raw balance/deposit response:
+
+```json
+{
+    "id": "aa42a905-6c77-52c6-a609-09d0ad13991a",
+    "createdAt": "2026-07-06T16:40:51.363Z",
+    "type": "individual",
+    "email": "human@gmail.com",
+    "name": "Hu Man",
+    "wallets": {
+        "INDIVIDUAL": {
+            "ETHEREUM": {
+                "id": "ff5407e3-904f-5a4c-9180-6ec9b12600ca",
+                "address": "0x78299289A42F0263CD279bfe1E16B98e17De7ea7"
+            },
+            "FLOW_EVM": {
+                "id": "01e20654-86f1-5c32-ab6e-830d69e7a53c",
+                "address": "0xabc2b8c19cb70581927a477feb25d485df4031ab"
+            },
+            "POLYGON": {
+                "id": "e95671db-f3c6-5780-9bc2-37d7f1947ce8",
+                "address": "0x03e583e5864E2fD689b707672037439613D52d03"
+            }
+        }
+    }
+}
+```
+
+**v3** — each wallet is its own resource:
+
+```json
+{
+  "id": "wlt_fkc0E4OsfHWZPNXiPhj4q",
+  "userId": "usr_a1B2c3D4e5F6g7H8i9J0k",
+  "chain": "POLYGON",
+  "address": "0xabc123...",
+  "createdAt": "...",
+  "updatedAt": "..."
+}
+```
+
+If you're used to reading wallet addresses off the v2 user object's `wallets` field, switch to calling `GET /v3/wallets?userId=...` instead — see [Users](/v3/guides/v2v3Migration/users#response-changes).
+
+## Deposits
+
+**v2** deposit list response: `{count, wallets: [...], nextCursor}`-style envelope keyed by raw timestamp cursor. **v3** returns the standard `{data, pagination}` envelope (see [platform-wide changes](/v3/guides/v2v3Migration/overview#pagination-one-envelope-for-every-list-endpoint)) and adds structured filters not available in v2: `minAmount`, `status`, `currency` as a required filter rather than optional.
+
+## ID format
+
+Wallets had no ID at all in v2 (only chain + address). v3 wallets are `wlt_...` prefixed public IDs; wallet deposits are `dep_...`.

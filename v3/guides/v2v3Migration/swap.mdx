@@ -1,0 +1,93 @@
+---
+title: "Swap"
+description: "What changed for the Swap resource when migrating from HIFI API v2 to v3."
+---
+
+Swap converts between stablecoins on-chain. The rate-then-accept flow and status enum are unchanged between versions. The main change: v3 dropped swap cancellation entirely, along with the fields that supported it. See the [platform-wide changes](/v3/guides/v2v3Migration/overview) for ID format, pagination, error shape, and idempotency.
+
+<Info>
+  Transfer Approval never applied to Swap in either version — there's no `requireApproval`/`requiresApproval` field here on either side.
+</Info>
+
+## Endpoints
+
+| v2 | v3 | Notes |
+|---|---|---|
+| `POST /v2/wallets/swaps` | `POST /v3/swaps` | Request body changed — see below. |
+| `GET /v2/wallets/swaps/rate` | `GET /v3/swaps/rates` | Path renamed to plural. <Badge color="yellow" iconType="light">Work in progress</Badge> |
+| `POST /v2/wallets/swaps/:transactionId/accept` | `POST /v3/swaps/:swapId/quote/accept` | Path renamed to include `/quote/`. |
+| `GET /v2/wallets/swaps/:transactionId` | `GET /v3/swaps/:swapId` | Response shape changed — see below. |
+| `GET /v2/wallets/swaps` | `GET /v3/swaps` | List envelope changed to the standard `{data, pagination}` shape. |
+| `POST /v2/wallets/swaps/:transactionId/cancel` | *(none)* | <Badge color="yellow" iconType="light">Work in progress</Badge> |
+| `GET /v2/wallets/swaps/export/csv` | *(none)* | <Badge color="yellow" iconType="light">Work in progress</Badge> — no v3 CSV export endpoint yet. |
+
+## Request changes: create a swap
+
+**v2**:
+
+```json
+{
+  "requestId": "3f2504e0-4f89-11d3-9a0c-0305e82c3301",
+  "source": { "chain": "polygon", "currency": "usdc", "userId": "7c9e6679-7425-40de-944b-e07fc1f90ae7", "amount": 100 },
+  "destination": { "chain": "polygon", "currency": "usdt", "userId": "7c9e6679-7425-40de-944b-e07fc1f90ae7" },
+  "cancelAfterSeconds": 3600
+}
+```
+
+**v3**:
+
+```json
+{
+  "requestId": "3f2504e0-4f89-11d3-9a0c-0305e82c3301",
+  "source": { "walletId": "wlt_fkc0E4OsfHWZPNXiPhj4q", "currency": "USDC", "amount": 100 },
+  "destination": { "walletId": "wlt_fkc0E4OsfHWZPNXiPhj4q", "currency": "USDT" }
+}
+```
+
+| v2 field | v3 field | Change |
+|---|---|---|
+| `currency` | `currency` | Same name; lowercase → uppercase |
+| `chain` | — | **Removed.** Derived from the wallet. |
+| `limitPrice` | — | <Badge color="yellow" iconType="light">Work in progress</Badge> |
+| `cancelAfterSeconds` | — | <Badge color="yellow" iconType="light">Work in progress</Badge> |
+
+## Response changes
+
+**v2** (nested envelope, includes cancellation state):
+
+```json
+{
+  "transferType": "WALLET.SWAP",
+  "transferDetails": {
+    "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "cancellable": true,
+    "autoCancelAt": "...",
+    "cancelRequestedAt": null,
+    "quoteInformation": { "...": "..." }
+  }
+}
+```
+
+**v3** (flat, no cancellation fields):
+
+```json
+{
+  "id": "swp_QW1e2r3t4y",
+  "status": "OPEN_QUOTE",
+  "source": { "currency": "USDC", "amount": "100.00" },
+  "destination": { "currency": "USDT" },
+  "quote": { "...": "..." }
+}
+```
+
+| Change | Detail |
+|---|---|
+| Envelope | No more `{transferType, transferDetails}` wrapper. |
+| `cancellable` / `autoCancelAt` / `cancelRequestedAt` | **Removed** — no cancellation concept exists in v3. |
+| `quoteInformation` | **Renamed** to `quote`. |
+| `id` | Raw UUID → prefixed public ID (`swp_...`). |
+
+
+## Status and lifecycle
+
+Shared status enum on both sides. Note `CANCELLED` still exists in the enum even though there's no public way to reach it via the v3 API anymore.

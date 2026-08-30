@@ -1,0 +1,107 @@
+---
+title: "Questionnaire"
+description: "What changed for compliance questionnaire data when migrating from HIFI API v2 to v3."
+---
+
+v2 already collected source-of-funds / purpose-of-account / expected-volume answers, but as a `sofEuQuestionnaire` object embedded directly in the KYC payload (`GET/POST /v2/users/:userId/kyc`) — its required fields varied by rail, and values were free-text strings with no fixed vocabulary. v3 breaks this out into its own dedicated resource with renamed fields and a fixed enum for nearly every value.
+
+## Endpoints
+
+| v2 | v3 | Notes |
+|---|---|---|
+| `sofEuQuestionnaire` field on `GET /v2/users/:userId/kyc` | `GET /v3/users/:userId/compliance/questionnaire` | Own endpoint instead of an embedded field. |
+| `sofEuQuestionnaire` field on `POST /v2/users/:userId/kyc` | `PATCH /v3/users/:userId/compliance/questionnaire` | Own endpoint instead of an embedded field; verb change. |
+
+Answers feed into the same `POST /users/:userId/compliance/submit` review as the [Compliance Profile](/v3/guides/v2v3Migration/compliance-profile), [Associated Party](/v3/guides/v2v3Migration/associated-party), and [Documents](/v3/guides/v2v3Migration/documents) resources — a compliance review can be blocked pending questionnaire answers the same way it can be blocked on a missing document.
+
+<Info>
+  v2's questionnaire values were unconstrained free text (e.g. `sourceOfFunds: "salary"` or `"consulting income"`), so they can't be mechanically mapped onto v3's fixed enum values (e.g. `sourceOfFunds: "employment_income"`). There's no automatic backfill — plan to re-collect questionnaire answers from users through your v3 integration.
+</Info>
+
+## Request changes: Individual
+
+**v2** (`sofEuQuestionnaire` object, itself nested inside the main KYC payload):
+
+```json
+{
+  "employmentStatus": "employed",
+  "sourceOfFunds": "salary",
+  "primaryPurpose": "purchase_goods_and_services",
+  "expectedMonthlyPayments": "5000_9999",
+  "actingAsIntermediary": false
+}
+```
+
+**v3**
+
+```json
+{
+  "employmentStatus": "employed",
+  "sourceOfFunds": "employment_income",
+  "primaryPurpose": "goods_and_services",
+  "expectedMonthlyTransactionVolume": "20000_50000",
+  "expectedMonthlyTransactionCount": "10_100",
+  "actsOnBehalfOfThirdParty": false,
+  "highRiskActivities": ["none"]
+}
+```
+
+| v2 field | v3 field | Change |
+|---|---|---|
+| `employmentStatus` | `employmentStatus` | Same name and same values, **expanded** — v3 keeps all 6 v2 values and adds `contractor_freelancer`, `business_owner`, `government_employee`, `other` |
+| `sourceOfFunds` | `sourceOfFunds` | Same name; most values rewritten, though `inheritance`, `savings`, `government_benefits`, and `pension_retirement` survive unchanged |
+| `primaryPurpose` | `primaryPurpose` | Same name; most values rewritten, only `charitable_donations` and `other` survive unchanged |
+| `primaryPurposeOther` | `primaryPurposeDetails` | Renamed |
+| `expectedMonthlyPayments` | `expectedMonthlyTransactionVolume` | Renamed; value-bucket boundaries also changed |
+| `actingAsIntermediary` | `actsOnBehalfOfThirdParty` | Renamed |
+| — | `actsOnBehalfOfThirdPartyDetails` | **New** — required when `actsOnBehalfOfThirdParty` is `true` |
+| — | `sourceOfFundsDetails` | **New.** v2's individual `sourceOfFunds` enum had no `"other"` option, so there was never a matching details field. v3 adds `"other"` and requires this field when it's chosen. |
+| — | `expectedMonthlyTransactionCount` | **New** |
+| — | `highRiskActivities` | **New for individuals** — v2 only asked this of businesses |
+| `mostRecentOccupation` | — | **Removed.** No v3 equivalent. |
+
+## Request changes: Business
+
+**v2**:
+
+```json
+{
+  "primaryPurpose": "protect_wealth",
+  "sourceOfFunds": "sales_of_goods_and_services",
+  "estimatedAnnualRevenueUsd": "1000000_9999999",
+  "expectedMonthlyPaymentsUsd": 50000,
+  "transmitsCustomerFunds": false,
+  "highRiskActivities": ["none_of_the_above"]
+}
+```
+
+**v3** 
+```json
+{
+  "primaryPurpose": "business_expenses",
+  "sourceOfFunds": "operating_revenue",
+  "annualRevenue": "1000000_10000000",
+  "expectedMonthlyTransactionVolume": "500000_1000000",
+  "expectedMonthlyTransactionCount": "100_1000",
+  "transmitsThirdPartyFunds": false,
+  "highRiskActivities": ["none"],
+  "providesFinancialServices": false
+}
+```
+
+| v2 field | v3 field | Change |
+|---|---|---|
+| `primaryPurpose` | `primaryPurpose` | Same name; most values rewritten, though `payroll`, `treasury_management`, `charitable_donations`, and `other` survive unchanged |
+| `primaryPurposeOther` | `primaryPurposeDetails` | Renamed |
+| `sourceOfFunds` | `sourceOfFunds` | Same name; most values rewritten, though `grants`, `third_party_funds`, and `treasury_reserves` survive unchanged |
+| `sourceOfFundsDescription` | `sourceOfFundsDetails` | Renamed |
+| `transmitsCustomerFunds` | `transmitsThirdPartyFunds` | Renamed |
+| `transmitsCustomerFundsDescription` | `transmitsThirdPartyFundsDetails` | Renamed |
+| `highRiskActivities` | `highRiskActivities` | Same name; most values rewritten (v3 adds `check_cashing_or_bail`, `government_entities`, `bearer_shares`, `shell_bank`), though `adult_entertainment`, `gambling`, and `money_services` survive unchanged |
+| `estimatedAnnualRevenueUsd` | `annualRevenue` | Renamed; value-bucket boundaries also changed |
+| `expectedMonthlyPaymentsUsd` | `expectedMonthlyTransactionVolume` | Renamed; changed from a raw number to a bucketed range |
+| — | `expectedMonthlyTransactionCount` | **New** |
+| — | `providesFinancialServices` | **New** — no confirmed v2 equivalent. (v2's `conductsMoneyServices` sounds related but there's no mapping between them in code, so it's listed here as new rather than assumed to be a rename.) |
+| `conductsMoneyServices` | — | **Removed** — see note above. |
+| `customerFundsDescription` | — | **Removed.** |
+| `operatesInProhibitedCountries` | — | **Removed.** |

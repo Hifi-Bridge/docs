@@ -297,8 +297,36 @@
             "tab": "Guides",
             "pages": [
               {
-                "group": "Guides",
-                "pages": []
+                "group": "Migration Guide",
+                "pages": [
+                  {
+                    "group": "Migrate from v2",
+                    "pages": [
+                      "v3/guides/v2v3Migration/overview",
+                      "v3/guides/v2v3Migration/users",
+                      "v3/guides/v2v3Migration/wallets",
+                      "v3/guides/v2v3Migration/deposit-offers",
+                      "v3/guides/v2v3Migration/compliance-profile",
+                      "v3/guides/v2v3Migration/associated-party",
+                      "v3/guides/v2v3Migration/questionnaire",
+                      "v3/guides/v2v3Migration/documents",
+                      "v3/guides/v2v3Migration/compliance-link",
+                      "v3/guides/v2v3Migration/virtual-accounts",
+                      "v3/guides/v2v3Migration/settlement-rules",
+                      "v3/guides/v2v3Migration/counter-party",
+                      "v3/guides/v2v3Migration/external-account",
+                      "v3/guides/v2v3Migration/external-wallet",
+                      "v3/guides/v2v3Migration/onchain-transfer",
+                      "v3/guides/v2v3Migration/offramp",
+                      "v3/guides/v2v3Migration/onramp",
+                      "v3/guides/v2v3Migration/bridge",
+                      "v3/guides/v2v3Migration/swap",
+                      "v3/guides/v2v3Migration/transfer-approvals",
+                      "v3/guides/v2v3Migration/orchestration-address",
+                      "v3/guides/v2v3Migration/webhooks"
+                    ]
+                  }
+                ]
               }
             ]
           },

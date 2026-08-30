@@ -1,0 +1,106 @@
+---
+title: "Users"
+description: "What changed for the Users resource when migrating from HIFI API v2 to v3."
+---
+
+The biggest change isn't a field rename — it's scope. In v2, a "user" was a heavyweight object that bundled identity, KYC data, and wallet addresses all in one record, created and updated in one call. In v3, a user is a thin identity/status record; KYC, wallets, and everything else are separate resources you create afterward. See the [platform-wide changes](/v3/guides/v2v3Migration/overview) for ID format, pagination, error shape, and idempotency — this page only covers what's specific to Users.
+
+<Info>
+  If you're migrating, expect to split any v2 "create user" call into several v3 calls: create the bare user, then submit compliance/KYC data, then provision a wallet — instead of one call that did all three.
+</Info>
+
+## Endpoints
+
+| v2 | v3 | Notes |
+|---|---|---|
+| `POST /v2/users` | `POST /v3/users` | Request body shrank drastically — see below. |
+| `GET /v2/users/:userId` | `GET /v3/users/:userId` | Response shape changed — see below. |
+| `GET /v2/users` | `GET /v3/users` | List envelope changed to the standard `{data, pagination}` shape. |
+| `POST /v2/users/:userId` (update) | *(none)* | **No v3 update-user endpoint exists.** There's no way to change `type` or re-submit identity fields via a Users call in v3 — that now happens through the compliance/KYC resources. |
+| `POST /v2/users/:userId` with `count` (batch anonymous users) | *(none)* | Anonymous/batch user creation has no v3 equivalent — v3's `type` enum only has `INDIVIDUAL`/`BUSINESS`, no `anonymous`. |
+| `GET /v2/users/:userId/wallets/balance`, `.../wallets/deposits`, `.../wallets/deposits/:depositId`, `.../wallets/external*`, `.../wallets/add`, `.../wallets/migrations*` | `GET /v3/wallets/...`, `GET /v3/wallets/deposits`, `GET /v3/external-wallets/...`, etc. | All wallet-related endpoints moved out from under `/users/:userId/wallets/*` to flat top-level resources (`/wallets`, `/external-wallets`) — `userId` is now supplied via query/body param instead of the URL path. See the (forthcoming) Wallets migration page for the full mapping. |
+
+ToS link endpoints (`POST /tos-link`, `GET /tos-link/:signedAgreementId`, `POST /tos-link/:signedAgreementId/accept`) are unchanged in path and shape between v2 and v3.
+
+## Request changes: create a user
+
+**v2** accepted a large, open-ended body — identity/KYC fields, `chains` to provision wallets on, `isDeveloper`, and unknown fields were silently ignored:
+
+```json
+{
+  "type": "individual",
+  "signedAgreementId": "2fb2da24-472a-4e5b-b160-038d9dc82a40",
+  "firstName": "Jane",
+  "lastName": "Doe",
+  "email": "jane@example.com",
+  "dateOfBirth": "1990-01-01",
+  "address": { "...": "..." },
+  "chains": ["POLYGON", "ETHEREUM"]
+}
+```
+
+**v3** is a closed schema — only these fields are accepted, and anything else (`firstName`, `email`, `chains`, etc.) is rejected outright rather than ignored:
+
+```json
+{
+  "requestId": "3f2504e0-4f89-11d3-9a0c-0305e82c3301",
+  "type": "INDIVIDUAL",
+  "signedAgreementId": "2fb2da24-472a-4e5b-b160-038d9dc82a40"
+}
+```
+
+| v2 field | v3 field | Change |
+|---|---|---|
+| `type` | `type` | Same name; `"anonymous"`/`"individual"`/`"business"` (lowercase) → `"INDIVIDUAL"`/`"BUSINESS"` (uppercase, though lowercase is still accepted for backward compatibility). No `"anonymous"` option in v3. |
+| `signedAgreementId` | `signedAgreementId` | Same name; required unless `type` was `"anonymous"` in v2 → always required in v3 |
+| `firstName` / `lastName` / `businessName` / `email` / `dateOfBirth` / `address` / `ipAddress` | — | **Rejected.** Submit these through the compliance/KYC resources instead. |
+| `chains` | — | **Rejected.** Create wallets separately via `POST /v3/wallets` after the user exists. |
+
+<Warning>
+  There's no v3 update-user endpoint. If your v2 integration calls `POST /v2/users/:userId` to correct or add identity fields after creation, there's no direct v3 replacement on the Users resource — that data now lives on the compliance/KYC side.
+</Warning>
+
+## Response changes
+
+**v2** (`GET /v2/users/:userId`):
+
+```json
+{
+  "id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+  "createdAt": "2026-01-15T10:30:00.000Z",
+  "type": "individual",
+  "email": "jane@example.com",
+  "name": "Jane Doe",
+  "wallets": {
+    "POLYGON": ["0xabc123..."],
+    "ETHEREUM": ["0xabc123..."]
+  }
+}
+```
+
+**v3** (`GET /v3/users/:userId`):
+
+```json
+{
+  "id": "usr_a1B2c3D4e5F6g7H8i9J0k",
+  "type": "INDIVIDUAL",
+  "status": "ACTIVE",
+  "createdAt": "2026-01-15T10:30:00.000Z",
+  "updatedAt": "2026-01-15T10:30:00.000Z"
+}
+```
+
+| Field | Change |
+|---|---|
+| `id` | Raw UUID → prefixed public ID (`usr_...`) |
+| `name`, `email` | **Removed.** Fetch identity fields from the compliance/KYC resources instead. |
+| `wallets` | **Removed.** List a user's wallets via `GET /v3/wallets?userId=...` instead of reading them off the user object. |
+| `status` | **New.** `ACTIVE` or `INACTIVE`. |
+| `updatedAt` | **New.** v2's user object had no `updatedAt` at all. |
+| `type` | Now always returned uppercase, regardless of how it was created. |
+
+<Note>
+  v2 itself was inconsistent here — `GET /v2/users/:userId` included `createdAt`, but `POST`/create-or-update responses on the same v2 resource did not. v3 is consistent across create, get, and list.
+</Note>
+
+**List** (`GET /users`): v2 returned `{ count, users: [...], nextCursor }` where `nextCursor` was a raw ISO timestamp string. v3 returns the standard `{ data: [...], pagination: { hasMore, startCursor, endCursor } }` — see [platform-wide changes](/v3/guides/v2v3Migration/overview#pagination-one-envelope-for-every-list-endpoint). There's no `count` field in the v3 list response.

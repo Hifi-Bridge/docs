@@ -52,10 +52,11 @@ For more details check [Documents](/v3/core/compliance/documents)
     **Request**
 
     ```shell
-    curl -X POST "https://sandbox.hifi.com/v3/users/usr_8kL2MdPcfxmB6OyzXWQNr/compliance/associated-parties" \
+    curl -X POST "https://sandbox.hifi.com/v3/compliance/associated-parties" \
       -H "Authorization: Bearer YOUR_API_KEY" \
       -H "Content-Type: application/json" \
       -d '{
+        "userId": "usr_8kL2MdPcfxmB6OyzXWQNr",
         "firstName": "Henry",
         "lastName": "Wu",
         "dateOfBirth": "1998-03-29",
@@ -118,10 +119,11 @@ For more details check [Documents](/v3/core/compliance/documents)
     **Request**
 
     ```shellscript
-    curl -X POST "https://sandbox.hifi.com/v3/users/usr_8kL2MdPcfxmB6OyzXWQNr/compliance/associated-parties/ap_kF9sLm2QwXcVbN3yTzR8p/documents" \
+    curl -X POST "https://sandbox.hifi.com/v3/compliance/documents" \
       -H "Authorization: Bearer YOUR_API_KEY" \
       -H "Content-Type: application/json" \
       -d '{
+        "associatedPartyId": "ap_kF9sLm2QwXcVbN3yTzR8p",
         "type": "PASSPORT",
         "subType": "SINGLE_SIDE",
         "issuedCountry": "USA",
@@ -162,10 +164,11 @@ For more details check [Documents](/v3/core/compliance/documents)
     **Request**
 
     ```shellscript
-    curl -X POST "https://sandbox.hifi.com/v3/users/usr_8kL2MdPcfxmB6OyzXWQNr/compliance/associated-parties/ap_kF9sLm2QwXcVbN3yTzR8p/documents" \
+    curl -X POST "https://sandbox.hifi.com/v3/compliance/documents" \
       -H "Authorization: Bearer YOUR_API_KEY" \
       -H "Content-Type: application/json" \
       -d '{
+        "associatedPartyId": "ap_kF9sLm2QwXcVbN3yTzR8p",
         "type": "UTILITY_BILL",
         "subType": "SINGLE_SIDE",
         "issuedCountry": "USA",

@@ -129,10 +129,11 @@ For more details check [Documents](/v3/core/compliance/documents)
     **Request**
 
     ```shellscript
-    curl -X POST "https://sandbox.hifi.com/v3/users/usr_4o0ZDdLcfxmB6OyzUEVNq/compliance/documents" \
+    curl -X POST "https://sandbox.hifi.com/v3/compliance/documents" \
       -H "Authorization: Bearer YOUR_API_KEY" \
       -H "Content-Type: application/json" \
       -d '{
+        "userId": "usr_4o0ZDdLcfxmB6OyzUEVNq",
         "type": "PASSPORT",
         "subType": "SINGLE_SIDE",
         "issuedCountry": "USA",
@@ -147,7 +148,7 @@ For more details check [Documents](/v3/core/compliance/documents)
     ```json
     {
         "id": "doc_lPeFxGI2dAVFvLV2g7b33",
-        "userId": "usr_TpCyt0c8PeZveAsmddulu",
+        "userId": "usr_4o0ZDdLcfxmB6OyzUEVNq",
         "associatedPartyId": null,
         "type": "PASSPORT",
         "subType": "SINGLE_SIDE",
@@ -173,10 +174,11 @@ For more details check [Documents](/v3/core/compliance/documents)
     **Request**
 
     ```shellscript
-    curl -X POST "https://sandbox.hifi.com/v3/users/usr_4o0ZDdLcfxmB6OyzUEVNq/compliance/documents" \
+    curl -X POST "https://sandbox.hifi.com/v3/compliance/documents" \
       -H "Authorization: Bearer YOUR_API_KEY" \
       -H "Content-Type: application/json" \
       -d '{
+        "userId": "usr_4o0ZDdLcfxmB6OyzUEVNq",
         "type": "UTILITY_BILL",
         "subType": "SINGLE_SIDE",
         "issuedCountry": "USA",
@@ -191,7 +193,7 @@ For more details check [Documents](/v3/core/compliance/documents)
     ```json
     {
         "id": "doc_lPeFxGI2dAVFvLV2g7b33",
-        "userId": "usr_TpCyt0c8PeZveAsmddulu",
+        "userId": "usr_4o0ZDdLcfxmB6OyzUEVNq",
         "associatedPartyId": null,
         "type": "UTILITY_BILL",
         "subType": "SINGLE_SIDE",
@@ -377,7 +379,7 @@ When a submitted application needs updated information, the status transitions t
 | Type | Action |
 | :-- | --- |
 | `UPDATE_PROFILE` | Update the user's profile information before resubmission, a common reason is information that doesn't match the submitted documentation. |
-| `RESUBMIT_DOCUMENT` | Update the user's documentation before resubmission, common reasons include expired, blurry, or unqualified documents. |
+| `UPLOAD_DOCUMENT` | Update the user's documentation before resubmission, common reasons include expired, blurry, or unqualified documents. |
 | `COMPLETE_LIVENESS_CHECK` | Complete the required liveness check for each associated party via provided verification link. |
 
 ## Getting Help

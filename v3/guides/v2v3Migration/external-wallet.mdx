@@ -1,0 +1,69 @@
+---
+title: "External Wallet"
+description: "What changed for the External Wallet resource when migrating from HIFI API v2 to v3."
+---
+
+External Wallet represents an on-chain address that isn't one of your users' HIFI-managed wallets — used as a Crypto Transfer/Bridge/Swap destination, an Onramp or Virtual Account destination (when a client wants fiat converted straight to stablecoins in the user's own wallet instead of a HIFI Wallet), or as an Offramp source. The core fields are the same; the main change is that a wallet must now belong to a [Counter Party](/v3/guides/v2v3Migration/counter-party), not just a user. See the [platform-wide changes](/v3/guides/v2v3Migration/overview) for ID format, pagination, error shape, and idempotency.
+
+## Endpoints
+
+| v2 | v3 | Notes |
+|---|---|---|
+| `POST /v2/users/:userId/wallets/external` | `POST /v3/external-wallets` | Request changed — a `counterPartyId` is now required. See below. |
+| `GET /v2/users/:userId/wallets/external/:walletId` | `GET /v3/external-wallets/:externalWalletId` | |
+| `GET /v2/users/:userId/wallets/external` | `GET /v3/external-wallets` | `userId`/`counterPartyId` now optional query filters instead of a required path segment. List envelope changed. |
+| `POST /v2/users/:userId/wallets/external/:walletId/deactivate` | `DELETE /v3/external-wallets/:externalWalletId` | Verb changed from a `POST .../deactivate` action to `DELETE`. |
+| *(none)* | `PATCH /v3/external-wallets/:externalWalletId` | **New** — v2 had no way to update an external wallet after creation. |
+
+## Request changes
+
+**v2**:
+
+```json
+{ "address": "0xabc123...", "chain": "POLYGON", "name": "Jane's cold wallet", "referenceId": "ext-001" }
+```
+
+**v3** — identical shape, plus a required `counterPartyId`:
+
+```json
+{ "counterPartyId": "cpty_QW1e2r3t4y", "address": "0xabc123...", "chain": "POLYGON", "name": "Jane's cold wallet", "referenceId": "ext-001" }
+```
+
+| v2 field | v3 field | Change |
+|---|---|---|
+| — | `counterPartyId` | **New required field.** v2 attached a wallet directly to a user; v3 requires a [Counter Party](/v3/guides/v2v3Migration/counter-party) reference. |
+
+<Info>
+  `address`, `chain`, `name`, and `referenceId` are otherwise unchanged — including `chain`, which was already an uppercase enum in v2 (`POLYGON`, `SOLANA`, `ETHEREUM`, `BASE`, `TRON`), not lowercase. v3 also keeps the field named `name`, not `nickname` — unlike Virtual Account and External Account, which do rename to `nickname`.
+</Info>
+
+## Response changes
+
+**v2** — no counterparty association, list uses a raw-timestamp cursor:
+
+```json
+{ "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6", "userId": "7c9e6679-...", "chain": "POLYGON", "name": "Jane's cold wallet", "address": "0xabc...", "referenceId": "ext-001", "active": true, "createdAt": "...", "updatedAt": "..." }
+```
+
+**v3**:
+
+```json
+{
+  "id": "extwlt_QW1e2r3t4y",
+  "userId": "usr_a1B2c3D4e5F6g7H8i9J0k",
+  "counterPartyId": "cpty_QW1e2r3t4y",
+  "chain": "POLYGON",
+  "name": "Jane's cold wallet",
+  "address": "0xabc123...",
+  "referenceId": "ext-001",
+  "active": true,
+  "createdAt": "...",
+  "updatedAt": "..."
+}
+```
+
+`counterPartyId` is new; `id`/`userId` are now prefixed public IDs instead of raw UUIDs. Every other field, including `name`, carries over unchanged.
+
+## ID format
+
+Raw UUID in v2 → `extwlt_...` prefixed public ID in v3.

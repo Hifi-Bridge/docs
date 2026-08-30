@@ -1,0 +1,30 @@
+---
+title: "Documents"
+description: "What changed for compliance document uploads when migrating from HIFI API v2 to v3."
+---
+
+v3 makes Documents a flat, independent, top-level resource instead of nesting it under (and embedding it back into) the per-user KYC object. The legacy hardcoded per-document-type URL fields on the KYC object (`govIdFrontUrl`, `proofOfAddressUrl`, etc.) are gone. See the [platform-wide changes](/v3/guides/v2v3Migration/overview) for ID format, pagination, error shape, and idempotency.
+
+## Endpoints
+
+| v2 | v3 | Notes |
+|---|---|---|
+| `POST /v2/files` | `POST /v3/files` | Same upload mechanism — only the authorization resource tag changed internally. |
+| `POST /v2/users/:userId/kyc/documents` | `POST /v3/compliance/documents` | Flat, top-level. See below — attaches to a user OR an associated party. |
+| `GET /v2/users/:userId/kyc/documents/:documentId` | `GET /v3/compliance/documents/:documentId` | |
+| `GET /v2/users/:userId/kyc/documents` | `GET /v3/compliance/documents` | List envelope changed. |
+| `POST /v2/users/:userId/kyc/documents/:documentId` | `PATCH /v3/compliance/documents/:documentId` | Verb change. |
+| *(none)* | `DELETE /v3/compliance/documents/:documentId` | **New.** Blocked if the document is already part of a submitted compliance review. |
+
+## Request changes
+
+| v2 field | v3 field | Change |
+|---|---|---|
+| `uboId` | `associatedPartyId` | Renamed |
+| `url` | — | **Removed.** v2 accepted a raw external URL as an alternative to `fileId` (the two were mutually exclusive — exactly one was required), but `url` was already marked deprecated in v2's own schema. v3 only accepts `fileId` from a prior `POST /files` call. |
+| `fileId` | `fileId` | Same field. v2 required exactly one of `url`/`fileId`; now that `url` is gone, `fileId` is unconditionally required. |
+| `type` | `type` | Same name; the accepted enum is narrower in v3, especially for business documents — see [Documents](/v3/core/compliance/documents) for the current list |
+
+## ID format
+
+Raw UUID in v2 → `doc_...` prefixed public ID in v3.

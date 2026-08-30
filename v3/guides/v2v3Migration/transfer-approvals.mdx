@@ -1,0 +1,67 @@
+---
+title: "Transfer Approvals"
+description: "What changed for the Transfer Approvals resource when migrating from HIFI API v2 to v3."
+---
+
+Transfer Approvals gate a transfer behind a manual approve/reject step before funds move — set on the transfer itself (see [Offramp](/v3/guides/v2v3Migration/offramp#transfer-approvals), [Onchain Transfer](/v3/guides/v2v3Migration/onchain-transfer), [Bridge](/v3/guides/v2v3Migration/bridge)), then managed here. Onramp and Swap don't support approval in either version. See the [platform-wide changes](/v3/guides/v2v3Migration/overview) for ID format, pagination, error shape, and idempotency.
+
+## Endpoints
+
+| v2 | v3 | Notes |
+|---|---|---|
+| `POST /v2/transfer-approvals/:approvalId/approve` | `POST /v3/transfer-approvals/:transferApprovalId/approve` | Now supports an `Idempotency-Key` header. |
+| `POST /v2/transfer-approvals/:approvalId/reject` | `POST /v3/transfer-approvals/:transferApprovalId/reject` | |
+| `GET /v2/transfer-approvals` | `GET /v3/transfer-approvals` | List envelope changed to the standard `{data, pagination}` shape (v2 was offset-based). |
+| `GET /v2/transfer-approvals/:approvalId` | `GET /v3/transfer-approvals/:transferApprovalId` | |
+
+## Request changes
+
+**v2** used different field names for approve vs. reject:
+
+```json
+// approve
+{ "comment": "Looks good" }
+// reject
+{ "reason": "Suspicious destination" }
+```
+
+**v3** unifies both to `comment`:
+
+```json
+// approve
+{ "comment": "Looks good" }
+// reject
+{ "comment": "Suspicious destination" }
+```
+
+| v2 field | v3 field | Change |
+|---|---|---|
+| `reason` (reject only) | `comment` | **Renamed** — now matches approve's field name |
+
+## Response changes
+
+**v2** — the underlying transfer's public ID is not returned on `transferId` (before v3-style public IDs existed, it was the raw internal DB reference):
+
+```json
+{ "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6", "status": "APPROVED", "transferId": "8b2e...", "transferType": "WALLET.TRANSFER" }
+```
+
+**v3**:
+
+```json
+{ "id": "ta_QW1e2r3t4y", "status": "APPROVED", "transferId": "offramp_QW1e2r3t4y", "transferType": "OFFRAMP", "createdAt": "...", "updatedAt": "..." }
+```
+
+| Change | Detail |
+|---|---|
+| `id` | Raw UUID → prefixed public ID (`ta_...`) |
+| `transferId` | Now correctly resolves to the underlying transfer's own public ID (e.g. `offramp_...`) — usable directly against that resource's `GET` endpoint |
+| `transferType` | Renamed values: `WALLET.TRANSFER`→`CRYPTO_TRANSFER`, `WALLET.TRANSFER.BATCH`→`BATCH_CRYPTO_TRANSFER`, `WALLET.BRIDGE`→`BRIDGE`, `OFFRAMP` unchanged. `ONRAMP` is a valid value in v3's type list even though Onramp doesn't support approval today. |
+
+## Status
+
+Shared 4-value enum on both sides: `PENDING_APPROVAL`, `APPROVED`, `REJECTED`, `EXPIRED`. Expiration windows are unchanged: 1 week for onchain transfer/bridge, 1 day for offramp.
+
+## ID format
+
+Raw UUID in v2 → `ta_...` prefixed public ID in v3.

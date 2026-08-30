@@ -1,0 +1,84 @@
+---
+title: "Counter Party"
+description: "What changed for the Counter Party resource when migrating from HIFI API v2 to v3."
+---
+
+Counter Party doesn't have a direct v2 predecessor — it's a new standalone identity resource in v3. In v2, the identity of a payout recipient (name, address, tax ID) was embedded directly inside each bank-account record you created, with no separate ID and no reuse across accounts. v3 pulls that identity out into its own resource: create a Counter Party once, then attach one or more [External Accounts](/v3/guides/v2v3Migration/external-account), [External Cards](/v3/core/counter-party/external-card), or [External Wallets](/v3/guides/v2v3Migration/external-wallet) to it via `counterPartyId`. See the [platform-wide changes](/v3/guides/v2v3Migration/overview) for ID format, pagination, error shape, and idempotency.
+
+<Info>
+  v2 had no equivalent identity resource at all — this isn't a rename, it's new structure. If you're migrating, you'll need to create a Counter Party for each of your existing v2 recipients before you can create their External Account(s).
+</Info>
+
+## Endpoints (all new in v3)
+
+| Method | Path |
+|---|---|
+| `POST /counter-parties` | Create a counterparty |
+| `GET /counter-parties/:counterPartyId` | Retrieve |
+| `GET /counter-parties` | List (`userId` optional filter) |
+| `PATCH /counter-parties/:counterPartyId` | Update |
+| `DELETE /counter-parties/:counterPartyId` | Deactivate |
+
+## Where the identity fields used to live
+
+**v2** — identity was the `accountHolder` object nested inside a `POST /users/:userId/accounts` request, alongside the bank details:
+
+```json
+{
+  "userId": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+  "type": "us",
+  "accountHolder": {
+    "type": "individual",
+    "name": "Jane Doe",
+    "address": { "...": "..." },
+    "phone": "+15555550100",
+    "email": "jane@example.com"
+  },
+  "us": { "accountNumber": "...", "routingNumber": "..." }
+}
+```
+
+**v3** — the same identity fields, now their own resource, created independently of any bank account:
+
+```json
+{
+  "userId": "usr_a1B2c3D4e5F6g7H8i9J0k",
+  "type": "INDIVIDUAL",
+  "firstName": "Jane",
+  "lastName": "Doe",
+  "phoneNumber": "+15555550100",
+  "email": "jane@example.com",
+  "address": { "...": "..." }
+}
+```
+
+| v2 field | v3 field | Change |
+|---|---|---|
+| `type` | `type` | Same name; values now uppercase (`INDIVIDUAL`/`BUSINESS`) |
+| `name` | `firstName` / `lastName` (individual) or `businessName` (business) | **Split** into separate fields |
+| `phone` | `phoneNumber` | Renamed |
+| `idNumber` | `taxId` | Renamed |
+| `formationCountry` | `incorporationCountry` | Renamed (business only) |
+| `address` | `address` | Same name and shape |
+
+<Info>
+  What's required depends on what you're attaching to the counterparty. Creating one only needs the minimum identifying fields — adding an External Account or External Card requires more (address is required for an account; phone, email, and address are all required for a card). If a required field is missing, HIFI returns `ACTION_NOT_ALLOWED` and you'll need to update the counterparty before retrying.
+</Info>
+
+## Status
+
+New three-state status model with no v2 equivalent — v2's embedded `accountHolder` had no independent lifecycle at all:
+
+| Status | Meaning |
+|---|---|
+| `ACTIVE` | Default status on creation. External Accounts, External Cards, and External Wallets can be added under the counterparty. |
+| `PENDING` | The counterparty is undergoing compliance screening. |
+| `INACTIVE` | The counterparty was deactivated. No new accounts/wallets can be added under it; existing ones and history are preserved. |
+
+<Warning>
+  A newly created Counter Party is subject to compliance screening and isn't guaranteed to be `ACTIVE` immediately — it can sit in `PENDING` first. Always check the counterparty's status (`GET /v3/counter-parties/:counterPartyId`, or subscribe to its status updates) and confirm it's `ACTIVE` before attaching an External Account, External Card, or External Wallet.
+</Warning>
+
+## ID format
+
+Raw UUID in v2 (since there was no standalone record to have an ID) → `cpty_...` prefixed public ID in v3.

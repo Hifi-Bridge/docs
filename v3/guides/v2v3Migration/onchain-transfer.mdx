@@ -1,0 +1,203 @@
+---
+title: "Onchain Transfer"
+description: "What changed for the Onchain Transfer resource (single and batch) when migrating from HIFI API v2 to v3."
+---
+
+Onchain Transfer moves stablecoins between wallets on the same chain, single or batched. v2 and v3 share the same underlying transfer engine and status enum — what changed is how source/destination are specified (always a registered wallet in v3, never a raw address). Cancellation and CSV export aren't available in v3 yet. See the [platform-wide changes](/v3/guides/v2v3Migration/overview) for ID format, pagination, error shape, and idempotency.
+
+## Endpoints
+
+| v2 | v3 | Notes |
+|---|---|---|
+| `POST /v2/wallets/transfers` | `POST /v3/crypto-transfers` | Request body changed — see below. |
+| `GET /v2/wallets/transfers/:transferId` | `GET /v3/crypto-transfers/:cryptoTransferId` | Response shape changed — see below. |
+| `GET /v2/wallets/transfers` | `GET /v3/crypto-transfers` | List envelope changed to the standard `{data, pagination}` shape. No free-text `search` filter in v3. |
+| `POST /v2/wallets/transfers/batches` | `POST /v3/batch-transfers` | Same 50-destination cap and XRPL exclusion on both sides. |
+| `GET /v2/wallets/transfers/batches/:transferId` | `GET /v3/batch-transfers/:batchCryptoTransferId` | |
+| `GET /v2/wallets/transfers/batches` | `GET /v3/batch-transfers` | |
+| `POST /v2/wallets/transfers/:transferId/cancel` | *(none)* | <Badge color="yellow" iconType="light">Work in progress</Badge> — no v3 cancel endpoint yet. |
+| `GET /v2/wallets/transfers/export/csv` | *(none)* | <Badge color="yellow" iconType="light">Work in progress</Badge> — no v3 CSV export endpoint yet. |
+
+## Request changes: create a transfer
+
+**v2** identified source/destination by chain + user/wallet, and allowed a raw destination address:
+
+```json
+{
+  "requestId": "3f2504e0-4f89-11d3-9a0c-0305e82c3301",
+  "currency": "usdc",
+  "chain": "POLYGON",
+  "amount": 100,
+  "source": { "userId": "7c9e6679-7425-40de-944b-e07fc1f90ae7" },
+  "destination": { "walletAddress": "0xabc123..." },
+  "requireApproval": false
+}
+```
+
+**v3** requires registered wallets on both sides and derives chain from the source wallet:
+
+```json
+{
+  "requestId": "3f2504e0-4f89-11d3-9a0c-0305e82c3301",
+  "currency": "USDC",
+  "amount": 100,
+  "source": { "walletId": "wlt_fkc0E4OsfHWZPNXiPhj4q" },
+  "destination": { "externalWalletId": "extwlt_QW1e2r3t4y" },
+  "requiresApproval": false
+}
+```
+
+| v2 field | v3 field | Change |
+|---|---|---|
+| `currency` | `currency` | Same name; lowercase → uppercase |
+| `chain` | — | **Removed.** Already an uppercase enum in v2 (`POLYGON`, `ETHEREUM`, `BASE`, `SOLANA`, `BSC`, `FLOW_EVM`, `TRON`, `CANTON`) — no casing change, it's just gone. Derived server-side from the source wallet's chain instead — you can no longer send funds to an arbitrary chain independent of the wallet. |
+| `destination.walletAddress` | `destination.walletId` / `destination.externalWalletId` | **Removed** as a raw address. Destination must be a registered wallet now — register the address as an [External Wallet](/v3/guides/v2v3Migration/external-wallet) first if it isn't one of your own HIFI wallets. |
+| `requireApproval` | `requiresApproval` | Renamed |
+
+<Warning>
+  If you currently send to raw, unregistered addresses in v2, plan for an extra step in v3: register the destination as an External Wallet before you can transfer to it.
+</Warning>
+
+## Request changes: create a batch transfer
+
+**v2** — one destination array (`destination.batch`), each entry needs a bare `userId` or raw `walletAddress` and a string `amount`; `chain` and top-level `requireApproval` work the same as a single transfer:
+
+```json
+{
+  "requestId": "3f2504e0-4f89-11d3-9a0c-0305e82c3301",
+  "currency": "usdc",
+  "chain": "POLYGON",
+  "source": { "userId": "7c9e6679-7425-40de-944b-e07fc1f90ae7" },
+  "destination": {
+    "batch": [
+      { "userId": "7c9e6679-7425-40de-944b-e07fc1f90ae7", "amount": "10" },
+      { "walletAddress": "0xabc123...", "amount": "15" }
+    ]
+  },
+  "requireApproval": false
+}
+```
+
+**v3** — `destination.batch` becomes a top-level `destinations` array of registered wallets with numeric amounts; `chain` is still derived from the source wallet:
+
+```json
+{
+  "requestId": "3f2504e0-4f89-11d3-9a0c-0305e82c3301",
+  "currency": "USDC",
+  "source": { "walletId": "wlt_fkc0E4OsfHWZPNXiPhj4q" },
+  "destinations": [
+    { "walletId": "wlt_IhAKCJ16xEcYkAzqIVqnu", "amount": 100 },
+    { "externalWalletId": "extwlt_QW1e2r3t4y", "amount": 50 }
+  ],
+  "requiresApproval": false
+}
+```
+
+| v2 field | v3 field | Change |
+|---|---|---|
+| `currency` | `currency` | Same name; lowercase → uppercase |
+| `chain` | — | **Removed**, same as single transfer — derived from the source wallet. |
+| `destination.batch` | `destinations` | **Renamed and unwrapped** — a top-level array instead of nested under `destination`. |
+| `destination.batch[].userId` / `.walletAddress` | `destinations[].walletId` / `.externalWalletId` | **Removed** as a bare `userId` or raw address — each entry must be a registered wallet, same restriction as a single transfer's destination. |
+| `destination.batch[].amount` | `destinations[].amount` | Same name; string (`"10"`) → number (`100`) |
+| `requireApproval` | `requiresApproval` | Renamed |
+
+Same 50-item cap and XRPL exclusion apply on both sides.
+
+## Response changes: single transfer
+
+**v2** (nested envelope, lowercase currency):
+
+```json
+{
+  "transferType": "WALLET.TRANSFER",
+  "transferDetails": {
+    "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "currency": "usdc",
+    "source": { "userId": "..." },
+    "destination": { "walletAddress": "0xabc123..." }
+  }
+}
+```
+
+**v3** (flat, uppercase currency):
+
+```json
+{
+  "id": "ctx_QW1e2r3t4y",
+  "requestId": "3f2504e0-4f89-11d3-9a0c-0305e82c3301",
+  "status": "COMPLETED",
+  "currency": "USDC",
+  "chain": "POLYGON",
+  "source": { "walletId": "wlt_..." },
+  "destination": { "externalWalletId": "extwlt_..." },
+  "requiresApproval": false,
+  "createdAt": "...",
+  "updatedAt": "..."
+}
+```
+
+| Change | Detail |
+|---|---|
+| Envelope | No more `{transferType, transferDetails}` wrapper. |
+| `id` | Raw UUID → prefixed public ID (`ctx_...`). |
+| `chain` | Now included in the response even though it's no longer a request field. |
+| Transfer approval detail | **No longer embedded.** v2 included an inline `approval` object on the transfer when `PENDING_APPROVAL`/`REJECTED`. v3 drops this — look up the approval separately via its own `transferApprovalId`/Transfer Approvals endpoint instead. |
+
+## Response changes: batch transfer
+
+**v2** (nested envelope, `source`/`destination` entries carry a raw `userId`/`walletAddress`):
+
+```json
+{
+  "transferType": "WALLET.TRANSFER.BATCH",
+  "transferDetails": {
+    "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "chain": "POLYGON",
+    "currency": "usdc",
+    "status": "COMPLETED",
+    "source": { "userId": "7c9e6679-...", "walletAddress": "0xabc...", "walletType": "INDIVIDUAL" },
+    "destination": {
+      "batch": [
+        { "userId": "7c9e6679-...", "amount": "10" },
+        { "walletAddress": "0xabc123...", "amount": "15" }
+      ]
+    },
+    "receipt": { "transactionHash": null, "userOpHash": null }
+  }
+}
+```
+
+**v3** (flat, one `receipt` for the whole batch):
+
+```json
+{
+  "id": "bctx_QW1e2r3t4y",
+  "requestId": "3f2504e0-4f89-11d3-9a0c-0305e82c3301",
+  "currency": "USDC",
+  "status": "CREATED",
+  "failedReason": null,
+  "source": { "userId": "usr_...", "walletId": "wlt_fkc0E4OsfHWZPNXiPhj4q" },
+  "destinations": [
+    { "userId": "usr_...", "walletId": "wlt_IhAKCJ16xEcYkAzqIVqnu", "externalWalletId": null, "amount": "100.00" },
+    { "userId": null, "walletId": null, "externalWalletId": "extwlt_QW1e2r3t4y", "amount": "50.00" }
+  ],
+  "contractAddress": "0x41e94eb019c0762f9bfcf9fb1e58725bfb0e7582",
+  "receipt": { "transactionHash": null, "userOpHash": null },
+  "chain": "POLYGON",
+  "createdAt": "...",
+  "updatedAt": "..."
+}
+```
+
+| Change | Detail |
+|---|---|
+| Envelope | No more `{transferType, transferDetails}` wrapper, same as single transfer. |
+| `id` | Raw UUID → prefixed public ID (`bctx_...`). |
+| `destination.batch` | **Renamed and unwrapped** to a top-level `destinations` array — each entry now resolves to `walletId`/`externalWalletId` (with `userId` populated when resolvable) instead of a raw `userId`/`walletAddress`. |
+| `source.walletType` | **Removed.** No wallet-type field on `source` in v3's response. |
+| Transfer approval detail | **No longer embedded** — same as single transfer, look up separately via `transferApprovalId`/Transfer Approvals. |
+
+## Status and lifecycle
+
+Unchanged — v2 and v3 share the exact same status enum (`OPEN_QUOTE`, `PENDING_APPROVAL`, `COMPLETED`, etc.). Note `CANCELLED` still exists in the shared enum even though the public cancel endpoint isn't available in v3 yet.

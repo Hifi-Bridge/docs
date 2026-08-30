@@ -1,0 +1,200 @@
+---
+title: "Compliance Profile"
+description: "What changed for identity/KYC data when migrating from HIFI API v2 to v3."
+---
+
+v3 have these new separate resources: **Compliance Profile** (this page — identity fields), [Associated Party](/v3/guides/v2v3Migration/associated-party) (beneficial owners/directors), [Documents](/v3/guides/v2v3Migration/documents), and [Questionnaire](/v3/guides/v2v3Migration/questionnaire) (new — source-of-funds style Q&A). See the [platform-wide changes](/v3/guides/v2v3Migration/overview) for ID format, pagination, error shape, and idempotency.
+
+<Warning>
+  **Existing v2 users:** identity data only carries over to v3 if the user's v2 KYC was actually submitted (`POST /v2/users/:userId/kyc/submissions`). For a v2 user who was created but never submitted KYC, there's nothing to backfill — `GET /v3/users/:userId/compliance/profile` and the [Associated Party](/v3/guides/v2v3Migration/associated-party) endpoints return empty until you submit their data fresh in v3.
+</Warning>
+
+## Major change: compliance is now rail-agnostic
+
+In v2, KYC access was tracked **per rail** — `USD`, `GLOBAL_NETWORK`, `AFRICA_GENERAL`, and others each had their own field requirements and their own status. A user could be `ACTIVE` on one rail and still need a separate submission — sometimes with different required fields — to unlock another. Adding a new corridor to your integration could mean re-submitting KYC for that rail specifically.
+
+**v3 has no rail concept anywhere in Compliance.** There's one identity submission and one aggregate `complianceStatus` per user. Once a Compliance Profile is submitted and approved, HIFI automatically resolves which corridors that user is eligible for based on their profile (country, business type, etc.) and unlocks access accordingly — you don't call anything rail- or provider-specific to "activate" a corridor. If you later want to offramp through a new corridor that user's profile already qualifies them for, there's no additional KYC step; access is already there.
+
+## Endpoints
+
+| v2 | v3 | Notes |
+|---|---|---|
+| `GET /v2/users/:userId/kyc` | `GET /v3/users/:userId/compliance/profile` | Response no longer includes embedded UBOs/documents — those are separate resources now. |
+| `POST /v2/users/:userId/kyc` | `PATCH /v3/users/:userId/compliance/profile` | Verb change; request only accepts identity fields now (no embedded UBOs/documents/questionnaire in the same call). |
+| `POST /v2/users/:userId/kyc/submissions` | `POST /v3/users/:userId/compliance/submit` | Submits the full compliance package (profile + questionnaire + associated parties + documents) for review |
+| `GET /v2/users/:userId/kyc/status` | `GET /v3/users/:userId/compliance/status` | Status model changed — see below. |
+| `GET /v2/users/:userId/kyc/requirements` | Removed | |
+
+## Request changes
+
+Both versions accept identity fields directly on the same object as the rest of KYC in v2; in v3 the same fields move to the standalone Compliance Profile, split cleanly by `type`. In both cases beneficial owners, documents, and Q&A are no longer part of this payload — submit them separately via [Associated Party](/v3/guides/v2v3Migration/associated-party), [Documents](/v3/guides/v2v3Migration/documents), and [Questionnaire](/v3/guides/v2v3Migration/questionnaire).
+
+### Individual (KYC)
+
+**v2**:
+
+```json
+{
+  "type": "individual",
+  "firstName": "Jane", "middleName": null, "lastName": "Doe",
+  "nationality": "USA",
+  "email": "jane@example.com",
+  "phone": "+15555550100",
+  "address": { "addressLine1": "...", "city": "...", "stateProvinceRegion": "...", "postalCode": "...", "country": "USA" },
+  "dateOfBirth": "1990-01-01",
+  "gender": "female",
+  "taxIdentificationNumber": "123-45-6789",
+  "taxIdentificationNumberType": "ssn",
+  "taxResidenceCountry": "USA"
+}
+```
+
+**v3**:
+
+```json
+{
+  "type": "INDIVIDUAL",
+  "firstName": "Jane", "middleName": null, "lastName": "Doe",
+  "nationality": "USA",
+  "email": "jane@example.com",
+  "phoneNumber": "+15555550100",
+  "physicalAddress": { "addressLine1": "...", "city": "...", "stateProvinceRegion": "...", "postalCode": "...", "country": "USA" },
+  "dateOfBirth": "1990-01-01",
+  "gender": "FEMALE",
+  "taxId": "123-45-6789",
+  "taxIdType": "SSN",
+  "taxIdCountry": "USA"
+}
+```
+
+| v2 field | v3 field | Change |
+|---|---|---|
+| `firstName` / `middleName` / `lastName` | Same | Unchanged |
+| `nationality` | Same | Unchanged |
+| `email` | Same | Unchanged |
+| `phone` | `phoneNumber` | Renamed; v3 requires E.164 format |
+| `address` | `physicalAddress` | Renamed |
+| `dateOfBirth` | Same | Unchanged |
+| `gender` | Same | Unchanged, values now uppercase |
+| `taxIdentificationNumber` | `taxId` | Renamed |
+| `taxIdentificationNumberType` | `taxIdType` | Renamed, values now uppercase |
+| `taxResidenceCountry` | `taxIdCountry` | Renamed |
+
+### Business (KYB)
+
+**v2**:
+
+```json
+{
+  "type": "business",
+  "businessName": "Acme Inc",
+  "businessDescription": "...",
+  "alternativeNames": ["Acme"],
+  "email": "compliance@acme.com",
+  "phone": "+15555550100",
+  "businessType": "c_corporation",
+  "businessIndustry": "541511",
+  "website": "https://acme.com",
+  "registrationNumber": "...",
+  "taxIdentificationNumber": "12-3456789",
+  "leiNumber": null,
+  "formationDate": "2010-01-01",
+  "incorporationDate": "2010-01-01",
+  "address": { "...": "..." },
+  "registeredAddress": { "...": "..." },
+  "postalAddress": { "...": "..." }
+}
+```
+
+**v3**:
+
+```json
+{
+  "type": "BUSINESS",
+  "businessName": "Acme Inc",
+  "businessDescription": "...",
+  "alternativeNames": ["Acme"],
+  "email": "compliance@acme.com",
+  "phoneNumber": "+15555550100",
+  "businessType": "corporation",
+  "businessIndustry": "541511",
+  "website": "https://acme.com",
+  "registrationNumber": "...",
+  "taxId": "12-3456789",
+  "leiNumber": null,
+  "formationDate": "2010-01-01",
+  "incorporationDate": "2010-01-01",
+  "physicalAddress": { "...": "..." },
+  "registeredAddress": { "...": "..." },
+  "postalAddress": { "...": "..." }
+}
+```
+
+| v2 field | v3 field | Change |
+|---|---|---|
+| `businessName` / `businessDescription` / `alternativeNames` | Same | Unchanged |
+| `email` | Same | Unchanged |
+| `phone` | `phoneNumber` | Renamed; v3 requires E.164 format |
+| `businessType` | Same field, **narrower enum** | v2's `s_corporation`, `b_corporation`, `c_corporation`, and `close_corporation` all collapse to v3's single `corporation`. `general_partnership`/`limited_partnership` both collapse to `partnership`. `trust` → `trusts`. `nonprofit_corporation` → `nonprofit`. |
+| `businessIndustry` | Same | Unchanged (same NAICS-style code list) |
+| `website` / `registrationNumber` | Same | Unchanged |
+| `taxIdentificationNumber` | `taxId` | Renamed |
+| `taxResidenceCountry` | `taxIdCountry` | Renamed |
+| `leiNumber` / `formationDate` / `incorporationDate` | Same | Unchanged |
+| `address` | `physicalAddress` | Renamed |
+| `registeredAddress` / `postalAddress` | Same | Unchanged |
+
+## Status changes
+
+**v2** tracked status **per rail** — a user could simultaneously be `COMPLETED` on one rail and `PENDING` on another (`GET /kyc/status` could return a status per rail, or the whole map). Status enum: `CREATED, ACTIVE, INACTIVE, PENDING, COMPLETED, ON_HOLD, RFI_PENDING, INCOMPLETE, REJECTED, MANUAL_REVIEW, CONTACT_SUPPORT`.
+
+**v3** returns **one aggregate status** for the user, derived from the underlying compliance review, plus a structured list of exactly what's blocking approval:
+
+```json
+{
+  "complianceStatus": "REQUIRES_INFO",
+  "rfiActions": [
+    { "section": "documents", "documentId": "doc_QW1e2r3t4y", "action": "..." }
+  ]
+}
+```
+
+Status enum: `NOT_SUBMITTED, PENDING, IN_REVIEW, APPROVED, REJECTED, REQUIRES_INFO`. `rfiActions` points at exactly which sub-resource needs attention (a specific document, associated party, or profile field) — v2 had no equivalent structured "what's wrong" list.
+
+## New in v3: `rfiActions`
+
+v2 had no structured way to tell you *why* a `RFI_PENDING` status was set — you'd get the status and had to contact support or guess. In v3, whenever `complianceStatus` is `REQUIRES_INFO`, `rfiActions` on `GET /v3/users/:userId/compliance/status` returns a typed, machine-readable list of exactly what needs to change before resubmission:
+
+```json
+{
+  "userId": "usr_CchuBDCeCm1FvoEWWl6rw",
+  "complianceStatus": "REQUIRES_INFO",
+  "message": "Enter your full name exactly as it appears on your identity document.",
+  "rfiActions": [
+    { "type": "UPDATE_PROFILE", "fields": ["firstName", "lastName"], "message": "Please update the full name in your profile to match the document." },
+    { "type": "UPLOAD_DOCUMENT", "documentId": "doc_pu0aoLYYTST8xxewiyblK", "message": "Please upload the document including the expiration date page." },
+    { "type": "COMPLETE_LIVENESS_CHECK", "verificationLink": "https://in.sumsub.com/websdk/p/sbx_iNZi5pTWEjmzOPEQ", "message": "Please complete the liveness check via verification link" }
+  ]
+}
+```
+
+| `type` | Meaning |
+| :-- | :-- |
+| `UPDATE_PROFILE` | One or more `fields` on the Compliance Profile (or an associated party's profile, for business users) need to be corrected — commonly a mismatch against submitted documentation. |
+| `UPLOAD_DOCUMENT` | The document at `documentId` needs to be replaced — commonly expired, blurry, or an unqualified document type. |
+| `UPDATE_QUESTIONNAIRE` | Business users only — the Questionnaire needs to be updated before resubmission. |
+| `COMPLETE_LIVENESS_CHECK` | The user (or an associated party, for business users) needs to complete a liveness check via `verificationLink`. |
+
+Once you've addressed every action in the list, call `POST /v3/users/:userId/compliance/submit` again — there's no per-action resubmission endpoint, the whole package goes back for review.
+
+<Tip>
+  For business user, if the object contain `associatedPartyId` it means the resouce of the respective associated party needs additional action
+</Tip>
+
+<Info>
+  Poll `GET /v3/users/:userId/compliance/status` or listen for the compliance status webhook to catch a transition to `REQUIRES_INFO` — don't rely on `rfiActions` being populated at any other status.
+</Info>
+
+## ID format
+
+The user's Compliance Profile isn't independently addressable by its own ID — it's fetched/updated via the user's ID (`GET/PATCH /users/:userId/compliance/profile`), same as v2.

@@ -1,0 +1,58 @@
+---
+title: "Deposit Offers"
+description: "What changed for the Deposit Offers (Canton) resource when migrating from HIFI API v2 to v3."
+---
+
+Deposit Offers are incoming Canton transfer offers made to one of your wallets, which you accept or reject to receive the funds. The mechanics are unchanged between versions — same underlying offer records, same accept/reject actions. What changed is the path shape and a couple of field renames. See the [platform-wide changes](/v3/guides/v2v3Migration/overview) for ID format, pagination, error shape, and idempotency.
+
+## Endpoints
+
+| v2 | v3 | Notes |
+|---|---|---|
+| `GET /v2/wallets/:walletId/offers` | `GET /v3/wallets/offers` | `walletId` moved from path to query filter. List envelope changed. |
+| `GET /v2/wallets/:walletId/offers/:offerId` | `GET /v3/wallets/offers/:offerId` | |
+| `POST /v2/wallets/:walletId/offers/:offerId/accept` | `POST /v3/wallets/offers/:offerId/accept` | Now supports an `Idempotency-Key` header. |
+| `POST /v2/wallets/:walletId/offers/:offerId/reject` | `POST /v3/wallets/offers/:offerId/reject` | Now supports an `Idempotency-Key` header. |
+
+## Response changes
+
+**v2**:
+
+```json
+{
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "status": "PENDING",
+  "amount": "100.00",
+  "currency": "USDCX",
+  "source": { "party": "..." },
+  "destination": { "userId": "7c9e6679-...", "userWalletId": "8b2e...", "party": "..." },
+  "creationTransactionHash": "...",
+  "executionTransactionHash": null
+}
+```
+
+**v3**:
+
+```json
+{
+  "id": "ofr_QW1e2r3t4y",
+  "status": "PENDING",
+  "amount": "100.00",
+  "currency": "USDCX",
+  "source": { "party": "..." },
+  "destination": { "userId": "usr_a1B2c3D4e5F6g7H8i9J0k", "walletId": "wlt_fkc0E4OsfHWZPNXiPhj4q", "party": "..." },
+  "creationTransactionHash": "...",
+  "executionTransactionHash": null
+}
+```
+
+| Change | Detail |
+|---|---|
+| `destination.userWalletId` | **Renamed** to `destination.walletId` |
+| `id`, `destination.userId`, `destination.walletId` | Raw UUIDs → prefixed public IDs (`ofr_...`, `usr_...`, `wlt_...`) |
+
+**List** (`GET /wallets/offers`): v2 returned `{count, records, nextCursor}` with a raw-timestamp cursor. v3 returns the standard `{data, pagination}` envelope — see [platform-wide changes](/v3/guides/v2v3Migration/overview#pagination-one-envelope-for-every-list-endpoint).
+
+## ID format
+
+Raw UUID in v2 → `ofr_...` prefixed public ID in v3.
