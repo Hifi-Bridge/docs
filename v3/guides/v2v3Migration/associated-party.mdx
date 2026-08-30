@@ -1,0 +1,62 @@
+---
+title: "Associated Party"
+description: "What changed for beneficial owners / associated parties when migrating from HIFI API v2 to v3."
+---
+
+An Associated Party is a person connected to a business user — beneficial owner, director, authorized signatory, and so on. v2 already exposed this as its own resource, called "UBO" and nested under the user (`/v2/users/:userId/kyc/ubos`); v3 renames it to Associated Party, flattens it to a top-level resource, and generalizes it with a broader role vocabulary. See the [platform-wide changes](/v3/guides/v2v3Migration/overview) for ID format, pagination, error shape, and idempotency.
+
+## Endpoints
+
+| v2 | v3 | Notes |
+|---|---|---|
+| `POST /v2/users/:userId/kyc/ubos` | `POST /v3/compliance/associated-parties` | Flat, top-level — `userId` in the body instead of the path. |
+| `GET /v2/users/:userId/kyc/ubos/:uboId` | `GET /v3/compliance/associated-parties/:associatedPartyId` | |
+| `GET /v2/users/:userId/kyc/ubos` | `GET /v3/compliance/associated-parties` | `userId` optional query filter. List envelope changed. |
+| `POST /v2/users/:userId/kyc/ubos/:uboId` | `PATCH /v3/compliance/associated-parties/:associatedPartyId` | Verb change. |
+| *(none)* | `DELETE /v3/compliance/associated-parties/:associatedPartyId` | **New** — v2 had no way to remove a UBO. |
+
+## Request changes
+
+**v2**
+
+```json
+{
+  "roles": ["UBO", "DIRECTOR"],
+  "businessTitle": "CFO",
+  "firstName": "Jane", "lastName": "Doe",
+  "phone": "+15555550100",
+  "address": { "...": "..." },
+  "taxIdentificationNumber": "123-45-6789",
+  "taxResidenceCountry": "USA",
+  "shareProportion": 25
+}
+```
+
+**v3** 
+
+```json
+{
+  "userId": "usr_a1B2c3D4e5F6g7H8i9J0k",
+  "roles": ["UBO", "DIRECTOR"],
+  "businessTitle": "CFO",
+  "firstName": "Jane", "lastName": "Doe",
+  "phoneNumber": "+15555550100",
+  "physicalAddress": { "...": "..." },
+  "taxId": "123-45-6789",
+  "taxIdCountry": "USA",
+  "shareProportion": 25
+}
+```
+
+| v2 field | v3 field | Change |
+|---|---|---|
+| `role` | — | **Removed.** This legacy singular field (its own 5-value enum: `OWNER_OR_OPERATOR`, `PARTNER`, `UBO`, `DIRECTOR_CONTROL_PERSON_OR_LEGAL_REP`, `AGENT_OR_AUTHORISED_PERSON`) is gone in v3 — `roles[]` is the only way to specify role. |
+| `roles` | `roles` | Same field, **expanded enum** — v2's 4 values (`UBO`, `DIRECTOR`, `REPRESENTATIVE`, `SHAREHOLDER`) grow to 14, adding `COMPANY_OFFICER`, `INVESTOR`, `SECRETARY`, `FOUNDER`, `LEGAL_ADVISOR`, `AUTHORIZED_SIGNATORY`, `TRUSTEE`, `TRUST_BENEFICIARY`, `TRUST_SETTLOR`, `TRUST_PROTECTOR`. |
+| `phone` | `phoneNumber` | Renamed |
+| `address` | `physicalAddress` | Renamed |
+| `taxIdentificationNumber` | `taxId` | Renamed |
+| `taxResidenceCountry` | `taxIdCountry` | Renamed |
+
+## ID format
+
+Raw UUID in v2 → `ap_...` prefixed public ID in v3.

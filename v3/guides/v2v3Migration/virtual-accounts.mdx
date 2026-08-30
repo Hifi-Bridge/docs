@@ -1,0 +1,96 @@
+---
+title: "Virtual Accounts"
+description: "What changed for the Virtual Accounts resource when migrating from HIFI API v2 to v3."
+---
+
+A Virtual Account is a persistent USD deposit account that auto-converts incoming deposits to stablecoins. The core create/deactivate/simulate-deposit flow carries over, but the path shape, a few fields, and the response's `status` values all changed. See the [platform-wide changes](/v3/guides/v2v3Migration/overview) for ID format, pagination, error shape, and idempotency.
+
+## Endpoints
+
+| v2 | v3 | Notes |
+|---|---|---|
+| `POST /v2/users/:userId/virtual-accounts` | `POST /v3/virtual-accounts` | `userId` moved from path to body. |
+| `GET /v2/users/:userId/virtual-accounts/:accountId` | `GET /v3/virtual-accounts/:virtualAccountId` | Response shape changed — see below. |
+| `GET /v2/users/:userId/virtual-accounts` | `GET /v3/virtual-accounts` | List envelope changed to the standard `{data, pagination}` shape. |
+| `POST /v2/users/:userId/virtual-accounts/:accountId/update` | `PATCH /v3/virtual-accounts/:virtualAccountId` | Verb change. |
+| `POST /v2/users/:userId/virtual-accounts/:accountId/deactivate` | `DELETE /v3/virtual-accounts/:virtualAccountId` | Verb change. |
+| `POST /v2/users/:userId/virtual-accounts/:accountId/simulate-deposit` | `POST /v3/virtual-accounts/:virtualAccountId/simulate-deposits` | Path renamed (now plural). |
+| `POST /v2/users/:userId/virtual-accounts/:accountId/reactivate` | *(none)* | |
+
+## Request changes: create a virtual account
+
+**v2**:
+
+```json
+{ "sourceCurrency": "usd", "destinationCurrency": "usdc", "destinationChain": "POLYGON", "maxBps": 50 }
+```
+
+**v3**:
+
+```json
+{
+  "userId": "usr_a1B2c3D4e5F6g7H8i9J0k",
+  "source": { "currency": "USD", "country": "US", "transferType": "ACH" },
+  "destination": { "currency": "USDC", "walletId": "wlt_fkc0E4OsfHWZPNXiPhj4q" },
+  "nickname": "Payroll VA"
+}
+```
+
+| v2 field | v3 field | Change |
+|---|---|---|
+| `sourceCurrency` / `destinationCurrency` | `source.currency` / `destination.currency` | Nested under `source`/`destination` objects instead of flat strings |
+| `source` (just a currency string) | `source` (`currency`, `country`, `transferType`) | Richer object |
+| `destinationChain` | `destination.walletId` | **Renamed** — still exactly one of `walletId`/`externalWalletId` required, same either/or as v2's `destinationChain`/`externalWalletId` |
+| `maxBps` | `maxBps` | Same name; <Badge color="yellow" iconType="light">Work in progress</Badge> in v3 |
+
+## Response changes
+
+**v2**:
+
+```json
+{
+  "id": "a5b25a16-1235-55f8-80b6-ccd16d91171d",
+  "userId": "07066b2d-ac82-58ec-afd2-ddc43667c3b3",
+  "provider": "CROSS_RIVER",
+  "source": { "paymentRail": ["ach", "wire", "rtp"], "currency": "USD" },
+  "destination": { "chain": "POLYGON", "currency": "USDT", "walletAddress": "0xabc...", "externalWalletId": null },
+  "status": "activated",
+  "maxBps": null,
+  "settlementRuleId": null
+}
+```
+
+**v3**:
+
+```json
+{
+  "id": "va_BlOxjLJQbTJCdRqgSpiSo",
+  "userId": "usr_gBlMyGTbuyknSPXlZtwlS",
+  "source": { "transferTypes": ["ACH", "WIRE", "RTP"], "currency": "USD" },
+  "destination": { "chain": "ETHEREUM", "currency": "USDC", "walletAddress": "0xabc...", "walletId": "wlt_FSC2xIW4N0OGRO2lwyDYa", "externalWalletId": null },
+  "status": "ACTIVE",
+  "settlementRuleId": null
+}
+```
+
+| Change | Detail |
+|---|---|
+| `provider` | **Removed.** v2 exposes the underlying banking/custody provider name (e.g. `CROSS_RIVER`) directly on the account; v3 never returns a provider identifier — don't build any logic around it carrying over. |
+| `source.paymentRail` | **Renamed** to `source.transferTypes`, values now uppercase |
+| `status` | v2 returns lowercase provider-derived values (`"activated"`/`"deactivated"`); v3 returns uppercase values (`"ACTIVE"`/`"INACTIVE"`) sourced directly from the account record instead of a provider status |
+| `id`, `userId` | Raw UUIDs → prefixed public IDs |
+| `destination.walletId` | **New.** v2's `destination` object had no reference to the HIFI wallet resource — only `walletAddress`/`externalWalletId`. |
+| `maxBps` | v2 returns this (nullable) on every account; v3 doesn't return it yet — <Badge color="yellow" iconType="light">Work in progress</Badge>, same as the request-side field above |
+| `nickname` | New field |
+
+<Info>
+  v2's create response (`POST .../virtual-accounts`) additionally wraps the account under an `accountInfo` key alongside a `message` string — `{ "message": "...", "accountInfo": { ...account } }`. v3's create response returns the account object directly, matching `GET` in both versions.
+</Info>
+
+## ID format
+
+Raw UUID in v2 → `va_...` prefixed public ID in v3.
+
+## Settlement Rules
+
+See the dedicated [Settlement Rules](/v3/guides/v2v3Migration/settlement-rules) page for how a rule is applied to a Virtual Account.

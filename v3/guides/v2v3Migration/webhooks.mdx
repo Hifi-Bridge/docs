@@ -1,0 +1,54 @@
+---
+title: "Webhooks"
+description: "What changed for webhooks when migrating from HIFI API v2 to v3."
+---
+
+The biggest change: webhook endpoints are now a self-service API resource instead of a dashboard-only setting, and signature verification switched from an asymmetric keypair to HMAC. If you're migrating, plan to rewrite your signature-verification code — it isn't a compatible change.
+
+## Endpoint management
+
+**v2**: one webhook URL per profile per environment, configured only through the dashboard — no API to register, list, or update it. Activating a webhook generates an RSA/EC keypair; you were given the **public key** to verify signatures against.
+
+**v3**: full self-service CRUD, and you can register multiple endpoints with independent event-type subscriptions:
+
+| Endpoint | Purpose |
+|---|---|
+| `POST /webhook-endpoints` | Register a new endpoint — returns a plaintext `signingSecret` **once**, on creation only |
+| `GET /webhook-endpoints/:webhookEndpointId` | Retrieve |
+| `GET /webhook-endpoints` | List |
+| `PATCH /webhook-endpoints/:webhookEndpointId` | Update URL, description, status, or event subscriptions |
+| `DELETE /webhook-endpoints/:webhookEndpointId` | Remove |
+| `GET /webhook-endpoints/:webhookEndpointId/history` | Delivery history |
+| `POST /webhook-endpoints/:webhookEndpointId/events/:webhookEventId/resend` | Resend a specific event |
+| `GET /webhook-endpoints/event-types` | List every subscribable event type |
+
+```json
+{
+  "name": "Production webhook",
+  "url": "https://example.com/webhooks/hifi",
+  "subscriptions": ["OFFRAMP.STATUS.COMPLETED", "USER.CREATED"]
+}
+```
+
+`subscriptions` lets you filter which event types are delivered to each endpoint — v2 had no such filtering; every event went to your one registered URL.
+
+## Signature verification (rewrite required)
+
+**v2**: asymmetric — HIFI holds a private key, you're given the corresponding **public key** at activation time and verify the payload signature against it.
+
+**v3**: symmetric HMAC-SHA256 — you're given a **shared secret** (`signingSecret`, returned once at endpoint creation, never again) and verify like this:
+
+```
+hifi-signature: t=<unix-timestamp>,v1=<hex-encoded-hmac>
+```
+
+```
+signed_payload = "<timestamp>.<raw request body>"
+expected = HMAC-SHA256(signed_payload, signingSecret) as hex
+```
+
+Compare `expected` against the `v1` value in the `hifi-signature` header. Store the `signingSecret` securely when you create the endpoint — like a v2 private key, HIFI never shows it to you again after creation.
+
+## Event types
+
+Event types themselves are largely unchanged in naming (`OFFRAMP.CREATED`, `OFFRAMP.STATUS.<STATUS>`, etc.) and, for resources with shared v2/v3 provider code (Onramp, Offramp), the payload is the v3 response shape regardless of which webhook endpoint receives it. See each resource's own migration page for its specific payload changes, and [Webhooks](/v3/core/webhooks/webhooks) for the full list of v3 event types.

@@ -1,0 +1,135 @@
+---
+title: "Offramp"
+description: "What changed for the Offramp resource when migrating from HIFI API v2 to v3."
+---
+
+Offramp's underlying transfer logic didn't change — v3 create/accept calls the exact same provider code v2 uses. What changed is the request/response shape sitting in front of it: how you specify the destination, a couple of renamed fields, and a real gap in one response field. See the [platform-wide changes](/v3/guides/v2v3Migration/overview) for ID format, pagination, error shape, and idempotency — this page only covers what's specific to Offramp.
+
+<Info>
+  The quote-then-accept flow (create → `OPEN_QUOTE` → accept → settlement) is **not new in v3** — v2 already works this way. If you're already handling that flow in v2, the state machine itself doesn't change.
+</Info>
+
+## Endpoints
+
+| v2 | v3 | Notes |
+|---|---|---|
+| `POST /v2/offramps` | `POST /v3/offramps` | Request body changed — see below. Now supports an `Idempotency-Key` header. |
+| `POST /v2/offramps/:transferId/quote/accept` | `POST /v3/offramps/:offrampId/quote/accept` | Same mechanics. |
+| `GET /v2/offramps/:transferId` | `GET /v3/offramps/:offrampId` | Response shape changed — see below. |
+| `GET /v2/offramps` | `GET /v3/offramps` | List envelope changed to the standard `{data, pagination}` shape. |
+| `GET /v2/offramps/rates` | `GET /v3/offramps/rates` | Unchanged. |
+| `POST /v2/offramps/:transferId/cancel` | `POST /v3/offramps/:offrampId/cancel` | Same `IN_REVIEW`-only restriction. Response shape changed — v3 returns the full offramp object instead of a message string. |
+| `GET /v2/offramps/export/csv` | *(none)* | <Badge color="yellow" iconType="light">Work in progress</Badge> — no v3 CSV export endpoint yet. |
+
+## Request changes: create an offramp
+
+**v2**:
+
+```json
+{
+  "requestId": "3f2504e0-4f89-11d3-9a0c-0305e82c3301",
+  "source": {
+    "currency": "usdc",
+    "chain": "polygon",
+    "amount": 500,
+    "userId": "7c9e6679-7425-40de-944b-e07fc1f90ae7"
+  },
+  "destination": {
+    "accountId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "currency": "usd",
+    "userId": "7c9e6679-7425-40de-944b-e07fc1f90ae7"
+  },
+  "requireApproval": false
+}
+```
+
+**v3**:
+
+```json
+{
+  "requestId": "3f2504e0-4f89-11d3-9a0c-0305e82c3301",
+  "source": {
+    "walletId": "wlt_fkc0E4OsfHWZPNXiPhj4q",
+    "currency": "USDC",
+    "amount": 500
+  },
+  "destination": {
+    "externalAccountId": "extacct_QW1e2r3t4y",
+    "currency": "USD"
+  },
+  "requiresApproval": false
+}
+```
+
+| v2 field | v3 field | Change |
+|---|---|---|
+| `source.currency` / `destination.currency` | Same names | Lowercase (`"usdc"`, `"usd"`) → uppercase (`"USDC"`, `"USD"`) |
+| `source.chain` + `source.userId` (+ optional `walletType`) | Exactly one of `source.walletId`, or `source.externalWalletId` | No more separate `userId` field to resolve the funding wallet |
+| `destination.accountId` | `destination.externalAccountId` (bank payout) or `destination.externalCardId` (card payout) | **Split into two** — exactly one required |
+| `source.returnAddress` | `source.returnExternalWalletId` | **Renamed and changed type** — must be a pre-registered [External Wallet](/v3/core/wallets/external-wallet) resource ID, not a raw address string |
+| `requireApproval` | `requiresApproval` | Renamed (plural) |
+| `developerFee` | `developerFee` | Same shape, same field name |
+
+
+<Note>
+  If you use a raw wallet address (not a HIFI-tracked wallet) as the return destination for funds that don't complete, you'll need to register it as an [External Wallet](/v3/core/wallets/external-wallet) before creating the offramp — v3 has no equivalent to v2's freeform `returnAddress` string.
+</Note>
+
+## Response changes
+
+**v2** (nested under a transfer envelope):
+
+```json
+{
+  "transferType": "OFFRAMP",
+  "transferDetails": {
+    "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "status": "OPEN_QUOTE",
+    "source": { "currency": "usdc", "amount": "500.00", "amountIncludeDeveloperFee": "505.00" },
+    "destination": { "currency": "usd" },
+    "quoteInformation": { "...": "..." }
+  }
+}
+```
+
+**v3** (flat):
+
+```json
+{
+  "id": "offramp_QW1e2r3t4y",
+  "requestId": "3f2504e0-4f89-11d3-9a0c-0305e82c3301",
+  "status": "OPEN_QUOTE",
+  "failedReason": null,
+  "error": null,
+  "errorDetails": null,
+  "source": { "chain": "POLYGON", "amount": "500.00", "currency": "usdc" },
+  "destination": { "amount": "..." , "currency": "usd" },
+  "quote": { "currency": "USD" },
+  "requiresApproval": false,
+  "transferApprovalId": null,
+  "createdAt": "...",
+  "updatedAt": "..."
+}
+```
+
+| Change | Detail |
+|---|---|
+| Envelope | No more `{transferType, transferDetails}` wrapper — the offramp object is top-level. |
+| `id` | Raw UUID → prefixed public ID (`offramp_...`). |
+| `quoteInformation` | **Renamed** to `quote`. |
+| `transferApprovalId` | New — resolves to the associated Transfer Approval record when `requiresApproval` is true. |
+| `error` / `errorDetails` | New top-level fields, always present (`null` when not failed) instead of only appearing on failure. |
+
+**Cancel** (`POST .../cancel`): v2 returns `{ "message": "Transaction: <id> cancelled successfully" }`. v3 returns the full offramp object (with `status` reflecting the cancellation) instead of a message string.
+
+## Status and lifecycle
+
+Unchanged — v2 and v3 offramps share the exact same status enum and transitions (`OPEN_QUOTE`, `PENDING_APPROVAL`, `AWAITING_FUNDS`, `COMPLETED`, etc.). Nothing here is v3-specific.
+
+## Transfer approvals
+
+Works the same way in both versions once you account for the field rename: set `requiresApproval: true` (v3) / `requireApproval: true` (v2) on create, and the record is created with `status: "PENDING_APPROVAL"` instead of `OPEN_QUOTE` — no funds move until a separate approve/reject call resolves it. See the (forthcoming) Transfer Approvals migration page for the approve/reject endpoints themselves.
+
+## Webhooks
+
+Event types are unchanged: `OFFRAMP.CREATED` and `OFFRAMP.STATUS.<STATUS>` fire the same way regardless of whether the offramp was created via v2 or v3, and the payload is built from the same v3-shaped offramp object either way. If you're already consuming these webhooks, no changes needed here.

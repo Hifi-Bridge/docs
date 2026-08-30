@@ -1,0 +1,130 @@
+---
+title: "Settlement Rules"
+description: "What changed for the Settlement Rules resource when migrating from HIFI API v2 to v3."
+---
+
+A Settlement Rule splits a Virtual Account's incoming deposits across multiple destinations by fee tier. The biggest change is the tier shape itself, plus how a rule's destination is specified. See the [platform-wide changes](/v3/guides/v2v3Migration/overview) for ID format, pagination, error shape, and idempotency.
+
+## Endpoints
+
+| v2 | v3 | Notes |
+|---|---|---|
+| `POST /v2/virtual-accounts/settlement-rules` | `POST /v3/virtual-accounts/settlement-rules` | Request body changed — see below. |
+| `GET /v2/virtual-accounts/settlement-rules/:ruleId` | `GET /v3/virtual-accounts/settlement-rules/:settlementRuleId` | |
+| `GET /v2/virtual-accounts/settlement-rules` | `GET /v3/virtual-accounts/settlement-rules` | List envelope changed to the standard `{data, pagination}` shape. Optional `chain` filter. |
+| `POST /v2/.../settlement-rules/:ruleId/update` | `PATCH /v3/virtual-accounts/settlement-rules/:settlementRuleId` | Verb change. |
+| `DELETE /v2/.../settlement-rules/:ruleId` | `DELETE /v3/virtual-accounts/settlement-rules/:settlementRuleId` | Same restriction: fails if the rule is currently applied to a Virtual Account. |
+| `POST /v2/users/:userId/virtual-accounts/:accountId/settlement-rules/:ruleId` (apply) | `PUT /v3/virtual-accounts/:virtualAccountId/settlement-rules` (`settlementRuleId` in body) | Verb changed from `POST` with the rule ID in the path to `PUT` with the rule ID in the request body. |
+| `DELETE /v2/users/:userId/virtual-accounts/:accountId/settlement-rules` (remove) | `DELETE /v3/virtual-accounts/:virtualAccountId/settlement-rules` | Same shape. |
+
+## Request changes: tiers and destination
+
+**v2** — tiers are `{min, max, value}` strings, with an empty string marking the open end of the first/last tier; destination is a raw wallet address:
+
+```json
+{
+  "chain": "POLYGON",
+  "includeHIFIFee": true,
+  "rules": [
+    { "type": "PERCENTAGE", "calculationModel": "TIERED", "walletAddress": "0xabc123...",
+      "tiers": [
+        { "min": "", "max": "1000", "value": 1 },
+        { "min": "1000", "max": "", "value": 0.5 }
+      ]
+    }
+  ]
+}
+```
+
+**v3** — tiers are `{upTo, value}` with a single ascending breakpoint (exactly one tier has `upTo: null` for the open-ended top tier); destination is a registered wallet reference:
+
+```json
+{
+  "requestId": "3f2504e0-4f89-11d3-9a0c-0305e82c3301",
+  "chain": "POLYGON",
+  "includeHIFIFee": true,
+  "nickname": "Standard split",
+  "rules": [
+    { "type": "PERCENTAGE", "calculationModel": "TIERED", "walletId": "wlt_fkc0E4OsfHWZPNXiPhj4q",
+      "tiers": [
+        { "upTo": 1000, "value": 1 },
+        { "upTo": null, "value": 0.5 }
+      ]
+    }
+  ]
+}
+```
+
+| v2 field | v3 field | Change |
+|---|---|---|
+| `tiers[].min` / `tiers[].max` | `tiers[].upTo` | **Changed shape** — `{min, max, value}` strings (`""` marks an open end) become `{upTo, value}`, a single ascending breakpoint per tier (`upTo: null` marks the open top tier) |
+| `walletAddress` | `walletId` / `externalWalletId` | **Removed** as a raw address — exactly one registered wallet reference required instead |
+| — | `requestId` | **New**, required |
+| — | `nickname` |**New**, optional |
+
+<Warning>
+  <strong>Known gap, unchanged from v2:</strong> applying a rule to a Virtual Account doesn't verify the rule's `chain` matches the Virtual Account's destination chain, or block Solana. A mismatched apply can silently misroute a fee cut to the wrong chain. Verify the chain yourself before applying a rule.
+</Warning>
+
+## Response changes
+
+**v2**
+
+```json
+{
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "chain": "POLYGON",
+  "includeHIFIFee": true,
+  "rules": [
+    {
+      "type": "PERCENTAGE",
+      "calculationModel": "TIERED",
+      "value": null,
+      "walletAddress": "0xabc123...",
+      "tiers": [
+        { "min": "", "max": "1000", "value": 1 },
+        { "min": "1000", "max": "", "value": 0.5 }
+      ]
+    }
+  ]
+}
+```
+
+**v3** 
+
+```json
+{
+  "id": "sr_QW1e2r3t4y",
+  "requestId": "3f2504e0-4f89-11d3-9a0c-0305e82c3301",
+  "nickname": "Standard split",
+  "chain": "POLYGON",
+  "includeHIFIFee": true,
+  "rules": [
+    {
+      "type": "PERCENTAGE",
+      "calculationModel": "TIERED",
+      "value": null,
+      "walletId": "wlt_fkc0E4OsfHWZPNXiPhj4q",
+      "externalWalletId": null,
+      "tiers": [
+        { "upTo": 1000, "value": 1 },
+        { "upTo": null, "value": 0.5 }
+      ]
+    }
+  ],
+  "createdAt": "...",
+  "updatedAt": "..."
+}
+```
+
+| Change | Detail |
+|---|---|
+| `id` | Raw UUID → prefixed public ID (`sr_...`) |
+| `walletAddress` | **Replaced** by resolved `walletId`/`externalWalletId` public IDs |
+| `requestId` | **New** — now included in the response, not just accepted on create |
+| `nickname` | **New**|
+| `createdAt` / `updatedAt` | **New** timestamps |
+
+## ID format
+
+Raw UUID in v2 → `sr_...` prefixed public ID in v3.

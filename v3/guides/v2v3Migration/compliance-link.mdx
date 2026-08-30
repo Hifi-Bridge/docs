@@ -1,0 +1,21 @@
+---
+title: "Compliance Link"
+description: "What changed for hosted KYC/compliance collection links when migrating from HIFI API v2 to v3."
+---
+
+A Compliance Link generates a hosted, session-token-based flow so an end user can submit their own compliance data without you building a form. In v2 this was called a KYC Link and wrote directly into the old KYC data model. v3 introduces `/compliance-links` alongside it.
+
+## Endpoints
+
+| v2 | v3 |
+|---|---|
+| `POST /kyc-link` | `POST /compliance-links` |
+| `GET /kyc-link/:kycLinkId` | `GET /compliance-links/:complianceLinkId` |
+
+## Request/response
+
+Generating a link is materially unchanged — you get back a session token and a hosted URL for the end user:
+
+## ID format
+
+Raw UUID in v2 → `cl_...` prefixed public ID in v3.

@@ -1,0 +1,60 @@
+---
+title: "Orchestration Address"
+description: "What changed for the Orchestration Address resource when migrating from HIFI API v2 to v3."
+---
+
+An Orchestration Address is a persistent on-chain address that batches incoming stablecoin deposits into offramp payouts. v2 and v3 share the exact same underlying processor — this is one of the more mechanically stable resources in the migration. What changed is the path shape (fully flattened, including deposits/batches sub-resources) and one field rename. See the [platform-wide changes](/v3/guides/v2v3Migration/overview) for ID format, pagination, error shape, and idempotency.
+
+## Endpoints
+
+| v2 | v3 | Notes |
+|---|---|---|
+| `POST /v2/users/:userId/orchestration-addresses` | `POST /v3/orchestration-addresses` | `userId` moved from path to body. |
+| `GET /v2/users/:userId/orchestration-addresses/:orchestrationAddressId` | `GET /v3/orchestration-addresses/:orchestrationAddressId` | |
+| `GET /v2/users/:userId/orchestration-addresses` | `GET /v3/orchestration-addresses` | List envelope changed to the standard `{data, pagination}` shape. |
+| `POST /v2/users/:userId/orchestration-addresses/:id/update` | `PATCH /v3/orchestration-addresses/:orchestrationAddressId` | Verb change. |
+| `POST /v2/users/:userId/orchestration-addresses/:id/deactivate` | `DELETE /v3/orchestration-addresses/:orchestrationAddressId` | Verb change. |
+| `GET /v2/users/:userId/.../deposits*`, `.../batches*` | `GET /v3/orchestration-addresses/deposits*`, `/batches*` | Nested under a user and an address in v2 → fully flat top-level paths in v3. |
+| `POST /v2/.../:id/orchestrate` | `POST /v3/orchestration-addresses/:orchestrationAddressId/orchestrate` | Same manual-trigger mechanics. |
+
+## Request changes: create an orchestration address
+
+Both versions require the same fields — `requestId`, `source: {currency, chain}`, `destination: {currency, ...}`, `mode`, and `schedule`/`thresholdAmount` depending on mode:
+
+```json
+{
+  "requestId": "3f2504e0-4f89-11d3-9a0c-0305e82c3301",
+  "source": { "currency": "usdc", "chain": "POLYGON" },
+  "destination": { "currency": "usd", "externalAccountId": "extacct_QW1e2r3t4y" },
+  "mode": "THRESHOLD",
+  "thresholdAmount": 1000
+}
+```
+
+| v2 field | v3 field | Change |
+|---|---|---|
+| `destination.accountId` | `destination.externalAccountId` | Renamed |
+| `requestId` | `requestId` | Same name; still required (unlike Virtual Account, which dropped the body `requestId` in favor of the idempotency header only) |
+
+
+## Response changes
+
+Same shape on both sides, aside from ID resolution:
+
+```json
+{
+  "id": "orchaddr_QW1e2r3t4y",
+  "userId": "usr_a1B2c3D4e5F6g7H8i9J0k",
+  "address": "0xabc123...",
+  "source": { "currency": "usdc", "chain": "POLYGON" },
+  "destination": { "currency": "usd", "externalAccountId": "extacct_QW1e2r3t4y" },
+  "mode": "THRESHOLD",
+  "status": "ACTIVE"
+}
+```
+
+`id`, `userId`, and `destination.externalAccountId` are raw UUIDs in v2, prefixed public IDs in v3 (`orchaddr_...`). No other structural changes.
+
+## ID format
+
+Raw UUID in v2 → `orchaddr_...` prefixed public ID in v3.

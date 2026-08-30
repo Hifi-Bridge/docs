@@ -1,0 +1,129 @@
+---
+title: "Onramp"
+description: "What changed for the Onramp resource when migrating from HIFI API v2 to v3."
+---
+
+Like Offramp, Onramp's underlying logic and status enum are unchanged. What changed is the request/response shape, how the fiat source and crypto destination are specified. See the [platform-wide changes](/v3/guides/v2v3Migration/overview) for ID format, pagination, error shape, and idempotency — this page only covers what's specific to Onramp.
+
+<Info>
+  Transfer Approval does not apply to Onramp in either version — there's no `requiresApproval` field on this resource, unlike Offramp/Onchain Transfer/Bridge.
+</Info>
+
+## Endpoints
+
+| v2 | v3 | Notes |
+|---|---|---|
+| `POST /v2/onramps` | `POST /v3/onramps` | Request body changed — see below. Now supports an `Idempotency-Key` header. |
+| `POST /v2/onramps/:transferId/quote/accept` | `POST /v3/onramps/:onrampId/quote/accept` | Same mechanics. |
+| `GET /v2/onramps/:transferId` | `GET /v3/onramps/:onrampId` | Response shape changed — see below. |
+| `GET /v2/onramps` | `GET /v3/onramps` | List envelope changed to the standard `{data, pagination}` shape. |
+| `GET /v2/onramps/rates` | `GET /v3/onramps/rates` | Unchanged. |
+| `POST /v2/onramps/:transferId/cancel` | `POST /v3/onramps/:onrampId/cancel` | Same restriction (cancel only while `IN_REVIEW`). |
+| `POST /v2/onramps/:transferId/simulate-deposit` | `POST /v3/onramps/:onrampId/simulate-deposits` | Path renamed (now plural). Sandbox-only, Cross River sources only in v3 — request body is now a structured `source: {routingNumber, accountNumber, name, bankName}` object. |
+| `POST /v2/onramps/:transferId/quote/refresh` | *(none)* | **No v3 quote-refresh endpoint.** If your quote expires before you accept it, create a new onramp instead of refreshing the existing one. |
+| `GET /v2/onramps/export/csv` | *(none)* | <Badge color="yellow" iconType="light">Work in progress</Badge> — no v3 CSV export endpoint yet. |
+
+## Request changes: create an onramp
+
+**v2**:
+
+```json
+{
+  "source": {
+    "currency": "usd",
+    "userId": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+    "transferType": "ach",
+    "accountId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "amount": 500
+  },
+  "destination": {
+    "currency": "usdc",
+    "chain": "polygon",
+    "userId": "7c9e6679-7425-40de-944b-e07fc1f90ae7"
+  },
+  "fee": { "type": "PERCENT", "value": 1 },
+  "isInstant": false
+}
+```
+
+**v3**:
+
+```json
+{
+  "requestId": "3f2504e0-4f89-11d3-9a0c-0305e82c3301",
+  "source": {
+    "currency": "USD",
+    "transferType": "ACH",
+    "externalAccountId": "extacct_QW1e2r3t4y",
+    "amount": 500
+  },
+  "destination": {
+    "currency": "USDC",
+    "walletId": "wlt_fkc0E4OsfHWZPNXiPhj4q"
+  },
+  "sameDayAch": false
+}
+```
+
+| v2 field | v3 field | Change |
+|---|---|---|
+| `source.currency` / `destination.currency` | Same names | Lowercase → uppercase |
+| `source.accountId` (raw UUID) | `source.externalAccountId` (prefixed public ID) | Renamed |
+| `source.transferType` | `source.transferType` | Same name; lowercase (`"ach"`, `"wire"`, `"rtp"`) → uppercase (`"ACH"`, `"WIRE"`, `"RTP"`) |
+| `destination.userId` (internal wallet, resolved indirectly) | `destination.walletId` | **New explicit field** for internal wallets — no more resolving a wallet indirectly through `userId` |
+| `fee: {type, value}` | — | **Removed.** |
+
+## Response changes
+
+**v2** (nested under a transfer envelope, lowercase currencies):
+
+```json
+{
+  "transferType": "ONRAMP",
+  "transferDetails": {
+    "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "status": "OPEN_QUOTE",
+    "source": { "currency": "usd", "amount": "500.00" },
+    "destination": { "currency": "usdc" },
+    "virtualAccountId": null,
+    "microDeposits": null,
+    "quoteInformation": { "...": "..." }
+  }
+}
+```
+
+**v3** (flat):
+
+```json
+{
+  "id": "onramp_QW1e2r3t4y",
+  "requestId": "3f2504e0-4f89-11d3-9a0c-0305e82c3301",
+  "status": "OPEN_QUOTE",
+  "failedReason": null,
+  "error": null,
+  "errorDetails": null,
+  "source": { "amount": "500.00", "currency": "usd", "externalAccountId": "extacct_QW1e2r3t4y", "depositInstructions": null },
+  "destination": { "amount": "...", "currency": "usdc", "walletId": "wlt_..." },
+  "quote": { "currency": "USD" },
+  "sameDayAch": false,
+  "createdAt": "...",
+  "updatedAt": "..."
+}
+```
+
+| Change | Detail |
+|---|---|
+| Envelope | No more `{transferType, transferDetails}` wrapper. |
+| `id` | Raw UUID → prefixed public ID (`onramp_...`). |
+| `quoteInformation` | **Renamed** to `quote`. |
+| `error` / `errorDetails` | New, always-present top-level fields (`null` when not failed). |
+
+## Webhooks
+
+<Warning>
+  Same event types fire either way (`ONRAMP.CREATED`, `ONRAMP.STATUS.<STATUS>`), but the **payload shape depends on which API version created the transaction**, not which API version you're currently calling. Onramps created via `POST /v3/onramps` get the v3 flat payload shown above. Onramps created via the old `POST /v2/onramps` continue to deliver a different, older payload shape for their entire lifecycle — creating an onramp in v3 going forward is what gets you the new payload, not simply upgrading your webhook consumer.
+</Warning>
+
+## Status and lifecycle
+
+Unchanged — v2 and v3 onramps share the exact same status enum and transitions (`OPEN_QUOTE`, `AWAITING_FUNDS`, `FIAT_PENDING`, `COMPLETED`, etc.).

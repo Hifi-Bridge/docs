@@ -1,0 +1,141 @@
+---
+title: "External Account"
+description: "What changed for the External Account resource when migrating from HIFI API v2 to v3."
+---
+
+External Account is v3's bank-account resource — the destination for an Offramp payout or the source for an ACH-pull Onramp. Its v2 predecessor is `POST /users/:userId/accounts`. There are two big changes: identity moved out into a separate [Counter Party](/v3/guides/v2v3Migration/counter-party) resource — this page only covers the bank-detail fields that stayed behind — and the `type` field v2 used to identify a bank account's country/rail (`us`, `brazilGlobalNetwork`, `italyGlobalNetwork`, and dozens of other per-country `*GlobalNetwork` values) is gone. v3 has no `type` field at all: HIFI derives the rail automatically from `currency` + `bankAddress.country` + `transferType`, combined with the counterparty's KYC/KYB profile. See the [platform-wide changes](/v3/guides/v2v3Migration/overview) for ID format, pagination, error shape, and idempotency.
+
+## Endpoints
+
+| v2 | v3 | Notes |
+|---|---|---|
+| `POST /v2/users/:userId/accounts` | `POST /v3/external-accounts` | Nested by user → flat, top-level. Identity (`accountHolder`) split out to a separate `counterPartyId` — see below. |
+| `GET /v2/users/:userId/accounts/:accountId` | `GET /v3/external-accounts/:externalAccountId` | Response shape changed — see below. |
+| `GET /v2/users/:userId/accounts` | `GET /v3/external-accounts` | `userId` and `counterPartyId` are now optional query filters instead of a required path segment. List envelope changed to the standard `{data, pagination}` shape. |
+| `DELETE /v2/users/:userId/accounts/:accountId` | `DELETE /v3/external-accounts/:externalAccountId` | Same deactivate semantics. |
+| *(none)* | `PATCH /v3/external-accounts/:externalAccountId` | **New** — v2 had no way to update an existing account's bank details. |
+
+## Request changes: create an external account
+
+**v2** nested bank details under a key named after the country/rail type, alongside the embedded `accountHolder`:
+
+```json
+{
+  "userId": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+  "type": "us",
+  "accountHolder": { "...": "..." },
+  "us": {
+    "transferType": "ach",
+    "accountNumber": "000123456789",
+    "routingNumber": "021000021",
+    "bankName": "Example Bank",
+    "accountType": "Checking",
+    "currency": "usd"
+  }
+}
+```
+
+**v3** references a pre-created Counter Party instead of embedding identity, and uses one flat schema selected by country + currency + transfer type rather than a dynamic type-named key:
+
+```json
+{
+  "counterPartyId": "cpty_QW1e2r3t4y",
+  "bankName": "Example Bank",
+  "bankAddress": { "city": "New York", "stateProvinceRegion": "NY", "postalCode": "10001", "country": "US" },
+  "currency": "USD",
+  "transferType": "ACH",
+  "accountNumber": "000123456789",
+  "routingNumber": "021000021",
+  "accountType": "CHECKING"
+}
+```
+
+| v2 field | v3 field | Change |
+|---|---|---|
+| `accountHolder` | `counterPartyId` | **Removed** as an embedded object — identity now lives on a separate [Counter Party](/v3/guides/v2v3Migration/counter-party) record, referenced by ID |
+| `type` (`us`, `brazilGlobalNetwork`, `italyGlobalNetwork`, etc. — one value per country/rail family, plus the fields nested under a same-named key like `us: {...}`) | — | **Removed.** No `type` field, and no dynamic wrapper key — bank fields are flat on the request body. HIFI selects the rail automatically from `bankAddress.country` + `currency` + `transferType`, together with the counterparty's KYC/KYB profile, instead of you specifying it via `type`. |
+| `transferType`, `accountType` | `transferType`, `accountType` | Same names; uppercase enums now (`"ACH"`, `"CHECKING"`) instead of lowercase/mixed case (`"ach"`, `"Checking"`) |
+| Non-US rail fields nested under their own `type` key (`iban`/`swiftCode`, `pix`, etc.) | Flat fields selected by `(bankAddress.country, currency, transferType)` | Not every combination is supported — an unsupported one is rejected with a validation error. E.g. PIX now requires exactly one of `pixKey`/`email`/`phoneNumber`/`cpf`/`cnpj`. |
+
+<Info>
+  See [Account Information](/v3/docs/references/account-information) for the exact field requirements per `(bankAddress.country, currency, transferType)` combination.
+</Info>
+
+## Response changes
+
+**v2** (`GET /v2/users/:userId/accounts/:accountId`) — fields returned in the clear, and identity/bank details duplicated three ways: top-level `beneficiary*`/`accountOwner*` fields, an embedded `accountHolder` object, and again inside a rail-specific sub-object (`us` here):
+
+```json
+{
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "accountId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "userId": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+  "accountHolder": { "type": "individual", "name": "Jane Doe", "address": { "...": "..." } },
+  "accountNumber": "000123456789",
+  "routingNumber": "021000021",
+  "bankName": "Example Bank",
+  "beneficiaryName": "Jane Doe",
+  "currency": "usd",
+  "accountOwnerName": "Jane Doe",
+  "accountOwnerType": "individual",
+  "accountType": "us",
+  "type": "us",
+  "beneficiaryStreetLine1": "...", "beneficiaryCity": "...", "beneficiaryState": "...", "beneficiaryPostalCode": "...", "beneficiaryCountry": "...",
+  "us": {
+    "accountType": "Checking",
+    "accountNumber": "000123456789",
+    "routingNumber": "021000021",
+    "iban": null,
+    "swiftCode": null,
+    "bankName": "Example Bank",
+    "bankCountry": null,
+    "bankAddress": null,
+    "currency": "usd"
+  },
+  "isValid": true,
+  "reason": null,
+  "rail": { "currency": "usd", "railType": "offramp", "paymentRail": "rtp" }
+}
+```
+
+**v3** (`GET /v3/external-accounts/:externalAccountId`), consistent shape across every country/rail, with sensitive fields masked by default:
+
+```json
+{
+  "id": "extacct_QW1e2r3t4y",
+  "userId": "usr_a1B2c3D4e5F6g7H8i9J0k",
+  "counterPartyId": "cpty_QW1e2r3t4y",
+  "accountNumber": "****6789",
+  "routingNumber": "021000021",
+  "accountType": "CHECKING",
+  "bankName": "Example Bank",
+  "bankAddress": { "city": "New York", "stateProvinceRegion": "NY", "postalCode": "10001", "country": "US" },
+  "currency": "USD",
+  "transferType": "ACH",
+  "nickname": null,
+  "status": "ACTIVE",
+  "createdAt": "...",
+  "updatedAt": "..."
+}
+```
+
+| Change | Detail |
+|---|---|
+| Field duplication | **Removed.** v2 repeated the same identity/bank details up to three times (top-level `beneficiary*`/`accountOwner*` fields, embedded `accountHolder`, and again inside the rail-specific `us`/etc. sub-object). v3 has one flat set of fields, no duplication. |
+| `type` / top-level `accountType` (e.g. both `"us"`) | **Removed.** The v2 rail-family/country selector is gone — see the `type` row in [Request changes](#request-changes-create-an-external-account) above. The rail itself now surfaces as `transferType`; v3's `accountType` instead means the bank account type (`"CHECKING"`, moved up from the nested `us.accountType` in v2). |
+| `rail` (`currency`, `railType`, `paymentRail`) | **Removed.** Also a known quirk in v2: `railType` here returns `"offramp"` rather than an actual rail name, and `paymentRail` (`"rtp"`) doesn't match the account's own `us.accountType`/`type` — this object wasn't reliable in v2 either. |
+| `accountId` | **Removed.** Duplicated `id` in v2; v3 only has `id`. |
+| `id`, `userId` | Raw UUIDs → prefixed public IDs (`extacct_...`, `usr_...`). |
+| Sensitive fields masked | `accountNumber`, `iban`, `pixKey`, `phoneNumber`, `email`, `cpf`, `cnpj`, `fpsId`, and `clabe` are masked by default in v3 responses (e.g. `"****6789"`) — v2 returned these fields in the clear. |
+| `counterPartyId` | New — resolves to the associated Counter Party record. |
+| `isValid`, `reason` | **Removed.** No v3 equivalent on the External Account object. |
+
+**List** (`GET /external-accounts`): v2 returned `{ count, banks: [...], nextCursor }` where `nextCursor` was a raw timestamp. v3 returns the standard `{ data, pagination }` envelope — see [platform-wide changes](/v3/guides/v2v3Migration/overview#pagination-one-envelope-for-every-list-endpoint).
+
+## Status
+
+`ACTIVE` / `INACTIVE` on both sides — same two-state model, just formalized as an explicit enum in v3.
+
+## ID format
+
+Raw UUID in v2 → `extacct_...` prefixed public ID in v3.

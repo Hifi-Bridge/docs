@@ -1,0 +1,91 @@
+---
+title: "Bridge"
+description: "What changed for the Bridge resource when migrating from HIFI API v2 to v3."
+---
+
+Bridge moves stablecoins across chains. Like the other transfer resources, v2 and v3 share the same underlying engine and status enum — creating and accepting a bridge work identically under the hood. What changed is the request shape, a path rename on accept, and one dropped recovery mechanism. See the [platform-wide changes](/v3/guides/v2v3Migration/overview) for ID format, pagination, error shape, and idempotency.
+
+## Endpoints
+
+| v2 | v3 | Notes |
+|---|---|---|
+| `POST /v2/wallets/bridges` | `POST /v3/bridges` | Request body changed — see below. |
+| `GET /v2/wallets/bridges/:transferId` | `GET /v3/bridges/:bridgeId` | Response shape changed — see below. |
+| `GET /v2/wallets/bridges` | `GET /v3/bridges` | List envelope changed to the standard `{data, pagination}` shape. |
+| `POST /v2/wallets/bridges/:transferId/accept` | `POST /v3/bridges/:bridgeId/quote/accept` | Path renamed to include `/quote/`, matching Onramp/Offramp/Swap. |
+| `GET /v2/wallets/bridges/export/csv` | *(none)* | <Badge color="yellow" iconType="light">Work in progress</Badge> — no v3 CSV export endpoint yet. |
+
+## Request changes: create a bridge
+
+**v2** specified chain explicitly and independently on each side:
+
+```json
+{
+  "requestId": "3f2504e0-4f89-11d3-9a0c-0305e82c3301",
+  "amount": 100,
+  "source": { "chain": "polygon", "currency": "usdc", "userId": "7c9e6679-7425-40de-944b-e07fc1f90ae7" },
+  "destination": { "chain": "ethereum", "currency": "usdc", "userId": "7c9e6679-7425-40de-944b-e07fc1f90ae7" },
+  "requireApproval": false
+}
+```
+
+**v3** derives each side's chain from its wallet:
+
+```json
+{
+  "requestId": "3f2504e0-4f89-11d3-9a0c-0305e82c3301",
+  "amount": 100,
+  "source": { "walletId": "wlt_fkc0E4OsfHWZPNXiPhj4q", "currency": "USDC" },
+  "destination": { "walletId": "wlt_z9Y8x7W6v5U4t3S2r1Q0p", "currency": "USDC" },
+  "requiresApproval": false
+}
+```
+
+| v2 field | v3 field | Change |
+|---|---|---|
+| `currency` | `currency` | Same name; lowercase → uppercase |
+| `source.chain` / `destination.chain` | — | **Removed.** Derived from each side's wallet instead of specified explicitly. |
+| `requireApproval` | `requiresApproval` | Renamed |
+
+Both versions enforce the same $10 minimum when either side's currency is USDT.
+
+## Response changes
+
+**v2** (nested envelope, lowercase currency, inline approval detail):
+
+```json
+{
+  "transferType": "WALLET.BRIDGE",
+  "transferDetails": {
+    "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "source": { "chain": "polygon", "currency": "usdc" },
+    "destination": { "chain": "ethereum", "currency": "usdc" },
+    "quoteInformation": { "...": "..." }
+  }
+}
+```
+
+**v3** (flat, uppercase currency, `quoteInformation` renamed):
+
+```json
+{
+  "id": "brg_QW1e2r3t4y",
+  "status": "OPEN_QUOTE",
+  "source": { "chain": "POLYGON", "currency": "USDC" },
+  "destination": { "chain": "ETHEREUM", "currency": "USDC" },
+  "quote": { "...": "..." },
+  "receipt": { "operations": [] },
+  "requiresApproval": false
+}
+```
+
+| Change | Detail |
+|---|---|
+| Envelope | No more `{transferType, transferDetails}` wrapper. |
+| `quoteInformation` | **Renamed** to `quote`. |
+| Transfer approval detail | **No longer embedded** — look it up separately via the Transfer Approvals resource. |
+| `id` | Raw UUID → prefixed public ID (`brg_...`). |
+
+## Status and lifecycle
+
+Unchanged — v2 and v3 share the exact same status enum and transitions (`OPEN_QUOTE`, `SOURCE_INITIATED`, `DESTINATION_PENDING`, `COMPLETED`, etc.).
