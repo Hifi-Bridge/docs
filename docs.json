@@ -830,8 +830,7 @@
                       "GET /v2/users/{userId}",
                       "POST /v2/users",
                       "POST /v2/users/{userId}",
-                      "GET /v2/tos-link/{signedAgreementId}",
-                      "POST /v2/tos-link"
+                      "GET /v2/tos-link/{signedAgreementId}"
                     ]
                   },
                   {
