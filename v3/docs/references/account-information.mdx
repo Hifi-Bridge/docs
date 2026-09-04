@@ -87,6 +87,10 @@ Some countries require an exact bank name match, check out below bank name list 
   This rail accepts ~140 Indonesian banks, including Bank Central Asia (BCA), Bank Mandiri, Bank Rakyat Indonesia (BRI), Bank Negara Indonesia (BNI), Bank CIMB Niaga, Bank Permata, Bank Danamon, Bank BJB, Citibank, HSBC Indonesia, Standard Chartered Bank, and the regional Bank Pembangunan Daerah network. See `IDN_BANK_NAMES` in [`src/externalAccount/enums.js`](/../../src/externalAccount/enums.js) for the exact list and spelling required.
 </Accordion>
 
+<Accordion title="Vietnam bank names">
+  Agricultural Bank of China (Agri Bank of China), An Binh Commercial Join Stock Bank, ANZ Bank Vietnam Limited, Asia Commercial Bank, Bac A Bank, Bangkok Bank, Ho Chi Minh City, Bank for Investment and Development of Vietnam, Bank of China Limited, Bank of Communications Vietnam, Bank of India, Ho Chi Minh City, Bank of Tokyo - Mitsubishi UFJ, Bao Viet Commercial Joint Stock Bank, BNP Paribas Bank - Ho Chi Minh Branch, Busan Bank Co Ltd, Cake Digital Bank - VPBank, Cambodia Investment and Development Co. Ltd., Cathay United Bank - Ho Chi Minh Branch, Cathay United Bank - Quang Nam, Chailease International Leasing Company Limited, China Construction Bank Corporation, Chinatrust Commercial Bank, CIMB Bank Vietnam, Citibank, Co-op Bank, Credit Union, Daegu Bank, DBS Bank Ltd, Deutsche Bank AG, Dong A Commercial Joint Stock Bank, Electricity Joint Stock Finance Company, E.Sun Commercial Bank Ltd, Far East National Bank, Finance Company Limited for Community, First Commercial Bank, First Commercial Joint Stock Bank, Foreign Exchange Bank of Korea, GP Bank, Great Trust Joint Stock Commercial Bank, Handico Finance Joint Stock Company, HD Bank, Home Credit Vietnam Finance Company Limited, Hongleong Bank Vietnam Ltd, HSBC Bank Limited, Hua Nan Bank Vietnam, Hua Nan Commercial Bank Ho Chi Minh City, Indovina Bank Ltd, Industrial and Commercial Bank of China, Industrial Bank of Korea, JACCS International Vietnam Finance Company Limited, JP Morgan Chase Bank & Co, The Chase Manhattan Bank, Kasikornbank Public Bank Limited, Kasikornbank Public Company Limited, KEB Hana Bank - Hanoi Branch, KEB Hana Bank - Ho Chi Minh City Branch, KEXIM Financial Company Head Office, Kien Long Commercial Joint Stock Bank, Kookmin Bank, Kookmin Bank Hanoi Branch, Kookmin Bank Ho Chi Minh City Branch, Lien Viet Post Bank, Liobank Digital Bank, Malayan Banking Berhad, MB Bank, Mizuho Bank, Ltd, Mizuho Corporate Bank, Nam A Bank, National Commercial Joint Stock Bank, Natixis Bank, Nonghyup Bank, Ocean Bank, Orient Commercial Joint Stock Bank, Oversea Bank - Chinese Banking Corporation Ltd, Petrolimex Petroleum Commercial Joint Stock Bank, Post and Telecommunication Finance Company Limited, Prudential Viet Nam Assurance Private Limited, Public Bank Vietnam, Rubber Finance Company, Saigon Bank for Industry and Trade, Saigon Commercial Joint Stock Bank, Saigon - Hanoi Commercial Joint Stock Bank, Saigon Thuong Tin Commercial Joint Stock Bank, Shinhan Bank Vietnam Ltd., Southeast Asia Commercial Joint Stock Bank, Standard Chartered Bank Vietnam Limited, Standard Chartered Bank Viet Nam Limited, State Bank of Vietnam, State Treasury, Sumitomo Mitsui Banking Corporation, Taipei Fubon Bank, The Development Bank of Singapore Limited, The Shanghai Commercial & Savings Bank, Ltd, The Siam Commercial Bank Public, Tien Phong Commercial Joint Stock Bank, Timo Digital Bank - Ban Viet Bank, Toyota Financial Services Vietnam Company Limited, Ubank Digital Bank - VPBank, Umee Digital Bank - Kien Long Bank, United Overseas Bank One Member Limited Liability Bank, Viet A Joint Stock Commercial Bank, Viet Capital Commercial Joint Stock Bank, Vietcombank, Viet Credit Joint Stock Company, Vietinbank, Vietnam Bank for Agriculture and Rural Development, Vietnam Bank for Social Policies, Vietnam Chemical Finance Joint Stock Company, Vietnam Construction Bank, Vietnam Development Bank, Vietnam Export Import Commercial Joint Stock Bank, Vietnam International Commercial Joint Stock Bank, Vietnam International Leasing Company Limited, Vietnam Maritime Commercial Joint Stock Bank, Vietnam Prosperity Joint-Stock Commercial Bank, Vietnam Public Commercial Joint Stock Bank, Vietnam Russia Joint Venture Bank, Vietnam Shipbuilding Finance Company Limited, Vietnam Technological and Commercial Joint-stock Bank, Vietnam Thuong Tin Commercial Joint Stock Bank, Vietnam Tin Nghia Commercial Joint Stock Bank, Vinaconex-Viettel Finance Joint Stock Company, Vung Tau Commercial Joint Stock Bank, Woori Bank
+</Accordion>
+
 ## EUR
 
 ### SEPA
@@ -306,6 +310,80 @@ Countries: Check out [Coverage](/v3/docs/references/coverage) for SEPA supported
 | `bankAddress` (rest) | Optional |  |
 | `currency` | Required | `AED` |
 | `transferType` | Required | `BANK` |
+
+## AUD
+
+### BANK
+
+**Country:** Australia
+
+| Field | Required | Notes |
+| :-- | :-- | :-- |
+| `accountNumber` | Required |  |
+| `bsbCode` | Required | 6 digits (e.g. 062000) |
+| `bankName` | Required | Free text |
+| `bankAddress.country` | Required | `AUS` |
+| `bankAddress` (rest) | Optional |  |
+| `currency` | Required | `AUD` |
+| `transferType` | Required | `BANK` |
+
+## CAD
+
+### BANK
+
+**Country:** Canada
+
+| Field | Required | Notes |
+| :-- | :-- | :-- |
+| `accountNumber` | Required |  |
+| `transitNumber` | Required | 5 digits (e.g. 00023) |
+| `bankCode` | Required | 3 digits (e.g. 003) |
+| `swiftCode` | Required | 8 or 11 characters, SWIFT/BIC format |
+| `bankName` | Required | Free text |
+| `bankAddress.country` | Required | `CAN` |
+| `bankAddress` (rest) | Optional |  |
+| `currency` | Required | `CAD` |
+| `transferType` | Required | `BANK` |
+
+## VND
+
+### BANK
+
+**Country:** Vietnam
+
+| Field | Required | Notes |
+| :-- | :-- | :-- |
+| `accountNumber` | Required |  |
+| `swiftCode` | Required | 8 or 11 characters, SWIFT/BIC format |
+| `bankName` | Required | Must match a fixed bank name (list below) |
+| `bankAddress.country` | Required | `VNM` |
+| `bankAddress` (rest) | Optional |  |
+| `currency` | Required | `VND` |
+| `transferType` | Required | `BANK` |
+
+<Accordion title="Vietnam bank names">
+  Agricultural Bank of China (Agri Bank of China), An Binh Commercial Join Stock Bank, ANZ Bank Vietnam Limited, Asia Commercial Bank, Bac A Bank, Bangkok Bank, Ho Chi Minh City, Bank for Investment and Development of Vietnam, Bank of China Limited, Bank of Communications Vietnam, Bank of India, Ho Chi Minh City, Bank of Tokyo - Mitsubishi UFJ, Bao Viet Commercial Joint Stock Bank, BNP Paribas Bank - Ho Chi Minh Branch, Busan Bank Co Ltd, Cake Digital Bank - VPBank, Cambodia Investment and Development Co. Ltd., Cathay United Bank - Ho Chi Minh Branch, Cathay United Bank - Quang Nam, Chailease International Leasing Company Limited, China Construction Bank Corporation, Chinatrust Commercial Bank, CIMB Bank Vietnam, Citibank, Co-op Bank, Credit Union, Daegu Bank, DBS Bank Ltd, Deutsche Bank AG, Dong A Commercial Joint Stock Bank, Electricity Joint Stock Finance Company, E.Sun Commercial Bank Ltd, Far East National Bank, Finance Company Limited for Community, First Commercial Bank, First Commercial Joint Stock Bank, Foreign Exchange Bank of Korea, GP Bank, Great Trust Joint Stock Commercial Bank, Handico Finance Joint Stock Company, HD Bank, Home Credit Vietnam Finance Company Limited, Hongleong Bank Vietnam Ltd, HSBC Bank Limited, Hua Nan Bank Vietnam, Hua Nan Commercial Bank Ho Chi Minh City, Indovina Bank Ltd, Industrial and Commercial Bank of China, Industrial Bank of Korea, JACCS International Vietnam Finance Company Limited, JP Morgan Chase Bank & Co, The Chase Manhattan Bank, Kasikornbank Public Bank Limited, Kasikornbank Public Company Limited, KEB Hana Bank - Hanoi Branch, KEB Hana Bank - Ho Chi Minh City Branch, KEXIM Financial Company Head Office, Kien Long Commercial Joint Stock Bank, Kookmin Bank, Kookmin Bank Hanoi Branch, Kookmin Bank Ho Chi Minh City Branch, Lien Viet Post Bank, Liobank Digital Bank, Malayan Banking Berhad, MB Bank, Mizuho Bank, Ltd, Mizuho Corporate Bank, Nam A Bank, National Commercial Joint Stock Bank, Natixis Bank, Nonghyup Bank, Ocean Bank, Orient Commercial Joint Stock Bank, Oversea Bank - Chinese Banking Corporation Ltd, Petrolimex Petroleum Commercial Joint Stock Bank, Post and Telecommunication Finance Company Limited, Prudential Viet Nam Assurance Private Limited, Public Bank Vietnam, Rubber Finance Company, Saigon Bank for Industry and Trade, Saigon Commercial Joint Stock Bank, Saigon - Hanoi Commercial Joint Stock Bank, Saigon Thuong Tin Commercial Joint Stock Bank, Shinhan Bank Vietnam Ltd., Southeast Asia Commercial Joint Stock Bank, Standard Chartered Bank Vietnam Limited, Standard Chartered Bank Viet Nam Limited, State Bank of Vietnam, State Treasury, Sumitomo Mitsui Banking Corporation, Taipei Fubon Bank, The Development Bank of Singapore Limited, The Shanghai Commercial & Savings Bank, Ltd, The Siam Commercial Bank Public, Tien Phong Commercial Joint Stock Bank, Timo Digital Bank - Ban Viet Bank, Toyota Financial Services Vietnam Company Limited, Ubank Digital Bank - VPBank, Umee Digital Bank - Kien Long Bank, United Overseas Bank One Member Limited Liability Bank, Viet A Joint Stock Commercial Bank, Viet Capital Commercial Joint Stock Bank, Vietcombank, Viet Credit Joint Stock Company, Vietinbank, Vietnam Bank for Agriculture and Rural Development, Vietnam Bank for Social Policies, Vietnam Chemical Finance Joint Stock Company, Vietnam Construction Bank, Vietnam Development Bank, Vietnam Export Import Commercial Joint Stock Bank, Vietnam International Commercial Joint Stock Bank, Vietnam International Leasing Company Limited, Vietnam Maritime Commercial Joint Stock Bank, Vietnam Prosperity Joint-Stock Commercial Bank, Vietnam Public Commercial Joint Stock Bank, Vietnam Russia Joint Venture Bank, Vietnam Shipbuilding Finance Company Limited, Vietnam Technological and Commercial Joint-stock Bank, Vietnam Thuong Tin Commercial Joint Stock Bank, Vietnam Tin Nghia Commercial Joint Stock Bank, Vinaconex-Viettel Finance Joint Stock Company, Vung Tau Commercial Joint Stock Bank, Woori Bank
+</Accordion>
+
+## JPY
+
+### BANK
+
+**Country:** Japan
+
+| Field | Required | Notes |
+| :-- | :-- | :-- |
+| `accountNumber` | Required |  |
+| `zenginBranchCode` | Required | 3 digits (e.g. 003) |
+| `bankCode` | Required | 4 digits (e.g. 0003) |
+| `accountType` | `CHECKING` `SAVING` |
+| `bankName` | Required | Free text |
+| `bankAddress.country` | Required | `JPN` |
+| `bankAddress` (rest) | Optional |  |
+| `currency` | Required | `JPY` |
+| `transferType` | Required | `BANK` |
+
+
 
 ## Getting Help
 
