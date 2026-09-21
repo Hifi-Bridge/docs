@@ -5,6 +5,97 @@ mode: "center"
 rss: true
 ---
 
+<Update label="September 18, 2026" description="HIFI V3, New USD Payout Corridors, Arc Support, Arc <> Canton Bridging">
+  **HIFI V3 is Live**<br />HIFI V3 is now live across both the API and dashboard, with a redesigned API structure and an updated dashboard experience.
+
+  - Explore the new dashboard at[ beta.hifi.com](http://beta.hifi.com).
+  - Check out the[ V3 documentation](https://docs.hifi.com/v3/docs/introduction/welcome) to get started.
+  - Please migrate to V3 by **March 18, 2027**.
+    - We've put together a[ V2 → V3 Migration Guide](https://docs.hifi.com/v3/guides/v2v3Migration/overview) to help make the transition as seamless as possible.
+
+  **New USD Payout Corridors**<br />We've expanded our USD payout coverage with:
+
+  - **Hong Kong** - USD CHATS (B2B Payments Only)
+
+  - **Bahrain** - USD SWIFT
+
+  **Arc Support**<br />HIFI now supports Arc across several core flows:
+
+  - **Onramp & Offramp** - Move funds between fiat and USDC on Arc.
+  - **USDC Bridging** - Bridge USDC to and from Arc across supported networks.
+
+  **Arc \<> Canton Bridging**
+
+  - USDC can now be bridged directly between Arc and Canton through HIFI, enabling seamless movement of USDC across both networks.
+  - Please note that HIFI has been selected as an official partner for DTCC/Canton tokenized asset initiatives, leveraging this unique cross-network capability.
+</Update>
+
+<Update label="September 11, 2026" description="Offramp Message, USDT Sandbox Parity, TRON Developer Fees, Two-Factor Authentication">
+  **Offramp Messages for Orchestration Addresses**
+
+  - Offramp messages can now be configured for Orchestration Addresses (OAs).
+    - When an OA triggers an offramp, the configured message will automatically be passed through as the Wire, ACH, or RTP reference, depending on the destination account.
+    - Offramp messages can be configured when creating or updating an OA.
+
+  **USDT Sandbox Parity**
+
+  - Sandbox now supports the full USDT functionality available in Production.
+    - Polygon Amoy now supports USDT onramps, offramps, swaps, transfers, and batch transfers.
+    - USDT swaps are now fully supported across Ethereum, Solana, TRON, and Polygon in sandbox.
+      - This brings USDT functionality in sandbox to full parity with Production, enabling more complete end-to-end testing.
+
+  **TRON Developer Fees**
+
+  - Developer fees are now supported for TRON offramps.
+    - Developer fees are automatically batched and processed as part of the offramp flow.
+
+  **Two-Factor Authentication**
+
+  - Two-Factor Authentication (2FA) is now enforced within the HIFI Dashboard.
+    - Adds an additional layer of security when accessing your HIFI account.
+</Update>
+
+<Update label="September 4, 2026" description="New Global Network Payout Currencies">
+  **New Global Network Payout Currencies - Beta**<br /><br />We've expanded Global Network payout coverage with five additional currencies, now available in beta:<br />
+
+  **AUD - Australian Dollar**
+
+  **CAD - Canadian Dollar**
+
+  **JPY - Japanese Yen**
+
+  **VND - Vietnamese Dong**
+
+  **GBP - British Pound**
+</Update>
+
+<Update label="August 28, 2026" description="DBA Support as a Payment Title, SWIFT Offramp Support">
+  **DBA Support as a Payment Title (from Sep 14, 2026)**<br /><br />We now support using a Doing Business As (DBA) name (`alternativeNames`) as the payout title for U.S. domestic payments (ACH, Wire, RTP). Starting Sep 14, any `alternativeNames` provided in a KYB application will require a `DBA_DOC` for verification. If the documentation is not uploaded, the KYB submission will be blocked.<br /><br />**Examples for payment title:**
+
+  - **Wire**:
+    - Previous: HIFI Bridge Inc
+    - New: HIFI
+  - **ACH / RTP:**
+    - Previous: HIFI Bridge Inc - ACME Corp.
+    - New: HIFI - ACME
+
+  What changes for businesses created after Sep 14:
+
+  - `alternativeNames` will require `DBA_DOC`.
+  - If `alternativeNames` is provided, it will be used automatically as the payment title.
+  - `alternativeNames` will be used as the beneficiary name of the virtual account for inbound deposits.
+  - `alternativeNames` will be limited to 1 value.
+
+  What remains unchanged:
+
+  - Businesses created before Sep 14 will continue to use their business name as the outbound payment title and as the virtual account beneficiary name.
+  - `alternativeNames` will remain optional.
+
+  If you’d like to update your DBA and the DBA for an already-onboarded business, please reach out with eligible documentation.<br /><br />**British Virgin Islands SWIFT Offramp Support for Global Network**
+
+  - We've added support for USD SWIFT offramps into the British Virgin Islands. 
+</Update>
+
 <Update label="August 28, 2026" description="DBA Support as a Payment Title, SWIFT Offramp Support">
   **DBA Support as a Payment Title (from Sep 14, 2026)**<br /><br />We now support using a Doing Business As (DBA) name (`alternativeNames`) as the payout title for U.S. domestic payments (ACH, Wire, RTP). Starting Sep 14, any `alternativeNames` provided in a KYB application will require a `DBA_DOC` for verification. If the documentation is not uploaded, the KYB submission will be blocked.<br /><br />**Examples for payment title:**
 
@@ -34,6 +125,21 @@ rss: true
 
 <Update label="August 21, 2026" description="Expanded U.S. Virtual Account Availability, Global Coverage">
   **Expanded U.S. Virtual Account Availability**<br /><br />We've expanded HIFI's U.S. Virtual Account coverage. **Individuals and businesses** in the following countries can now open U.S. Virtual Accounts:<br />**Bahamas**<br />**Bolivia**<br />**Costa Rica**<br />**Dominican Republic**<br />**Ecuador**<br />**Fiji**<br />**Guatemala**<br />**Honduras**<br />**India**<br />**Jamaica**<br />**Monaco**<br />**Nigeria**<br />**Panama**<br />**Peru**<br />**Philippines**<br />**Saudi Arabia**<br />**Trinidad and Tobago**<br />**Turkey**<br />**Vietnam**<br /><br />As part of this expansion, liveness checks will be required for individuals completing KYC, as well as UBOs of businesses completing KYB, in the countries above.<br /><br />This requirement will also apply to new onboardings going forward in the following previously supported markets:<br />**China**<br />**Colombia**<br />**Hong Kong**<br /><br />
+</Update>
+
+<Update label="August 14, 2026" description="New Global Network Corridors, SEPA Limit ">
+  **New Global Network SWIFT Corridors**<br /><br />We've expanded Global Network coverage with two new USD SWIFT payout corridors:
+
+  - **Macau** - USD SWIFT
+
+  - **India** - USD SWIFT
+
+  **SEPA Instant - Transaction Limit Removed**
+
+  - All supported **EUR SEPA payouts**, regardless of transaction size, will now settle via SEPA Instant when the recipient bank supports the rail.
+    - Enables faster EUR settlement without requiring any changes to your existing payment flow.
+
+  **Note:** If the recipient bank does not support SEPA Instant, the payment will automatically settle via SEPA Standard.
 </Update>
 
 <Update label="August 14, 2026" description="New Global Network Corridors, SEPA Limit ">
