@@ -374,7 +374,6 @@
                       "PATCH /v3/users/{userId}/compliance/profile",
                       "GET /v3/users/{userId}/compliance/questionnaire",
                       "PATCH /v3/users/{userId}/compliance/questionnaire",
-                      "POST /v3/compliance/associated-parties",
                       "PATCH /v3/compliance/associated-parties/{associatedPartyId}",
                       "DELETE /v3/compliance/associated-parties/{associatedPartyId}",
                       "GET /v3/compliance/associated-parties/{associatedPartyId}",
