@@ -1,0 +1,166 @@
+---
+title: "Requests for Information"
+description: "A request for information (RFI) is raised when our compliance team needs evidence beyond what was submitted. We email the request to your compliance contact with a HIFI-hosted link, and you can answer there or submit the reply through the API."
+---
+
+## Overview
+
+An RFI is opened by our compliance team after a review, either against a user's verification or against a single transfer. It is not raised automatically by a failed submission: if the applicant's own data needs correcting, the compliance status moves to `REQUIRES_INFO` and you fix it by updating and resubmitting instead.
+
+The request is emailed to your compliance contact, not to the end user. It carries a HIFI-hosted link you can answer on directly, so the default path needs no integration work. The endpoints below exist for clients who would rather gather the evidence inside their own product and reply programmatically.
+
+| Kind | Raised against | Effect while open |
+| :-- | :-- | :-- |
+| `onboarding` | The user's verification | Onboarding does not complete until the request is resolved |
+| `transaction` | A single onramp or offramp | That transfer stays held until the request is resolved |
+
+<Info>
+  An open RFI does **not** change `complianceStatus`. Poll GET `/v3/rfis` or subscribe to the `KYC.RFI.OPEN` and `KYC.RFI.CLOSED` webhook events to know where a request stands.
+</Info>
+
+## Rounds
+
+Each RFI has one open round at a time, numbered from 1. A round carries its own questions, its own deadline, and its own link. If the reply does not settle the question, our compliance team asks again, which closes the current round and opens the next one with a fresh link.
+
+A round accepts one submission. Answering twice, or answering after the deadline, returns an error.
+
+## Request Items
+
+The `items` array on the current round is what is being asked for, in the order it should be shown. Each item is answered by its `id`.
+
+| Field | Description |
+| :-- | :-- | 
+| `id` | Quote this as `requestItemId` when you reply |
+| `kind` | `document` expects a file, or text explaining why the file cannot be provided. `question` expects text only |
+| `label` | What is being asked for, in the reviewer's own words |
+| `docType` | Hint for the kind of document expected, or `null` for a custom request. Not a closed set |
+| `detail` | Additional guidance, or `null` |
+| `required` | Whether the item must be answered for the submission to be accepted |
+
+## Example: Answer an RFI
+
+<Steps>
+  <Step title="Find the open request">
+    List the requests raised against your users, filtering by status.
+
+    **Request**
+
+    ```shell
+    curl "https://sandbox.hifi.com/v3/rfis?status=issued" \
+      -H "Authorization: Bearer YOUR_API_KEY"
+    ```
+
+    **Response**
+
+    ```json
+    {
+      "data": [
+        {
+          "id": "rfi_5Kf9dQ2mNpXwZ7bV1aLcs",
+          "kind": "onboarding",
+          "status": "issued",
+          "subjectType": "individual",
+          "userId": "usr_3Kf9dQ2mNpXwZ7bV1aLcs",
+          "transferId": null,
+          "flowType": null,
+          "createdAt": "2026-07-01T10:30:00.000Z",
+          "currentRound": 1,
+          "round": {
+            "id": "rfir_2mNpXwZ7bV1aLcs3Kf9dQ",
+            "round": 1,
+            "issuedAt": "2026-07-01T10:30:00.000Z",
+            "expiresAt": "2026-07-31T10:30:00.000Z",
+            "submittedAt": null,
+            "items": [
+              {
+                "id": "3f7c1e90-2a4b-4d61-9c0e-5b8f2d6a1e34",
+                "kind": "document",
+                "label": "Proof of address issued in the last 3 months",
+                "docType": "proof_of_address",
+                "detail": "A utility bill or bank statement dated within the last three months.",
+                "required": true
+              },
+              {
+                "id": "6b2d4a81-7c05-4e39-8f1a-2d9c3e7b5041",
+                "kind": "question",
+                "label": "What is the source of the funds being deposited?",
+                "docType": null,
+                "detail": null,
+                "required": true
+              }
+            ],
+            "link": "https://dashboard.hifi.com/production/rfi-link/rfir_2mNpXwZ7bV1aLcs3Kf9dQ#sessionToken=..."
+          }
+        }
+      ],
+      "pagination": { "limit": 20, "offset": 0, "total": 1 }
+    }
+    ```
+
+    <Tip>
+      You can stop here. Open the `link` and answer on the HIFI-hosted page, with no further calls. The same link was emailed to your compliance contact when the request was issued.
+    </Tip>
+  </Step>
+  <Step title="Upload any documents">
+    Upload each file via POST `/v3/files` and keep the `file_` ID from the response.
+
+    ```shell
+    curl -X POST "https://sandbox.hifi.com/v3/files" \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -F "file=@proof-of-address.pdf"
+    ```
+  </Step>
+  <Step title="Submit the reply">
+    Answer every required item in one call. Each entry carries exactly one of `fileId` or `answerText`, and repeating a `requestItemId` attaches several files to the same item.
+
+    **Request**
+
+    ```shell
+    curl -X POST "https://sandbox.hifi.com/v3/rfis/rfi_5Kf9dQ2mNpXwZ7bV1aLcs/submissions" \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "items": [
+          { "requestItemId": "3f7c1e90-2a4b-4d61-9c0e-5b8f2d6a1e34", "fileId": "file_7bV1aLcs3Kf9dQ2mNpXwZ" },
+          { "requestItemId": "6b2d4a81-7c05-4e39-8f1a-2d9c3e7b5041", "answerText": "Salary from the user's employer, with payslips attached." }
+        ]
+      }'
+    ```
+
+    **Response**
+
+    ```json
+    {
+      "rfiId": "rfi_5Kf9dQ2mNpXwZ7bV1aLcs",
+      "roundId": "rfir_2mNpXwZ7bV1aLcs3Kf9dQ",
+      "round": 1,
+      "status": "submitted",
+      "submittedAt": "2026-07-03T09:12:44.000Z",
+      "responseCount": 2
+    }
+    ```
+  </Step>
+  <Step title="Track the outcome">
+    The request sits at `submitted` while our compliance team reviews it. It then moves to `resolved`, or a new round opens if they need more. A request left unanswered past its deadline moves to `expired`.
+  </Step>
+</Steps>
+
+## Statuses
+
+| Status | Description |
+| --- | --- |
+| `issued` | Emailed to your compliance contact and waiting on a reply |
+| `submitted` | Answered and under review by our compliance team |
+| `resolved` | Decided by our compliance team |
+| `expired` | The deadline passed without a reply |
+
+## Getting Help
+
+- 📧 **Email:** [support@hifi.com](mailto:support@hifi.com)
+- 💬 **Slack:** Message us in our shared Slack channel
+
+## Related Resources
+
+- [Compliance Overview](/v3/core/compliance/overview) - The full compliance life cycle
+- [Documents](/v3/core/compliance/documents) - Uploading compliance documents
+- [Compliance Link](/v3/core/compliance/compliance-link) - HIFI-hosted compliance collection
