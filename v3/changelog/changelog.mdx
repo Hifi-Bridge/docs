@@ -96,33 +96,6 @@ rss: true
   - We've added support for USD SWIFT offramps into the British Virgin Islands. 
 </Update>
 
-<Update label="August 28, 2026" description="DBA Support as a Payment Title, SWIFT Offramp Support">
-  **DBA Support as a Payment Title (from Sep 14, 2026)**<br /><br />We now support using a Doing Business As (DBA) name (`alternativeNames`) as the payout title for U.S. domestic payments (ACH, Wire, RTP). Starting Sep 14, any `alternativeNames` provided in a KYB application will require a `DBA_DOC` for verification. If the documentation is not uploaded, the KYB submission will be blocked.<br /><br />**Examples for payment title:**
-
-  - **Wire**:
-    - Previous: HIFI Bridge Inc
-    - New: HIFI
-  - **ACH / RTP:**
-    - Previous: HIFI Bridge Inc - ACME Corp.
-    - New: HIFI - ACME
-
-  What changes for businesses created after Sep 14:
-
-  - `alternativeNames` will require `DBA_DOC`.
-  - If `alternativeNames` is provided, it will be used automatically as the payment title.
-  - `alternativeNames` will be used as the beneficiary name of the virtual account for inbound deposits.
-  - `alternativeNames` will be limited to 1 value.
-
-  What remains unchanged:
-
-  - Businesses created before Sep 14 will continue to use their business name as the outbound payment title and as the virtual account beneficiary name.
-  - `alternativeNames` will remain optional.
-
-  If you’d like to update your DBA and the DBA for an already-onboarded business, please reach out with eligible documentation.<br /><br />**British Virgin Islands SWIFT Offramp Support for Global Network**
-
-  - We've added support for USD SWIFT offramps into the British Virgin Islands. 
-</Update>
-
 <Update label="August 21, 2026" description="Expanded U.S. Virtual Account Availability, Global Coverage">
   **Expanded U.S. Virtual Account Availability**<br /><br />We've expanded HIFI's U.S. Virtual Account coverage. **Individuals and businesses** in the following countries can now open U.S. Virtual Accounts:<br />**Bahamas**<br />**Bolivia**<br />**Costa Rica**<br />**Dominican Republic**<br />**Ecuador**<br />**Fiji**<br />**Guatemala**<br />**Honduras**<br />**India**<br />**Jamaica**<br />**Monaco**<br />**Nigeria**<br />**Panama**<br />**Peru**<br />**Philippines**<br />**Saudi Arabia**<br />**Trinidad and Tobago**<br />**Turkey**<br />**Vietnam**<br /><br />As part of this expansion, liveness checks will be required for individuals completing KYC, as well as UBOs of businesses completing KYB, in the countries above.<br /><br />This requirement will also apply to new onboardings going forward in the following previously supported markets:<br />**China**<br />**Colombia**<br />**Hong Kong**<br /><br />
 </Update>
