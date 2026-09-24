@@ -24,7 +24,7 @@
       "og:site_name": "HIFI Docs",
       "og:locale": "en_US",
       "twitter:card": "summary",
-      "twitter:site": "@hifibridge",
+      "twitter:site": "@hifiHQ",
       "twitter:title": "HIFI Docs",
       "twitter:description": "Build modern payment workflows and automate money movement.",
       "theme-color": "#33171E",
@@ -133,7 +133,7 @@
   },
   "footer": {
     "socials": {
-      "x": "https://x.com/hifibridge",
+      "x": "https://x.com/hifiHQ",
       "github": "https://github.com/Hifi-Bridge",
       "linkedin": "https://www.linkedin.com/company/hifibridge"
     }
