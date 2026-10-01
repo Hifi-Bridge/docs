@@ -15,7 +15,7 @@ The request is emailed to your compliance contact, not to the end user. It carri
 | `transaction` | A single onramp or offramp | That transfer stays held until the request is resolved |
 
 <Info>
-  An open RFI does **not** change `complianceStatus`. Poll GET `/v3/rfis` or subscribe to the `KYC.RFI.OPEN` and `KYC.RFI.CLOSED` webhook events to know where a request stands.
+  An open RFI does **not** change `complianceStatus`. Poll GET `/v3/rfis` to know where a request stands.
 </Info>
 
 ## Rounds
