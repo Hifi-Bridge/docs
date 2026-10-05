@@ -5,6 +5,24 @@ mode: "center"
 rss: true
 ---
 
+<Update label="October 2, 2026" description="Settlement Rules, CCTP v2, USDT Bridging Sandbox ">
+  **Settlement Rules by Rail**
+
+  - Settlement Rules can now be configured based on the domestic payment rail, giving you more control over how incoming funds are automatically settled.
+    - Configure rail-specific triggers for **RTP, ACH, and Wire** when creating Settlement Rules via the API.
+    - Check out the [Settlement Rules documentation](https://docs.hifi.com/api-reference/settlement-rules/create-a-settlement-rule#response-rules-items-trigger-one-of-0) for more details.
+
+  **CCTP v2: Faster Cross-Chain USDC Transfers**
+
+  - We’re upgrading USDC bridging to CCTP v2, Circle’s Cross-Chain Transfer Protocol, with a new Fast Transfer option. USDC continues to move natively between supported blockchains.
+    - **Fast Transfers** - Cut the source-chain verification wait on Ethereum from ~15–19 minutes with Standard to ~20 seconds with Fast. On Base, that drops from ~15–19 minutes to ~8 seconds, helping you fund wallets, rebalance treasury balances, and make cross-chain payments faster.
+    - **Choose Your Speed** - Standard remains the default. Request `transferSpeed: "FAST"` through the existing bridge API for transfers originating on Ethereum, Base, or Solana. Fast Transfers carry an additional fee and are subject to available capacity.
+
+  **USDT Bridging Sandbox**
+
+  - USDT bridging is now fully functional end-to-end in Sandbox, making it easier to test bridging flows before moving to Production.
+</Update>
+
 <Update label="September 25, 2026" description="USD SWIFT Coverage">
   **USD SWIFT Coverage Expansion**<br />We’ve expanded USD SWIFT payout coverage to 122 additional countries, significantly expanding HIFI’s global payout reach.
 
