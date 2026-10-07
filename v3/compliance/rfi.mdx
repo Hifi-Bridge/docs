@@ -7,15 +7,13 @@ description: "A request for information (RFI) is raised when our compliance team
 
 An RFI is opened by our compliance team after a review, either against a user's verification or against a single transfer. It is not raised automatically by a failed submission: if the applicant's own data needs correcting, the compliance status moves to `REQUIRES_INFO` and you fix it by updating and resubmitting instead.
 
-The request is emailed to your compliance contact, not to the end user. It carries a HIFI-hosted link you can answer on directly, so the default path needs no integration work. The endpoints below exist for clients who would rather gather the evidence inside their own product and reply programmatically.
-
 | Kind | Raised against | Effect while open |
 | :-- | :-- | :-- |
 | `onboarding` | The user's verification | Onboarding does not complete until the request is resolved |
 | `transaction` | A single onramp or offramp | That transfer stays held until the request is resolved |
 
 <Info>
-  An open RFI does **not** change `complianceStatus`. Poll GET `/v3/rfis` to know where a request stands.
+  An open RFI does **not** change `complianceStatus`. Poll GET `/v3/rfis` or subscribe to the [RFI webhook events](/v3/core/webhooks/webhooks#rfi) to know where a request stands.
 </Info>
 
 ## Rounds
@@ -141,7 +139,7 @@ The `items` array on the current round is what is being asked for, in the order 
     ```
   </Step>
   <Step title="Track the outcome">
-    The request sits at `submitted` while our compliance team reviews it. It then moves to `resolved`, or a new round opens if they need more. A request left unanswered past its deadline moves to `expired`.
+    The request sits at `submitted` while our compliance team reviews it. It then moves to `resolved`, or a new round opens if they need more. A request left unanswered past its deadline moves to `expired`. Each change sends the matching `RFI.STATUS.*` webhook.
   </Step>
 </Steps>
 

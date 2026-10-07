@@ -29,6 +29,19 @@ Event types follow one of two shapes: `RESOURCE.EVENT` for one-time events like 
 | `COMPLIANCE.STATUS.REJECTED` | Compliance rejected. |
 | `COMPLIANCE.STATUS.REQUIRES_INFO` | Our compliance team has requested updates to the applicant's data before resubmission. |
 
+## RFI
+
+| Event Type | Description |
+| --- | --- |
+| `RFI.STATUS.ISSUED` | A request was issued to your compliance contact, or a new round opened because our compliance team needs more. |
+| `RFI.STATUS.SUBMITTED` | A response to the current round was submitted and is under review. |
+| `RFI.STATUS.RESOLVED` | Our compliance team closed the request. The outcome arrives on the compliance or transfer status events that follow. |
+| `RFI.STATUS.EXPIRED` | The deadline passed without a response. |
+
+<Info>
+  An RFI can move from `submitted` back to `issued` when a new round opens, so a forward-only status guard should treat `ISSUED` with a higher `currentRound` as newer.
+</Info>
+
 ## Wallet
 
 | Event Type | Description |

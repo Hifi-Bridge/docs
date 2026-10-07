@@ -6,7 +6,7 @@ tag: "New"
 
 ## Overview
 
-An RFI is opened by our compliance team after a review, either against a user's KYC/KYB or against a single transfer. The request is emailed to your compliance contact, not to the end user. It carries a HIFI-hosted link you can answer on directly, so the default path needs no integration work. The endpoints below exist for clients who would rather gather the evidence inside their own product and reply programmatically.
+An RFI is opened by our compliance team after a review, either against a user's KYC/KYB or against a single transfer.
 
 | Kind | Raised against | Effect while open |
 | :-- | :-- | :-- |
@@ -19,7 +19,8 @@ There are three ways to find out, and they answer slightly different questions.
 
 | Signal | Tells you |
 | :-- | :-- |
-| `KYC.RFI.OPEN` and `KYC.RFI.CLOSED` webhooks | An onboarding request was opened or closed for a user |
+| [`KYC.RFI.OPEN` and `KYC.RFI.CLOSED`](/webhooks/kyc-events#kyc-rfi) webhooks | An onboarding request was opened or closed for a user |
+| [`ONRAMP.RFI.OPEN`](/webhooks/onramp-events#rfi-events) / [`OFFRAMP.RFI.OPEN`](/webhooks/offramp-events#rfi-events) and the matching `CLOSED` webhooks | A transaction request was opened or closed for a transfer. Pass the transfer's ID as `transferId` to GET `/v2/rfis` to fetch it |
 | GET `/v2/users/:user_id/kyc/status` | The user's KYC status, plus an `rfi` object describing the open onboarding request |
 | GET `/v2/rfis` | Every request across all your users, including transaction requests |
 
@@ -150,7 +151,7 @@ The `items` array on the current round is what is being asked for, in the order 
     ```
   </Step>
   <Step title="Track the outcome">
-    The request sits at `submitted` while our compliance team reviews it. It then moves to `resolved` and a `KYC.RFI.CLOSED` webhook is sent, or a new round opens if they need more. A request left unanswered past its deadline moves to `expired`.
+    The request sits at `submitted` while our compliance team reviews it. It then moves to `resolved`, or a new round opens if they need more. A request left unanswered past its deadline moves to `expired`. Resolving or expiring sends `KYC.RFI.CLOSED` for an onboarding request, or `ONRAMP.RFI.CLOSED` / `OFFRAMP.RFI.CLOSED` for a transaction request. A new round does not send another `OPEN`.
   </Step>
 </Steps>
 
