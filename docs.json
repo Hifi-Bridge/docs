@@ -175,8 +175,7 @@
                       "v3/core/compliance/associated-party",
                       "v3/core/compliance/questionnaire",
                       "v3/core/compliance/documents",
-                      "v3/core/compliance/compliance-link",
-                      "v3/core/compliance/rfi"
+                      "v3/core/compliance/compliance-link"
                     ]
                   },
                   {
@@ -246,7 +245,8 @@
                 "pages": [
                   "v3/compliance/industries",
                   "v3/compliance/regions",
-                  "v3/compliance/liveness-checks"
+                  "v3/compliance/liveness-checks",
+                  "v3/compliance/rfi"
                 ]
               },
               {
@@ -386,7 +386,12 @@
                       "GET /v3/compliance/documents/{documentId}",
                       "GET /v3/compliance/documents",
                       "POST /v3/users/{userId}/compliance/submit",
-                      "GET /v3/users/{userId}/compliance/status",
+                      "GET /v3/users/{userId}/compliance/status"
+                    ]
+                  },
+                  {
+                    "group": "RFI",
+                    "pages": [
                       "GET /v3/rfis",
                       "POST /v3/rfis/{rfiId}/submissions"
                     ]
@@ -849,14 +854,19 @@
                       "GET /v2/users/{userId}/kyc/documents/{documentId}",
                       "GET /v2/users/{userId}/kyc/ubos",
                       "GET /v2/users/{userId}/kyc/ubos/{uboId}",
-                      "GET /v2/rfis",
                       "POST /v2/kyc-link",
                       "POST /v2/users/{userId}/kyc",
                       "POST /v2/users/{userId}/kyc/submissions",
                       "POST /v2/users/{userId}/kyc/documents",
                       "POST /v2/users/{userId}/kyc/documents/{documentId}",
                       "POST /v2/users/{userId}/kyc/ubos",
-                      "POST /v2/users/{userId}/kyc/ubos/{uboId}",
+                      "POST /v2/users/{userId}/kyc/ubos/{uboId}"
+                    ]
+                  },
+                  {
+                    "group": "RFI",
+                    "pages": [
+                      "GET /v2/rfis",
                       "POST /v2/rfis/{rfiId}/submissions"
                     ]
                   },
@@ -1024,6 +1034,26 @@
     ]
   },
   "redirects": [
+    {
+      "source": "/v3/core/compliance/rfi",
+      "destination": "/v3/compliance/rfi"
+    },
+    {
+      "source": "/v3/api-reference/compliance/list-rfis",
+      "destination": "/v3/api-reference/rfi/list-rfis"
+    },
+    {
+      "source": "/v3/api-reference/compliance/submit-a-response-to-an-rfi",
+      "destination": "/v3/api-reference/rfi/submit-a-response-to-an-rfi"
+    },
+    {
+      "source": "/api-reference/kyc/list-rfis",
+      "destination": "/api-reference/rfi/list-rfis"
+    },
+    {
+      "source": "/api-reference/kyc/submit-an-rfi-response",
+      "destination": "/api-reference/rfi/submit-an-rfi-response"
+    },
     {
       "source": "/testing/magic-values",
       "destination": "/features/magic-values/overview"

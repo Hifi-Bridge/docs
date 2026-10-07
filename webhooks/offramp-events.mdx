@@ -45,8 +45,10 @@ description: "You can expect to receive webhook events whenever an offramp trans
 
 | Status                 | Description                                                                                                           |
 | :--------------------- | :-------------------------------------------------------------------------------------------------------------------- |
-| **OFFRAMP.RFI.OPEN**   | An RFI case has been opened for this transaction. An email with next steps has been sent by the HIFI Compliance team. |
+| **OFFRAMP.RFI.OPEN**   | An RFI case has been opened for this transaction.                                                                     |
 | **OFFRAMP.RFI.CLOSED** | The RFI case for this transaction has been resolved by the HIFI Compliance team.                                      |
+
+To fetch the request itself, call GET `/v2/rfis` with the transfer's ID as `transferId`. See [Requests for Information](/features/rfi).
 
 ## Legacy Types:
 

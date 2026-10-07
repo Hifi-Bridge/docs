@@ -11,6 +11,8 @@ description: "You can expect to receive KYC webhook events whenever you update a
 - **KYC.STATUS.UPDATE**: Update of the user's KYC status for any rail.
 - **KYC_LINK.CREATE**: Creation of a KYC Link.
 - **KYC_LINK.UPDATE**: Submission of a KYC Link.
+- **KYC.RFI.OPEN**: An onboarding request for information (RFI) was issued.
+- **KYC.RFI.CLOSED**: The user's onboarding RFI was resolved or expired.
 
 ## KYC.DATA
 
@@ -134,6 +136,66 @@ The data object is expected to have the same structure as the response from the 
   },
   "createdAt": "2025-03-07T14:55:45.780Z",
   "timestamp": "2025-03-07T14:56:00.355Z",
+  "version": "v2"
+}
+```
+
+## KYC.RFI
+
+Sent when an onboarding [request for information](/features/rfi) opens or closes. The data object has the same structure as [KYC.STATUS](#kyc-status) for the `USD` rail, including its `rfi` object. On `KYC.RFI.OPEN`, `rfi` describes the open request. On `KYC.RFI.CLOSED`, it is `null`.
+
+Transaction RFIs are sent as `ONRAMP.RFI.*` and `OFFRAMP.RFI.*` instead. See [Onramp Events](/webhooks/onramp-events#rfi-events) and [Offramp Events](/webhooks/offramp-events#rfi-events).
+
+```json
+{
+  "eventId": "evt_19a3c7f2b1e94d0c55",
+  "eventCategory": "KYC",
+  "eventType": "KYC.RFI.OPEN",
+  "eventAction": "OPEN",
+  "data": {
+    "userId": "2d5b7e18-9c40-4a63-b8f1-7e0a4c9d2536",
+    "USD": {
+      "status": "RFI_PENDING",
+      "message": "",
+      "reviewResult": {},
+      "details": {
+        "personalInfo": {
+          "reviewResult": {}
+        }
+      },
+      "rfi": {
+        "id": "7c9e1a34-5b02-4d68-91af-3e6d2b8c4075",
+        "kind": "onboarding",
+        "status": "issued",
+        "subjectType": "individual",
+        "userId": "2d5b7e18-9c40-4a63-b8f1-7e0a4c9d2536",
+        "transferId": null,
+        "flowType": null,
+        "createdAt": "2026-07-01T10:30:00.000Z",
+        "currentRound": 1,
+        "round": {
+          "id": "b81d4f2c-6e35-4a90-9f27-0c3e5a71d8b6",
+          "round": 1,
+          "issuedAt": "2026-07-01T10:30:00.000Z",
+          "expiresAt": "2026-07-31T10:30:00.000Z",
+          "submittedAt": null,
+          "items": [
+            {
+              "id": "3f7c1e90-2a4b-4d61-9c0e-5b8f2d6a1e34",
+              "kind": "document",
+              "label": "Proof of address issued in the last 3 months",
+              "docType": "proof_of_address",
+              "detail": "A utility bill or bank statement dated within the last three months.",
+              "required": true
+            }
+          ],
+          "link": "https://dashboard.hifi.com/production/rfi-link/rfir_2mNpXwZ7bV1aLcs3Kf9dQ#sessionToken=..."
+        }
+      }
+    }
+  },
+  "createdAt": "2026-07-01T10:30:01.120Z",
+  "timestamp": "2026-07-01T10:30:15.402Z",
   "version": "v2"
 }
 ```
