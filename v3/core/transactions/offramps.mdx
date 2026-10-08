@@ -166,7 +166,7 @@ curl -X POST https://sandbox.hifi.com/v3/offramps/offramp_QW1e2r3t4y/quote/accep
 | `AWAITING_FUNDS` | Quote accepted (External Wallet source); awaiting the crypto deposit. | No |
 | `CRYPTO_INITIATED` / `CRYPTO_PENDING` / `CRYPTO_PROCESSED` | Crypto leg initiating, confirming, and settled. | No |
 | `FIAT_INITIATED` / `FIAT_PENDING` | Fiat payout initiating and processing. | No |
-| `COMPLETED` | Fiat delivered to the destination. | Yes\* |
+| `COMPLETED` | Fiat sent out from the sending bank. | Yes\* |
 | `CRYPTO_FAILED` | Crypto leg failed. | No |
 | `CRYPTO_RETURNED` | Crypto was returned. | Yes |
 | `FIAT_FAILED` / `FIAT_RETURNED` | Fiat payout failed or was returned. | No |
