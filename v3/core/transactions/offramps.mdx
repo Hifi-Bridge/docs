@@ -179,6 +179,10 @@ curl -X POST https://sandbox.hifi.com/v3/offramps/offramp_QW1e2r3t4y/quote/accep
   A transaction in `COMPLETED` status can transition to `FIAT_FAILED` or `FIAT_RETURNED` if a payment is returned by the recipient.
 </Note>
 
+<Note>
+  `COMPLETED` transaction does not necessarily mean the funds being credited to the destination account.
+</Note>
+
 ## Cancel an offramp
 
 Only allowed while status is `IN_REVIEW`. Any other status returns `RESOURCE_NOT_ELIGIBLE` (422).
