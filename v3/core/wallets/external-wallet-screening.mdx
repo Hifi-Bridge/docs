@@ -5,60 +5,80 @@ description: "Wallet screening"
 
 Every external wallet must now pass compliance screening before it can receive funds. New wallets are screened from launch, and existing wallets must be re-submitted before **Monday, November 9, 2026**, or they will stop working.
 
-## Key Dates
+<Warning>
+  Re-submit every existing external wallet you still use before **Monday, November 9, 2026**. Any wallet that hasn't cleared screening by then is deactivated.
+</Warning>
 
-| **When** | **What Happens** |
+## Key dates
+
+| When | What happens |
 | :-- | :-- |
 | From launch | New wallets are screened and stay inactive until `CLEARED`. Flagged wallets are blocked immediately. Existing wallets keep working. |
 | Until Monday, November 9, 2026 | Re-submit every existing wallet you still use. |
 | From Monday, November 9, 2026 | Any wallet that hasn't cleared is deactivated. |
 
-## What This Means for You
+## What this means for you
 
-### New Wallets
+### New wallets
 
 - A wallet created with `POST /v3/external-wallets` starts inactive (`active: false`, `screeningStatus: UNDER_REVIEW`).
 - It turns on only when it is `CLEARED`. Wait for `CLEARED` before using it as a transfer destination or as `destination.externalWalletId` on a virtual account.
 - Any transfer to a wallet that isn't active is rejected.
 
-### Existing Wallets
+### Existing wallets
 
 - They keep working as usual until Monday, November 9, 2026.
 - Re-submit each one you still use before then (see below). It stays active while under review.
 - From Monday, November 9, 2026, any wallet that isn't `CLEARED` is deactivated. To use it again, register it with a new `referenceId` and wait for it to clear.
 
-### Flagged Wallets
+### Flagged wallets
 
 - A `FLAGGED` wallet is deactivated immediately, at any time, including existing wallets before November 9.
 - It is blocked from all transactions and can't be linked to a virtual account.
 
-## Re-submit an Existing Wallet
+## Re-submit an existing wallet
 
 Send the original registration request again, unchanged. The wallet keeps its `id` and keeps working while it is screened.
 
-1. Call `POST /v3/external-wallets`.
-2. Send the **same** `counterPartyId`, `referenceId`, `address`, `chain` and `nickname` as the original registration. If you didn't send a `nickname` originally, leave it out.
-3. The response returns the **same wallet** `id` with `screeningStatus: UNDER_REVIEW` and `active: true`.
-4. Wait for the `EXTERNAL_WALLET.UPDATED` webhook. `CLEARED` means you're done; `FLAGGED` means the wallet is now deactivated.
+<Steps>
+  <Step title="Call the create endpoint again">
+    Call `POST /v3/external-wallets`.
+  </Step>
+  <Step title="Send the original values">
+    Send the **same** `counterPartyId`, `referenceId`, `address`, `chain` and `nickname` as the original registration. If you didn't send a `nickname` originally, leave it out.
+  </Step>
+  <Step title="Confirm the wallet is under review">
+    The response returns the **same wallet** `id` with `screeningStatus: UNDER_REVIEW` and `active: true`.
+  </Step>
+  <Step title="Wait for the webhook">
+    Wait for the `EXTERNAL_WALLET.UPDATED` webhook. `CLEARED` means you're done; `FLAGGED` means the wallet is now deactivated.
+  </Step>
+</Steps>
 
-```json
-POST /v3/external-wallets
-{
-  "counterPartyId": "<original counterPartyId>",
-  "referenceId": "<original referenceId>",
-  "address": "<original address>",
-  "chain": "<original chain>",
-  "nickname": "<original nickname, if any>"
-}
+**Request**
+
+```shell
+curl -X POST https://sandbox.hifi.com/v3/external-wallets \
+  -H "Idempotency-Key: <unique-key>" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -d '{
+    "counterPartyId": "<original counterPartyId>",
+    "referenceId": "<original referenceId>",
+    "address": "<original address>",
+    "chain": "<original chain>",
+    "nickname": "<original nickname, if any>"
+  }'
 ```
 
-Changing the address, chain or nickname returns a `409` conflict on `referenceId`. Deleted wallets can't be re-submitted; register them again with a new `referenceId`.
+<Info>
+  Changing the address, chain or nickname returns a `409` conflict on `referenceId`. Deleted wallets can't be re-submitted; register them again with a new `referenceId`.
+</Info>
 
-## Screening Status and Webhooks
+## Screening status and webhooks
 
 The external wallet object now includes `screeningStatus` next to `active`. Use `active` to decide whether a wallet can be used.
 
-| `screeningStatus` | **Meaning** | `active` |
+| `screeningStatus` | Meaning | `active` |
 | :-- | :-- | :-- |
 | `UNDER_REVIEW` | Screening in progress, or held for manual review by our compliance team | `false` for new wallets; `true` for re-submitted existing wallets until November 9 |
 | `CLEARED` | Passed screening | `true` |
@@ -66,9 +86,13 @@ The external wallet object now includes `screeningStatus` next to `active`. Use 
 | `NOT_SCREENED` | The chain isn't supported for screening yet | `true` |
 | `null` | Registered before this change and not yet re-submitted | `true` until Monday, November 9, 2026 |
 
-When a wallet's status changes, we send an `EXTERNAL_WALLET.UPDATED` webhook with the updated external wallet object. No webhook is sent when wallets are deactivated on November 9; check `active` on your wallets after that date.
+When a wallet's status changes, we send an `EXTERNAL_WALLET.UPDATED` webhook with the updated external wallet object.
 
-## Virtual Accounts
+<Note>
+  No webhook is sent when wallets are deactivated on November 9. Check `active` on your wallets after that date.
+</Note>
+
+## Virtual accounts
 
 A virtual account with `destination.externalWalletId` follows that wallet's status. If the wallet is blocked, deposits are not delivered.
 
@@ -76,18 +100,18 @@ A virtual account with `destination.externalWalletId` follows that wallet's stat
 - If the linked wallet is later flagged, deactivated on November 9, or deleted, new deposits **fail** instead of being delivered.
 - A failed deposit's onramp ends as `FIAT_FAILED` with error `EXTERNAL_WALLET_INACTIVE` ("External wallet is not active"), and you'll get the usual onramp status webhook. No crypto is sent.
 - To keep receiving deposits, update the virtual account to point to a wallet that has cleared.
-- Virtual accounts with `destination.walletId` (a HIFI wallet) are not affected.
+- Virtual accounts with `destination.walletId` (a [HIFI Wallet](/v3/core/wallets/hifi-wallet)) are not affected.
 
-## Testing and Common Errors
+## Testing and common errors
 
 You can test the full flow in sandbox now. The wallet `nickname` picks the result:
 
-| `nickname` | **Result** |
+| `nickname` | Result |
 | :-- | :-- |
 | `FLAGGED` | `FLAGGED`, wallet stays inactive |
 | Anything else, or none | `CLEARED`, wallet turns on |
 
-| **Response** | **What It Means** | **What to Do** |
+| Response | What it means | What to do |
 | :-- | :-- | :-- |
 | `503` "Unable to register the external wallet right now. Please try again later." | Screening couldn't be started; no wallet was created | Retry the same request |
 | `409` conflict on `referenceId` | That `referenceId` is already used with a different address, chain or nickname | Use a new `referenceId`, or re-send the original values |
@@ -100,5 +124,6 @@ You can test the full flow in sandbox now. The wallet `nickname` picks the resul
 
 ## Related Resources
 
-- [External Wallet](https://docs.hifi.com/v3/core/wallets/external-wallet) - Register and manage external wallets
-- [Wallets Overview](https://docs.hifi.com/v3/core/wallets/overview) - Wallets resources
+- [External Wallet](/v3/core/wallets/external-wallet) - Register and manage external wallets
+- [Wallets Overview](/v3/core/wallets/overview) - Wallets resources
+- [Webhooks](/v3/core/webhooks/webhooks) - Receive wallet status updates
