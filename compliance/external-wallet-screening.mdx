@@ -1,15 +1,17 @@
 ---
 title: "External Wallet Screening"
-description: "Learn how HIFI screens external wallets, how to re-submit existing wallets, and why raw wallet addresses stop working."
+description: "Learn how HIFI screens external wallets, how to re-submit existing wallets before November 9, 2026, and why raw wallet addresses stop working."
 ---
 
 Every external wallet must now pass compliance screening before it can receive funds. New wallets are screened from launch, and existing wallets must be re-submitted before **Monday, November 9, 2026**, or they will stop working.
 
-From Monday, November 9, 2026, transfers sent to a raw `walletAddress` are also rejected.
+<Warning>
+  From Monday, November 9, 2026, any wallet that hasn't cleared screening is deactivated, and transfers sent to a raw `walletAddress` are rejected.
+</Warning>
 
 ## Key Dates
 
-| **When** | **What Happens** |
+| When | What Happens |
 | :-- | :-- |
 | From launch | New wallets are screened and stay inactive until `CLEARED`. Flagged wallets are blocked immediately. Existing wallets keep working. |
 | Until Monday, November 9, 2026 | Re-submit every existing wallet you still use. |
@@ -39,32 +41,48 @@ From Monday, November 9, 2026, transfers sent to a raw `walletAddress` are also 
 - From Monday, November 9, 2026, every destination must be a registered external wallet.
 - Crypto transfers and bridging that send to `destination.walletAddress` will be rejected. Register the address as an external wallet, wait for it to clear, and send to `destination.externalWalletId` instead.
 
-## Re-submit an Existing Wallet
+## Re-submitting an Existing Wallet
 
 Send the original registration request again, unchanged. The wallet keeps its `id` and keeps working while it is screened.
 
-1. Call `POST /v2/users/{userId}/wallets/external` for the same user.
-2. Send the **same** `referenceId`, `address`, `chain` and `name` as the original registration.
-3. The response returns the **same wallet** `id` with `screeningStatus: UNDER_REVIEW` and `active: true`.
-4. Wait for the `WALLET.EXTERNAL_WALLET.UPDATE` webhook. `CLEARED` means you're done; `FLAGGED` means the wallet is now deactivated.
+<Steps>
+  <Step title="Call the external wallet endpoint">
+    Call `POST /v2/users/{userId}/wallets/external` for the same user.
+  </Step>
+  <Step title="Send the original values">
+    Send the **same** `referenceId`, `address`, `chain` and `name` as the original registration.
+  </Step>
+  <Step title="Confirm the wallet is under review">
+    The response returns the **same wallet** `id` with `screeningStatus: UNDER_REVIEW` and `active: true`.
+  </Step>
+  <Step title="Wait for the webhook">
+    Wait for the `WALLET.EXTERNAL_WALLET.UPDATE` webhook. `CLEARED` means you're done; `FLAGGED` means the wallet is now deactivated.
+  </Step>
+</Steps>
 
-```json
-POST /v2/users/{userId}/wallets/external
-{
-  "referenceId": "<original referenceId>",
-  "address": "<original address>",
-  "chain": "<original chain>",
-  "name": "<original name>"
-}
+**Request:**
+
+```bash
+curl -X POST "https://sandbox.hifibridge.com/v2/users/usr_abc123/wallets/external" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "referenceId": "<original referenceId>",
+    "address": "<original address>",
+    "chain": "<original chain>",
+    "name": "<original name>"
+  }'
 ```
 
-Changing the address, chain or name returns a `400` `EXTERNAL_WALLET_ALREADY_EXISTS` error. Deleted wallets can't be re-submitted; register them again with a new `referenceId`.
+<Info>
+  Changing the address, chain or name returns a `400` `EXTERNAL_WALLET_ALREADY_EXISTS` error. Deleted wallets can't be re-submitted; register them again with a new `referenceId`.
+</Info>
 
 ## Screening Status and Webhooks
 
 The external wallet response now includes `screeningStatus` next to `active`. Use `active` to decide whether a wallet can be used.
 
-| `screeningStatus` | **Meaning** | `active` |
+| `screeningStatus` | Meaning | `active` |
 | :-- | :-- | :-- |
 | `UNDER_REVIEW` | Screening in progress, or held for manual review by our compliance team | `false` for new wallets; `true` for re-submitted existing wallets until November 9 |
 | `CLEARED` | Passed screening | `true` |
@@ -72,7 +90,11 @@ The external wallet response now includes `screeningStatus` next to `active`. Us
 | `NOT_SCREENED` | The chain isn't supported for screening yet | `true` |
 | `null` | Registered before this change and not yet re-submitted | `true` until Monday, November 9, 2026 |
 
-When a wallet's status changes, we send a `WALLET.EXTERNAL_WALLET.UPDATE` webhook with the updated wallet (`id`, `userId`, `chain`, `name`, `address`, `referenceId`, `active`, `screeningStatus`, `createdAt`, `updatedAt`). No webhook is sent when wallets are deactivated on November 9; check `active` on your wallets after that date.
+When a wallet's status changes, we send a `WALLET.EXTERNAL_WALLET.UPDATE` webhook with the updated wallet (`id`, `userId`, `chain`, `name`, `address`, `referenceId`, `active`, `screeningStatus`, `createdAt`, `updatedAt`).
+
+<Note>
+  No webhook is sent when wallets are deactivated on November 9. Check `active` on your wallets after that date.
+</Note>
 
 ## Virtual Accounts
 
@@ -88,12 +110,12 @@ A virtual account created with an `externalWalletId` follows that wallet's statu
 
 You can test the full flow in sandbox now. The wallet `name` picks the result:
 
-| `name` | **Result** |
+| `name` | Result |
 | :-- | :-- |
 | `FLAGGED` | `FLAGGED`, wallet stays inactive |
 | Anything else | `CLEARED`, wallet turns on |
 
-| **Response** | **What It Means** | **What to Do** |
+| Response | What It Means | What to Do |
 | :-- | :-- | :-- |
 | `503` `SERVICE_UNAVAILABLE` "Unable to register the external wallet right now. Please try again later." | Screening couldn't be started; no wallet was created | Retry the same request |
 | `400` `EXTERNAL_WALLET_ALREADY_EXISTS` | That `referenceId` is already used with a different address, chain or name | Use a new `referenceId`, or re-send the original values |
@@ -103,3 +125,10 @@ You can test the full flow in sandbox now. The wallet `name` picks the result:
 
 - 📧 **Email:** [support@hifi.com](mailto:support@hifi.com)
 - 💬 **Slack:** Message us in our shared Slack channel
+
+## Related Resources
+
+- [Wallets](/wallets) - Wallet provisioning, balances, and transfers
+- [Wallet Events](/webhooks/wallet-events) - Wallet webhook notifications
+- [Virtual Accounts](/accounts/virtual-accounts) - Set up fiat onramps to wallets
+- [Transfers](/transactions/transfers) - Send stablecoins between wallets
