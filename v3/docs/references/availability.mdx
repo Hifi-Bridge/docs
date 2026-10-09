@@ -17,24 +17,27 @@ Availability depends on the payment rail. Some rails operate on business days on
 | ACH - Standard | USD | 4:00 PM ET (Mon–Fri)<br />Requests after Same Day cut-offs settle the next business day | T\+1 | 1 USD | 1M USD | Your Business Name with user's name<br />Example: ACME - John Doe |
 | RTP | USD | 24/7 | Real-time | 1 USD | 10M USD | Your Business Name with user's name<br />Example: ACME - John Doe |
 | SWIFT (Cross River Bank) | USD | 11:30 AM ET (Mon–Fri)<br />Requests after cut-off begin processing early the next business day | T\+1 - T\+5 | 5 USD | 3M USD | User |
-| SWIFT (Standard Chartered Bank) | USD, CNY, HKD, EUR | 4:00 PM ET (Mon–Fri)<br />Saturday treated as a non-working day from 11:59 AM ET Friday | T\+1 - T\+5 | 31 USD | 10M USD | User |
-| SEPA | EUR | 8:00 AM ET (Mon–Fri) | T\+1 | 100k USD | 5M USD | User |
-| SEPA Instant | EUR | 24/7 | Real-time | 11 USD | 100k USD | User |
-| PIX | BRL | 24/7 | Real-time | 10 USD | 1M USD | Payout Partner |
+| SWIFT (Standard Chartered Bank) | USD | 4:00 PM ET (Mon–Fri)<br />Saturday treated as a non-working day from 11:59 AM ET Friday | T\+1 - T\+5 | 31 USD | 10M USD | User |
+| SWIFT (Standard Chartered Bank) | CNY | 4:00 PM ET (Mon–Fri)<br />Saturday treated as a non-working day from 11:59 AM ET Friday | T\+1 - T\+5 | 62 USD<br />410.18 CNY | 5M USD<br />35,593,243.25 CNY | User |
+| SWIFT (Standard Chartered Bank) | HKD | 4:00 PM ET (Mon–Fri)<br />Saturday treated as a non-working day from 11:59 AM ET Friday | T\+1 - T\+5 | 56 USD<br />430.23 HKD | 5M USD<br />38,950,000 HKD | User |
+| SWIFT (Standard Chartered Bank) | EUR | 4:00 PM ET (Mon–Fri)<br />Saturday treated as a non-working day from 11:59 AM ET Friday | T\+1 - T\+5 | 31 USD<br />30 EUR | 5M USD<br />4,258,671 EUR | User |
+| SEPA | EUR | 8:00 AM ET (Mon–Fri) | T\+1 | 11 USD<br />1.05 EUR | 5M USD<br />4,244,284.01 EUR | User |
+| SEPA Instant | EUR | 24/7 | Real-time | 11 USD<br />1.05 EUR | 5M USD<br />4,244,284.01 EUR | User |
+| PIX <Badge color="yellow" iconType="light">maintenance</Badge> | BRL | 24/7 | Real-time | 10 USD | 1M USD | Payout Partner |
 | CHATs (Hong Kong) | USD | 3:00 AM ET (Mon–Fri) | Real-time | 100 USD | 600K USD | User |
-| CHATS | HKD | 3:00 AM ET (Mon–Fri) | Real-time | 11 USD | 99,970 USD | User |
-| SPEI | MXN | 24/7 | Real-time | 11 USD | 1M USD | Payout Partner |
-| Bank Transfer (Local) | NGN | 24/7 | Real-time | 3 USD | 20,760 USD | Payout Partner |
-| Bank Transfer (IPP/FTS) | AED | 11:45 AM ET (Mon–Fri) | T\+0 | 7 USD | 5M USD | HIFI |
-| Bank Transfer (ACH) | COP | 1:00 PM ET (Mon–Fri) | T\+0 | 10 USD | 400K USD | Payout Partner |
-| Bank Transfer (ZENGIN) | JPY | 2:00 AM ET (Mon–Fri) | T\+0 | 2 USD | 309,190 USD | User |
-| Bank Transfer (ACSS) | CAD | 6:00 PM ET (Mon–Fri) | T\+1 | 2 USD | 5M USD | User |
-| Bank Transfer (BECS) | AUD | 5:00 AM ET (Mon–Fri) | Real-time | 2 USD | 5M USD | User |
+| CHATS | HKD | 3:00 AM ET (Mon–Fri) | Real-time | 11 USD<br />101.65 HKD | 99,970 USD<br />782,500 HKD | User |
+| SPEI | MXN | 24/7 | Real-time | 11 USD<br />21.69 MXN | 5M USD<br />87,388,600 MXN | Payout Partner |
+| Bank Transfer (Local) | NGN | 24/7 | Real-time | 3 USD<br />2,500 NGN | 20,760.67 USD<br />30,000,000 NGN | Payout Partner |
+| Bank Transfer (IPP/FTS) | AED | 11:45 AM ET (Mon–Fri) | T\+0 | 7 USD<br />3.67 AED | 5M USD<br />18,362,500 AED | HIFI |
+| Bank Transfer (ACH) <Badge color="yellow" iconType="light">maintenance</Badge> | COP | 1:00 PM ET (Mon–Fri) | T\+0 | 10 USD | 400K USD | Payout Partner |
+| Bank Transfer (ZENGIN) | JPY | 2:00 AM ET (Mon–Fri) | T\+0 | 2 USD<br />162 JPY | 309,190 USD<br />50,000,000 JPY | User |
+| Bank Transfer (ACSS) | CAD | 6:00 PM ET (Mon–Fri) | T\+1 | 2 USD<br />1.41 CAD | 69,873,309 USD<br />99,000,000 CAD | User |
+| Bank Transfer (BECS) | AUD | 5:00 AM ET (Mon–Fri) | Real-time | 2 USD<br />1.44 AUD | 5M USD<br />7,199,000 AUD | User |
 | Bank Transfer (NAPAS) | VND | 5:00 AM ET (Mon–Fri) | T\+1 | 7 USD | 5M USD | Payout Partner |
-| Bank Transfer (Local) | GBP | 12:00 PM ET (Mon–Fri) | Real-time | 3 USD | 5M USD | HIFI |
+| Bank Transfer (Local) | GBP | 12:00 PM ET (Mon–Fri) | Real-time | 3 USD<br />1 GBP | 5M USD<br />3,733,325 GBP | HIFI |
 | NEQUI <Badge color="yellow" iconType="light">maintenance</Badge> | COP |  |  | 10 USD | 100K USD |  |
-| Bank Transfer (FAST) | SGD | 24/7 | Real-time | 11 USD | 157,716 USD | User |
-| Instapay | PHP | 24/7 | Real-time | 2 USD | 811 USD | User |
-| PESONet | PHP | 1:30 AM ET (Mon–Fri) | T\+0 | 2 USD | 300K USD | User |
+| Bank Transfer (FAST) | SGD | 24/7 | Real-time | 11 USD<br />1.27 SGD | 5M USD<br />3,850,000 SGD | User |
+| Instapay | PHP | 24/7 | Real-time | 2 USD<br />60 PHP | 811.12 USD<br />50,000 PHP | User |
+| PESONet | PHP | 1:30 AM ET (Mon–Fri) | T\+0 | 2 USD<br />60 PHP | 300,000 USD<br />18,495,600 PHP | User |
 | IMPS | INR | 24/7 | Real-time | 10 USD | 5,257 USD | User |
 | NEFT, RTGS | INR | 24/7 | Real-time (Batched) | 10 USD | 21,031 USD | User |
