@@ -715,7 +715,8 @@
                   "features/developer-fees",
                   "features/settlement-rules",
                   "features/orchestration-addresses",
-                  "features/token-sharing"
+                  "features/token-sharing",
+                  "external-wallet-screening-2"
                 ]
               },
               {
