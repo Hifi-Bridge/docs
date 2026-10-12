@@ -79,7 +79,7 @@ The external wallet object now includes `screeningStatus` next to `active`. Use 
 
 | `screeningStatus` | Meaning | `active` |
 | :-- | :-- | :-- |
-| `UNDER_REVIEW` | Screening in progress, or held for manual review by our compliance team | `false` for new wallets; `true` for re-submitted existing wallets until November 9 |
+| `UNDER_REVIEW` | Screening in progress, or held for manual review by our compliance team | `false` for new wallets; `true` for re-submitted existing wallets until November 11 |
 | `CLEARED` | Passed screening | `true` |
 | `FLAGGED` | Failed screening; blocked from all transactions | `false` |
 | `NOT_SCREENED` | The chain isn't supported for screening yet | `true` |
@@ -88,7 +88,7 @@ The external wallet object now includes `screeningStatus` next to `active`. Use 
 When a wallet's status changes, we send an `EXTERNAL_WALLET.UPDATED` webhook with the updated external wallet object.
 
 <Note>
-  No webhook is sent when wallets are deactivated on November 9. Check `active` on your wallets after that date.
+  No webhook is sent when wallets are deactivated on November 11. Check `active` on your wallets after that date.
 </Note>
 
 ## Virtual accounts
@@ -96,7 +96,7 @@ When a wallet's status changes, we send an `EXTERNAL_WALLET.UPDATED` webhook wit
 A virtual account with `destination.externalWalletId` follows that wallet's status. If the wallet is blocked, deposits are not delivered.
 
 - You can only set `destination.externalWalletId` to an **active** wallet. For a new wallet, wait for `CLEARED`.
-- If the linked wallet is later flagged, deactivated on November 9, or deleted, new deposits **fail** instead of being delivered.
+- If the linked wallet is later flagged, deactivated on November 11, or deleted, new deposits **fail** instead of being delivered.
 - A failed deposit's onramp ends as `FIAT_FAILED` with error `EXTERNAL_WALLET_INACTIVE` ("External wallet is not active"), and you'll get the usual onramp status webhook. No crypto is sent.
 - To keep receiving deposits, update the virtual account to point to a wallet that has cleared.
 - Virtual accounts with `destination.walletId` (a [HIFI Wallet](/v3/core/wallets/hifi-wallet)) are not affected.
