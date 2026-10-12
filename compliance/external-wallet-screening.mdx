@@ -2,10 +2,10 @@
 title: "External Wallet Screening"
 ---
 
-Every external wallet must now pass compliance screening before it can receive funds. New wallets are screened from launch, and existing wallets must be re-submitted before **Monday, November 9, 2026**, or they will stop working.
+Every external wallet must now pass compliance screening before it can receive funds. New wallets are screened from launch, and existing wallets must be re-submitted before **Wednesday, November 11, 2026**, or they will stop working.
 
 <Warning>
-  From Monday, November 9, 2026, any wallet that hasn't cleared screening is deactivated, and transfers sent to a raw `walletAddress` are rejected.
+  From Wednesday, November 11, 2026, any wallet that hasn't cleared screening is deactivated, and transfers sent to a raw `walletAddress` are rejected.
 </Warning>
 
 ## Key Dates
@@ -13,8 +13,8 @@ Every external wallet must now pass compliance screening before it can receive f
 | When | What Happens |
 | :-- | :-- |
 | From launch | New wallets are screened and stay inactive until `CLEARED`. Flagged wallets are blocked immediately. Existing wallets keep working. |
-| Until Monday, November 9, 2026 | Re-submit every existing wallet you still use. |
-| From Monday, November 9, 2026 | Any wallet that hasn't cleared is deactivated. Raw `walletAddress` destinations are rejected. |
+| Until Wednesday, November 11, 2026 | Re-submit every existing wallet you still use. |
+| From Wednesday, November 11, 2026 | Any wallet that hasn't cleared is deactivated. Raw `walletAddress` destinations are rejected. |
 
 ## What This Means for You
 
@@ -26,18 +26,18 @@ Every external wallet must now pass compliance screening before it can receive f
 
 ### Existing Wallets
 
-- They keep working as usual until Monday, November 9, 2026.
+- They keep working as usual until Wednesday, November 11, 2026.
 - Re-submit each one you still use before then (see below). It stays active while under review.
-- From Monday, November 9, 2026, any wallet that isn't `CLEARED` is deactivated. To use it again, register it with a new `referenceId` and wait for it to clear.
+- From Wednesday, November 11, 2026, any wallet that isn't `CLEARED` is deactivated. To use it again, register it with a new `referenceId` and wait for it to clear.
 
 ### Flagged Wallets
 
-- A `FLAGGED` wallet is deactivated immediately, at any time, including existing wallets before November 9.
+- A `FLAGGED` wallet is deactivated immediately, at any time, including existing wallets before November 11.
 - It is blocked from all transactions and can't be linked to a virtual account.
 
 ### Raw Addresses
 
-- From Monday, November 9, 2026, every destination must be a registered external wallet.
+- From Wednesday, November 11, 2026, every destination must be a registered external wallet.
 - Crypto transfers and bridging that send to `destination.walletAddress` will be rejected. Register the address as an external wallet, wait for it to clear, and send to `destination.externalWalletId` instead.
 
 ## Re-submitting an Existing Wallet
