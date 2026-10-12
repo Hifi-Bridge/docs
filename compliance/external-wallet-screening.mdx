@@ -83,16 +83,16 @@ The external wallet response now includes `screeningStatus` next to `active`. Us
 
 | `screeningStatus` | Meaning | `active` |
 | :-- | :-- | :-- |
-| `UNDER_REVIEW` | Screening in progress, or held for manual review by our compliance team | `false` for new wallets; `true` for re-submitted existing wallets until November 9 |
+| `UNDER_REVIEW` | Screening in progress, or held for manual review by our compliance team | `false` for new wallets; `true` for re-submitted existing wallets until November 11 |
 | `CLEARED` | Passed screening | `true` |
 | `FLAGGED` | Failed screening; blocked from all transactions | `false` |
 | `NOT_SCREENED` | The chain isn't supported for screening yet | `true` |
-| `null` | Registered before this change and not yet re-submitted | `true` until Monday, November 9, 2026 |
+| `null` | Registered before this change and not yet re-submitted | `true` until Wednesday, November 11, 2026 |
 
 When a wallet's status changes, we send a `WALLET.EXTERNAL_WALLET.UPDATE` webhook with the updated wallet (`id`, `userId`, `chain`, `name`, `address`, `referenceId`, `active`, `screeningStatus`, `createdAt`, `updatedAt`).
 
 <Note>
-  No webhook is sent when wallets are deactivated on November 9. Check `active` on your wallets after that date.
+  No webhook is sent when wallets are deactivated on November 11. Check `active` on your wallets after that date.
 </Note>
 
 ## Virtual Accounts
@@ -100,7 +100,7 @@ When a wallet's status changes, we send a `WALLET.EXTERNAL_WALLET.UPDATE` webhoo
 A virtual account created with an `externalWalletId` follows that wallet's status. If the wallet is blocked, deposits are not delivered.
 
 - You can only set `externalWalletId` to an **active** wallet. For a new wallet, wait for `CLEARED`.
-- If the linked wallet is later flagged, deactivated on November 9, or deleted, new deposits **fail** instead of being delivered.
+- If the linked wallet is later flagged, deactivated on November 11, or deleted, new deposits **fail** instead of being delivered.
 - A failed deposit's onramp ends as `FIAT_FAILED` with error `EXTERNAL_WALLET_INACTIVE` ("External wallet is not active"), and you'll get the usual onramp status webhook. No crypto is sent.
 - To keep receiving deposits, update the virtual account to point to a wallet that has cleared.
 - Virtual accounts that deliver to the user's HIFI wallet (`destinationChain` with no `externalWalletId`) are not affected.
