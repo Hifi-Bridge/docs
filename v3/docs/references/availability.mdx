@@ -17,7 +17,7 @@ Availability depends on the payment rail. Some rails operate on business days on
 | ACH - Standard | USD | 4:00 PM ET (Mon–Fri)<br />Requests after Same Day cut-offs settle the next business day | T\+1 | 1 USD | 1M USD | Your Business Name with user's name<br />Example: ACME - John Doe |
 | RTP | USD | 24/7 | Real-time | 1 USD | 10M USD | Your Business Name with user's name<br />Example: ACME - John Doe |
 | SWIFT (Cross River Bank) | USD | 11:30 AM ET (Mon–Fri)<br />Requests after cut-off begin processing early the next business day | T\+1 - T\+5 | 5 USD | 3M USD | User |
-| SWIFT (Standard Chartered Bank) | USD | 4:00 PM ET (Mon–Fri)<br />Saturday treated as a non-working day from 11:59 AM ET Friday | T\+1 - T\+5 | 31 USD | 10M USD | User |
+| SWIFT (Standard Chartered Bank) | USD | **For C2B & C2C:** <ul><li>Cut-off window: 8:30 PM ET (previous day) to 6:30 AM ET (Mon–Fri).</li></ul> **For all other use cases:** <ul><li>Cut-off window: 8:30 PM ET to 4:30 PM ET the following working day.</li><li>Friday cut-off: 11:59 AM ET, since the following day is a Saturday in SGT.</li></ul> | T+1 - T+5 | 31 USD | 10M USD | User |
 | SWIFT (Standard Chartered Bank) | CNY | 4:00 PM ET (Mon–Fri)<br />Saturday treated as a non-working day from 11:59 AM ET Friday | T\+1 - T\+5 | 62 USD<br />410.18 CNY | 5M USD<br />35,593,243.25 CNY | User |
 | SWIFT (Standard Chartered Bank) | HKD | 4:00 PM ET (Mon–Fri)<br />Saturday treated as a non-working day from 11:59 AM ET Friday | T\+1 - T\+5 | 56 USD<br />430.23 HKD | 5M USD<br />38,950,000 HKD | User |
 | SWIFT (Standard Chartered Bank) | EUR | 4:00 PM ET (Mon–Fri)<br />Saturday treated as a non-working day from 11:59 AM ET Friday | T\+1 - T\+5 | 31 USD<br />30 EUR | 5M USD<br />4,258,671 EUR | User |
