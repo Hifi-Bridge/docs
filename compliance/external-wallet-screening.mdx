@@ -12,7 +12,7 @@ Every external wallet must now pass compliance screening before it can receive f
 
 | When | What Happens |
 | :-- | :-- |
-| From launch | New wallets are screened and stay inactive until `CLEARED`. Flagged wallets are blocked immediately. Existing wallets keep working. |
+| From launch | New wallets are screened and can be used while under review. Flagged wallets are blocked immediately. Existing wallets keep working. |
 | Until Wednesday, November 11, 2026 | Re-submit every existing wallet you still use. |
 | From Wednesday, November 11, 2026 | Any wallet that hasn't cleared is deactivated. Raw `walletAddress` destinations are rejected. |
 
@@ -20,8 +20,8 @@ Every external wallet must now pass compliance screening before it can receive f
 
 ### New Wallets
 
-- A wallet created with `POST /v2/users/{userId}/wallets/external` starts inactive (`active: false`, `screeningStatus: UNDER_REVIEW`).
-- It turns on only when it is `CLEARED`. Wait for `CLEARED` before using it as a transfer destination or as the `externalWalletId` of a virtual account.
+- A wallet created with `POST /v2/users/{userId}/wallets/external` starts active (`active: true`, `screeningStatus: UNDER_REVIEW`).
+- The wallet can be used straight away. If screening returns `FLAGGED`, it is deactivated and you receive a `WALLET.EXTERNAL_WALLET.UPDATE` webhook.
 - Any transfer to a wallet that isn't active is rejected.
 
 ### Existing Wallets
@@ -83,7 +83,7 @@ The external wallet response now includes `screeningStatus` next to `active`. Us
 
 | `screeningStatus` | Meaning | `active` |
 | :-- | :-- | :-- |
-| `UNDER_REVIEW` | Screening in progress, or held for manual review by our compliance team | `false` for new wallets; `true` for re-submitted existing wallets until November 11 |
+| `UNDER_REVIEW` | Screening in progress, or held for manual review by our compliance team | `true`. If screening fails, the status changes to `FLAGGED` and `active` becomes `false` |
 | `CLEARED` | Passed screening | `true` |
 | `FLAGGED` | Failed screening; blocked from all transactions | `false` |
 | `NOT_SCREENED` | The chain isn't supported for screening yet | `true` |
@@ -99,7 +99,7 @@ When a wallet's status changes, we send a `WALLET.EXTERNAL_WALLET.UPDATE` webhoo
 
 A virtual account created with an `externalWalletId` follows that wallet's status. If the wallet is blocked, deposits are not delivered.
 
-- You can only set `externalWalletId` to an **active** wallet. For a new wallet, wait for `CLEARED`.
+- You can only set `externalWalletId` to an **active** wallet.
 - If the linked wallet is later flagged, deactivated on November 11, or deleted, new deposits **fail** instead of being delivered.
 - A failed deposit's onramp ends as `FIAT_FAILED` with error `EXTERNAL_WALLET_INACTIVE` ("External wallet is not active"), and you'll get the usual onramp status webhook. No crypto is sent.
 - To keep receiving deposits, update the virtual account to point to a wallet that has cleared.
@@ -111,14 +111,14 @@ You can test the full flow in sandbox now. The wallet `name` picks the result:
 
 | `name` | Result |
 | :-- | :-- |
-| `FLAGGED` | `FLAGGED`, wallet stays inactive |
-| Anything else | `CLEARED`, wallet turns on |
+| `FLAGGED` | `FLAGGED`, wallet is deactivated |
+| Anything else | `CLEARED`, wallet stays active |
 
 | Response | What It Means | What to Do |
 | :-- | :-- | :-- |
 | `503` `SERVICE_UNAVAILABLE` "Unable to register the external wallet right now. Please try again later." | Screening couldn't be started; no wallet was created | Retry the same request |
 | `400` `EXTERNAL_WALLET_ALREADY_EXISTS` | That `referenceId` is already used with a different address, chain or name | Use a new `referenceId`, or re-send the original values |
-| Transfer rejected: wallet not active | The wallet is under review, flagged, or deactivated | Check `screeningStatus`; wait for `CLEARED` or register a new wallet |
+| Transfer rejected: wallet not active | The wallet is flagged or deactivated | Check `screeningStatus`; register a new wallet if needed |
 
 ## Getting Help
 
