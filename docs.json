@@ -476,7 +476,8 @@
                       "GET /v3/virtual-accounts",
                       "POST /v3/virtual-accounts/{virtualAccountId}/simulate-deposits",
                       "GET /v3/virtual-accounts/routes",
-                      "GET /v3/virtual-accounts/routes/{vaRouteId}"
+                      "GET /v3/virtual-accounts/routes/{vaRouteId}",
+                      "POST /v3/virtual-accounts/v3-migration",
                     ]
                   },
                   {
