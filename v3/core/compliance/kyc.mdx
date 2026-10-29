@@ -20,6 +20,7 @@ Different information is required for verification, including both non-documenta
 | `taxId` | Tax identification number in the user's country | Yes |
 | `taxIdType` | Tax identification number (e.g. SSN, ITIN) | No |
 | `taxIdCountry` | Tax identification number issuance country | No |
+| `ipAddress` | The user's IP address when they onboarded (IPv4 or IPv6). Needed to enable [Visa Direct accounts](/v3/core/counter-party/external-account#visa-direct-accounts) | No |
 | `nationality` | User's nationality | Yes |
 
 {/* TODO: Replace with the actual field list and requirement rules — 
@@ -380,7 +381,7 @@ When a submitted application needs updated information, the status transitions t
 | :-- | --- |
 | `UPDATE_PROFILE` | Update the user's profile information before resubmission, a common reason is information that doesn't match the submitted documentation. |
 | `UPLOAD_DOCUMENT` | Update the user's documentation before resubmission, common reasons include expired, blurry, or unqualified documents. |
-| `COMPLETE_LIVENESS_CHECK` | Complete the required liveness check for each associated party via provided verification link. |
+| `COMPLETE_LIVENESS_CHECK` | Complete the required liveness check for each associated party via provided verification link. Can also appear after approval, while a payment method is being enabled. See [Liveness Checks](/v3/compliance/liveness-checks). |
 
 ## Getting Help
 

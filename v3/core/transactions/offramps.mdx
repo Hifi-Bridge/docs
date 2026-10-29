@@ -242,6 +242,36 @@ Some destinations require a `purposeOfPayment` describing why the payment is bei
 | `merchant_settlement` | Merchant settlement |
 | `repatriation_fund_settlement` | Repatriation fund settlement |
 
+## Visa Direct offramps
+
+An offramp to a [Visa Direct account](/v3/core/counter-party/external-account#visa-direct-accounts) differs from other offramps in a few ways:
+
+- **Source.** Pay from a HIFI Wallet (`source.walletId`). [Corridors](/v3/core/eligibility/corridors) lists the chains and coins you can send from.
+- **Amount.** Set `source.amount`. `destination.amount` is not supported.
+- **IP address.** `ipAddress` is required: the end customer's IP address when they request the payout (IPv4 or IPv6).
+- **What the recipient gets.** `quote.receiveNet` is the exact amount paid into the recipient's account, at `quote.rate`.
+
+```shell
+curl -X POST https://sandbox.hifi.com/v3/offramps \
+  -H "Idempotency-Key: <unique-key>" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -d '{
+    "requestId": "8a1f0c2e-6b7d-4e3a-9f10-2c4d5e6f7a8b",
+    "source": {
+      "walletId": "wlt_fkc0E4OsfHWZPNXiPhj4q",
+      "currency": "USDC",
+      "amount": 50
+    },
+    "destination": {
+      "externalAccountId": "extacct_IN1e2r3t4y",
+      "currency": "INR"
+    },
+    "ipAddress": "203.0.113.7"
+  }'
+```
+
+A quote can fail for reasons specific to these accounts: `DESTINATION_ACCOUNT_NOT_READY` (the account is still being set up; try again shortly) and `DESTINATION_ACCOUNT_REJECTED` (the account details were refused; add a corrected account).
+
 ## Additional information
 
 <AccordionGroup>

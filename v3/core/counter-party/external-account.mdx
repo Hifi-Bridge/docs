@@ -164,6 +164,40 @@ curl https://sandbox.hifi.com/v3/external-accounts?counterPartyId=cpty_a1b2c3&li
 }
 ```
 
+## Visa Direct accounts
+
+A Visa Direct account pays straight into the recipient's bank account over Visa Direct. India (INR) is supported today.
+
+| Field | Value |
+| --- | --- |
+| `transferType` | `VISA_DIRECT_ACCOUNT` |
+| `currency` | `INR` |
+| `bankAddress.country` | `IND` |
+| `accountNumber` | The recipient's bank account number |
+| `bankCode` | The branch's 11 character IFSC code, for example `HDFC0001234` |
+
+An individual counterparty also needs `phoneNumber`.
+
+```shell
+curl -X POST https://sandbox.hifi.com/v3/external-accounts \
+  -H "Idempotency-Key: <unique-key>" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -d '{
+    "counterPartyId": "cpty_a1b2c3",
+    "transferType": "VISA_DIRECT_ACCOUNT",
+    "currency": "INR",
+    "bankAddress": { "country": "IND" },
+    "accountNumber": "50100123456789",
+    "bankCode": "HDFC0001234"
+  }'
+```
+
+The account is returned straight away and then set up for payouts in the background, usually within a minute. Until it is ready, an offramp to it is quoted as `QUOTE_FAILED` with `DESTINATION_ACCOUNT_NOT_READY`: create a new offramp shortly after. If the account details are refused, offramps to it fail with `DESTINATION_ACCOUNT_REJECTED`: add a corrected account.
+
+<Info>
+  Visa Direct is enabled per user after their compliance is approved, and can take a liveness check first (see [Liveness Checks](/v3/compliance/liveness-checks)). Use [Corridors](/v3/core/eligibility/corridors) with `transferType=VISA_DIRECT_ACCOUNT` to see whether a user can send, and from which chains and coins. Offramps to these accounts have their own requirements: see [Visa Direct offramps](/v3/core/transactions/offramps#visa-direct-offramps).
+</Info>
+
 ## Using an external account as an onramp source
 
 Instead of a user sending fiat in directly, an onramp can be funded by pulling from a counterparty's external account - pass `source.externalAccountId` instead of `source.userId` when creating the onramp. See [Onramp](https://docs.hifi.com/v3/core/transactions/onramps) for the full request shape.

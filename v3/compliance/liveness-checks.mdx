@@ -41,6 +41,10 @@ Check out [High Risk Regions](/v3/compliance/regions#high-risk-regions) for the 
     <Info>
       Our compliance team may also reach out via email, including the liveness check link as an RFI.
     </Info>
+
+    <Info>
+      A liveness check can also be requested after the user is approved, while a payment method such as [Visa Direct](/v3/core/counter-party/external-account#visa-direct-accounts) is being enabled for them. The status moves to `REQUIRES_INFO` with a `COMPLETE_LIVENESS_CHECK` action naming the person, and returns to its previous value once the check is decided. The compliance webhook fires both times.
+    </Info>
   </Step>
   <Step title="Complete liveness check">
     Share the link with your user to complete the liveness check requirement. Once the liveness check is submitted, the compliance status will update if the result is valid.
