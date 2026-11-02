@@ -39,7 +39,7 @@ Every v3 resource is identified by an opaque, prefixed public ID instead of a ra
 
 ## Map v2 IDs to v3 IDs
 
-`GET /v3/id-mappings` takes a batch of `{ v2Id, resourceType }` pairs and returns the corresponding v3 ID for each one you own. Up to 1,000 IDs per call.
+`POST /v3/id-mappings` takes a batch of `{ v2Id, resourceType }` pairs and returns the corresponding v3 ID for each one you own. Up to 1,000 IDs per call.
 
 **Request**
 
