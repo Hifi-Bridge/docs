@@ -578,7 +578,7 @@
                   {
                     "group": "Migration",
                     "pages": [
-                      "GET /v3/id-mappings"
+                      "POST /v3/id-mappings"
                     ]
                   },
                   {
