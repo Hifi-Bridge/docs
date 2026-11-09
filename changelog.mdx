@@ -5,6 +5,25 @@ mode: "center"
 rss: true
 ---
 
+<Update label="October 12, 2026" description="External Wallet Screening">
+  **External Wallet Screening - Breaking Change**<br />We're updating our external wallet screening requirements. All external wallets will be required to pass screening before they can receive funds, effective November 11, 2026.<br /><br />**What's Changing:**
+
+  - **New Wallets:** During the migration period, newly registered wallets will remain active while screening is conducted. Wallets flagged during screening will be deactivated, while those requiring additional review will remain active unless screening determines they should be restricted.
+  - **Existing Wallets:** Existing wallets will continue functioning until November 11, 2026. To avoid disruptions, re-submit any wallets you intend to continue using by sending the original registration request again with the same `referenceId`, address, and chain.
+
+  **Effective November 11 (11 AM ET), 2026:**
+
+  - All newly registered wallets will remain inactive until they receive a `CLEARED` status.
+  - Any wallet that has not received a `CLEARED` status will be blocked from transactions.
+  - Deposits into Virtual Accounts linked to uncleared wallets will fail.
+  - Raw wallet addresses will no longer be accepted.
+
+  **Documentation:**<br />For details on wallet registration, screening statuses, webhooks, and Sandbox testing, refer to:<br />
+
+  - [V2 External Wallet Screening](https://docs.hifi.com/compliance/external-wallet-screening#screening-status-and-webhooks)
+  - [V3 External Wallet Screening](https://docs.hifi.com/v3/core/wallets/external-wallet-screening)
+</Update>
+
 <Update label="October 2, 2026" description="Settlement Rules, CCTP v2, USDT Bridging Sandbox ">
   **Settlement Rules by Rail**
 
